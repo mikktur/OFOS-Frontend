@@ -29,6 +29,19 @@ public class LoginController {
     @FXML
     private void checkLogin() throws IOException {
         if (username.getText().toString().equals("johannes") && password.getText().toString().equals("1234")) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/menuUI.fxml"));
+            Parent root = loader.load();
+
+            Stage currentStage = (Stage) signUpButton.getScene().getWindow();
+
+            Scene registerScene = new Scene(root, 600, 400);
+
+            currentStage.setTitle("OFOS Menu");
+
+            currentStage.setScene(registerScene);
+
+            currentStage.show();
+
             System.out.println("Login successful! You are the best.");
         } else {
             System.out.println("Login failed, you are not the best.");
@@ -56,7 +69,7 @@ public class LoginController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/loginUI.fxml"));
         Parent root = loader.load();
 
-        Stage currentStage = (Stage) signUpButton.getScene().getWindow();
+        Stage currentStage = (Stage) goBackButton.getScene().getWindow();
 
         Scene registerScene = new Scene(root, 600, 400);
 
