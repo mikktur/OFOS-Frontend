@@ -15,7 +15,7 @@ public class LoginController {
     @FXML
     private Button signUpButton;
     @FXML
-    private Button registerButton;
+    private Button goBackButton;
     @FXML
     private TextField username;
     @FXML
@@ -35,16 +35,6 @@ public class LoginController {
         }
     }
 
-    public void initialize() {
-        signUpButton.setOnAction(event -> {
-            try {
-                goToRegister(event);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
-
     @FXML
     private void goToRegister(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/registerUI.fxml"));
@@ -55,6 +45,22 @@ public class LoginController {
         Scene registerScene = new Scene(root, 600, 400);
 
         currentStage.setTitle("OFOS Register");
+
+        currentStage.setScene(registerScene);
+
+        currentStage.show();
+    }
+
+    @FXML
+    private void backToLogin(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/loginUI.fxml"));
+        Parent root = loader.load();
+
+        Stage currentStage = (Stage) signUpButton.getScene().getWindow();
+
+        Scene registerScene = new Scene(root, 600, 400);
+
+        currentStage.setTitle("OFOS Login");
 
         currentStage.setScene(registerScene);
 
