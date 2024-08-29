@@ -11,8 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.LoginController">
    <left>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
@@ -48,15 +47,15 @@
                   <Font name="System Bold" size="36.0" />
                </font>
             </Label>
-            <TextField layoutX="142.0" layoutY="128.0" promptText="Username" />
-            <PasswordField layoutX="144.0" layoutY="188.0" promptText="Password" />
-            <Button layoutX="176.0" layoutY="242.0" mnemonicParsing="false" text="Log in" />
+            <TextField layoutX="142.0" layoutY="128.0" promptText="Username" fx:id="username"/>
+            <PasswordField layoutX="144.0" layoutY="188.0" promptText="Password" fx:id="password"/>
+            <Button layoutX="176.0" layoutY="242.0" mnemonicParsing="false" onAction="#userLogin" text="Log in" />
             <Text layoutX="103.0" layoutY="299.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Don't have an account?" textAlignment="CENTER" wrappingWidth="194.990234375">
                <font>
                   <Font size="14.0" />
                </font>
             </Text>
-            <Button layoutX="172.0" layoutY="323.0" mnemonicParsing="false" text="Sign up" />
+            <Button layoutX="172.0" layoutY="323.0" mnemonicParsing="false" text="Sign up"/>
          </children>
       </AnchorPane>
    </center>
