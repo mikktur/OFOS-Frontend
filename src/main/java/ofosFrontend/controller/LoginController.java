@@ -131,6 +131,13 @@ public class LoginController {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/loginUI.fxml"));
                 Parent root = loader.load();
 
+                Stage currentStage = (Stage) goBackButton.getScene().getWindow();
+                Scene registerScene = new Scene(root, 600, 400);
+                currentStage.setTitle("OFOS Login");
+                currentStage.setScene(registerScene);
+                currentStage.show();
+                System.out.println("User registration successful.");
+
             } catch (IOException e) {
                 System.out.println("Failed to load the menu UI.");
                 e.printStackTrace();
