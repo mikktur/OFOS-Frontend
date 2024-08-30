@@ -9,35 +9,37 @@ import java.io.IOException;
 
 public class NetworkUtils {
 
-    private static final String LOGIN_URL = "http://localhost:8000/api/"; // Replace with your backend URL
+    private static final String LOGIN_URL = "http://localhost:8000/api/"; //
 
     private final OkHttpClient client = new OkHttpClient();
 
     public boolean login(String username, String password) throws IOException {
-        // Define the media type for JSON
+
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
-        // Create a User object with the username and password
+
         User user = new User(username, password);
-        // Serialize the User object to JSON string
+
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonBody = objectMapper.writeValueAsString(user);
 
-        // Create the request body with JSON content
+        System.out.println(jsonBody);
         RequestBody body = RequestBody.create(jsonBody, JSON);
 
         // Build the HTTP POST request
         Request request = new Request.Builder()
-                .url(LOGIN_URL)
+                .url(LOGIN_URL+"auth/login")
                 .post(body)
                 .build();
 
         // Execute the request and handle the response
         try (Response response = client.newCall(request).execute()) {
+            System.out.println(response);
             int statusCode = response.code(); // Get the HTTP status code
 
             // Handle different status codes
             if (statusCode == 200) { // HTTP 200 OK
+                assert response.body() != null;
                 String responseBody = response.body().string();
                 System.out.println(responseBody);
                 return true;
@@ -56,4 +58,6 @@ public class NetworkUtils {
             }
         }
     }
+
+
 }
