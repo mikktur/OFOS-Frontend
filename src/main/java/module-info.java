@@ -3,6 +3,8 @@ module ofosfrontend {
     requires javafx.fxml;
 
     requires org.controlsfx.controls;
+    requires java.net.http;
+    requires com.fasterxml.jackson.databind;
 
     opens ofosFrontend to javafx.fxml;
     exports ofosFrontend;

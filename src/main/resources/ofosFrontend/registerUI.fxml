@@ -47,8 +47,8 @@
                   <Font name="System Bold" size="36.0" />
                </font>
             </Label>
-            <TextField fx:id="username" layoutX="142.0" layoutY="128.0" promptText="Username" />
-            <PasswordField fx:id="password" layoutX="144.0" layoutY="188.0" promptText="Password" />
+            <TextField fx:id="usernameField" layoutX="142.0" layoutY="128.0" promptText="Username" />
+            <PasswordField fx:id="passwordField" layoutX="144.0" layoutY="188.0" promptText="Password" />
             <Button fx:id="signUpButton" layoutX="176.0" layoutY="242.0" mnemonicParsing="false" onAction="#registerUser" text="Sign up" />
             <Button fx:id="goBackButton" layoutX="162.0" layoutY="316.0" mnemonicParsing="false" onAction="#backToLogin" text="Back to login" />
          </children>
