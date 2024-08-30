@@ -108,11 +108,37 @@ public class LoginController {
 
     @FXML
     public void registerUser(ActionEvent event) throws IOException{
-        createUser();
+        new Thread(() -> {
+            try {
+                String usernameText = username.getText();
+                String passwordText = password.getText();
+                boolean success = networkUtils.login(usernameText,passwordText); // Pass the userModel object
+                Platform.runLater(() -> handleLoginResult(success));
+            } catch (IOException e) {
+                Platform.runLater(() -> {
+                    System.out.println("Register failed.");
+                    e.printStackTrace();  // Add this for debugging
+                });
+            }
+        }).start();
     }
-
-    @FXML
-    private void createUser() throws IOException {
-        System.out.println("User created successfully.");
+    private void handleRegisterResult(boolean success) {
+        if (success) {
+            try {
+                var loader = new FXMLLoader(getClass().getResource("/ofosFrontend/menuUI.fxml"));
+                Parent root = loader.load();
+                Stage currentStage = (Stage) signUpButton.getScene().getWindow();
+                Scene registerScene = new Scene(root, 600, 400);
+                currentStage.setTitle("OFOS Menu");
+                currentStage.setScene(registerScene);
+                currentStage.show();
+                System.out.println("User registration successful.");
+            } catch (IOException e) {
+                System.out.println("Failed to load the menu UI.");
+                e.printStackTrace();  // Add this for debugging
+            }
+        } else {
+            System.out.println("User registration failed.");
+        }
     }
 }
