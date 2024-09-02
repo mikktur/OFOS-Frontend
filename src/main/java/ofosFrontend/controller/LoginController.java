@@ -1,5 +1,6 @@
 package ofosFrontend.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
@@ -7,15 +8,21 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import ofosFrontend.model.User;
 import ofosFrontend.util.NetworkUtils;
+import okhttp3.Response;
 
 import java.io.IOException;
+import java.util.Map;
 
 public class LoginController {
+    public Label passwordErrorLabel;
+    public Label usernameErrorLabel;
+    public Label loginPasswordErrorLabel;
     @FXML
     private Button signUpButton;
     @FXML
@@ -35,44 +42,42 @@ public class LoginController {
 
 
     @FXML
-    public void userLogin(ActionEvent event) throws IOException {
-        checkLogin();
-    }
-
-    @FXML
-    private void checkLogin() {
+    public void userLogin(ActionEvent event) {
         new Thread(() -> {
             try {
-                String usernameText = username.getText();
-                String passwordText = password.getText();
-                boolean success = networkUtils.login(usernameText,passwordText);
-                Platform.runLater(() -> handleLoginResult(success));
+                Response response = networkUtils.login(username.getText(), password.getText());
+                Platform.runLater(() -> handleLoginResponse(response));
             } catch (IOException e) {
                 Platform.runLater(() -> {
                     System.out.println("Login failed.");
                     e.printStackTrace();
+                    showError("Login error: " + e.getMessage());
                 });
             }
         }).start();
     }
-
-    private void handleLoginResult(boolean success) {
-        if (success) {
-            try {
+    private void handleLoginResponse(Response response) {
+        try {
+            if (response.isSuccessful()) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/menuUI.fxml"));
                 Parent root = loader.load();
                 Stage currentStage = (Stage) signUpButton.getScene().getWindow();
-                Scene registerScene = new Scene(root, 600, 400);
+                Scene menuScene = new Scene(root, 650, 400);
                 currentStage.setTitle("OFOS Menu");
-                currentStage.setScene(registerScene);
+                currentStage.setScene(menuScene);
                 currentStage.show();
                 System.out.println("Login successful.");
-            } catch (IOException e) {
-                System.out.println("Failed to load the menu UI.");
-                e.printStackTrace();
+            } else if (response.code() == 401) { // Unauthorized error
+                ObjectMapper objectMapper = new ObjectMapper();
+                Map<String, String> errors = objectMapper.readValue(response.body().string(), Map.class);
+                updateLoginErrorLabel(errors);
+            } else {
+                showError("Unexpected response code: " + response.code());
             }
-        } else {
-            System.out.println("Login failed.");
+        } catch (IOException e) {
+            System.out.println("Failed to handle the response.");
+            e.printStackTrace();
+            showError("Error processing login response.");
         }
     }
 
@@ -84,7 +89,7 @@ public class LoginController {
 
         Stage currentStage = (Stage) signUpButton.getScene().getWindow();
 
-        Scene registerScene = new Scene(root, 600, 400);
+        Scene registerScene = new Scene(root, 650, 400);
 
         currentStage.setTitle("OFOS Register");
 
@@ -100,7 +105,7 @@ public class LoginController {
 
         Stage currentStage = (Stage) goBackButton.getScene().getWindow();
 
-        Scene registerScene = new Scene(root, 600, 400);
+        Scene registerScene = new Scene(root, 650, 400);
 
         currentStage.setTitle("OFOS Login");
 
@@ -110,40 +115,65 @@ public class LoginController {
     }
 
     @FXML
-    public void registerUser(ActionEvent event) throws IOException{
+    public void registerUser(ActionEvent event) {
         new Thread(() -> {
             try {
-                String usernameText = username.getText();
-                String passwordText = password.getText();
-                boolean success = networkUtils.register(usernameText,passwordText);
-                Platform.runLater(() -> handleRegisterResult(success));
+                Response response = networkUtils.register(username.getText(), password.getText());
+                Platform.runLater(() -> handleRegisterResponse(response));
             } catch (IOException e) {
                 Platform.runLater(() -> {
-                    System.out.println("Register failed.");
+                    System.out.println("Registration failed.");
                     e.printStackTrace();
+                    showError("Registration error: " + e.getMessage());
                 });
             }
         }).start();
     }
-    private void handleRegisterResult(boolean success) {
-        if (success) {
-            try {
+
+    private void handleRegisterResponse(Response response) {
+        try {
+            if (response.isSuccessful()) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/loginUI.fxml"));
                 Parent root = loader.load();
-
                 Stage currentStage = (Stage) goBackButton.getScene().getWindow();
-                Scene registerScene = new Scene(root, 600, 400);
+                Scene registerScene = new Scene(root, 650, 400);
                 currentStage.setTitle("OFOS Login");
                 currentStage.setScene(registerScene);
                 currentStage.show();
                 System.out.println("User registration successful.");
-
-            } catch (IOException e) {
-                System.out.println("Failed to load the menu UI.");
-                e.printStackTrace();
+            } else if (response.code() == 400) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                Map<String, String> errors = objectMapper.readValue(response.body().string(), Map.class);
+                updateRegistrationErrorLabels(errors);
+            } else {
+                showError("Unexpected response code: " + response.code());
             }
-        } else {
-            System.out.println("User registration failed.");
+        } catch (IOException e) {
+            System.out.println("Failed to handle the response.");
+            e.printStackTrace();
+            showError("Error processing registration response.");
         }
+    }
+
+    private void updateRegistrationErrorLabels(Map<String, String> errors) {
+        // Handles username error text under the username field
+        String usernameError = errors.get("username");
+        usernameErrorLabel.setText(usernameError != null ? usernameError : "");
+        usernameErrorLabel.setVisible(usernameError != null);
+
+        // Sets the password error text under the password field
+        String passwordError = errors.get("password");
+        passwordErrorLabel.setText(passwordError != null ? passwordError : "");
+        passwordErrorLabel.setVisible(passwordError != null);
+    }
+
+    private void updateLoginErrorLabel(Map<String, String> errors) {
+
+        String passwordError = errors.get("message");
+        loginPasswordErrorLabel.setText(passwordError != null ? passwordError : "");
+        loginPasswordErrorLabel.setVisible(passwordError != null);
+    }
+    private void showError(String message) {
+        System.out.println(message);
     }
 }

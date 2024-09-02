@@ -31,32 +31,33 @@
    </left>
    <center>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <children>
-            <Label layoutX="50.0" layoutY="120.0" prefHeight="40.0" prefWidth="87.0" text="Username:">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <Label layoutX="52.0" layoutY="187.0" text="Password:" textAlignment="CENTER">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <Label layoutX="150.0" layoutY="33.0" prefHeight="35.0" prefWidth="197.0" text="Login">
-               <font>
-                  <Font name="System Bold" size="36.0" />
-               </font>
-            </Label>
-            <TextField fx:id="username" layoutX="142.0" layoutY="128.0" promptText="Username" />
-            <PasswordField fx:id="password" layoutX="144.0" layoutY="188.0" promptText="Password" />
-            <Button layoutX="176.0" layoutY="242.0" mnemonicParsing="false" onAction="#userLogin" text="Log in" />
-            <Text layoutX="103.0" layoutY="299.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Don't have an account?" textAlignment="CENTER" wrappingWidth="194.990234375">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Text>
-            <Button layoutX="172.0" layoutY="323.0" mnemonicParsing="false" onAction="#goToRegister" text="Sign up" fx:id="signUpButton"/>
-         </children>
+         <Label layoutX="50.0" layoutY="120.0" prefHeight="40.0" prefWidth="87.0" text="Username:">
+            <font>
+               <Font size="18.0"/>
+            </font>
+         </Label>
+         <Label layoutX="52.0" layoutY="187.0" text="Password:" textAlignment="CENTER">
+            <font>
+               <Font size="18.0"/>
+            </font>
+         </Label>
+         <Label layoutX="150.0" layoutY="33.0" prefHeight="35.0" prefWidth="197.0" text="Login">
+            <font>
+               <Font name="System Bold" size="36.0"/>
+            </font>
+         </Label>
+         <TextField fx:id="username" layoutX="142.0" layoutY="128.0" promptText="Username"/>
+         <PasswordField fx:id="password" layoutX="144.0" layoutY="188.0" promptText="Password"/>
+         <Button layoutX="176.0" layoutY="242.0" mnemonicParsing="false" onAction="#userLogin" text="Log in"/>
+         <Text layoutX="103.0" layoutY="299.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Don't have an account?"
+               textAlignment="CENTER" wrappingWidth="194.990234375">
+            <font>
+               <Font size="14.0"/>
+            </font>
+         </Text>
+         <Button layoutX="172.0" layoutY="323.0" mnemonicParsing="false" onAction="#goToRegister" text="Sign up"
+                 fx:id="signUpButton"/>
+         <Label fx:id="loginPasswordErrorLabel" layoutX="142.0" layoutY="218.0" textFill="red"/>
       </AnchorPane>
    </center>
 </BorderPane>

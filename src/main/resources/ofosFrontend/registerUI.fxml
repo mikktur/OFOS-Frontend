@@ -31,27 +31,34 @@
    </left>
    <center>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <children>
-            <Label layoutX="50.0" layoutY="120.0" prefHeight="40.0" prefWidth="87.0" text="Username:">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <Label layoutX="52.0" layoutY="187.0" text="Password:" textAlignment="CENTER">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <Label layoutX="142.0" layoutY="34.0" prefHeight="35.0" prefWidth="197.0" text="Register">
-               <font>
-                  <Font name="System Bold" size="36.0" />
-               </font>
-            </Label>
-            <TextField fx:id="username" layoutX="142.0" layoutY="128.0" promptText="Username" />
-            <PasswordField fx:id="password" layoutX="144.0" layoutY="188.0" promptText="Password" />
-            <Button fx:id="createUserButton" layoutX="176.0" layoutY="242.0" mnemonicParsing="false" onAction="#registerUser" text="Sign up" />
-            <Button fx:id="goBackButton" layoutX="162.0" layoutY="316.0" mnemonicParsing="false" onAction="#backToLogin" text="Back to login" />
-         </children>
+         <Label layoutX="50.0" layoutY="120.0" prefHeight="40.0" prefWidth="87.0" text="Username:">
+            <font>
+               <Font size="18.0"/>
+            </font>
+         </Label>
+         <TextField fx:id="username" layoutX="142.0" layoutY="128.0" promptText="Username"/>
+
+         <Label fx:id="usernameErrorLabel" layoutX="142.0" layoutY="160.0" textFill="RED" visible="false"/>
+
+         <Label layoutX="52.0" layoutY="187.0" text="Password:" textAlignment="CENTER">
+            <font>
+               <Font size="18.0"/>
+            </font>
+         </Label>
+         <PasswordField fx:id="password" layoutX="144.0" layoutY="188.0" promptText="Password"/>
+
+         <Label fx:id="passwordErrorLabel" layoutX="144.0" layoutY="220.0" textFill="RED" visible="false"/>
+
+         <Label layoutX="142.0" layoutY="34.0" prefHeight="35.0" prefWidth="197.0" text="Register">
+            <font>
+               <Font name="System Bold" size="36.0"/>
+            </font>
+         </Label>
+
+         <Button fx:id="createUserButton" layoutX="176.0" layoutY="242.0" mnemonicParsing="false"
+                 onAction="#registerUser" text="Sign up"/>
+         <Button fx:id="goBackButton" layoutX="162.0" layoutY="316.0" mnemonicParsing="false" onAction="#backToLogin"
+                 text="Back to login"/>
       </AnchorPane>
    </center>
 </BorderPane>
