@@ -34,12 +34,12 @@
          <children>
             <ImageView fitHeight="82.0" fitWidth="78.0" layoutX="270.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../../../Downloads/user.png" />
+                  <Image url="@../images/user.png" />
                </image>
             </ImageView>
             <Pane layoutX="143.0" layoutY="92.0" prefHeight="225.0" prefWidth="315.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 5, 0, 2, 2);">
                <children>
-                  <Button fx:id="signUpButton" layoutX="115.0" layoutY="186.0" mnemonicParsing="false" onAction="#goToRegister" text="Back to login" />
+                  <Button fx:id="signUpButton" layoutX="115.0" layoutY="186.0" mnemonicParsing="false" onAction="#backToLogin" text="Back to login" />
                   <Label layoutX="51.0" layoutY="20.0" prefHeight="40.0" prefWidth="87.0" text="Username:">
                      <font>
                         <Font size="18.0" />
@@ -52,7 +52,7 @@
                   </Label>
                   <TextField fx:id="username" layoutX="138.0" layoutY="28.0" promptText="Username" />
                   <PasswordField fx:id="password" layoutX="138.0" layoutY="77.0" promptText="Password" />
-                  <Button layoutX="129.0" layoutY="132.0" mnemonicParsing="false" onAction="#userLogin" text="Sign up" />
+                  <Button fx:id="signUp" layoutX="129.0" layoutY="132.0" mnemonicParsing="false" onAction="#registerUser" text="Sign up" />
                </children>
             </Pane>
          </children>
