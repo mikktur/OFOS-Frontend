@@ -36,7 +36,7 @@ public class LoginController {
 
     private final NetworkUtils networkUtils = new NetworkUtils();
 
-    private final FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/menuUI.fxml"));
+    private final FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/mainUI.fxml"));
 
 
 
@@ -59,8 +59,7 @@ public class LoginController {
     private void handleLoginResponse(Response response) {
         try {
             if (response.isSuccessful()) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/menuUI.fxml"));
-                Parent root = loader.load();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/mainUI.fxml"));                Parent root = loader.load();
                 Stage currentStage = (Stage) signUpButton.getScene().getWindow();
                 Scene menuScene = new Scene(root, 650, 400);
                 currentStage.setTitle("OFOS Menu");
