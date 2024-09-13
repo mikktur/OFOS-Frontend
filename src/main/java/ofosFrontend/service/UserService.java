@@ -1,4 +1,4 @@
-package ofosFrontend.util;
+package ofosFrontend.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ofosFrontend.model.User;
@@ -7,7 +7,7 @@ import okhttp3.*;
 import java.io.IOException;
 
 
-public class NetworkUtils {
+public class UserService {
 
     private static final String API_URL = "http://localhost:8000/api/"; //
 
