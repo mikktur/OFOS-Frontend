@@ -105,11 +105,11 @@ public class LoginController {
 
         Stage currentStage = (Stage) signUpButton.getScene().getWindow();
 
-        Scene registerScene = new Scene(root, 650, 400);
+        Scene loginScene = new Scene(root, 650, 400);
 
         currentStage.setTitle("OFOS Login");
 
-        currentStage.setScene(registerScene);
+        currentStage.setScene(loginScene);
 
         currentStage.show();
     }

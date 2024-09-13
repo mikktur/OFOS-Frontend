@@ -1,79 +1,111 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="488.0" prefWidth="664.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.LoginController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="488.0" prefWidth="664.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.ClientController">
    <top>
-      <AnchorPane prefHeight="30.0" prefWidth="600.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);;" BorderPane.alignment="CENTER">
+      <HBox alignment="CENTER" prefHeight="48.0" prefWidth="664.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" BorderPane.alignment="CENTER">
          <children>
-            <Text layoutX="87.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="OFOS" textAlignment="CENTER" wrappingWidth="115.63671875">
-               <font>
-                  <Font name="System Bold" size="36.0" />
-               </font>
-            </Text>
-            <ImageView fx:id="mainMenu" fitHeight="49.0" fitWidth="117.0" layoutX="22.0" onMousePressed="#openMainMenu" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="mainMenu" fitHeight="49.0" fitWidth="117.0" onMousePressed="#openMainMenu" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
                <image>
                   <Image url="@../images/burger-bar.png" />
                </image>
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin>
             </ImageView>
-            <TextField layoutX="487.0" layoutY="12.0" prefHeight="26.0" prefWidth="86.0" promptText="username" />
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f7f7f700" height="28.0" layoutX="488.0" layoutY="11.0" stroke="BLACK" strokeType="INSIDE" width="86.0" />
-            <Text layoutX="259.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Settings" textAlignment="CENTER" wrappingWidth="146.13671875">
+            <Text fx:id="returnToMenu" onMouseClicked="#backToMenu" strokeType="OUTSIDE" strokeWidth="0.0" text="OFOS" textAlignment="CENTER" wrappingWidth="115.63671875" HBox.hgrow="ALWAYS">
                <font>
-                  <Font name="System Bold" size="24.0" />
+                  <Font name="System Bold" size="36.0" />
                </font>
+               <HBox.margin>
+                  <Insets left="10.0" right="10.0" />
+               </HBox.margin>
             </Text>
+            <TextField prefHeight="25.0" prefWidth="112.0" promptText="hae" style="-fx-background-color: #ffffff;" HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets left="60.0" />
+               </HBox.margin>
+            </TextField>
+            <ImageView fitHeight="23.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
+               <image>
+                  <Image url="@../images/search.png" />
+               </image>
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </ImageView>
+            <Label text="Käyttäjänimi" HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets left="80.0" />
+               </HBox.margin>
+            </Label>
+            <ImageView fx:id="openCart" fitHeight="40.0" fitWidth="111.0" onMouseClicked="#openCart" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
+               <image>
+                  <Image url="@../images/cart.png" />
+               </image>
+               <HBox.margin>
+                  <Insets left="30.0" />
+               </HBox.margin>
+            </ImageView>
          </children>
-      </AnchorPane>
+      </HBox>
    </top>
    <center>
-      <AnchorPane prefHeight="452.0" prefWidth="664.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
-            <AnchorPane layoutX="125.0" layoutY="44.0" prefHeight="340.0" prefWidth="415.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
+            <TilePane alignment="CENTER" prefHeight="305.0" prefWidth="664.0" VBox.vgrow="ALWAYS">
                <children>
-                  <TextArea layoutX="164.0" layoutY="14.0" prefHeight="49.0" prefWidth="201.0" promptText="nimi" />
-                  <TextArea layoutX="164.0" layoutY="92.0" prefHeight="49.0" prefWidth="200.0" promptText="xxx-xxx-xxxx" />
-                  <TextArea layoutX="164.0" layoutY="165.0" prefHeight="49.0" prefWidth="200.0" promptText="esi.merkki@mail.com" />
-                  <TextArea layoutX="164.0" layoutY="241.0" prefHeight="49.0" prefWidth="200.0" promptText="Katukatu 22" />
-                  <Text layoutX="68.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nimi:">
-                     <font>
-                        <Font name="System Bold" size="18.0" />
-                     </font>
-                  </Text>
-                  <Text layoutX="24.0" layoutY="123.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Puhelinnumero:">
-                     <font>
-                        <Font name="System Bold" size="18.0" />
-                     </font>
-                  </Text>
-                  <Text layoutX="41.0" layoutY="196.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sähköposti:">
-                     <font>
-                        <Font name="System Bold" size="18.0" />
-                     </font>
-                  </Text>
-                  <Text layoutX="26.0" layoutY="272.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Toimitusosoite:">
-                     <font>
-                        <Font name="System Bold" size="18.0" />
-                     </font>
-                  </Text>
-                  <Button fx:id="settingsApply" layoutX="161.0" layoutY="301.0" mnemonicParsing="false" onAction="#applySettings" text="Apply changes" />
+                  <AnchorPane prefHeight="340.0" prefWidth="427.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" TilePane.alignment="CENTER">
+                     <children>
+                        <TextArea layoutX="164.0" layoutY="14.0" prefHeight="49.0" prefWidth="201.0" promptText="nimi" />
+                        <TextArea layoutX="164.0" layoutY="92.0" prefHeight="49.0" prefWidth="200.0" promptText="xxx-xxx-xxxx" />
+                        <TextArea layoutX="164.0" layoutY="165.0" prefHeight="49.0" prefWidth="200.0" promptText="esi.merkki@mail.com" />
+                        <TextArea layoutX="164.0" layoutY="241.0" prefHeight="49.0" prefWidth="200.0" promptText="Katukatu 22" />
+                        <Text layoutX="68.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nimi:">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Text>
+                        <Text layoutX="24.0" layoutY="123.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Puhelinnumero:">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Text>
+                        <Text layoutX="41.0" layoutY="196.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sähköposti:">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Text>
+                        <Text layoutX="26.0" layoutY="272.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Toimitusosoite:">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Text>
+                        <Button fx:id="settingsApply" layoutX="167.0" layoutY="301.0" mnemonicParsing="false" onAction="#applySettings" text="Apply changes" />
+                     </children>
+                  </AnchorPane>
                </children>
-            </AnchorPane>
-            <Text layoutX="125.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Yhteystiedot">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </Text>
-            <Button fx:id="passwordChange" layoutX="268.0" layoutY="400.0" mnemonicParsing="false" onAction="#changePassword" text="Change my password" />
+            </TilePane>
+            <HBox alignment="CENTER" prefHeight="0.0" prefWidth="664.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <Button fx:id="changePassword" alignment="CENTER" mnemonicParsing="false" onAction="#changePassword" text="Vaihda salasanaa" textAlignment="CENTER" />
+               </children>
+            </HBox>
          </children>
-      </AnchorPane>
+      </VBox>
    </center>
 </BorderPane>

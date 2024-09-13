@@ -1,82 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="488.0" prefWidth="664.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.LoginController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="488.0" prefWidth="664.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.AdminController">
    <top>
-      <AnchorPane prefHeight="30.0" prefWidth="600.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);;" BorderPane.alignment="CENTER">
+      <HBox alignment="CENTER_LEFT" prefHeight="42.0" prefWidth="664.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" BorderPane.alignment="CENTER">
          <children>
-            <Text layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="OFOS" textAlignment="CENTER" wrappingWidth="115.63671875">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="OFOS" textAlignment="CENTER" wrappingWidth="115.63671875" HBox.hgrow="ALWAYS">
                <font>
                   <Font name="System Bold" size="36.0" />
                </font>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
             </Text>
-            <Text layoutX="146.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ADMIN" textAlignment="CENTER" wrappingWidth="130.63671875">
-               <font>
-                  <Font name="System Bold" size="36.0" />
-               </font>
-            </Text>
-            <ImageView fitHeight="38.0" fitWidth="39.0" layoutX="108.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="38.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
                <image>
                   <Image url="@../images/admin.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="adminLogout" fitHeight="39.0" fitWidth="40.0" layoutX="552.0" layoutY="4.0" onMouseClicked="#logOut" pickOnBounds="true" preserveRatio="true">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="ADMIN" textAlignment="CENTER" wrappingWidth="130.63671875" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font name="System Bold" size="36.0" />
+               </font>
+            </Text>
+            <ImageView fx:id="adminLogout" fitHeight="39.0" fitWidth="40.0" onMouseClicked="#logOut" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
                <image>
                   <Image url="@../images/logout.png" />
                </image>
+               <HBox.margin>
+                  <Insets left="210.0" />
+               </HBox.margin>
             </ImageView>
-            <Text layoutX="451.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="AdminName">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="AdminName">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin>
             </Text>
          </children>
-      </AnchorPane>
+      </HBox>
    </top>
    <center>
-      <AnchorPane prefHeight="452.0" prefWidth="664.0" BorderPane.alignment="CENTER">
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0" BorderPane.alignment="CENTER">
          <children>
-            <AnchorPane layoutX="175.0" layoutY="50.0" prefHeight="301.0" prefWidth="415.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
-               <children>
-                  <TextArea layoutX="164.0" layoutY="14.0" prefHeight="49.0" prefWidth="120.0" promptText="Katukatu 22" />
-                  <TextArea layoutX="164.0" layoutY="92.0" prefHeight="49.0" prefWidth="121.0" promptText="xxx-xxx-xxxx" />
-                  <TextArea layoutX="164.0" layoutY="165.0" prefHeight="49.0" prefWidth="122.0" promptText="9-22" />
-                  <Text layoutX="88.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Osoite:">
-                     <font>
-                        <Font name="System Bold" size="18.0" />
-                     </font>
-                  </Text>
-                  <Text layoutX="14.0" layoutY="123.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Puhelinnumero:">
-                     <font>
-                        <Font name="System Bold" size="18.0" />
-                     </font>
-                  </Text>
-                  <Text layoutX="46.0" layoutY="196.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Aukioloajat:">
-                     <font>
-                        <Font name="System Bold" size="18.0" />
-                     </font>
-                  </Text>
-                  <Button fx:id="saveAdminAddress" layoutX="320.0" layoutY="26.0" mnemonicParsing="false" onAction="#saveAddress" text="Tallenna" />
-                  <Button fx:id="saveAdminPhone" layoutX="320.0" layoutY="104.0" mnemonicParsing="false" onAction="#savePhone" text="Tallenna" />
-                  <Button fx:id="saveAdminHours" layoutX="320.0" layoutY="177.0" mnemonicParsing="false" onAction="#saveHours" text="Tallenna" />
-                  <Button fx:id="editMenu" layoutX="161.0" layoutY="247.0" mnemonicParsing="false" onAction="#goToAdminMenu" text="Muokkaa ruokalistaa" />
-               </children>
-            </AnchorPane>
-            <Text layoutX="175.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="McDonald's">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </Text>
-            <VBox layoutX="26.0" layoutY="91.0" prefHeight="167.0" prefWidth="118.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
+            <VBox prefHeight="268.0" prefWidth="118.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Minun ravintolat" textAlignment="CENTER" wrappingWidth="117.13671875">
                      <font>
@@ -114,8 +95,56 @@
                      </font>
                   </Text>
                </children>
+               <HBox.margin>
+                  <Insets bottom="150.0" left="20.0" top="100.0" />
+               </HBox.margin>
+            </VBox>
+            <VBox prefHeight="133.0" prefWidth="549.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="McDonald's" VBox.vgrow="ALWAYS">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets top="30.0" />
+                     </VBox.margin>
+                  </Text>
+                  <TilePane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <AnchorPane prefHeight="301.0" prefWidth="415.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" TilePane.alignment="CENTER">
+                           <children>
+                              <TextArea layoutX="164.0" layoutY="14.0" prefHeight="49.0" prefWidth="120.0" promptText="Katukatu 22" />
+                              <TextArea layoutX="164.0" layoutY="92.0" prefHeight="49.0" prefWidth="121.0" promptText="xxx-xxx-xxxx" />
+                              <TextArea layoutX="164.0" layoutY="165.0" prefHeight="49.0" prefWidth="122.0" promptText="9-22" />
+                              <Text layoutX="88.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Osoite:">
+                                 <font>
+                                    <Font name="System Bold" size="18.0" />
+                                 </font>
+                              </Text>
+                              <Text layoutX="14.0" layoutY="123.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Puhelinnumero:">
+                                 <font>
+                                    <Font name="System Bold" size="18.0" />
+                                 </font>
+                              </Text>
+                              <Text layoutX="46.0" layoutY="196.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Aukioloajat:">
+                                 <font>
+                                    <Font name="System Bold" size="18.0" />
+                                 </font>
+                              </Text>
+                              <Button fx:id="saveAdminAddress" layoutX="320.0" layoutY="26.0" mnemonicParsing="false" onAction="#saveAddress" text="Tallenna" />
+                              <Button fx:id="saveAdminPhone" layoutX="320.0" layoutY="104.0" mnemonicParsing="false" onAction="#savePhone" text="Tallenna" />
+                              <Button fx:id="saveAdminHours" layoutX="320.0" layoutY="177.0" mnemonicParsing="false" onAction="#saveHours" text="Tallenna" />
+                              <Button fx:id="editMenu" layoutX="161.0" layoutY="247.0" mnemonicParsing="false" onAction="#goToAdminMenu" text="Muokkaa ruokalistaa" />
+                           </children>
+                           <TilePane.margin>
+                              <Insets top="10.0" />
+                           </TilePane.margin>
+                        </AnchorPane>
+                     </children>
+                  </TilePane>
+               </children>
             </VBox>
          </children>
-      </AnchorPane>
+      </HBox>
    </center>
 </BorderPane>

@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.io.IOException;
 
@@ -22,6 +23,12 @@ public class ClientController {
     private Button mCButton;
     @FXML
     private Button bmButton;
+    @FXML
+    private Text adminTest;
+    @FXML
+    private ImageView dropDownMenu;
+    @FXML
+    private Text returnToMenu;
 
     @FXML
     private void goToRestaurant() throws IOException {
@@ -30,11 +37,11 @@ public class ClientController {
 
         Stage currentStage = (Stage) mcButton.getScene().getWindow();
 
-        Scene registerScene = new Scene(root, 650, 400);
+        Scene restaurantScene = new Scene(root, 650, 400);
 
         currentStage.setTitle("OFOS Restaurant");
 
-        currentStage.setScene(registerScene);
+        currentStage.setScene(restaurantScene);
 
         currentStage.show();
     }
@@ -57,5 +64,58 @@ public class ClientController {
 
     public void bigMacToCart(ActionEvent event) {
         System.out.println("Big Mac added to cart");
+    }
+
+    public void goAdmin(MouseEvent mouseEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/adminMainUI.fxml"));
+        Parent root = loader.load();
+
+        Stage currentStage = (Stage) adminTest.getScene().getWindow();
+
+        Scene adminScene = new Scene(root, 650, 400);
+
+        currentStage.setTitle("OFOS Admin");
+
+        currentStage.setScene(adminScene);
+
+        currentStage.show();
+    }
+
+    public void goToSettings(MouseEvent mouseEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/userSettingsUI.fxml"));
+        Parent root = loader.load();
+
+        Stage currentStage = (Stage) dropDownMenu.getScene().getWindow();
+
+        Scene settingsScene = new Scene(root, 650, 400);
+
+        currentStage.setTitle("OFOS Settings");
+
+        currentStage.setScene(settingsScene);
+
+        currentStage.show();
+    }
+
+    public void backToMenu(MouseEvent mouseEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/mainUI.fxml"));
+        Parent root = loader.load();
+
+        Stage currentStage = (Stage) returnToMenu.getScene().getWindow();
+
+        Scene mainScene = new Scene(root, 650, 400);
+
+        currentStage.setTitle("OFOS Restaurant");
+
+        currentStage.setScene(mainScene);
+
+        currentStage.show();
+    }
+
+    public void applySettings(ActionEvent event) {
+        System.out.println("Settings applied");
+    }
+
+    public void changePassword(ActionEvent event) {
+        System.out.println("Changing password hasn't been implemented yet");
     }
 }
