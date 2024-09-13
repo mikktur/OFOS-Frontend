@@ -51,13 +51,13 @@
                      </font>
                   </Label>
                   <TextField fx:id="username" layoutX="138.0" layoutY="28.0" promptText="Username" />
-                   <Label fx:id="usernameErrorLabel" layoutX="142.0" layoutY="160.0" textFill="RED" visible="false"/>
+                   <Label fx:id="usernameErrorLabel" layoutX="50" layoutY="55" textFill="RED" visible="false"/>
                    <PasswordField fx:id="password" layoutX="138.0" layoutY="77.0" promptText="Password" />
-                   <Label fx:id="passwordErrorLabel" layoutX="144.0" layoutY="220.0" textFill="RED" visible="false"/>
+                   <Label fx:id="passwordErrorLabel" layoutX="50" layoutY="105.0" textFill="RED" visible="false"/>
                    <Button fx:id="signUp" layoutX="129.0" layoutY="132.0" mnemonicParsing="false" onAction="#registerUser" text="Sign up" />
                </children>
             </Pane>
          </children>
       </AnchorPane>
-   </center>
+   </left>
 </BorderPane>

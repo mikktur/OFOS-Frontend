@@ -59,7 +59,8 @@ public class LoginController {
     private void handleLoginResponse(Response response) {
         try {
             if (response.isSuccessful()) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/mainUI.fxml"));                Parent root = loader.load();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/mainUI.fxml"));
+                Parent root = loader.load();
                 Stage currentStage = (Stage) signUpButton.getScene().getWindow();
                 Scene menuScene = new Scene(root, 650, 400);
                 currentStage.setTitle("OFOS Menu");
@@ -102,7 +103,7 @@ public class LoginController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/loginUI.fxml"));
         Parent root = loader.load();
 
-        Stage currentStage = (Stage) goBackButton.getScene().getWindow();
+        Stage currentStage = (Stage) signUpButton.getScene().getWindow();
 
         Scene registerScene = new Scene(root, 650, 400);
 
@@ -174,5 +175,13 @@ public class LoginController {
     }
     private void showError(String message) {
         System.out.println(message);
+    }
+
+    public void openMainMenu(){
+
+    }
+
+    public void openCart(){
+
     }
 }
