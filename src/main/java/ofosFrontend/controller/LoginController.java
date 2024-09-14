@@ -12,11 +12,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import ofosFrontend.model.User;
-import ofosFrontend.util.NetworkUtils;
+import ofosFrontend.model.Restaurant;
+import ofosFrontend.model.RestaurantList;
+import ofosFrontend.service.RestaurantService;
+import ofosFrontend.service.UserService;
 import okhttp3.Response;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 public class LoginController {
@@ -33,9 +36,8 @@ public class LoginController {
     private TextField username;
     @FXML
     private PasswordField password;
-
-    private final NetworkUtils networkUtils = new NetworkUtils();
-
+    private final UserService userService = new UserService();
+    private final RestaurantService restaurantService = new RestaurantService();
     private final FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/mainUI.fxml"));
 
 
@@ -45,7 +47,7 @@ public class LoginController {
     public void userLogin(ActionEvent event) {
         new Thread(() -> {
             try {
-                Response response = networkUtils.login(username.getText(), password.getText());
+                Response response = userService.login(username.getText(), password.getText());
                 Platform.runLater(() -> handleLoginResponse(response));
             } catch (IOException e) {
                 Platform.runLater(() -> {
@@ -58,6 +60,11 @@ public class LoginController {
     }
     private void handleLoginResponse(Response response) {
         try {
+            ObjectMapper mapper = new ObjectMapper();
+            String responseBody = restaurantService.getAllRestaurants().body().string();
+            RestaurantList restaurantList = mapper.readValue(responseBody, RestaurantList.class);
+            List<Restaurant> restaurants = restaurantList.getRestaurantList();
+            System.out.println("Restaurants: " + restaurants);
             if (response.isSuccessful()) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/mainUI.fxml"));
                 Parent root = loader.load();
@@ -118,7 +125,7 @@ public class LoginController {
     public void registerUser(ActionEvent event) {
         new Thread(() -> {
             try {
-                Response response = networkUtils.register(username.getText(), password.getText());
+                Response response = userService.register(username.getText(), password.getText());
                 Platform.runLater(() -> handleRegisterResponse(response));
             } catch (IOException e) {
                 Platform.runLater(() -> {
