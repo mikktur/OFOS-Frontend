@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -23,7 +24,14 @@ import java.util.Objects;
 
 
 public class ClientController {
-
+    @FXML
+    private HBox navBar;
+    @FXML
+    private HBox leftNav;
+    @FXML
+    private HBox middleNav;
+    @FXML
+    private HBox rightNav;
     @FXML
     private ImageView mcButton;
     @FXML
@@ -57,7 +65,6 @@ public class ClientController {
 
         currentStage.show();
     }
-
     public void initMenu() {
         RestaurantList restaurantList = new RestaurantList();
         try {

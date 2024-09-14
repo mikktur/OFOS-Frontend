@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
@@ -14,9 +15,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="712.0" prefWidth="963.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.ClientController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="712.0" prefWidth="1061.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.ClientController">
    <center>
-      <VBox alignment="TOP_CENTER" maxWidth="1000.0" BorderPane.alignment="CENTER">
+      <VBox alignment="TOP_CENTER" maxWidth="1300.0" BorderPane.alignment="CENTER">
          <children>
             <HBox alignment="CENTER" prefHeight="29.0" prefWidth="653.0">
                <children>
@@ -95,50 +96,65 @@
       </VBox>
    </center>
    <top>
-      <HBox alignment="CENTER" prefHeight="44.0" prefWidth="650.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" BorderPane.alignment="CENTER">
+      <HBox alignment="CENTER" prefHeight="44.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" styleClass="navBar" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fx:id="dropDownMenu" fitHeight="49.0" fitWidth="117.0" onMouseClicked="#goToSettings" onMousePressed="#openMainMenu" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/burger-bar.png" />
-               </image>
-               <HBox.margin>
-                  <Insets left="20.0" />
-               </HBox.margin>
-            </ImageView>
-            <Text fx:id="adminTest" onMouseClicked="#goAdmin" strokeType="OUTSIDE" strokeWidth="0.0" text="OFOS" textAlignment="CENTER" wrappingWidth="115.63671875">
-               <font>
-                  <Font name="System Bold" size="36.0" />
-               </font>
-               <HBox.margin>
-                  <Insets left="10.0" right="10.0" />
-               </HBox.margin>
-            </Text>
-            <TextField prefHeight="25.0" prefWidth="112.0" promptText="hae" style="-fx-background-color: #ffffff;">
-               <HBox.margin>
-                  <Insets left="60.0" />
-               </HBox.margin>
-            </TextField>
-            <ImageView fitHeight="23.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/search.png" />
-               </image>
-               <HBox.margin>
-                  <Insets left="5.0" />
-               </HBox.margin>
-            </ImageView>
-            <Label text="Käyttäjänimi">
-               <HBox.margin>
-                  <Insets left="80.0" />
-               </HBox.margin>
-            </Label>
-            <ImageView fx:id="openCart" fitHeight="40.0" fitWidth="111.0" onMouseClicked="#openCart" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/cart.png" />
-               </image>
-               <HBox.margin>
-                  <Insets left="30.0" />
-               </HBox.margin>
-            </ImageView>
+            <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="412.0" styleClass="leftNav" HBox.hgrow="ALWAYS">
+               <children>
+                  <ImageView fx:id="dropDownMenu" fitHeight="49.0" fitWidth="117.0" onMouseClicked="#goToSettings" onMousePressed="#openMainMenu" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/burger-bar.png" />
+                     </image>
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                     <viewport>
+                        <Rectangle2D minY="200.0" />
+                     </viewport>
+                  </ImageView>
+                  <Text fx:id="adminTest" onMouseClicked="#goAdmin" strokeType="OUTSIDE" strokeWidth="0.0" text="OFOS" textAlignment="CENTER" wrappingWidth="138.63671875">
+                     <font>
+                        <Font name="System Bold" size="36.0" />
+                     </font>
+                  </Text>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" styleClass="middleNav" HBox.hgrow="ALWAYS">
+               <children>
+                  <TextField alignment="CENTER" maxWidth="800.0" prefHeight="35.0" prefWidth="583.0" promptText="hae" style="-fx-background-color: #ffffff;">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </TextField>
+                  <ImageView fitHeight="23.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/search.png" />
+                     </image>
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
+                  </ImageView>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="449.0" styleClass="rightNav" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label text="Käyttäjänimi">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets right="50.0" />
+                     </HBox.margin>
+                  </Label>
+                  <ImageView fx:id="openCart" fitHeight="40.0" fitWidth="111.0" onMouseClicked="#openCart" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/cart.png" />
+                     </image>
+                     <HBox.margin>
+                        <Insets right="20.0" />
+                     </HBox.margin>
+                  </ImageView>
+               </children>
+            </HBox>
          </children>
       </HBox>
    </top>
