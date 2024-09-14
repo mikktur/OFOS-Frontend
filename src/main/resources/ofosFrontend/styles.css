@@ -1,0 +1,16 @@
+.bottom-border {
+    -fx-border-width: 0 0 2px 0; /* Top, Right, Bottom, Left */
+    -fx-border-color: black; /* Color of the border */
+}
+
+#menuBox {
+    -fx-border-width: 2px; /* Top, Right, Bottom, Left */
+    -fx-border-color: #cacaca; /* Color of the border */
+    -fx-background-color: #ffffff;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);
+
+}
+#menuBox:hover{
+    -fx-background-color: #f0f0f0;
+}
+

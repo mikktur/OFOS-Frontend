@@ -6,17 +6,28 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import ofosFrontend.model.Restaurant;
+import ofosFrontend.model.RestaurantList;
+import ofosFrontend.service.RestaurantService;
+
 import java.io.IOException;
+import java.util.Objects;
 
 
 public class ClientController {
 
     @FXML
     private ImageView mcButton;
+    @FXML
+    private FlowPane restaurantFlowPane;
     @FXML
     private Button mVButton;
     @FXML
@@ -29,6 +40,7 @@ public class ClientController {
     private ImageView dropDownMenu;
     @FXML
     private Text returnToMenu;
+    private final RestaurantService restaurantService = new RestaurantService();
 
     @FXML
     private void goToRestaurant() throws IOException {
@@ -45,6 +57,35 @@ public class ClientController {
 
         currentStage.show();
     }
+
+    public void initMenu() {
+        RestaurantList restaurantList = new RestaurantList();
+        try {
+            restaurantList.setRestaurants(restaurantService.getAllRestaurants());
+            for (Restaurant restaurant : restaurantList.getRestaurantList()) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/restaurant_card.fxml"));
+                System.out.println(loader);
+                VBox card = loader.load();
+
+                // Access UI elements directly if no controller is used
+                ImageView imageView = (ImageView) card.lookup("#restaurantImage");
+                Label descriptionLabel = (Label) card.lookup("#restaurantDesc");
+
+                // Set data
+
+                imageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/hamburga.jpg"))));//+ restaurant.getPicture()));
+
+
+                descriptionLabel.setText(restaurant.getRestaurantName() + "\n" + restaurant.getRestaurantPhone());
+
+                // Add card to FlowPane
+                restaurantFlowPane.getChildren().add(card);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void openMainMenu(MouseEvent mouseEvent) {
         System.out.println("Main Menu button clicked");

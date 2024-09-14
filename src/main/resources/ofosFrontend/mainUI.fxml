@@ -7,15 +7,16 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="712.0" prefWidth="653.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.ClientController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="712.0" prefWidth="963.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.ClientController">
    <center>
-      <VBox BorderPane.alignment="CENTER">
+      <VBox alignment="TOP_CENTER" maxWidth="1000.0" BorderPane.alignment="CENTER">
          <children>
             <HBox alignment="CENTER" prefHeight="29.0" prefWidth="653.0">
                <children>
@@ -28,7 +29,7 @@
             </HBox>
             <HBox prefHeight="189.0">
                <children>
-                  <TilePane alignment="CENTER" hgap="20.0" orientation="VERTICAL" prefColumns="3" prefHeight="100.0" prefRows="1" prefWidth="500.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" HBox.hgrow="ALWAYS">
+                  <TilePane fx:id="categoryTile" alignment="CENTER" hgap="20.0" prefColumns="3" prefHeight="100.0" prefRows="1" prefWidth="500.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" HBox.hgrow="ALWAYS">
                      <children>
                         <AnchorPane prefHeight="166.0" prefWidth="159.0" style="-fx-background-color: #ffffff; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
                            <children>
@@ -79,122 +80,18 @@
                   </TilePane>
                </children>
             </HBox>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="500.0" spacing="40.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" VBox.vgrow="ALWAYS">
-               <children>
-                  <VBox prefHeight="337.0" prefWidth="140.0" spacing="20.0">
-                     <children>
-                        <AnchorPane prefHeight="155.0" prefWidth="159.0" style="-fx-background-color: #ffffff; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
-                           <children>
-                              <ImageView fx:id="mcButton" fitHeight="119.0" fitWidth="119.0" layoutX="21.0" layoutY="14.0" onMouseClicked="#goToRestaurant" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-                                 <image>
-                                    <Image url="@../images/burger.png" />
-                                 </image>
-                              </ImageView>
-                              <Text layoutX="30.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="McDonald's" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="120.0">
-                                 <font>
-                                    <Font name="System Bold" size="18.0" />
-                                 </font>
-                              </Text>
-                           </children>
-                        </AnchorPane>
-                        <AnchorPane layoutX="10.0" layoutY="50.0" prefHeight="155.0" prefWidth="159.0" style="-fx-background-color: #ffffff; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
-                           <children>
-                              <ImageView fitHeight="119.0" fitWidth="119.0" layoutX="21.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
-                                 <image>
-                                    <Image url="@../images/burger.png" />
-                                 </image>
-                              </ImageView>
-                              <Text layoutX="30.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hesburger" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="120.0">
-                                 <font>
-                                    <Font name="System Bold" size="18.0" />
-                                 </font>
-                              </Text>
-                           </children>
-                        </AnchorPane>
-                     </children>
-                     <padding>
-                        <Insets bottom="40.0" top="40.0" />
-                     </padding>
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                  </VBox>
-                  <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0">
-                     <padding>
-                        <Insets bottom="40.0" top="40.0" />
-                     </padding>
-                     <children>
-                        <AnchorPane prefHeight="155.0" prefWidth="159.0" style="-fx-background-color: #ffffff; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
-                           <children>
-                              <ImageView fitHeight="119.0" fitWidth="119.0" layoutX="21.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-                                 <image>
-                                    <Image url="@../images/pizza.png" />
-                                 </image>
-                              </ImageView>
-                              <Text layoutX="30.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PizzaHut" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="125.0">
-                                 <font>
-                                    <Font name="System Bold" size="18.0" />
-                                 </font>
-                              </Text>
-                           </children>
-                        </AnchorPane>
-                        <AnchorPane layoutX="10.0" layoutY="50.0" prefHeight="155.0" prefWidth="159.0" style="-fx-background-color: #ffffff; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
-                           <children>
-                              <ImageView fitHeight="119.0" fitWidth="119.0" layoutX="21.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-                                 <image>
-                                    <Image url="@../images/pizza.png" />
-                                 </image>
-                              </ImageView>
-                              <Text layoutX="30.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="KotiPizza" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="125.0">
-                                 <font>
-                                    <Font name="System Bold" size="18.0" />
-                                 </font>
-                              </Text>
-                           </children>
-                        </AnchorPane>
-                     </children>
-                  </VBox>
-                  <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0">
-                     <padding>
-                        <Insets bottom="40.0" top="40.0" />
-                     </padding>
-                     <children>
-                        <AnchorPane prefHeight="155.0" prefWidth="159.0" style="-fx-background-color: #ffffff; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
-                           <children>
-                              <ImageView fitHeight="119.0" fitWidth="119.0" layoutX="21.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-                                 <image>
-                                    <Image url="@../images/noodles.png" />
-                                 </image>
-                              </ImageView>
-                              <Text layoutX="30.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Fat ramen" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="125.0">
-                                 <font>
-                                    <Font name="System Bold" size="18.0" />
-                                 </font>
-                              </Text>
-                           </children>
-                        </AnchorPane>
-                        <AnchorPane layoutX="10.0" layoutY="50.0" prefHeight="155.0" prefWidth="159.0" style="-fx-background-color: #ffffff; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
-                           <children>
-                              <ImageView fitHeight="119.0" fitWidth="119.0" layoutX="21.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-                                 <image>
-                                    <Image url="@../images/noodles.png" />
-                                 </image>
-                              </ImageView>
-                              <Text layoutX="30.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Konnichiwa" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="125.0">
-                                 <font>
-                                    <Font name="System Bold" size="18.0" />
-                                 </font>
-                              </Text>
-                           </children>
-                        </AnchorPane>
-                     </children>
-                  </VBox>
-               </children>
+            <FlowPane fx:id="restaurantFlowPane" hgap="20.0" style="-fx-background-color: #c4e6fb;" vgap="20.0" VBox.vgrow="ALWAYS">
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </padding>
                <VBox.margin>
-                  <Insets bottom="20.0" left="40.0" right="40.0" top="20.0" />
+                  <Insets bottom="20.0" top="20.0" />
                </VBox.margin>
-            </HBox>
+            </FlowPane>
          </children>
+         <BorderPane.margin>
+            <Insets left="100.0" right="100.0" />
+         </BorderPane.margin>
       </VBox>
    </center>
    <top>

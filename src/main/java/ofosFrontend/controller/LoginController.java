@@ -61,10 +61,7 @@ public class LoginController {
     private void handleLoginResponse(Response response) {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            String responseBody = restaurantService.getAllRestaurants().body().string();
-            RestaurantList restaurantList = mapper.readValue(responseBody, RestaurantList.class);
-            List<Restaurant> restaurants = restaurantList.getRestaurantList();
-            System.out.println("Restaurants: " + restaurants);
+
             if (response.isSuccessful()) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/mainUI.fxml"));
                 Parent root = loader.load();
@@ -73,6 +70,8 @@ public class LoginController {
                 currentStage.setTitle("OFOS Menu");
                 currentStage.setScene(menuScene);
                 currentStage.show();
+                ClientController controller = loader.getController();
+                controller.initMenu();
                 System.out.println("Login successful.");
             } else if (response.code() == 401) { // Unauthorized error
                 ObjectMapper objectMapper = new ObjectMapper();

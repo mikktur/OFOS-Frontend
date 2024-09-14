@@ -23,7 +23,9 @@ public class RestaurantList {
     public List<Restaurant> getRestaurantList() {
         return restaurantList;
     }
-
+    public void setRestaurants(List<Restaurant> restaurantList) {
+        this.restaurantList = restaurantList;
+    }
     public void setRestaurantList(List<Restaurant> restaurantList) {
         this.restaurantList = restaurantList;
     }
@@ -48,11 +50,12 @@ public class RestaurantList {
         return restaurantList.isEmpty();
     }
 
+    public void getNames() {
+        restaurantList.forEach(restaurant1 -> System.out.println(restaurant1.getRestaurantName()));
+    }
     public List<Restaurant> filterByCategory(String category) {
         return restaurantList.stream()
                 .filter(restaurant -> restaurant.getCategory().equalsIgnoreCase(category))
                 .collect(Collectors.toList());
-
-
     }
 }
