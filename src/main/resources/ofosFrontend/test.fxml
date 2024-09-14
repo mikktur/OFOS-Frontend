@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="712.0" prefWidth="963.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.ClientController">
+   <center>
+      <VBox alignment="TOP_CENTER" maxWidth="1000.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER" prefHeight="29.0" prefWidth="653.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Mitä tänään saisi olla?" textAlignment="CENTER" wrappingWidth="652.9375">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                  </Text>
+               </children>
+            </HBox>
+            <HBox prefHeight="189.0">
+               <children>
+                  <TilePane fx:id="categoryTile" alignment="CENTER" hgap="20.0" prefColumns="3" prefHeight="100.0" prefRows="1" prefWidth="500.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" HBox.hgrow="ALWAYS">
+                     <children>
+                        <AnchorPane prefHeight="166.0" prefWidth="159.0" style="-fx-background-color: #ffffff; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
+                           <children>
+                              <ImageView fitHeight="119.0" fitWidth="119.0" layoutX="21.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/burger.png" />
+                                 </image>
+                              </ImageView>
+                              <Text layoutX="21.0" layoutY="146.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hampurilaiset">
+                                 <font>
+                                    <Font name="System Bold" size="18.0" />
+                                 </font>
+                              </Text>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane prefHeight="166.0" style="-fx-background-color: #ffffff; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
+                           <children>
+                              <ImageView fitHeight="114.0" fitWidth="115.0" layoutX="23.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/pizza.png" />
+                                 </image>
+                              </ImageView>
+                              <Text layoutX="55.0" layoutY="146.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pizzat">
+                                 <font>
+                                    <Font name="System Bold" size="18.0" />
+                                 </font>
+                              </Text>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane prefHeight="166.0" prefWidth="159.0" style="-fx-background-color: #ffffff; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
+                           <children>
+                              <ImageView fitHeight="118.0" fitWidth="119.0" layoutX="21.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/noodles.png" />
+                                 </image>
+                              </ImageView>
+                              <Text layoutX="43.0" layoutY="146.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nuudelit">
+                                 <font>
+                                    <Font name="System Bold" size="18.0" />
+                                 </font>
+                              </Text>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                     <HBox.margin>
+                        <Insets left="40.0" right="40.0" />
+                     </HBox.margin>
+                  </TilePane>
+               </children>
+            </HBox>
+            <FlowPane fx:id="restaurantFlowPane" hgap="20.0" style="-fx-background-color: #c4e6fb;" vgap="20.0" VBox.vgrow="ALWAYS">
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets bottom="20.0" top="20.0" />
+               </VBox.margin>
+            </FlowPane>
+         </children>
+         <BorderPane.margin>
+            <Insets left="100.0" right="100.0" />
+         </BorderPane.margin>
+      </VBox>
+   </center>
+   <top>
+      <HBox alignment="CENTER" prefHeight="44.0" prefWidth="650.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fx:id="dropDownMenu" fitHeight="49.0" fitWidth="117.0" onMouseClicked="#goToSettings" onMousePressed="#openMainMenu" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/burger-bar.png" />
+               </image>
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin>
+            </ImageView>
+            <Text fx:id="adminTest" onMouseClicked="#goAdmin" strokeType="OUTSIDE" strokeWidth="0.0" text="OFOS" textAlignment="CENTER" wrappingWidth="115.63671875">
+               <font>
+                  <Font name="System Bold" size="36.0" />
+               </font>
+               <HBox.margin>
+                  <Insets left="10.0" right="10.0" />
+               </HBox.margin>
+            </Text>
+            <TextField prefHeight="25.0" prefWidth="112.0" promptText="hae" style="-fx-background-color: #ffffff;">
+               <HBox.margin>
+                  <Insets left="60.0" />
+               </HBox.margin>
+            </TextField>
+            <ImageView fitHeight="23.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/search.png" />
+               </image>
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </ImageView>
+            <Label text="Käyttäjänimi">
+               <HBox.margin>
+                  <Insets left="80.0" />
+               </HBox.margin>
+            </Label>
+            <ImageView fx:id="openCart" fitHeight="40.0" fitWidth="111.0" onMouseClicked="#openCart" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/cart.png" />
+               </image>
+               <HBox.margin>
+                  <Insets left="30.0" />
+               </HBox.margin>
+            </ImageView>
+         </children>
+      </HBox>
+   </top>
+</BorderPane>
