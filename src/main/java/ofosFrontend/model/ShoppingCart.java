@@ -13,7 +13,7 @@ public class ShoppingCart {
 
     public void addItem(Product product, int quantity) {
         for (CartItem item : items) {
-            if (item.getProduct().getProductId().equals(product.getProductId())) {
+            if (item.getProduct().getProductID().equals(product.getProductID())) {
                 item.setQuantity(item.getQuantity() + quantity);
                 return;
             }
@@ -22,7 +22,7 @@ public class ShoppingCart {
     }
 
     public void removeItem(Product product) {
-        items.removeIf(item -> item.getProduct().getProductId().equals(product.getProductId()));
+        items.removeIf(item -> item.getProduct().getProductID().equals(product.getProductID()));
     }
 
     public List<CartItem> getItems() {

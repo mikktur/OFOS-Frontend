@@ -12,14 +12,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import ofosFrontend.model.Restaurant;
-import ofosFrontend.model.RestaurantList;
+import ofosFrontend.controller.User.MMenuController;
 import ofosFrontend.service.RestaurantService;
 import ofosFrontend.service.UserService;
 import okhttp3.Response;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 public class LoginController {
@@ -70,7 +68,7 @@ public class LoginController {
                 currentStage.setTitle("OFOS Menu");
                 currentStage.setScene(menuScene);
                 currentStage.show();
-                ClientController controller = loader.getController();
+                MMenuController controller = loader.getController();
                 controller.initMenu();
                 System.out.println("Login successful.");
             } else if (response.code() == 401) { // Unauthorized error

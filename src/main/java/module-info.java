@@ -9,4 +9,6 @@ module ofosfrontend {
     opens ofosFrontend.controller to javafx.fxml; // Existing configuration
     exports ofosFrontend;
     exports ofosFrontend.controller;
+    exports ofosFrontend.controller.User;
+    opens ofosFrontend.controller.User to javafx.fxml;
 }

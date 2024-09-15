@@ -14,5 +14,5 @@ public class CartItem {
     public Product getProduct() { return product; }
     public int getQuantity() { return quantity; }
     public void setQuantity(int quantity) { this.quantity = quantity; }
-    public double getTotalPrice() { return product.getPrice() * quantity; }
+    public double getTotalPrice() { return product.getProductPrice() * quantity; }
 }

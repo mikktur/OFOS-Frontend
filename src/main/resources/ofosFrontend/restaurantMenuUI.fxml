@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="562.0" prefWidth="653.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.ClientController">
+<BorderPane id="itemMenu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="631.0" prefWidth="683.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.User.RMenuController">
    <top>
-      <HBox alignment="CENTER" prefHeight="44.0" prefWidth="650.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" BorderPane.alignment="CENTER">
+      <HBox alignment="CENTER" prefHeight="49.0" prefWidth="690.0" style="-fx-background-color: #C4E6FB99;" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fx:id="dropDownMenu" fitHeight="49.0" fitWidth="117.0" onMouseClicked="#goToSettings" onMousePressed="#openMainMenu" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="dropDownMenu" fitHeight="49.0" fitWidth="117.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/burger-bar.png" />
                </image>
@@ -34,7 +32,7 @@
                   <Insets left="10.0" right="10.0" />
                </HBox.margin>
             </Text>
-            <TextField prefHeight="25.0" prefWidth="112.0" promptText="hae" style="-fx-background-color: #ffffff;">
+            <TextField prefHeight="25.0" prefWidth="169.0" promptText="hae" style="-fx-background-color: #ffffff;">
                <HBox.margin>
                   <Insets left="60.0" />
                </HBox.margin>
@@ -52,7 +50,7 @@
                   <Insets left="80.0" />
                </HBox.margin>
             </Label>
-            <ImageView fx:id="openCart" fitHeight="40.0" fitWidth="111.0" onMouseClicked="#openCart" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="openCart" fitHeight="40.0" fitWidth="111.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/cart.png" />
                </image>
@@ -64,157 +62,97 @@
       </HBox>
    </top>
    <center>
-      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <VBox alignment="TOP_CENTER" maxWidth="1300.0" prefHeight="627.0" prefWidth="683.0">
          <children>
-            <VBox alignment="CENTER" prefHeight="433.0" prefWidth="655.0" HBox.hgrow="ALWAYS">
+            <HBox id="menuInfo" alignment="CENTER" prefHeight="103.0" prefWidth="683.0" spacing="20.0" stylesheets="@styles.css">
                <children>
-                  <HBox alignment="CENTER" prefHeight="0.0" prefWidth="653.0" spacing="20.0" VBox.vgrow="ALWAYS">
-                     <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="McDonald's" HBox.hgrow="ALWAYS">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <font>
-                              <Font name="System Bold" size="24.0" />
-                           </font>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Osoite: Mannerheimintie 105" wrappingWidth="153.1640625">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Aukioloaika: 9-22">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Puhelinnumero: 050 566 7777">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                        </Text>
-                     </children>
-                  </HBox>
-                  <HBox alignment="CENTER" prefHeight="10.0" prefWidth="493.0" spacing="20.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" VBox.vgrow="ALWAYS">
-                     <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ateriat" textAlignment="CENTER">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <font>
-                              <Font name="System Bold" size="18.0" />
-                           </font>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Burgerit" textAlignment="CENTER">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <font>
-                              <Font name="System Bold" size="18.0" />
-                           </font>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Sormisyötävät">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <font>
-                              <Font name="System Bold" size="18.0" />
-                           </font>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Juomat" textAlignment="CENTER">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <font>
-                              <Font name="System Bold" size="18.0" />
-                           </font>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Dipit" textAlignment="CENTER" HBox.hgrow="ALWAYS">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <font>
-                              <Font name="System Bold" size="18.0" />
-                           </font>
-                        </Text>
-                     </children>
-                     <VBox.margin>
-                        <Insets left="80.0" right="80.0" />
-                     </VBox.margin>
-                  </HBox>
-                  <TilePane alignment="CENTER" hgap="10.0" prefColumns="3" prefHeight="284.0" prefRows="1" prefWidth="633.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" VBox.vgrow="ALWAYS">
-                     <children>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ffffff; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
-                           <children>
-                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="10.0">
-                                 <image>
-                                    <Image url="@../images/burger.png" />
-                                 </image>
-                              </ImageView>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Bigmac" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="70.0" AnchorPane.topAnchor="150.0">
-                                 <font>
-                                    <Font size="18.0" />
-                                 </font>
-                              </Text>
-                              <Text layoutX="26.0" layoutY="197.0" strokeType="OUTSIDE" strokeWidth="0.0" text="3,99 €" AnchorPane.topAnchor="180.0">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </Text>
-                              <Button fx:id="bMButton" layoutX="88.0" layoutY="180.0" mnemonicParsing="false" onAction="#bigMacToCart" text="Lisää koriin" AnchorPane.bottomAnchor="5.0" />
-                           </children>
-                           <TilePane.margin>
-                              <Insets />
-                           </TilePane.margin>
-                        </AnchorPane>
-                        <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="205.0" prefWidth="169.0" style="-fx-background-color: #ffffff; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
-                           <children>
-                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="10.0">
-                                 <image>
-                                    <Image url="@../images/burger.png" />
-                                 </image>
-                              </ImageView>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="McChicken" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="150.0">
-                                 <font>
-                                    <Font size="18.0" />
-                                 </font>
-                              </Text>
-                              <Text layoutX="26.0" layoutY="197.0" strokeType="OUTSIDE" strokeWidth="0.0" text="3,99 €" AnchorPane.topAnchor="180.0">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </Text>
-                              <Button fx:id="mCButton" layoutX="88.0" layoutY="180.0" mnemonicParsing="false" onAction="#mcChickenTOCart" text="Lisää koriin" AnchorPane.bottomAnchor="5.0" />
-                           </children>
-                        </AnchorPane>
-                        <AnchorPane layoutX="210.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ffffff; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
-                           <children>
-                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="10.0">
-                                 <image>
-                                    <Image url="@../images/burger.png" />
-                                 </image>
-                              </ImageView>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="McVegan" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="60.0" AnchorPane.topAnchor="150.0">
-                                 <font>
-                                    <Font size="18.0" />
-                                 </font>
-                              </Text>
-                              <Text layoutX="26.0" layoutY="197.0" strokeType="OUTSIDE" strokeWidth="0.0" text="3,99 €" AnchorPane.topAnchor="180.0">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </Text>
-                              <Button fx:id="mVButton" layoutX="88.0" layoutY="180.0" mnemonicParsing="false" onAction="#mcVeganToCart" text="Lisää koriin" AnchorPane.bottomAnchor="5.0" />
-                           </children>
-                        </AnchorPane>
-                     </children>
-                     <VBox.margin>
-                        <Insets bottom="20.0" left="10.0" right="10.0" top="20.0" />
-                     </VBox.margin>
-                  </TilePane>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="McDonald's" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                  </Text>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Osoite: Mannerheimintie 105" wrappingWidth="153.1640625">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Text>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Aukioloaika: 9-22">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Text>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Puhelinnumero: 050 566 7777">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Text>
                </children>
-            </VBox>
+               <VBox.margin>
+                  <Insets bottom="20.0" top="2.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox id="itemCategory" alignment="CENTER" maxWidth="553.0" prefHeight="35.0" prefWidth="527.0" spacing="20.0" style="-fx-background-color: #C4E6FB99;" stylesheets="@styles.css">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ateriat" textAlignment="CENTER">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Text>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Burgerit" textAlignment="CENTER">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Text>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Sormisyötävät">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Text>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Juomat" textAlignment="CENTER">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Text>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Dipit" textAlignment="CENTER" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Text>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="20.0" />
+               </VBox.margin>
+               <opaqueInsets>
+                  <Insets bottom="20.0" />
+               </opaqueInsets>
+            </HBox>
+            <FlowPane fx:id="menuContainer" hgap="20.0" prefHeight="317.0" prefWidth="613.0" rowValignment="TOP" style="-fx-background-color: #C4E6FB99;" styleClass="itemContainer" vgap="20.0">
+               <VBox.margin>
+                  <Insets bottom="50.0" left="20.0" right="20.0" />
+               </VBox.margin>
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </padding>
+            </FlowPane>
          </children>
-      </HBox>
+      </VBox>
    </center>
 </BorderPane>

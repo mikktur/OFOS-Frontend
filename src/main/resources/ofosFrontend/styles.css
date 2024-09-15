@@ -14,3 +14,24 @@
     -fx-background-color: #f0f0f0;
 }
 
+
+#itemCard {
+    -fx-border-radius: 15px;
+    -fx-border-width: 1px;
+    -fx-border-color: #cacaca;
+    -fx-background-color: #ffffff;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);
+    -fx-background-radius: 15px;
+}
+
+#itemImage {
+    -fx-background-radius: 15px;
+    -fx-clip: true;
+}
+
+#itemInfo {
+    -fx-border-width: 1px 0 0 0;
+    -fx-border-color: #3d3d3d;
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 15px;
+}

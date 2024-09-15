@@ -1,4 +1,4 @@
-package ofosFrontend.controller;
+package ofosFrontend.controller.User;
 
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
@@ -15,6 +15,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import ofosFrontend.AppManager;
 import ofosFrontend.model.Restaurant;
 import ofosFrontend.model.RestaurantList;
 import ofosFrontend.service.RestaurantService;
@@ -23,7 +24,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 
-public class ClientController {
+public class MMenuController {
     @FXML
     private HBox navBar;
     @FXML
@@ -51,20 +52,21 @@ public class ClientController {
     private final RestaurantService restaurantService = new RestaurantService();
 
     @FXML
-    private void goToRestaurant() throws IOException {
+    private void goToRestaurant(Restaurant restaurant) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/restaurantMenuUI.fxml"));
+        loader.setControllerFactory(param -> new RMenuController(restaurant));
+
         Parent root = loader.load();
 
-        Stage currentStage = (Stage) mcButton.getScene().getWindow();
+        Scene restaurantScene = new Scene(root);
 
-        Scene restaurantScene = new Scene(root, 650, 400);
-
+        Stage currentStage = AppManager.getInstance().getPrimaryStage();
         currentStage.setTitle("OFOS Restaurant");
-
         currentStage.setScene(restaurantScene);
 
         currentStage.show();
     }
+
     public void initMenu() {
         RestaurantList restaurantList = new RestaurantList();
         try {
@@ -73,21 +75,20 @@ public class ClientController {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/restaurant_card.fxml"));
                 System.out.println(loader);
                 VBox card = loader.load();
-
-                // Access UI elements directly if no controller is used
                 ImageView imageView = (ImageView) card.lookup("#restaurantImage");
                 Label descriptionLabel = (Label) card.lookup("#restaurantDesc");
-
-                // Set data
-
                 imageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/hamburga.jpg"))));//+ restaurant.getPicture()));
-
-
                 descriptionLabel.setText(restaurant.getRestaurantName() + "\n" + restaurant.getRestaurantPhone());
-
-                // Add card to FlowPane
+                card.setOnMouseClicked(event -> {
+                    try {
+                        goToRestaurant(restaurant);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
                 restaurantFlowPane.getChildren().add(card);
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -118,7 +119,7 @@ public class ClientController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/adminMainUI.fxml"));
         Parent root = loader.load();
 
-        Stage currentStage = (Stage) adminTest.getScene().getWindow();
+        Stage currentStage = AppManager.getInstance().getPrimaryStage();
 
         Scene adminScene = new Scene(root, 650, 400);
 
@@ -133,7 +134,7 @@ public class ClientController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/userSettingsUI.fxml"));
         Parent root = loader.load();
 
-        Stage currentStage = (Stage) dropDownMenu.getScene().getWindow();
+        Stage currentStage = (Stage) AppManager.getInstance().getPrimaryStage();
 
         Scene settingsScene = new Scene(root, 650, 400);
 
