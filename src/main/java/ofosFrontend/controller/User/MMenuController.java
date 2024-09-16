@@ -107,10 +107,10 @@ public class MMenuController {
                 restaurantFlowPane.getChildren().add(card);
 
                 mainScroll.widthProperty().addListener((obs, oldVal, newVal) -> {
-                    restaurantFlowPane.setPrefWrapLength(newVal.doubleValue());  // Dynamically adjust the wrap length
-                    restaurantFlowPane.requestLayout();  // Recalculate the layout for responsiveness
+                    restaurantFlowPane.setPrefWrapLength(newVal.doubleValue());
+                    restaurantFlowPane.requestLayout();
                 });
-                restaurantFlowPane.requestLayout();  // Update layout after adding a new item
+                restaurantFlowPane.requestLayout();
                 mainScroll.requestLayout();
                 System.out.println("Card added to FlowPane");
                 System.out.println("VBox height: " + contentBox.getHeight());
