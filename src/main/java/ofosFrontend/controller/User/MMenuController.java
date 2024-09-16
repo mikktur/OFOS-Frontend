@@ -7,9 +7,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -48,16 +50,28 @@ public class MMenuController {
     @FXML
     private ImageView dropDownMenu;
     @FXML
+    private VBox contentBox2;
+    @FXML
+    private ScrollPane mainScroll;
+    @FXML
+    private VBox contentBox;
+
+    @FXML
     private Text returnToMenu;
     private final RestaurantService restaurantService = new RestaurantService();
 
     @FXML
     private void goToRestaurant(Restaurant restaurant) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/restaurantMenuUI.fxml"));
-        loader.setControllerFactory(param -> new RMenuController(restaurant));
 
         Parent root = loader.load();
 
+
+        RMenuController controller = loader.getController();
+
+
+        controller.setRestaurant(restaurant);
+        controller.createCards();
         Scene restaurantScene = new Scene(root);
 
         Stage currentStage = AppManager.getInstance().getPrimaryStage();
@@ -73,12 +87,14 @@ public class MMenuController {
             restaurantList.setRestaurants(restaurantService.getAllRestaurants());
             for (Restaurant restaurant : restaurantList.getRestaurantList()) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/restaurant_card.fxml"));
-                System.out.println(loader);
                 VBox card = loader.load();
+
                 ImageView imageView = (ImageView) card.lookup("#restaurantImage");
                 Label descriptionLabel = (Label) card.lookup("#restaurantDesc");
-                imageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/hamburga.jpg"))));//+ restaurant.getPicture()));
+
+                imageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/hamburga.jpg"))));
                 descriptionLabel.setText(restaurant.getRestaurantName() + "\n" + restaurant.getRestaurantPhone());
+
                 card.setOnMouseClicked(event -> {
                     try {
                         goToRestaurant(restaurant);
@@ -86,8 +102,22 @@ public class MMenuController {
                         e.printStackTrace();
                     }
                 });
+
+                // Add card to FlowPane
                 restaurantFlowPane.getChildren().add(card);
+
+                mainScroll.widthProperty().addListener((obs, oldVal, newVal) -> {
+                    restaurantFlowPane.setPrefWrapLength(newVal.doubleValue());  // Dynamically adjust the wrap length
+                    restaurantFlowPane.requestLayout();  // Recalculate the layout for responsiveness
+                });
+                restaurantFlowPane.requestLayout();  // Update layout after adding a new item
+                mainScroll.requestLayout();
+                System.out.println("Card added to FlowPane");
+                System.out.println("VBox height: " + contentBox.getHeight());
+                System.out.println("FlowPane height: " + restaurantFlowPane.getHeight());
+                System.out.println("ScrollPane height: " + mainScroll.getHeight());
             }
+
 
         } catch (IOException e) {
             e.printStackTrace();

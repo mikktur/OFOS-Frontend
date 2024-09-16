@@ -27,9 +27,8 @@ public class RMenuController {
         this.restaurant = restaurant;
 
     }
-    @FXML
-    public void initialize() {
-        createCards();
+
+    public RMenuController() {
     }
 
 
@@ -42,9 +41,7 @@ public class RMenuController {
             for(Product product : products) {
                 FXMLLoader cardLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/menuItem.fxml"));
                 VBox card = cardLoader.load();
-
                 VBox cText = (VBox) card.lookup("#itemInfo");
-
                 ImageView imageView = (ImageView) card.lookup("#itemImage");
                 Label descriptionLabel = (Label) cText.lookup("#itemDesc");
                 Label priceLabel = (Label) cText.lookup("#itemPrice");

@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
@@ -12,57 +8,12 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane id="itemMenu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="631.0" prefWidth="683.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.User.RMenuController">
+<BorderPane id="itemMenu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.User.RMenuController">
    <top>
-      <HBox alignment="CENTER" prefHeight="49.0" prefWidth="690.0" style="-fx-background-color: #C4E6FB99;" BorderPane.alignment="CENTER">
-         <children>
-            <ImageView fx:id="dropDownMenu" fitHeight="49.0" fitWidth="117.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/burger-bar.png" />
-               </image>
-               <HBox.margin>
-                  <Insets left="20.0" />
-               </HBox.margin>
-            </ImageView>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="OFOS" textAlignment="CENTER" wrappingWidth="115.63671875">
-               <font>
-                  <Font name="System Bold" size="36.0" />
-               </font>
-               <HBox.margin>
-                  <Insets left="10.0" right="10.0" />
-               </HBox.margin>
-            </Text>
-            <TextField prefHeight="25.0" prefWidth="169.0" promptText="hae" style="-fx-background-color: #ffffff;">
-               <HBox.margin>
-                  <Insets left="60.0" />
-               </HBox.margin>
-            </TextField>
-            <ImageView fitHeight="23.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/search.png" />
-               </image>
-               <HBox.margin>
-                  <Insets left="5.0" />
-               </HBox.margin>
-            </ImageView>
-            <Label text="Käyttäjänimi">
-               <HBox.margin>
-                  <Insets left="80.0" />
-               </HBox.margin>
-            </Label>
-            <ImageView fx:id="openCart" fitHeight="40.0" fitWidth="111.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/cart.png" />
-               </image>
-               <HBox.margin>
-                  <Insets left="30.0" />
-               </HBox.margin>
-            </ImageView>
-         </children>
-      </HBox>
+      <fx:include source="navBar.fxml" />
    </top>
    <center>
-      <VBox alignment="TOP_CENTER" maxWidth="1300.0" prefHeight="627.0" prefWidth="683.0">
+      <VBox alignment="TOP_CENTER" maxWidth="1100.0" prefHeight="627.0" prefWidth="200.0">
          <children>
             <HBox id="menuInfo" alignment="CENTER" prefHeight="103.0" prefWidth="683.0" spacing="20.0" stylesheets="@styles.css">
                <children>
@@ -144,13 +95,13 @@
                   <Insets bottom="20.0" />
                </opaqueInsets>
             </HBox>
-            <FlowPane fx:id="menuContainer" hgap="20.0" prefHeight="317.0" prefWidth="613.0" rowValignment="TOP" style="-fx-background-color: #C4E6FB99;" styleClass="itemContainer" vgap="20.0">
-               <VBox.margin>
-                  <Insets bottom="50.0" left="20.0" right="20.0" />
-               </VBox.margin>
+            <FlowPane fx:id="menuContainer" hgap="20.0" prefHeight="40.0" prefWidth="1308.0" prefWrapLength="800.0" rowValignment="TOP" style="-fx-background-color: #C4E6FB99;" styleClass="itemContainer" vgap="20.0">
                <padding>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </padding>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
             </FlowPane>
          </children>
       </VBox>

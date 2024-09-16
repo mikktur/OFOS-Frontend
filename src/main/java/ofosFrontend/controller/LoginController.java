@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import ofosFrontend.AppManager;
 import ofosFrontend.controller.User.MMenuController;
 import ofosFrontend.service.RestaurantService;
 import ofosFrontend.service.UserService;
@@ -63,8 +64,8 @@ public class LoginController {
             if (response.isSuccessful()) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/mainUI.fxml"));
                 Parent root = loader.load();
-                Stage currentStage = (Stage) signUpButton.getScene().getWindow();
-                Scene menuScene = new Scene(root, 650, 400);
+                Stage currentStage = AppManager.getInstance().getPrimaryStage();
+                Scene menuScene = new Scene(root, 1000, 800);
                 currentStage.setTitle("OFOS Menu");
                 currentStage.setScene(menuScene);
                 currentStage.show();
@@ -91,9 +92,10 @@ public class LoginController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/registerUI.fxml"));
         Parent root = loader.load();
 
-        Stage currentStage = (Stage) signUpButton.getScene().getWindow();
+        Stage currentStage = (Stage) AppManager.getInstance().getPrimaryStage();
 
         Scene registerScene = new Scene(root, 650, 400);
+
 
         currentStage.setTitle("OFOS Register");
 
@@ -107,7 +109,9 @@ public class LoginController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/loginUI.fxml"));
         Parent root = loader.load();
 
-        Stage currentStage = (Stage) signUpButton.getScene().getWindow();
+        Stage currentStage = (Stage) AppManager.getInstance().getPrimaryStage();
+
+
 
         Scene loginScene = new Scene(root, 650, 400);
 
@@ -139,7 +143,7 @@ public class LoginController {
             if (response.isSuccessful()) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/loginUI.fxml"));
                 Parent root = loader.load();
-                Stage currentStage = (Stage) goBackButton.getScene().getWindow();
+                Stage currentStage = AppManager.getInstance().getPrimaryStage();
                 Scene registerScene = new Scene(root, 650, 400);
                 currentStage.setTitle("OFOS Login");
                 currentStage.setScene(registerScene);
