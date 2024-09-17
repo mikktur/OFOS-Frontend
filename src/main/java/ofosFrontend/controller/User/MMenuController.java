@@ -110,12 +110,6 @@ public class MMenuController {
                     restaurantFlowPane.setPrefWrapLength(newVal.doubleValue());
                     restaurantFlowPane.requestLayout();
                 });
-                restaurantFlowPane.requestLayout();
-                mainScroll.requestLayout();
-                System.out.println("Card added to FlowPane");
-                System.out.println("VBox height: " + contentBox.getHeight());
-                System.out.println("FlowPane height: " + restaurantFlowPane.getHeight());
-                System.out.println("ScrollPane height: " + mainScroll.getHeight());
             }
 
 

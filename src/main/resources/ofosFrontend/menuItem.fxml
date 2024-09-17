@@ -8,12 +8,12 @@
 
 <VBox id="itemCard" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="250.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ImageView fx:id="itemImage" fitHeight="280.0" fitWidth="283.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="itemImage" fitHeight="258.0" fitWidth="217.0" pickOnBounds="true" preserveRatio="true">
          <VBox.margin>
             <Insets top="10.0" />
          </VBox.margin>
       </ImageView>
-      <VBox id="itemInfo" fx:id="textBox" alignment="CENTER_LEFT" prefHeight="171.0" prefWidth="318.0">
+      <VBox id="itemInfo" fx:id="textBox" alignment="CENTER_LEFT" prefHeight="84.0" prefWidth="248.0">
          <children>
             <Label fx:id="itemName">
                <font>

@@ -3,6 +3,7 @@ package ofosFrontend.controller.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
@@ -22,7 +23,8 @@ public class RMenuController {
     private ProductService productService = new ProductService();
     @FXML
     private FlowPane menuContainer;
-
+    @FXML
+    private ScrollPane menuScroll;
     public RMenuController(Restaurant restaurant) {
         this.restaurant = restaurant;
 
@@ -54,6 +56,10 @@ public class RMenuController {
 
 
             }
+            menuScroll.widthProperty().addListener((obs, oldVal, newVal) -> {
+                menuContainer.setPrefWrapLength(newVal.doubleValue());
+                menuContainer.requestLayout();
+            });
 
 
         } catch (IOException e) {

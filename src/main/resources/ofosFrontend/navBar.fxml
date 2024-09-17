@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<StackPane fx:id="navBar" alignment="TOP_CENTER" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.User.NavController">
+   <children>
+      <HBox alignment="CENTER" maxHeight="60.0" prefHeight="44.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" styleClass="navBar">
+          <children>
+              <HBox alignment="CENTER_LEFT" styleClass="leftNav" HBox.hgrow="ALWAYS">
+                  <children>
+                      <ImageView fx:id="dropDownMenuBtn" fitHeight="49.0" fitWidth="117.0" pickOnBounds="true" preserveRatio="true">
+                          <image>
+                              <Image url="@../images/burger-bar.png" />
+                          </image>
+                          <HBox.margin>
+                              <Insets left="10.0" />
+                          </HBox.margin>
+                          <viewport>
+                              <Rectangle2D minY="200.0" />
+                          </viewport>
+                      </ImageView>
+                      <Text fx:id="mainMenuLink" strokeType="OUTSIDE" strokeWidth="0.0" text="OFOS" textAlignment="CENTER" wrappingWidth="138.63671875">
+                          <font>
+                              <Font name="System Bold" size="36.0" />
+                          </font>
+                      </Text>
+                  </children>
+              </HBox>
+              <HBox alignment="CENTER" styleClass="middleNav" HBox.hgrow="ALWAYS">
+                  <children>
+                      <TextField alignment="CENTER" maxWidth="800.0" prefHeight="35.0" prefWidth="583.0" promptText="hae" style="-fx-background-color: #ffffff;">
+                          <font>
+                              <Font size="16.0" />
+                          </font>
+                      </TextField>
+                      <ImageView fitHeight="23.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+                          <image>
+                              <Image url="@../images/search.png" />
+                          </image>
+                          <HBox.margin>
+                              <Insets left="5.0" />
+                          </HBox.margin>
+                      </ImageView>
+                  </children>
+              </HBox>
+              <HBox alignment="CENTER_RIGHT" styleClass="rightNav" HBox.hgrow="ALWAYS">
+                  <children>
+                      <Label fx:id="usernameLabel" text="Käyttäjänimi">
+                          <font>
+                              <Font size="18.0" />
+                          </font>
+                          <HBox.margin>
+                              <Insets right="50.0" />
+                          </HBox.margin>
+                      </Label>
+                      <ImageView fx:id="openCart" fitHeight="40.0" fitWidth="111.0" pickOnBounds="true" preserveRatio="true">
+                          <image>
+                              <Image url="@../images/cart.png" />
+                          </image>
+                          <HBox.margin>
+                              <Insets right="20.0" />
+                          </HBox.margin>
+                      </ImageView>
+                  </children>
+              </HBox>
+          </children>
+      </HBox>
+   </children>
+</StackPane>

@@ -49,6 +49,14 @@ public class SessionManager {
         return token != null;
     }
 
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public ShoppingCart getCart() {
         if (cart == null) {
             cart = new ShoppingCart();
