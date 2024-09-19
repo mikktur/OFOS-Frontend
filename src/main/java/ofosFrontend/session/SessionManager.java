@@ -5,12 +5,15 @@ import ofosFrontend.model.ShoppingCart;
 public class SessionManager {
 
     private static SessionManager session;
+    private int userId;
     private String username;
     private String token;
     private ShoppingCart cart;
 
     private SessionManager() {
+
         username = null;
+        userId = 0;
         token = null;
         cart = null;
     }
@@ -55,6 +58,14 @@ public class SessionManager {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public int getUserId() {
+        return userId;
     }
 
     public ShoppingCart getCart() {

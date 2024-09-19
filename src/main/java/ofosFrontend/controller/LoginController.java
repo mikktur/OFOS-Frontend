@@ -76,8 +76,25 @@ public class LoginController extends BasicController {
                 Map<String, String> body = mapper.readValue(responseBody, Map.class);
                 manager.setToken(body.get("token"));
                 manager.setUsername(body.get("username"));
+                Object userIdObj = body.get("userId");
+
+                //vois tehä simppelimmin
+                if (userIdObj instanceof String) {
+
+                    manager.setUserId(Integer.parseInt((String) userIdObj));
+                } else if (userIdObj instanceof Integer) {
+
+                    manager.setUserId((Integer) userIdObj);
+                } else {
+
+                    throw new IllegalArgumentException("Invalid userId type: " + userIdObj);
+                }
+                System.out.println("User ID: " + manager.getUserId());
+
                 System.out.println("Token: " + manager.getToken());
                 System.out.println("Username: " + manager.getUsername());
+
+
                 super.goToMain();
 
 

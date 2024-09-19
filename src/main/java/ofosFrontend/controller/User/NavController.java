@@ -35,6 +35,7 @@ public class NavController extends BasicController {
 
         initializeUIComponents();
         setupEventHandlers();
+
     }
 
     public void handleDropDownClick() {
