@@ -23,7 +23,7 @@
                   <Insets />
                </HBox.margin>
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Chekout">
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Checkout">
                      <VBox.margin>
                         <Insets left="25.0" top="10.0" />
                      </VBox.margin>
