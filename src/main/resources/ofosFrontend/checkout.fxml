@@ -33,7 +33,7 @@
                   </Text>
                   <VBox prefHeight="200.0" prefWidth="100.0" spacing="8.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);;">
                      <children>
-                        <Label style="-fx-background-color: #ffffff; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);;" text="McDonald's" textAlignment="CENTER">
+                        <Label style="-fx-background-color: #ffffff; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);;" textAlignment="CENTER">
                            <font>
                               <Font size="14.0" />
                            </font>
