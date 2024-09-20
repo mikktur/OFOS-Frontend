@@ -16,11 +16,10 @@ import java.util.List;
 
 public class ShoppingCartController {
     @FXML
-    VBox cartItemContainer;
+    private VBox cartItemContainer;
+
     @FXML
-    CartItemController cartItemController = new CartItemController();
-    @FXML
-    private Button checkoutBtn;
+    private Button goToCheckout;
 
     public ShoppingCartController() {
 
@@ -41,8 +40,11 @@ public class ShoppingCartController {
     public void loadCartItems() throws IOException {
         List<CartItem> list = SessionManager.getInstance().getCart().getItems();
         for (CartItem item : list) {
-            VBox cartItem = cartItemController.loadCartItem(item);
-            cartItemContainer.getChildren().add(cartItem);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/cartItem.fxml"));
+            VBox cartItem = loader.load();  // Load the FXML and controller
+            CartItemController cartItemController = loader.getController();  // Get the controller for each item
+            cartItemController.loadCartItem(item);  // Pass the CartItem to the controller
+            cartItemContainer.getChildren().add(cartItem);  // Add the item to the container
         }
     }
 
@@ -52,7 +54,8 @@ public class ShoppingCartController {
 
     public void addListeners() {
         System.out.println("Listener added");
-        checkoutBtn.setOnAction(event -> {
+
+        goToCheckout.setOnAction(event -> {
             handleCheckoutClick();
         });
 
