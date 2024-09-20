@@ -26,6 +26,12 @@ public class NavController extends BasicController {
     AnchorPane dropDownContent;
     @FXML
     private Label usernameLabel;
+    @FXML
+    private ImageView openCart;
+    @FXML
+    VBox shoppingCartContent;
+    private boolean isShoppingCartVisible = false;
+
     public NavController() {
 
     }
@@ -68,6 +74,7 @@ public class NavController extends BasicController {
             e.printStackTrace();
         }
     }
+
     public void loadDropDownContent() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/dropDownUi.fxml"));
         try {
@@ -76,6 +83,7 @@ public class NavController extends BasicController {
             e.printStackTrace();
         }
     }
+
     public void setUsernameLabel() {
         SessionManager sessionManager = SessionManager.getInstance();
         System.out.println(sessionManager.getUsername());
@@ -93,5 +101,34 @@ public class NavController extends BasicController {
         mainMenuLink.setOnMouseClicked(event -> super.goToMain());
         assert dropDownMenuBtn != null;
         dropDownMenuBtn.setOnMouseClicked(event -> handleDropDownClick());
+        openCart.setOnMouseClicked(event -> handleShoppingCartClick());
+    }
+
+    public void handleShoppingCartClick() {
+        System.out.println("Shopping cart clicked");
+
+        try {
+            Parent parent = navBar.getParent();
+            BorderPane borderPane = (BorderPane) parent;
+
+            // Load the shopping cart content each time to refresh it
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/shoppingCart.fxml"));
+            shoppingCartContent = loader.load();
+            System.out.println("testing testing");
+
+            // Toggle visibility manually using the flag
+            if (isShoppingCartVisible) {
+                // If the cart is visible, hide it
+                borderPane.setRight(null);  // Remove the cart from the layout
+                isShoppingCartVisible = false;  // Update the flag
+            } else {
+                // If the cart is not visible, show it
+                borderPane.setRight(shoppingCartContent);
+                isShoppingCartVisible = true;  // Update the flag
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

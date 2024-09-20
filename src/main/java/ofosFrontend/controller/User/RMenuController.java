@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import ofosFrontend.model.CartItem;
 import ofosFrontend.model.Product;
 import ofosFrontend.model.Restaurant;
 import ofosFrontend.model.ShoppingCart;
@@ -47,7 +48,7 @@ public class RMenuController {
                 FXMLLoader cardLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/menuItem.fxml"));
                 VBox card = cardLoader.load();
                 VBox cText = (VBox) card.lookup("#itemInfo");
-                Button addToCartButton = (Button) card.lookup("#addToCartButton");
+                Button addToCartButton = (Button) card.lookup("#addToCart");
                 ImageView imageView = (ImageView) card.lookup("#itemImage");
                 Label descriptionLabel = (Label) cText.lookup("#itemDesc");
                 Label priceLabel = (Label) cText.lookup("#itemPrice");
@@ -57,6 +58,15 @@ public class RMenuController {
                 priceLabel.setText(String.valueOf(product.getProductPrice()));
                 addToCartButton.setOnMouseClicked(event -> {
                     addProductToCart(product);
+                    SessionManager sessionManager = SessionManager.getInstance();
+                    System.out.println("Added to cart");
+                    List<CartItem> list = SessionManager.getInstance().getCart().getItems();
+                    for (CartItem item : list) {
+                        System.out.println("Item: " + item.getProduct().getProductName() + " Quantity: " + item.getQuantity());
+                        System.out.println("Total price: " + item.getTotalPrice());
+                    }
+                    System.out.println("Subtotal: " + sessionManager.getCart().getTotalPrice());
+
                 });
                 imageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/hamburga.jpg"))));//+ product.getPicture()))
                 menuContainer.getChildren().add(card);

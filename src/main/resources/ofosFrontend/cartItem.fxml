@@ -9,19 +9,19 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="172.0" prefWidth="288.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="172.0" prefWidth="288.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.User.CartItemController">
    <children>
-      <Label prefHeight="35.0" prefWidth="70.0" VBox.vgrow="NEVER">
+      <Label fx:id="itemName" prefHeight="35.0" prefWidth="70.0" VBox.vgrow="NEVER">
          <font>
-            <Font size="24.0" />
+            <Font size="10.0" />
          </font>
          <VBox.margin>
             <Insets left="20.0" top="5.0" />
          </VBox.margin>
       </Label>
-      <Label VBox.vgrow="NEVER">
+      <Label fx:id="itemPrice" VBox.vgrow="NEVER">
          <font>
-            <Font size="18.0" />
+            <Font size="10.0" />
          </font>
          <VBox.margin>
             <Insets left="20.0" />
@@ -29,25 +29,25 @@
       </Label>
       <HBox alignment="CENTER_LEFT" prefHeight="195.0" prefWidth="368.0" spacing="20.0" VBox.vgrow="NEVER">
          <children>
-            <Button mnemonicParsing="false" prefHeight="43.0" prefWidth="39.0" text="-" HBox.hgrow="NEVER">
+            <Button fx:id="subBtn" mnemonicParsing="false" prefHeight="43.0" prefWidth="39.0" text="-" HBox.hgrow="NEVER">
                <HBox.margin>
                   <Insets left="20.0" />
                </HBox.margin>
                <font>
-                  <Font size="18.0" />
+                  <Font size="10.0" />
                </font>
             </Button>
-            <Label HBox.hgrow="NEVER">
+            <Label fx:id="itemQuantity" HBox.hgrow="NEVER">
                <font>
-                  <Font size="18.0" />
+                  <Font size="10.0" />
                </font>
             </Label>
-            <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="39.0" text="+" HBox.hgrow="NEVER">
+            <Button fx:id="addBtn" mnemonicParsing="false" prefHeight="42.0" prefWidth="39.0" text="+" HBox.hgrow="NEVER">
                <font>
-                  <Font size="18.0" />
+                  <Font size="10.0" />
                </font>
             </Button>
-            <ImageView fitHeight="40.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="NEVER">
+            <ImageView fx:id="deleteBtn" fitHeight="40.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="NEVER">
                <image>
                   <Image url="@../images/trash.png" />
                </image>
