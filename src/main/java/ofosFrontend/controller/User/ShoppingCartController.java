@@ -11,22 +11,29 @@ import ofosFrontend.model.Product;
 import ofosFrontend.session.SessionManager;
 
 import java.io.IOException;
+import java.util.EventListener;
 import java.util.List;
 
-public class ShoppingCartController extends BasicController {
+public class ShoppingCartController {
     @FXML
     VBox cartItemContainer;
+    @FXML
     CartItemController cartItemController = new CartItemController();
+    @FXML
+    private Button checkoutBtn;
+
     public ShoppingCartController() {
 
     }
+
     @FXML
     public void initialize() {
         try {
             loadCartItems();
+            addListeners();
 
-        }
-        catch (IOException e) {
+
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -38,7 +45,16 @@ public class ShoppingCartController extends BasicController {
             cartItemContainer.getChildren().add(cartItem);
         }
     }
-    public void handleDropDownClick() {
-        System.out.println("Drop down clicked");
+
+    public void handleCheckoutClick() {
+        System.out.println("Checkout clicked");
+    }
+
+    public void addListeners() {
+        System.out.println("Listener added");
+        checkoutBtn.setOnAction(event -> {
+            handleCheckoutClick();
+        });
+
     }
 }

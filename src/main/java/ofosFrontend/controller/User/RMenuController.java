@@ -58,14 +58,6 @@ public class RMenuController {
                 priceLabel.setText(String.valueOf(product.getProductPrice()));
                 addToCartButton.setOnMouseClicked(event -> {
                     addProductToCart(product);
-                    SessionManager sessionManager = SessionManager.getInstance();
-                    System.out.println("Added to cart");
-                    List<CartItem> list = SessionManager.getInstance().getCart().getItems();
-                    for (CartItem item : list) {
-                        System.out.println("Item: " + item.getProduct().getProductName() + " Quantity: " + item.getQuantity());
-                        System.out.println("Total price: " + item.getTotalPrice());
-                    }
-                    System.out.println("Subtotal: " + sessionManager.getCart().getTotalPrice());
 
                 });
                 imageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/hamburga.jpg"))));//+ product.getPicture()))
@@ -81,9 +73,6 @@ public class RMenuController {
 
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        for(Product product : products) {
-            System.out.println("Product: " + product.getProductName());
         }
     }
     private void addProductToCart(Product product) {

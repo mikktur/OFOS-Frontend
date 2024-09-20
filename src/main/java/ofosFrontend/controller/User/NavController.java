@@ -114,7 +114,6 @@ public class NavController extends BasicController {
             // Load the shopping cart content each time to refresh it
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/shoppingCart.fxml"));
             shoppingCartContent = loader.load();
-            System.out.println("testing testing");
 
             // Toggle visibility manually using the flag
             if (isShoppingCartVisible) {

@@ -36,7 +36,6 @@ public class CartItemController {
     }
 
     public VBox loadCartItem(CartItem item) throws IOException {
-        System.out.println("Load cart function! " + item.getProduct().getProductName());
 
         // Load the FXML and get the controller for the loaded FXML
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/cartItem.fxml"));
@@ -48,7 +47,6 @@ public class CartItemController {
         // Now use the controller to set values
         controller.itemName.setText(item.getProduct().getProductName());
         controller.itemPrice.setText(String.valueOf(item.getProduct().getProductPrice()));
-        System.out.println("Quantity: " + item.getQuantity());
         controller.itemQuantity.setText(String.valueOf(item.getQuantity()));
 
         controller.addBtn.setOnMouseClicked(event -> {

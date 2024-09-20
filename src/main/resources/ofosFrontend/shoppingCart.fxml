@@ -45,7 +45,7 @@
             <Font size="14.0" />
          </font>
       </Text>
-      <Button mnemonicParsing="false" text="Checkout" VBox.vgrow="ALWAYS">
+      <Button fx:id="goToCheckout" mnemonicParsing="false" text="Checkout" VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets bottom="10.0" left="60.0" top="10.0" />
          </VBox.margin>
