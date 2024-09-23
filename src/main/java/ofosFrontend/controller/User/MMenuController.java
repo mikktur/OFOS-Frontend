@@ -154,20 +154,7 @@ public class MMenuController {
         currentStage.show();
     }
 
-    public void goToSettings(MouseEvent mouseEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/userSettingsUI.fxml"));
-        Parent root = loader.load();
 
-        Stage currentStage = (Stage) AppManager.getInstance().getPrimaryStage();
-
-        Scene settingsScene = new Scene(root, 650, 400);
-
-        currentStage.setTitle("OFOS Settings");
-
-        currentStage.setScene(settingsScene);
-
-        currentStage.show();
-    }
 
     public void backToMenu(MouseEvent mouseEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/mainUI.fxml"));

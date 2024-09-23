@@ -53,7 +53,7 @@
             </HBox>
             <HBox alignment="CENTER">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Settings" textAlignment="CENTER" wrappingWidth="93.13671875" HBox.hgrow="NEVER">
+                  <Text fx:id="settingsElement" onMouseClicked="#goToSettings" strokeType="OUTSIDE" strokeWidth="0.0" text="Settings" textAlignment="CENTER" wrappingWidth="93.13671875" HBox.hgrow="NEVER">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
