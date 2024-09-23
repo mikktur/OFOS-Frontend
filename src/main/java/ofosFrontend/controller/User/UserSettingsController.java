@@ -226,8 +226,8 @@ public class UserSettingsController {
         // Root VBox for each address node
         VBox rootVBox = new VBox(5);
         rootVBox.setPadding(new Insets(10));
-        rootVBox.setStyle("-fx-border-color: lightgray; -fx-border-width: 1;");
-        rootVBox.setPrefWidth(350);
+        rootVBox.setStyle("-fx-background-color: white; -fx-border-color: lightgray; -fx-border-width: 1;");
+        rootVBox.setPrefWidth(250);
 
         // Top HBox containing Address information and buttons
         HBox topHBox = new HBox(10);
@@ -280,7 +280,8 @@ public class UserSettingsController {
         infoLabel.setStyle("-fx-font-weight: bold;");
         String instructions = address.getInfo() != null ? address.getInfo() : "";
         Label infoValue = new Label(instructions);
-        infoValue.setStyle("-fx-text-fill: gray;"); // Slightly faded gray color
+        infoValue.setStyle("-fx-text-fill: gray;");
+        infoValue.setWrapText(true);
 
         // Add components to rootVBox
         rootVBox.getChildren().addAll(topHBox, infoLabel, infoValue);
