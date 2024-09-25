@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -59,41 +60,36 @@
          <children>
             <VBox prefHeight="268.0" prefWidth="118.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Minun ravintolat" textAlignment="CENTER" wrappingWidth="117.13671875">
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="My restaurants" textAlignment="CENTER" wrappingWidth="117.13671875">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Text>
-                  <Text layoutX="10.0" layoutY="25.0" strokeType="OUTSIDE" strokeWidth="0.0" text="McDonald's" textAlignment="CENTER" wrappingWidth="117.13671875">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Text>
-                  <Text layoutX="10.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hesburger" textAlignment="CENTER" wrappingWidth="117.13671875">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Text>
-                  <Text layoutX="10.0" layoutY="64.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Kotipizza" textAlignment="CENTER" wrappingWidth="117.13671875">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Text>
-                  <Text layoutX="10.0" layoutY="83.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PizzaHut" textAlignment="CENTER" wrappingWidth="117.13671875">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Text>
-                  <Text layoutX="10.0" layoutY="102.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Konnichiwa" textAlignment="CENTER" wrappingWidth="117.13671875">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Text>
-                  <Text layoutX="10.0" layoutY="121.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Fat Ramen" textAlignment="CENTER" wrappingWidth="117.13671875">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Text>
+                  <Label>
+                     <VBox.margin>
+                        <Insets left="50.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label layoutX="60.0" layoutY="29.0">
+                     <VBox.margin>
+                        <Insets left="50.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label layoutX="10.0" layoutY="46.0">
+                     <VBox.margin>
+                        <Insets left="50.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label layoutX="10.0" layoutY="63.0">
+                     <VBox.margin>
+                        <Insets left="50.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label layoutX="10.0" layoutY="80.0">
+                     <VBox.margin>
+                        <Insets left="50.0" />
+                     </VBox.margin>
+                  </Label>
                </children>
                <HBox.margin>
                   <Insets bottom="150.0" left="20.0" top="100.0" />
@@ -101,7 +97,7 @@
             </VBox>
             <VBox prefHeight="133.0" prefWidth="549.0">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="McDonald's" VBox.vgrow="ALWAYS">
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Default restaurant" VBox.vgrow="ALWAYS">
                      <font>
                         <Font name="System Bold" size="24.0" />
                      </font>
