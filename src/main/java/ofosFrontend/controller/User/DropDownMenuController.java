@@ -36,9 +36,11 @@ public class DropDownMenuController {
 
         Stage currentStage = (Stage) AppManager.getInstance().getPrimaryStage();
 
-        Scene settingsScene = new Scene(root, 650, 400);
+        Scene settingsScene = new Scene(root, 800, 600);
 
         currentStage.setTitle("OFOS Settings");
+        currentStage.setMinWidth(800);
+        currentStage.setMinHeight(600);
 
         currentStage.setScene(settingsScene);
 

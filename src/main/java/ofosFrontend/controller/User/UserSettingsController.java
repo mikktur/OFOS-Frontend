@@ -155,19 +155,6 @@ public class UserSettingsController {
     }
 
 
-
-    /*
-    private void updateUI(ContactInfo contactInfo) {
-        String fullName = contactInfo.getFirstName() + " " + contactInfo.getLastName();
-        nameLabel.setText(fullName);
-        emailLabel.setText(contactInfo.getEmail());
-        phoneNumberLabel.setText(contactInfo.getPhoneNumber());
-        cityLabel.setText(contactInfo.getCity());
-        postalCodeLabel.setText(contactInfo.getPostalCode());
-        addressLabel.setText(contactInfo.getAddress());
-    }
-     */
-
     private void fetchDeliveryAddresses() {
         Task<List<DeliveryAddress>> task = new Task<>() {
             @Override
@@ -215,18 +202,28 @@ public class UserSettingsController {
         // Clear existing items
         deliveryAddressContainer.getChildren().clear();
 
-        for (DeliveryAddress address : deliveryAddresses) {
-            // Create UI elements for each address
-            Node addressNode = createAddressNode(address);
-            deliveryAddressContainer.getChildren().add(addressNode);
+        if (deliveryAddresses.isEmpty()) {
+            // If there are no addresses, add the placeholder Label
+            Label placeholderLabel = new Label("No saved delivery addresses");
+            placeholderLabel.setStyle("-fx-font-style: italic; -fx-text-fill: gray;");
+            placeholderLabel.setPadding(new Insets(10)); // Optional: Add padding
+            deliveryAddressContainer.getChildren().add(placeholderLabel);
+        } else {
+
+            for (DeliveryAddress address : deliveryAddresses) {
+                // Create UI elements for each address
+                Node addressNode = createAddressNode(address);
+                deliveryAddressContainer.getChildren().add(addressNode);
+            }
         }
     }
+
 
     private Node createAddressNode(DeliveryAddress address) {
         // Root VBox for each address node
         VBox rootVBox = new VBox(5);
         rootVBox.setPadding(new Insets(10));
-        rootVBox.setStyle("-fx-background-color: white; -fx-border-color: lightgray; -fx-border-width: 1;");
+        rootVBox.setStyle("-fx-background-color: white; -fx-border-color: lightgray; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10;");
         rootVBox.setPrefWidth(250);
 
         // Top HBox containing Address information and buttons
