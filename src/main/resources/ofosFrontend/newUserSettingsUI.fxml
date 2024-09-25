@@ -24,20 +24,20 @@
       <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" style="-fx-background-color: transparent;">
          <content>
             <!-- Outer VBox to center content and add top padding -->
-            <VBox alignment="TOP_CENTER" spacing="20.0">
+            <VBox alignment="TOP_CENTER" spacing="20.0" VBox.vgrow="ALWAYS">
                <padding>
                   <Insets top="80.0" />
                </padding>
                <children>
                   <!-- Inner VBox with background color and drop shadow effect -->
-                  <VBox alignment="TOP_CENTER" spacing="20.0" maxWidth="1000.0" maxHeight="800.0"
+                  <VBox alignment="TOP_CENTER" spacing="20.0" maxWidth="900" VBox.vgrow="ALWAYS"
                         style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 5, 5);">
                      <padding>
                         <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
                      </padding>
                      <children>
                         <!-- HBox containing the Contact Information and Delivery Addresses -->
-                        <HBox alignment="TOP_CENTER" spacing="20.0">
+                        <HBox alignment="TOP_CENTER" spacing="20.0" VBox.vgrow="ALWAYS">
                            <children>
                               <!-- Contact Information VBox -->
                               <VBox spacing="10.0" HBox.hgrow="ALWAYS">
@@ -86,7 +86,7 @@
                                     <Label text="Delivery Addresses" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
                                     <ScrollPane fitToWidth="true" style="-fx-background-color: #c4e6fb;">
                                        <content>
-                                          <VBox fx:id="deliveryAddressContainer" spacing="10.0" style="-fx-background-color: #c4e6fb;">
+                                          <VBox fx:id="deliveryAddressContainer" spacing="10.0" style="-fx-background-color: #c4e6fb;" VBox.vgrow="ALWAYS">
                                              <!-- Dynamically added delivery address nodes will be added here -->
                                           </VBox>
                                        </content>
