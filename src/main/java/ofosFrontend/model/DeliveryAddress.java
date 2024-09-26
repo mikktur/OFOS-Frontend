@@ -6,6 +6,7 @@ public class DeliveryAddress {
     private String city;
     private String postalCode;
     private String info;
+    private boolean defaultAddress;
 
     public int getDeliveryAddressId() {
         return deliveryAddressId;
@@ -45,5 +46,13 @@ public class DeliveryAddress {
 
     public void setInfo(String info) {
         this.info = info;
+    }
+
+    public boolean isDefaultAddress() {
+        return defaultAddress;
+    }
+
+    public void setDefaultAddress(boolean isDefault) {
+        this.defaultAddress = isDefault;
     }
 }

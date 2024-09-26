@@ -26,8 +26,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class UserSettingsController {
 
@@ -40,6 +39,7 @@ public class UserSettingsController {
     @FXML private VBox deliveryAddressContainer;
 
     private int userId;
+    private List<DeliveryAddress> deliveryAddressesList = new ArrayList<>();
 
     public void initialize() {
         this.userId = SessionManager.getInstance().getUserId();
@@ -155,6 +155,7 @@ public class UserSettingsController {
     }
 
 
+
     private void fetchDeliveryAddresses() {
         Task<List<DeliveryAddress>> task = new Task<>() {
             @Override
@@ -163,6 +164,7 @@ public class UserSettingsController {
                 HttpClient client = HttpClient.newHttpClient();
                 HttpRequest request = HttpRequest.newBuilder()
                         .uri(URI.create(url))
+                        .header("Authorization", "Bearer " + SessionManager.getInstance().getToken())
                         .GET()
                         .build();
 
@@ -183,8 +185,8 @@ public class UserSettingsController {
         };
 
         task.setOnSucceeded(event -> {
-            List<DeliveryAddress> deliveryAddresses = task.getValue();
-            updateDeliveryAddressesUI(deliveryAddresses);
+            deliveryAddressesList = task.getValue();
+            updateDeliveryAddressesUI();
         });
 
         task.setOnFailed(event -> {
@@ -198,25 +200,27 @@ public class UserSettingsController {
         thread.start();
     }
 
-    private void updateDeliveryAddressesUI(List<DeliveryAddress> deliveryAddresses) {
-        // Clear existing items
-        deliveryAddressContainer.getChildren().clear();
 
-        if (deliveryAddresses.isEmpty()) {
-            // If there are no addresses, add the placeholder Label
-            Label placeholderLabel = new Label("No saved delivery addresses");
-            placeholderLabel.setStyle("-fx-font-style: italic; -fx-text-fill: gray;");
-            placeholderLabel.setPadding(new Insets(10)); // Optional: Add padding
-            deliveryAddressContainer.getChildren().add(placeholderLabel);
-        } else {
+    private void updateDeliveryAddressesUI() {
+        Platform.runLater(() -> {
+            deliveryAddressContainer.getChildren().clear();
 
-            for (DeliveryAddress address : deliveryAddresses) {
-                // Create UI elements for each address
-                Node addressNode = createAddressNode(address);
-                deliveryAddressContainer.getChildren().add(addressNode);
+            if (deliveryAddressesList.isEmpty()) {
+                // If there are no addresses, add the placeholder Label
+                Label placeholderLabel = new Label("No saved delivery addresses");
+                placeholderLabel.setStyle("-fx-font-style: italic; -fx-text-fill: gray;");
+                placeholderLabel.setPadding(new Insets(10));
+                deliveryAddressContainer.getChildren().add(placeholderLabel);
+            } else {
+                for (DeliveryAddress address : deliveryAddressesList) {
+                    Node addressNode = createAddressNode(address);
+                    deliveryAddressContainer.getChildren().add(addressNode);
+                }
             }
-        }
+        });
     }
+
+
 
 
     private Node createAddressNode(DeliveryAddress address) {
@@ -261,11 +265,31 @@ public class UserSettingsController {
         deleteButton.setOnAction(e -> handleRemoveAddress(address));
         deleteButton.setStyle("-fx-background-color: transparent;");
 
+        // Create defaultNode
+        Node defaultNode;
+        if (address.isDefaultAddress()) {
+            // Default Indicator
+            ImageView defaultIndicator = new ImageView(new Image(getClass().getResourceAsStream("/images/star_icon.png")));
+            defaultIndicator.setFitWidth(20);
+            defaultIndicator.setFitHeight(20);
+            Tooltip.install(defaultIndicator, new Tooltip("Default Address"));
+            defaultNode = defaultIndicator;
+        } else {
+            // Set as Default Button
+            Button defaultButton = new Button();
+            defaultButton.setText("Set as Default");
+            defaultButton.setOnAction(e -> handleSetDefaultAddress(address));
+            defaultButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: white; -fx-border-radius: 5; -fx-background-radius: 5;");
+            Tooltip.install(defaultButton, new Tooltip("Set as Default Address"));
+            defaultNode = defaultButton;
+        }
+
         // Add tooltips
         Tooltip.install(editButton, new Tooltip("Edit Address"));
         Tooltip.install(deleteButton, new Tooltip("Delete Address"));
 
-        buttonHBox.getChildren().addAll(editButton, deleteButton);
+        // Add buttons to buttonHBox
+        buttonHBox.getChildren().addAll(editButton, deleteButton, defaultNode);
 
         HBox.setHgrow(addressVBox, Priority.ALWAYS);
 
@@ -285,6 +309,7 @@ public class UserSettingsController {
 
         return rootVBox;
     }
+
 
 
 
@@ -350,9 +375,96 @@ public class UserSettingsController {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            deleteAddress(address);
+            Platform.runLater(() -> {
+                deliveryAddressesList.remove(address);
+                deleteAddress(address);
+                updateDeliveryAddressesUI();
+            });
+
         }
     }
+
+    @FXML
+    private void handleSetDefaultAddress(DeliveryAddress address) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Set as Default Address");
+        alert.setHeaderText(null);
+        alert.setContentText("Are you sure you want to set this address as your default?");
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // Proceed to set as default
+            Task<Void> task = new Task<>() {
+                @Override
+                protected Void call() throws Exception {
+                    String url = "http://localhost:8000/api/deliveryaddress/setDefault";
+                    HttpClient client = HttpClient.newHttpClient();
+                    ObjectMapper objectMapper = new ObjectMapper();
+
+                    // Prepare the request body
+                    Map<String, Integer> requestBody = new HashMap<>();
+                    requestBody.put("deliveryAddressId", address.getDeliveryAddressId());
+                    requestBody.put("userId", userId);
+
+                    String requestBodyJson = objectMapper.writeValueAsString(requestBody);
+
+
+                    HttpRequest request = HttpRequest.newBuilder()
+                            .uri(URI.create(url))
+                            .header("Content-Type", "application/json")
+                            .header("Authorization", "Bearer " + SessionManager.getInstance().getToken())
+                            .method("PUT", HttpRequest.BodyPublishers.ofString(requestBodyJson))
+                            .build();
+
+
+                    HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+                    if (response.statusCode() != 200) {
+                        throw new Exception("Failed to set default address. Status code: " + response.statusCode());
+                    }
+
+                    return null;
+                }
+            };
+
+            task.setOnSucceeded(e -> {
+                // Update the UI
+                updateDefaultAddressInUI(address); // Refresh the list of addresses
+            });
+
+            task.setOnFailed(e -> {
+                Throwable exception = task.getException();
+                exception.printStackTrace();
+                showError("An error occurred while setting the default address.");
+            });
+
+            Thread thread = new Thread(task);
+            thread.setDaemon(true);
+            thread.start();
+        }
+    }
+
+    private void updateDefaultAddressInUI(DeliveryAddress newDefaultAddress) {
+        // Update the isDefaultAddress property of all addresses
+        for (DeliveryAddress addr : deliveryAddressesList) {
+            if (addr.getDeliveryAddressId() == newDefaultAddress.getDeliveryAddressId()) {
+                addr.setDefaultAddress(true);
+            } else {
+                addr.setDefaultAddress(false);
+            }
+        }
+
+        // Refresh the UI nodes
+        Platform.runLater(() -> {
+            deliveryAddressContainer.getChildren().clear();
+            for (DeliveryAddress address : deliveryAddressesList) {
+                Node addressNode = createAddressNode(address);
+                deliveryAddressContainer.getChildren().add(addressNode);
+            }
+        });
+    }
+
+
 
     private void deleteAddress(DeliveryAddress address) {
         Task<Void> task = new Task<>() {
