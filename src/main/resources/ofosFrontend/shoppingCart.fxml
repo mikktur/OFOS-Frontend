@@ -9,46 +9,39 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="184.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.User.ShoppingCartController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="664.0" prefWidth="225.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.User.ShoppingCartController">
    <children>
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Your cart is empty" textAlignment="CENTER" wrappingWidth="183.3681640625" VBox.vgrow="ALWAYS">
-         <font>
-            <Font size="18.0" />
-         </font>
-         <VBox.margin>
-            <Insets bottom="5.0" top="5.0" />
-         </VBox.margin>
-      </Text>
-      <ScrollPane hbarPolicy="NEVER" prefHeight="0.0" prefWidth="184.0" VBox.vgrow="ALWAYS">
+      <ScrollPane fitToHeight="true" hbarPolicy="NEVER" prefHeight="478.0" prefWidth="225.0" VBox.vgrow="ALWAYS">
          <content>
-            <VBox fx:id="cartItemContainer" prefHeight="255.0" prefWidth="184.0" />
+            <VBox fx:id="cartItemContainer" alignment="TOP_CENTER" prefWidth="223.0" />
          </content>
       </ScrollPane>
-      <Label prefHeight="27.0" prefWidth="107.0" text="Subtotal" VBox.vgrow="ALWAYS">
-         <VBox.margin>
-            <Insets left="15.0" top="10.0" />
-         </VBox.margin>
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Line startX="150.0">
-         <VBox.margin>
-            <Insets left="15.0" right="5.0" />
-         </VBox.margin>
-      </Line>
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="0,00 €" VBox.vgrow="ALWAYS">
-         <VBox.margin>
-            <Insets left="130.0" />
-         </VBox.margin>
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Text>
-      <Button fx:id="goToCheckout" mnemonicParsing="false" text="Checkout" VBox.vgrow="ALWAYS">
-         <VBox.margin>
-            <Insets bottom="10.0" left="60.0" top="10.0" />
-         </VBox.margin>
-      </Button>
+      <VBox alignment="TOP_CENTER" prefHeight="107.0" prefWidth="225.0" VBox.vgrow="NEVER">
+         <children>
+            <Label prefHeight="27.0" prefWidth="211.0" text="Subtotal" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets left="15.0" top="10.0" />
+               </VBox.margin>
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Line startX="150.0">
+               <VBox.margin>
+                  <Insets left="15.0" right="5.0" />
+               </VBox.margin>
+            </Line>
+            <Text fx:id="subTotalLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="0,00 €" textAlignment="CENTER" wrappingWidth="81.0576171875">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+            <Button fx:id="goToCheckout" mnemonicParsing="false" text="Checkout" textAlignment="CENTER" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </Button>
+         </children>
+      </VBox>
    </children>
 </VBox>

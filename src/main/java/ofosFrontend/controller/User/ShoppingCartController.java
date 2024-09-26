@@ -1,11 +1,14 @@
 package ofosFrontend.controller.User;
 
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import ofosFrontend.model.CartItem;
 import ofosFrontend.model.Product;
 import ofosFrontend.session.SessionManager;
@@ -17,7 +20,8 @@ import java.util.List;
 public class ShoppingCartController {
     @FXML
     private VBox cartItemContainer;
-
+    @FXML
+    private Text subTotalLabel;
     @FXML
     private Button goToCheckout;
 
@@ -38,14 +42,64 @@ public class ShoppingCartController {
     }
 
     public void loadCartItems() throws IOException {
-        List<CartItem> list = SessionManager.getInstance().getCart().getItems();
-        for (CartItem item : list) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/cartItem.fxml"));
-            VBox cartItem = loader.load();  // Load the FXML and controller
-            CartItemController cartItemController = loader.getController();  // Get the controller for each item
-            cartItemController.loadCartItem(item);  // Pass the CartItem to the controller
-            cartItemContainer.getChildren().add(cartItem);  // Add the item to the container
+        ObservableList<CartItem> items = SessionManager.getInstance().getCart().getItems();
+
+
+        items.addListener((ListChangeListener<CartItem>) change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    removeEmptyCartMessage();
+                    for (CartItem addedItem : change.getAddedSubList()) {
+                        try {
+                            addCartItemToUI(addedItem);
+                            addQuantityListener(addedItem);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                if (change.wasRemoved()) {
+                    for (CartItem removedItem : change.getRemoved()) {
+                        removeCartItemFromUI(removedItem);
+                    }
+                    if (items.isEmpty()) {
+                        displayEmptyCartMessage();
+                    }
+                }
+            }
+
+            updateSubTotal();
+        });
+
+        cartItemContainer.getChildren().clear();
+        if (items.isEmpty()) {
+            displayEmptyCartMessage();
+        } else {
+            for (CartItem item : items) {
+                addCartItemToUI(item);
+                addQuantityListener(item);
+            }
         }
+
+
+        updateSubTotal();
+    }
+
+    private void addCartItemToUI(CartItem item) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/cartItem.fxml"));
+        VBox cartItem = loader.load();
+        CartItemController cartItemController = loader.getController();
+        cartItemController.loadCartItem(item);
+
+        cartItem.setUserData(item);
+        cartItemContainer.getChildren().add(cartItem);
+    }
+
+    private void removeCartItemFromUI(CartItem item) {
+        cartItemContainer.getChildren().removeIf(node -> {
+            CartItem associatedItem = (CartItem) node.getUserData();
+            return associatedItem != null && associatedItem.getProduct().getProductID().equals(item.getProduct().getProductID());
+        });
     }
 
     public void handleCheckoutClick() {
@@ -59,5 +113,27 @@ public class ShoppingCartController {
             handleCheckoutClick();
         });
 
+    }
+    private void removeEmptyCartMessage() {
+        cartItemContainer.getChildren().removeIf(node -> "emptyMessage".equals(node.getId()));
+    }
+
+    public void displayEmptyCartMessage() {
+        cartItemContainer.getChildren().clear();
+        Label emptyItem = new Label("Your cart is empty");
+        emptyItem.setId("emptyMessage");
+        cartItemContainer.getChildren().add(emptyItem);
+    }
+
+
+    private void addQuantityListener(CartItem cartItem) {
+        cartItem.quantityProperty().addListener((observable, oldValue, newValue) -> {
+            updateSubTotal();
+        });
+    }
+
+    private void updateSubTotal() {
+        double subTotal = SessionManager.getInstance().getCart().getTotalPrice();
+        subTotalLabel.setText("Subtotal: " + subTotal);
     }
 }

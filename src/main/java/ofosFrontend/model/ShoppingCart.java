@@ -1,14 +1,17 @@
 package ofosFrontend.model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class ShoppingCart {
-    private List<CartItem> items;
+    private final ObservableList<CartItem> items;
 
     public ShoppingCart() {
-        items = new ArrayList<>();
+        items = FXCollections.observableArrayList();
     }
 
     public void addItem(Product product, int quantity) {
@@ -25,7 +28,7 @@ public class ShoppingCart {
         items.removeIf(item -> item.getProduct().getProductID().equals(product.getProductID()));
     }
 
-    public List<CartItem> getItems() {
+    public ObservableList<CartItem> getItems() {
         return items;
     }
 

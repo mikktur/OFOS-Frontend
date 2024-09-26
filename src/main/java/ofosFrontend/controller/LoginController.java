@@ -76,6 +76,8 @@ public class LoginController extends BasicController {
                 Map<String, String> body = mapper.readValue(responseBody, Map.class);
                 manager.setToken(body.get("token"));
                 manager.setUsername(body.get("username"));
+                System.out.println("role: " + body.get("role"));
+                manager.setRole(body.get("role"));
                 Object userIdObj = body.get("userId");
 
                 //vois tehä simppelimmin
@@ -93,9 +95,9 @@ public class LoginController extends BasicController {
 
                 System.out.println("Token: " + manager.getToken());
                 System.out.println("Username: " + manager.getUsername());
-
-
+                System.out.println("Role: " + manager.getRole());
                 super.goToMain();
+
 
 
                 System.out.println("Login successful.");

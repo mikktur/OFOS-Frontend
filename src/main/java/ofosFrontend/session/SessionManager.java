@@ -9,6 +9,7 @@ public class SessionManager {
     private String username;
     private String token;
     private ShoppingCart cart;
+    private String role;
 
     private SessionManager() {
 
@@ -16,6 +17,7 @@ public class SessionManager {
         userId = 0;
         token = null;
         cart = null;
+        role = null;
     }
 
     public static SessionManager getInstance() {
@@ -39,7 +41,13 @@ public class SessionManager {
         token = null;
         cart = null;
     }
+    public void setRole(String role) {
+        this.role = role;
+    }
 
+    public String getRole() {
+        return role;
+    }
     public String getUsername() {
         return username != null ? username : "";
     }
