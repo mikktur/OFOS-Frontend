@@ -40,6 +40,7 @@ public class LoginController extends BasicController {
     private final UserService userService = new UserService();
     private final RestaurantService restaurantService = new RestaurantService();
     private final FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/mainUI.fxml"));
+    private String role;
 
 
 
@@ -76,6 +77,7 @@ public class LoginController extends BasicController {
                 Map<String, String> body = mapper.readValue(responseBody, Map.class);
                 manager.setToken(body.get("token"));
                 manager.setUsername(body.get("username"));
+                manager.setRole(body.get("role"));
                 Object userIdObj = body.get("userId");
 
                 //vois tehä simppelimmin
@@ -94,8 +96,10 @@ public class LoginController extends BasicController {
                 System.out.println("Token: " + manager.getToken());
                 System.out.println("Username: " + manager.getUsername());
 
-
-                super.goToMain();
+                if (manager.getRole().equals("OWNER")) {
+                    goToAdmin();
+                } else
+                    super.goToMain();
 
 
                 System.out.println("Login successful.");
@@ -110,6 +114,25 @@ public class LoginController extends BasicController {
             System.out.println("Failed to handle the response.");
             e.printStackTrace();
             showError("Error processing login response.");
+        }
+    }
+
+    private void goToAdmin() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/adminMainUI.fxml"));
+            Parent root = loader.load();
+
+            Stage currentStage = (Stage) AppManager.getInstance().getPrimaryStage();
+
+            Scene adminScene = new Scene(root, 650, 400);
+
+            currentStage.setTitle("OFOS Admin");
+
+            currentStage.setScene(adminScene);
+
+            currentStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

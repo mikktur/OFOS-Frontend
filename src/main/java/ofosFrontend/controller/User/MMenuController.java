@@ -127,35 +127,6 @@ public class MMenuController {
         System.out.println("Cart button clicked");
     }
 
-    public void mcVeganToCart(ActionEvent event) {
-        System.out.println("McVegan added to cart");
-    }
-
-    public void mcChickenTOCart(ActionEvent event) {
-        System.out.println("McChicken added to cart");
-    }
-
-    public void bigMacToCart(ActionEvent event) {
-        System.out.println("Big Mac added to cart");
-    }
-
-    public void goAdmin(MouseEvent mouseEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/adminMainUI.fxml"));
-        Parent root = loader.load();
-
-        Stage currentStage = AppManager.getInstance().getPrimaryStage();
-
-        Scene adminScene = new Scene(root, 650, 400);
-
-        currentStage.setTitle("OFOS Admin");
-
-        currentStage.setScene(adminScene);
-
-        currentStage.show();
-    }
-
-
-
     public void backToMenu(MouseEvent mouseEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/mainUI.fxml"));
         Parent root = loader.load();
