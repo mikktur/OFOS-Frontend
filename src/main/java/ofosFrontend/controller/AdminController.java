@@ -3,7 +3,6 @@ package ofosFrontend.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -13,6 +12,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -24,31 +24,34 @@ import java.util.List;
 import java.util.Optional;
 
 public class AdminController {
-
     @FXML
-    private VBox restaurantListVBox; // VBox containing the restaurants list
+    private VBox restaurantsVBox; // VBox containing the list of restaurants
+    @FXML
+    private VBox restaurantListVBox;
     @FXML
     private Label addressLabel, phoneLabel, hoursLabel; // Labels for restaurant details
     @FXML
-    private Text defaultText; // Text for displaying the selected restaurant name
-    @FXML
     private ImageView adminLogout; // Logout button
+    @FXML
+    private Text defaultText; // Default text to display when no restaurant is selected
 
     private RestaurantService restaurantService = new RestaurantService();
+    private Restaurant currentSelectedRestaurant; // Store the currently selected restaurant
 
     @FXML
     public void initialize() {
+
         loadRestaurants(); // Load restaurants when the UI initializes
     }
 
     // Method to load the list of restaurants owned by the admin
     public void loadRestaurants() {
         try {
-            // Fetch the list of restaurants from the service
-            List<Restaurant> restaurants = restaurantService.getOwnerRestaurants();
-
             // Clear the VBox before adding new restaurant entries
             restaurantListVBox.getChildren().clear();
+
+            // Fetch the list of restaurants from the service
+            List<Restaurant> restaurants = restaurantService.getOwnerRestaurants();
 
             // Iterate through the list of restaurants
             for (Restaurant restaurant : restaurants) {
@@ -59,7 +62,7 @@ public class AdminController {
 
                 // Create a Text node for the restaurant name
                 Text restaurantNameText = new Text(restaurant.getRestaurantName());
-                restaurantNameText.setFont(Font.font(14));  // Set smaller font size
+                restaurantNameText.setFont(Font.font(12));  // Adjust font size to be smaller
                 restaurantNameText.setStyle("-fx-font-weight: bold;");
 
                 // Add the restaurant name to the HBox
@@ -67,7 +70,11 @@ public class AdminController {
 
                 // Add click event to load the selected restaurant's details
                 restaurantBox.setOnMouseClicked(event -> {
-                    updateRestaurantDetails(restaurant);
+                    // Set the selected restaurant
+                    currentSelectedRestaurant = restaurant;
+
+                    // Update the UI with the selected restaurant's details
+                    updateRestaurantDetailsUI();
                 });
 
                 // Add the HBox to the VBox (restaurantListVBox)
@@ -78,36 +85,31 @@ public class AdminController {
         }
     }
 
-    private void updateRestaurantDetails(Restaurant restaurant) {
-        // Update the labels with the restaurant's details
-        defaultText.setText(restaurant.getRestaurantName()); // Update the "Default restaurant" text
-        addressLabel.setText(restaurant.getAddress()); // Update the address label
-        phoneLabel.setText(restaurant.getRestaurantPhone()); // Update the phone label
-        hoursLabel.setText(restaurant.getBusinessHours()); // Update the business hours label
-    }
 
-    @FXML
-    public void goToEditMenu(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/AdminFoodMenuUI.fxml"));
-            Parent root = loader.load();
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.setTitle("Admin Food Menu");
-
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
+    // Unified method to update restaurant details in the UI
+    private void updateRestaurantDetailsUI() {
+        if (currentSelectedRestaurant != null) {
+            // Update the labels in the UI with the selected restaurant's details
+            defaultText.setText(currentSelectedRestaurant.getRestaurantName());
+            addressLabel.setText(currentSelectedRestaurant.getAddress());
+            phoneLabel.setText(currentSelectedRestaurant.getRestaurantPhone());
+            hoursLabel.setText(currentSelectedRestaurant.getBusinessHours());
         }
     }
 
     // Method to modify restaurant information
     @FXML
     private void modifyRestaurantInfo() {
+        if (currentSelectedRestaurant == null) {
+            // If no restaurant is selected, show an error message
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("No Restaurant Selected");
+            alert.setHeaderText("Please select a restaurant to modify.");
+            alert.showAndWait();
+            return;
+        }
+
+        // Proceed with modifying the selected restaurant
         Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.setTitle("Modify Restaurant Info");
         dialog.setHeaderText("Edit the contact information for the restaurant.");
@@ -119,17 +121,9 @@ public class AdminController {
         grid.setHgap(10);
         grid.setVgap(10);
 
-        TextField addressField = new TextField();
-        addressField.setPromptText("Address");
-        addressField.setText(addressLabel.getText());
-
-        TextField phoneField = new TextField();
-        phoneField.setPromptText("Phone Number");
-        phoneField.setText(phoneLabel.getText());
-
-        TextField hoursField = new TextField();
-        hoursField.setPromptText("Business Hours");
-        hoursField.setText(hoursLabel.getText());
+        TextField addressField = new TextField(currentSelectedRestaurant.getAddress());
+        TextField phoneField = new TextField(currentSelectedRestaurant.getRestaurantPhone());
+        TextField hoursField = new TextField(currentSelectedRestaurant.getBusinessHours());
 
         grid.add(new Label("Address:"), 0, 0);
         grid.add(addressField, 1, 0);
@@ -140,6 +134,7 @@ public class AdminController {
 
         dialog.getDialogPane().setContent(grid);
 
+        // Convert result
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == modifyButtonType) {
                 return new Pair<>(addressField.getText(), phoneField.getText());
@@ -150,29 +145,66 @@ public class AdminController {
         Optional<Pair<String, String>> result = dialog.showAndWait();
 
         result.ifPresent(info -> {
-            addressLabel.setText(addressField.getText());
-            phoneLabel.setText(phoneField.getText());
-            hoursLabel.setText(hoursField.getText());
+            // Update the selected restaurant's details
+            currentSelectedRestaurant.setAddress(addressField.getText());
+            currentSelectedRestaurant.setRestaurantPhone(phoneField.getText());
+            currentSelectedRestaurant.setHours(hoursField.getText());
 
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Information Updated");
-            alert.setHeaderText("Restaurant Information Updated Successfully");
-            alert.setContentText("Address: " + addressField.getText() +
-                    "\nPhone: " + phoneField.getText() +
-                    "\nBusiness Hours: " + hoursField.getText());
-            alert.showAndWait();
+            // Update the UI with new data
+            updateRestaurantDetailsUI();
+
+            // Now update the backend
+            try {
+                restaurantService.updateRestaurantInfo(currentSelectedRestaurant);
+
+                // Show success alert
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Information Updated");
+                alert.setHeaderText("Restaurant Information Updated Successfully");
+                alert.setContentText("Address: " + addressField.getText() +
+                        "\nPhone: " + phoneField.getText() +
+                        "\nBusiness Hours: " + hoursField.getText());
+                alert.showAndWait();
+            } catch (IOException e) {
+                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                errorAlert.setTitle("Error");
+                errorAlert.setHeaderText("Failed to Update Restaurant Information");
+                errorAlert.setContentText("An error occurred while updating the restaurant.");
+                errorAlert.showAndWait();
+                e.printStackTrace();
+            }
         });
     }
 
     @FXML
-    public void logOut(MouseEvent mouseEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/loginUI.fxml"));
-        Parent root = loader.load();
+    public void logOut(MouseEvent mouseEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/loginUI.fxml"));
+            Parent root = loader.load();
+            System.out.println("Logged out, I guess");
 
-        Stage currentStage = (Stage) adminLogout.getScene().getWindow();
-        Scene backToLoginScene = new Scene(root, 650, 400);
-        currentStage.setTitle("OFOS Login");
-        currentStage.setScene(backToLoginScene);
-        currentStage.show();
+            Stage currentStage = (Stage) adminLogout.getScene().getWindow();
+            Scene backToLoginScene = new Scene(root, 650, 400);
+            currentStage.setTitle("OFOS Login");
+            currentStage.setScene(backToLoginScene);
+            currentStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void goToEditMenu(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/AdminFoodMenuUI.fxml"));
+            Parent root = loader.load();
+
+            Stage currentStage = (Stage) adminLogout.getScene().getWindow();
+            Scene editMenuScene = new Scene(root, 650, 400);
+            currentStage.setTitle("OFOS Admin");
+            currentStage.setScene(editMenuScene);
+            currentStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

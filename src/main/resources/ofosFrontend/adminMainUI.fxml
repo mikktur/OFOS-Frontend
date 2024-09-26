@@ -73,7 +73,7 @@
                </HBox.margin>
             </VBox>
 
-            <VBox prefHeight="133.0" prefWidth="549.0">
+            <VBox>
                <children>
                   <Text fx:id="defaultText" strokeType="OUTSIDE" strokeWidth="0.0" text="Default restaurant" VBox.vgrow="ALWAYS">
                      <font>
@@ -83,7 +83,7 @@
                         <Insets top="30.0" />
                      </VBox.margin>
                   </Text>
-                  <VBox prefHeight="290.0" prefWidth="397.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
+                  <VBox style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" VBox.vgrow="NEVER">
                      <VBox.margin>
                         <Insets right="20.0" top="5.0" />
                      </VBox.margin>

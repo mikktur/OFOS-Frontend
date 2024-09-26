@@ -48,9 +48,31 @@ public class RestaurantService {
         List<Restaurant> restaurants = mapper.readValue(responseBody, mapper.getTypeFactory().constructCollectionType(List.class, Restaurant.class));
         System.out.println(restaurants);
         return restaurants;
+    }
+    public void updateRestaurantInfo(Restaurant restaurant) throws IOException {
+        MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
+        // Serialize the restaurant object to JSON
+        String restaurantJson = mapper.writeValueAsString(restaurant);
+
+        // Create the request body with the JSON
+        RequestBody body = RequestBody.create(restaurantJson, JSON);
+
+        // Build the PUT request to update restaurant information
+        Request request = new Request.Builder()
+                .url(API_URL + "restaurants/" + restaurant.getId()) // Assuming the restaurant ID is used in the URL
+                .put(body)
+                .build();
+
+        // Execute the request and handle the response
+        Response response = client.newCall(request).execute();
+
+        if (!response.isSuccessful()) {
+            throw new IOException("Unexpected code " + response);
+        }
     }
 }
+
 
 
 

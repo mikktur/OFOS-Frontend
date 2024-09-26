@@ -64,4 +64,12 @@ public class Restaurant {
     public String getBusinessHours() {
         return businessHours;
     }
+
+    public void setAddress(String newAddress) {
+        this.address = newAddress;
+    }
+
+    public void setHours(String newHours) {
+        this.businessHours = newHours;
+    }
 }
