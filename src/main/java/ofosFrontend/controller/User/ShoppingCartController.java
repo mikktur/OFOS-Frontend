@@ -4,13 +4,18 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import ofosFrontend.AppManager;
 import ofosFrontend.model.CartItem;
 import ofosFrontend.model.Product;
+import ofosFrontend.model.Restaurant;
 import ofosFrontend.session.SessionManager;
 
 import java.io.IOException;
@@ -104,6 +109,11 @@ public class ShoppingCartController {
 
     public void handleCheckoutClick() {
         System.out.println("Checkout clicked");
+        try {
+            GoToCheckout();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void addListeners() {
@@ -135,5 +145,20 @@ public class ShoppingCartController {
     private void updateSubTotal() {
         double subTotal = SessionManager.getInstance().getCart().getTotalPrice();
         subTotalLabel.setText("Subtotal: " + subTotal);
+    }
+
+    @FXML
+    private void GoToCheckout() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/checkout.fxml"));
+
+        Parent root = loader.load();
+
+        Scene checkoutScene = new Scene(root);
+
+        Stage currentStage = AppManager.getInstance().getPrimaryStage();
+        currentStage.setTitle("OFOS Checkout");
+        currentStage.setScene(checkoutScene);
+
+        currentStage.show();
     }
 }

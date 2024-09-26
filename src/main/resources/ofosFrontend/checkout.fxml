@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.User.CheckoutController">
     <top>
         <fx:include source="navBar.fxml" />
     </top>
@@ -46,7 +46,7 @@
                               <Insets left="10.0" />
                            </VBox.margin>
                         </Text>
-                        <ChoiceBox prefWidth="150.0">
+                        <ChoiceBox fx:id="deliveryMethod" prefWidth="150.0">
                            <VBox.margin>
                               <Insets left="10.0" />
                            </VBox.margin>
@@ -56,7 +56,7 @@
                               <Insets left="10.0" />
                            </VBox.margin>
                         </Text>
-                        <ChoiceBox prefWidth="150.0">
+                        <ChoiceBox fx:id="deliveryAddress" prefWidth="150.0">
                            <VBox.margin>
                               <Insets left="10.0" />
                            </VBox.margin>
@@ -66,12 +66,12 @@
                               <Insets left="10.0" />
                            </VBox.margin>
                         </Text>
-                        <ChoiceBox prefWidth="150.0">
+                        <ChoiceBox fx:id="paymentMethod" prefWidth="150.0">
                            <VBox.margin>
                               <Insets left="10.0" />
                            </VBox.margin>
                         </ChoiceBox>
-                        <Button mnemonicParsing="false" text="Confirm order">
+                        <Button fx:id="orderBtn" mnemonicParsing="false" text="Confirm order">
                            <VBox.margin>
                               <Insets bottom="10.0" left="130.0" top="20.0" />
                            </VBox.margin>
@@ -93,26 +93,29 @@
                         <Font size="14.0" />
                      </font>
                   </Text>
-                  <VBox prefWidth="179.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);;">
+                  <VBox alignment="TOP_CENTER" prefWidth="179.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);;">
                      <VBox.margin>
                         <Insets left="20.0" right="20.0" top="2.0" />
                      </VBox.margin>
                      <children>
-                        <VBox prefWidth="179.0" VBox.vgrow="ALWAYS" />
-                        <Label text="Subtotal">
+                        <VBox fx:id="summaryContainer" prefWidth="179.0" spacing="10.0" VBox.vgrow="ALWAYS">
                            <VBox.margin>
-                              <Insets left="20.0" />
+                              <Insets left="10.0" />
+                           </VBox.margin></VBox>
+                        <Label prefHeight="20.0" prefWidth="112.0" text="Subtotal" textAlignment="CENTER">
+                           <VBox.margin>
+                              <Insets />
                            </VBox.margin>
                            <font>
                               <Font size="14.0" />
                            </font>
                         </Label>
-                        <Line endX="20.0" startX="150.0">
+                        <Line startX="150.0">
                            <VBox.margin>
-                              <Insets left="20.0" top="2.0" />
+                              <Insets top="2.0" />
                            </VBox.margin>
                         </Line>
-                        <Label>
+                        <Label fx:id="subTotal">
                            <VBox.margin>
                               <Insets bottom="5.0" left="120.0" top="5.0" />
                            </VBox.margin>
