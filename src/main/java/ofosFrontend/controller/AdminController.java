@@ -40,7 +40,6 @@ public class AdminController {
 
     @FXML
     public void initialize() {
-
         loadRestaurants(); // Load restaurants when the UI initializes
     }
 

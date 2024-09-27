@@ -30,6 +30,7 @@ public class RestaurantService {
         return restaurants;
 
     }
+
     public List<Restaurant> getOwnerRestaurants() throws IOException {
 
         SessionManager sessionManager = SessionManager.getInstance();
@@ -50,6 +51,28 @@ public class RestaurantService {
         return restaurants;
     }
     public void updateRestaurantInfo(Restaurant restaurant) throws IOException {
+        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+
+        // Serialize the restaurant object to JSON
+        String restaurantJson = mapper.writeValueAsString(restaurant);
+
+        // Create the request body with the JSON
+        RequestBody body = RequestBody.create(restaurantJson, JSON);
+
+        // Build the PUT request to update restaurant information
+        Request request = new Request.Builder()
+                .url(API_URL + "restaurants/" + restaurant.getId()) // Assuming the restaurant ID is used in the URL
+                .put(body)
+                .build();
+
+        // Execute the request and handle the response
+        Response response = client.newCall(request).execute();
+
+        if (!response.isSuccessful()) {
+            throw new IOException("Unexpected code " + response);
+        }
+    }
+    public void getRestaurantID(Restaurant restaurant) throws IOException {
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
         // Serialize the restaurant object to JSON
