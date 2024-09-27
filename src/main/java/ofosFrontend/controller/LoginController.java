@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import ofosFrontend.AppManager;
 import ofosFrontend.controller.User.BasicController;
 import ofosFrontend.controller.User.MMenuController;
+import ofosFrontend.controller.User.MainController;
 import ofosFrontend.service.RestaurantService;
 import ofosFrontend.service.UserService;
 import ofosFrontend.session.SessionManager;
@@ -111,6 +112,7 @@ public class LoginController extends BasicController {
             e.printStackTrace();
             showError("Error processing login response.");
         }
+        openMainStage();
     }
 
 
@@ -219,30 +221,44 @@ public class LoginController extends BasicController {
     public void openCart(){
 
     }
-    public void goToMain() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/root.fxml"));
+    public void openMainStage() {
         try {
-            BorderPane root = loader.load();
-            Stage currentStage = AppManager.getInstance().getPrimaryStage();
+            // Load the main layout (root.fxml) and get the controller
+            FXMLLoader rootLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/root.fxml"));
+            BorderPane root = rootLoader.load();
+            MainController mainController = rootLoader.getController(); // Get the MainController instance
+
+            // Create the new scene and stage
+            Stage mainStage = new Stage();
             Scene menuScene = new Scene(root, 1000, 800);
-            currentStage.setTitle("OFOS Menu");
-            currentStage.setScene(menuScene);
-            FXMLLoader loader2 = new FXMLLoader(getClass().getResource("/ofosFrontend/mainUI.fxml"));
-            ScrollPane newCenterContent = loader2.load();
+            mainStage.setTitle("OFOS Menu");
+            mainStage.setScene(menuScene);
 
-
-            MMenuController controller = loader2.getController();
+            // Load the main UI content (mainUI.fxml) using MainController's setCenterContent
+            FXMLLoader mainLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/mainUI.fxml"));
+            ScrollPane newCenterContent = mainLoader.load();
+            MMenuController controller = mainLoader.getController();
             controller.initMenu();
 
+            // Use MainController to set the center content
+            mainController.setCenterContent(newCenterContent);
 
+            // Show the new main stage
+            mainStage.show();
 
-
-            root.setCenter(newCenterContent);
-            currentStage.show();
-
+            // Close the login stage
+            closeLoginStage();
 
         } catch (Exception e) {
             e.printStackTrace();
+            showError("Failed to open the main stage.");
         }
+    }
+
+
+    // Close the login stage
+    private void closeLoginStage() {
+        Stage loginStage = (Stage) username.getScene().getWindow();
+        loginStage.close();
     }
 }

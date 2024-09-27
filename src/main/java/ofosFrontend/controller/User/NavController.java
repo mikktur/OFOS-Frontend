@@ -15,24 +15,18 @@ import ofosFrontend.session.SessionManager;
 
 public class NavController extends BasicController {
     @FXML
+    public StackPane navBarRoot;
+    @FXML
     private Text mainMenuLink;
-
+    private MainController mainController;
     @FXML
-    private VBox cart;
     private ImageView dropDownMenuBtn;
-    @FXML
-    private StackPane navBar;
-    @FXML
-    private VBox dropDown;
-    @FXML
-    AnchorPane dropDownContent;
     @FXML
     private Label usernameLabel;
     @FXML
     private ImageView openCart;
     @FXML
     VBox shoppingCartContent;
-    private boolean isShoppingCartVisible = false;
 
     public NavController() {
 
@@ -40,51 +34,13 @@ public class NavController extends BasicController {
 
     @FXML
     private void initialize() {
-
+        navBarRoot.getProperties().put("controller", this);
         initializeUIComponents();
         setupEventHandlers();
-
     }
 
-    public void handleDropDownClick() {
-        System.out.println("Drop down clicked");
-
-        try {
-            Parent parent = navBar.getParent();
-            BorderPane borderPane = (BorderPane) parent;
-
-            if (dropDownContent == null) {
-
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/dropDownUi.fxml"));
-                dropDownContent = loader.load();
-            }
 
 
-            if (dropDownContent.isVisible()) {
-
-                dropDownContent.setVisible(false);
-                dropDownContent.setManaged(false);
-                borderPane.setLeft(null);
-            } else {
-
-                dropDownContent.setVisible(true);
-                dropDownContent.setManaged(true);
-                borderPane.setLeft(dropDownContent);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void loadDropDownContent() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/dropDownUi.fxml"));
-        try {
-            dropDownContent = loader.load();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public void setUsernameLabel() {
         SessionManager sessionManager = SessionManager.getInstance();
@@ -94,8 +50,10 @@ public class NavController extends BasicController {
     }
 
     public void initializeUIComponents() {
-        loadDropDownContent();
         setUsernameLabel();
+    }
+    public void handleDropDownClick() {
+        mainController.toggleSideMenu();
     }
 
     public void setupEventHandlers() {
@@ -103,35 +61,16 @@ public class NavController extends BasicController {
         mainMenuLink.setOnMouseClicked(event -> super.goToMain());
         assert dropDownMenuBtn != null;
         dropDownMenuBtn.setOnMouseClicked(event -> handleDropDownClick());
-        openCart.setOnMouseClicked(event -> handleShoppingCartClick());
+        openCart.setOnMouseClicked(event -> handleCartClick());
     }
 
-    public void handleShoppingCartClick() {
-        System.out.println("Shopping cart clicked");
+    @FXML
+    private void handleCartClick() {
+        mainController.toggleShoppingCart();
+    }
 
-        try {
-            Parent parent = navBar.getParent();
-            BorderPane borderPane = (BorderPane) parent;
-            VBox cart = (VBox) borderPane.getRight();
-            // Load the shopping cart content each time to refresh it
 
-            // Toggle visibility manually using the flag
-            if (isShoppingCartVisible) {
-                // If the cart is visible, hide it
-                cart.setVisible(false);
-                borderPane.setRight(null);
-                 // Remove the cart from the layout
-                isShoppingCartVisible = false;  // Update the flag
-            } else {
-                // If the cart is not visible, show it
-                borderPane.setRight(cart);
-                cart.setVisible(true);
-
-                isShoppingCartVisible = true;  // Update the flag
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
     }
 }

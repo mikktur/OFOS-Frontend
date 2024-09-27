@@ -23,6 +23,7 @@ import java.util.EventListener;
 import java.util.List;
 
 public class ShoppingCartController {
+
     @FXML
     private VBox cartItemContainer;
     @FXML
@@ -31,13 +32,14 @@ public class ShoppingCartController {
     private Button goToCheckout;
     @FXML
     private VBox cartRoot;
+    private MainController mainController;
     public ShoppingCartController() {
-
     }
 
     @FXML
     public void initialize() {
         try {
+            cartRoot.getProperties().put("controller", this);
             loadCartItems();
             addListeners();
 
@@ -46,7 +48,9 @@ public class ShoppingCartController {
             e.printStackTrace();
         }
     }
-
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
     public void loadCartItems() throws IOException {
         ObservableList<CartItem> items = SessionManager.getInstance().getCart().getItems();
 

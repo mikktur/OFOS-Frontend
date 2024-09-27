@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ofosFrontend.AppManager;
@@ -14,14 +15,19 @@ import java.io.IOException;
 
 public class DropDownMenuController {
     @FXML
+    private AnchorPane dropDownContent;
+    @FXML
     private Text dropDownUsername;
-
+    private MainController mainController;
     @FXML
     private void initialize() {
+        dropDownContent.getProperties().put("controller", this);
         SessionManager sessionManager = SessionManager.getInstance();
         dropDownUsername.setText(sessionManager.getUsername());
     }
-
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
     public DropDownMenuController() {
     }
 
