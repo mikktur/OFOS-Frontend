@@ -16,7 +16,9 @@ import ofosFrontend.session.SessionManager;
 public class NavController extends BasicController {
     @FXML
     private Text mainMenuLink;
+
     @FXML
+    private VBox cart;
     private ImageView dropDownMenuBtn;
     @FXML
     private StackPane navBar;
@@ -110,19 +112,21 @@ public class NavController extends BasicController {
         try {
             Parent parent = navBar.getParent();
             BorderPane borderPane = (BorderPane) parent;
-
+            VBox cart = (VBox) borderPane.getRight();
             // Load the shopping cart content each time to refresh it
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/shoppingCart.fxml"));
-            shoppingCartContent = loader.load();
 
             // Toggle visibility manually using the flag
             if (isShoppingCartVisible) {
                 // If the cart is visible, hide it
-                borderPane.setRight(null);  // Remove the cart from the layout
+                cart.setVisible(false);
+                borderPane.setRight(null);
+                 // Remove the cart from the layout
                 isShoppingCartVisible = false;  // Update the flag
             } else {
                 // If the cart is not visible, show it
-                borderPane.setRight(shoppingCartContent);
+                borderPane.setRight(cart);
+                cart.setVisible(true);
+
                 isShoppingCartVisible = true;  // Update the flag
             }
 

@@ -29,7 +29,8 @@ public class ShoppingCartController {
     private Text subTotalLabel;
     @FXML
     private Button goToCheckout;
-
+    @FXML
+    private VBox cartRoot;
     public ShoppingCartController() {
 
     }

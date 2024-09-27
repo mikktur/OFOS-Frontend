@@ -3,6 +3,7 @@ package ofosFrontend.controller.User;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ofosFrontend.AppManager;
 
@@ -12,16 +13,24 @@ public abstract class BasicController {
 
 
     public void goToMain() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/mainUI.fxml"));
         try {
-            Parent root = loader.load();
-            Stage currentStage = AppManager.getInstance().getPrimaryStage();
-            Scene menuScene = new Scene(root, 1000, 800);
-            currentStage.setTitle("OFOS Menu");
-            currentStage.setScene(menuScene);
-            currentStage.show();
+
+
+
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/mainUI.fxml"));
+            Parent newCenterContent = loader.load();
+
+
             MMenuController controller = loader.getController();
             controller.initMenu();
+
+
+
+            BorderPane rootPane = (BorderPane) AppManager.getInstance().getPrimaryStage().getScene().getRoot();
+
+
+            rootPane.setCenter(newCenterContent);
         } catch (Exception e) {
             e.printStackTrace();
         }

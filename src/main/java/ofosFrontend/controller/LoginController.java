@@ -7,10 +7,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ofosFrontend.AppManager;
 import ofosFrontend.controller.User.BasicController;
@@ -96,7 +94,7 @@ public class LoginController extends BasicController {
                 System.out.println("Token: " + manager.getToken());
                 System.out.println("Username: " + manager.getUsername());
                 System.out.println("Role: " + manager.getRole());
-                super.goToMain();
+                goToMain();
 
 
 
@@ -220,5 +218,31 @@ public class LoginController extends BasicController {
 
     public void openCart(){
 
+    }
+    public void goToMain() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/root.fxml"));
+        try {
+            BorderPane root = loader.load();
+            Stage currentStage = AppManager.getInstance().getPrimaryStage();
+            Scene menuScene = new Scene(root, 1000, 800);
+            currentStage.setTitle("OFOS Menu");
+            currentStage.setScene(menuScene);
+            FXMLLoader loader2 = new FXMLLoader(getClass().getResource("/ofosFrontend/mainUI.fxml"));
+            ScrollPane newCenterContent = loader2.load();
+
+
+            MMenuController controller = loader2.getController();
+            controller.initMenu();
+
+
+
+
+            root.setCenter(newCenterContent);
+            currentStage.show();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

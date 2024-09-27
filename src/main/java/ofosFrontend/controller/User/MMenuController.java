@@ -62,9 +62,9 @@ public class MMenuController {
 
     @FXML
     private void goToRestaurant(Restaurant restaurant) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/restaurantMenuUI.fxml"));
 
-        Parent root = loader.load();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/restaurantMenuUI.fxml"));
+        Parent newCenterContent = loader.load();
 
 
         RMenuController controller = loader.getController();
@@ -72,13 +72,12 @@ public class MMenuController {
 
         controller.setRestaurant(restaurant);
         controller.createCards();
-        Scene restaurantScene = new Scene(root);
 
-        Stage currentStage = AppManager.getInstance().getPrimaryStage();
-        currentStage.setTitle("OFOS Restaurant");
-        currentStage.setScene(restaurantScene);
 
-        currentStage.show();
+        BorderPane rootPane = (BorderPane) AppManager.getInstance().getPrimaryStage().getScene().getRoot();
+
+
+        rootPane.setCenter(newCenterContent);
     }
 
     public void initMenu() {
