@@ -14,6 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ofosFrontend.model.Product;
+import ofosFrontend.model.Restaurant;
 import ofosFrontend.service.ProductService;
 
 import java.io.IOException;
@@ -28,26 +29,20 @@ public class AdminMenuController {
     private ImageView adminLogout;
     @FXML
     private Text restaurantNameText;
-    private ProductService productService = new ProductService();  // Use ProductService to handle products
-    private int restaurantId = 1;  // For simplicity, assuming restaurant ID is 1. Replace with dynamic value.
 
-
+    private ProductService productService = new ProductService();
+    private int restaurantID;
 
     @FXML
     public void initialize() {
-        loadProducts();  // Load products when the UI initializes
+        loadProducts();
     }
-    public void updateRestaurantName(String restaurantName) {
-        restaurantNameText.setText(restaurantName);  // Update the Text node with the restaurant name
-    }
-
-    // Load products dynamically into the VBox
     private void loadProducts() {
         try {
             productListVBox.getChildren().clear();  // Clear existing product entries in the VBox
 
             // Fetch products by restaurant ID using ProductService
-            List<Product> products = productService.getProductsByRID(restaurantId);
+            List<Product> products = productService.getProductsByRID(restaurantID);
 
             // Iterate through the list of products and add them to the VBox
             for (Product product : products) {
@@ -153,7 +148,7 @@ public class AdminMenuController {
         result.ifPresent(product -> {
             // Add product to the database (You will need to implement this in ProductService)
             try {
-                productService.addProductToRestaurant(product, restaurantId);  // Pass the product and restaurant ID
+                productService.addProductToRestaurant(product, restaurantID);  // Pass the product and restaurant ID
                 loadProducts();  // Update the UI with the newly added product
             } catch (IOException e) {
                 e.printStackTrace();
@@ -238,5 +233,8 @@ public class AdminMenuController {
         currentStage.setTitle("OFOS Login");
         currentStage.setScene(backToLoginScene);
         currentStage.show();
+    }
+    public void setRId(int restaurantID) {
+        this.restaurantID = restaurantID;
     }
 }

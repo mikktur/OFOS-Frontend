@@ -34,6 +34,7 @@ public class AdminController {
     private ImageView adminLogout; // Logout button
     @FXML
     private Text defaultText; // Default text to display when no restaurant is selected
+    private int rID;
 
     private RestaurantService restaurantService = new RestaurantService();
     private Restaurant currentSelectedRestaurant; // Store the currently selected restaurant
@@ -69,7 +70,7 @@ public class AdminController {
 
                 // Add click event to load the selected restaurant's details
                 restaurantBox.setOnMouseClicked(event -> {
-                    // Set the selected restaurant
+                    rID = restaurant.getId();
                     currentSelectedRestaurant = restaurant;
 
                     // Update the UI with the selected restaurant's details
@@ -194,7 +195,10 @@ public class AdminController {
 
     public void goToEditMenu(ActionEvent actionEvent) {
         try {
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/AdminFoodMenuUI.fxml"));
+            AdminMenuController controller = loader.getController();
+            controller.setRId(rID);
             Parent root = loader.load();
 
             Stage currentStage = (Stage) adminLogout.getScene().getWindow();
