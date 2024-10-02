@@ -2,6 +2,7 @@ package ofosFrontend.controller.User;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -13,11 +14,10 @@ import java.io.IOException;
 public class MainController {
 
     @FXML
-    private StackPane centerPane; // This StackPane is used for dynamic content
- // This StackPane is used for the navigation bar
+    private StackPane centerPane;
 
     @FXML
-    private BorderPane root; // This BorderPane is the root layout of the application
+    private BorderPane root;
     @FXML
     private VBox cart;
 
@@ -33,18 +33,31 @@ public class MainController {
 
         loadDefaultContent();
         setControllers();
-        root.setLeft(null); // Initialize without the side menu
-        root.setRight(null); // Initialize without the shopping cart
+        root.setLeft(null);
+        root.setRight(null);
     }
 
-    // Method to set the center content dynamically
+
     public void setCenterContent(Node content) {
-        centerPane.getChildren().clear(); // Clear any existing content
-        centerPane.getChildren().add(content); // Add new content to the centerPane
+        if (centerPane == null) {
+            System.out.println("centerPane is null!");
+            return;
+        }
+        System.out.println("Setting center content...");
+        System.out.println("Content: " + content);
+        // Clear any existing content
+        centerPane.getChildren().clear();
+        System.out.println("Cleared existing content...");
+        System.out.println("Content: " + centerPane.getChildren());
+        // Add the new content
+        centerPane.getChildren().add(content);
+        System.out.println("content: " + centerPane.getChildren());
+        // Ensure the content is set to fill the available space (optional)
+        StackPane.setAlignment(content, Pos.CENTER);
     }
 
-    // Example method to load default content in the centerPane
-    private void loadDefaultContent() {
+
+    public void loadDefaultContent() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/mainUI.fxml"));
             Node content = loader.load();
@@ -84,7 +97,7 @@ public class MainController {
         }
     }
 
-    // This method can be called by other controllers or UI components to change the center content
+
     public void switchToContent(String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -104,7 +117,6 @@ public class MainController {
         }
     }
 
-    // Toggle the shopping cart visibility
     public void toggleShoppingCart() {
         if (cart != null) {
             boolean isVisible = cart.isVisible();

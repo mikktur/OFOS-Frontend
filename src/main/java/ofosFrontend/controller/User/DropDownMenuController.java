@@ -39,18 +39,7 @@ public class DropDownMenuController {
     public void goToSettings(MouseEvent mouseEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/newUserSettingsUI.fxml"));
         Parent root = loader.load();
-
-        Stage currentStage = (Stage) AppManager.getInstance().getPrimaryStage();
-
-        Scene settingsScene = new Scene(root, 800, 600);
-
-        currentStage.setTitle("OFOS Settings");
-        currentStage.setMinWidth(800);
-        currentStage.setMinHeight(600);
-
-        currentStage.setScene(settingsScene);
-
-        currentStage.show();
+        mainController.setCenterContent(root);
     }
 
 

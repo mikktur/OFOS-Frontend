@@ -58,7 +58,7 @@ public class NavController extends BasicController {
 
     public void setupEventHandlers() {
         assert mainMenuLink != null;
-        mainMenuLink.setOnMouseClicked(event -> super.goToMain());
+        mainMenuLink.setOnMouseClicked(event -> mainController.loadDefaultContent());
         assert dropDownMenuBtn != null;
         dropDownMenuBtn.setOnMouseClicked(event -> handleDropDownClick());
         openCart.setOnMouseClicked(event -> handleCartClick());

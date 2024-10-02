@@ -94,7 +94,7 @@ public class ShoppingCartController {
 
         updateSubTotal();
     }
-
+    // lisää tuotekortin ostoskorin käyttöliittymään
     private void addCartItemToUI(CartItem item) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/cartItem.fxml"));
         VBox cartItem = loader.load();
@@ -105,6 +105,7 @@ public class ShoppingCartController {
         cartItemContainer.getChildren().add(cartItem);
     }
 
+    // poista tuotekortin ostoskorin käyttöliittymästä
     private void removeCartItemFromUI(CartItem item) {
         cartItemContainer.getChildren().removeIf(node -> {
             CartItem associatedItem = (CartItem) node.getUserData();
@@ -129,6 +130,8 @@ public class ShoppingCartController {
         });
 
     }
+
+
     private void removeEmptyCartMessage() {
         cartItemContainer.getChildren().removeIf(node -> "emptyMessage".equals(node.getId()));
     }
@@ -157,13 +160,6 @@ public class ShoppingCartController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/checkout.fxml"));
 
         Parent root = loader.load();
-
-        Scene checkoutScene = new Scene(root);
-
-        Stage currentStage = AppManager.getInstance().getPrimaryStage();
-        currentStage.setTitle("OFOS Checkout");
-        currentStage.setScene(checkoutScene);
-
-        currentStage.show();
+        mainController.setCenterContent(root);
     }
 }

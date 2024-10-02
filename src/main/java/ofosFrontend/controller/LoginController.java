@@ -223,30 +223,22 @@ public class LoginController extends BasicController {
     }
     public void openMainStage() {
         try {
-            // Load the main layout (root.fxml) and get the controller
             FXMLLoader rootLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/root.fxml"));
             BorderPane root = rootLoader.load();
             MainController mainController = rootLoader.getController(); // Get the MainController instance
-
-            // Create the new scene and stage
+            AppManager.getInstance().setMainController(mainController);
             Stage mainStage = new Stage();
             Scene menuScene = new Scene(root, 1000, 800);
             mainStage.setTitle("OFOS Menu");
             mainStage.setScene(menuScene);
 
-            // Load the main UI content (mainUI.fxml) using MainController's setCenterContent
             FXMLLoader mainLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/mainUI.fxml"));
             ScrollPane newCenterContent = mainLoader.load();
-            MMenuController controller = mainLoader.getController();
-            controller.initMenu();
 
-            // Use MainController to set the center content
             mainController.setCenterContent(newCenterContent);
 
-            // Show the new main stage
             mainStage.show();
 
-            // Close the login stage
             closeLoginStage();
 
         } catch (Exception e) {

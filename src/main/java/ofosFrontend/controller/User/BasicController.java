@@ -21,12 +21,6 @@ public abstract class BasicController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/mainUI.fxml"));
             Parent newCenterContent = loader.load();
 
-
-            MMenuController controller = loader.getController();
-            controller.initMenu();
-
-
-
             BorderPane rootPane = (BorderPane) AppManager.getInstance().getPrimaryStage().getScene().getRoot();
 
 

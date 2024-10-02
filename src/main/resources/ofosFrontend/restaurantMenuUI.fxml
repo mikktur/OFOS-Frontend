@@ -2,117 +2,113 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane id="itemMenu" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.User.RMenuController">
-   <center>
-      <ScrollPane fx:id="menuScroll" fitToWidth="true">
-         <content>
-            <VBox alignment="TOP_CENTER">
+
+<ScrollPane fx:id="menuScroll" fitToWidth="true" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.User.RMenuController">
+   <content>
+      <VBox alignment="TOP_CENTER">
+         <children>
+            <VBox alignment="TOP_CENTER" maxWidth="1300.0" VBox.vgrow="ALWAYS">
                <children>
-                  <VBox alignment="TOP_CENTER" maxWidth="1300.0" VBox.vgrow="ALWAYS">
+                  <HBox id="menuInfo" alignment="CENTER" minHeight="103.0" spacing="20.0" stylesheets="@styles.css" VBox.vgrow="NEVER">
                      <children>
-                        <HBox id="menuInfo" alignment="CENTER" minHeight="103.0" spacing="20.0" stylesheets="@styles.css" VBox.vgrow="NEVER">
-                           <children>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="McDonald's" HBox.hgrow="ALWAYS">
-                                 <HBox.margin>
-                                    <Insets />
-                                 </HBox.margin>
-                                 <font>
-                                    <Font name="System Bold" size="24.0" />
-                                 </font>
-                              </Text>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Osoite: Mannerheimintie 105" wrappingWidth="153.1640625">
-                                 <HBox.margin>
-                                    <Insets />
-                                 </HBox.margin>
-                              </Text>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Aukioloaika: 9-22">
-                                 <HBox.margin>
-                                    <Insets />
-                                 </HBox.margin>
-                              </Text>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Puhelinnumero: 050 566 7777">
-                                 <HBox.margin>
-                                    <Insets />
-                                 </HBox.margin>
-                              </Text>
-                           </children>
-                           <VBox.margin>
-                              <Insets bottom="20.0" top="2.0" />
-                           </VBox.margin>
-                        </HBox>
-                        <HBox id="itemCategory" alignment="CENTER" maxWidth="553.0" spacing="20.0" style="-fx-background-color: #C4E6FB99;" stylesheets="@styles.css" VBox.vgrow="NEVER">
-                           <children>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ateriat" textAlignment="CENTER">
-                                 <HBox.margin>
-                                    <Insets />
-                                 </HBox.margin>
-                                 <font>
-                                    <Font name="System Bold" size="18.0" />
-                                 </font>
-                              </Text>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Burgerit" textAlignment="CENTER">
-                                 <HBox.margin>
-                                    <Insets />
-                                 </HBox.margin>
-                                 <font>
-                                    <Font name="System Bold" size="18.0" />
-                                 </font>
-                              </Text>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Sormisyötävät">
-                                 <HBox.margin>
-                                    <Insets />
-                                 </HBox.margin>
-                                 <font>
-                                    <Font name="System Bold" size="18.0" />
-                                 </font>
-                              </Text>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Juomat" textAlignment="CENTER">
-                                 <HBox.margin>
-                                    <Insets />
-                                 </HBox.margin>
-                                 <font>
-                                    <Font name="System Bold" size="18.0" />
-                                 </font>
-                              </Text>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Dipit" textAlignment="CENTER" HBox.hgrow="ALWAYS">
-                                 <HBox.margin>
-                                    <Insets />
-                                 </HBox.margin>
-                                 <font>
-                                    <Font name="System Bold" size="18.0" />
-                                 </font>
-                              </Text>
-                           </children>
-                           <VBox.margin>
-                              <Insets bottom="20.0" />
-                           </VBox.margin>
-                           <opaqueInsets>
-                              <Insets bottom="20.0" />
-                           </opaqueInsets>
-                        </HBox>
-                        <FlowPane fx:id="menuContainer" hgap="20.0" prefWrapLength="800.0" rowValignment="TOP" style="-fx-background-color: #C4E6FB99;" styleClass="itemContainer" vgap="20.0" VBox.vgrow="ALWAYS">
-                           <padding>
-                              <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                           </padding>
-                           <VBox.margin>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="McDonald's" HBox.hgrow="ALWAYS">
+                           <HBox.margin>
                               <Insets />
-                           </VBox.margin>
-                        </FlowPane>
+                           </HBox.margin>
+                           <font>
+                              <Font name="System Bold" size="24.0" />
+                           </font>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Osoite: Mannerheimintie 105" wrappingWidth="153.1640625">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Aukioloaika: 9-22">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Puhelinnumero: 050 566 7777">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </Text>
                      </children>
+                     <VBox.margin>
+                        <Insets bottom="20.0" top="2.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox id="itemCategory" alignment="CENTER" maxWidth="553.0" spacing="20.0" style="-fx-background-color: #C4E6FB99;" stylesheets="@styles.css" VBox.vgrow="NEVER">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ateriat" textAlignment="CENTER">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Burgerit" textAlignment="CENTER">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Sormisyötävät">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Juomat" textAlignment="CENTER">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Dipit" textAlignment="CENTER" HBox.hgrow="ALWAYS">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Text>
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="20.0" />
+                     </VBox.margin>
+                     <opaqueInsets>
+                        <Insets bottom="20.0" />
+                     </opaqueInsets>
+                  </HBox>
+                  <FlowPane fx:id="menuContainer" hgap="20.0" prefWrapLength="800.0" rowValignment="TOP" style="-fx-background-color: #C4E6FB99;" styleClass="itemContainer" vgap="20.0" VBox.vgrow="ALWAYS">
                      <padding>
-                        <Insets left="20.0" right="20.0" />
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                      </padding>
-                  </VBox>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </FlowPane>
                </children>
+               <padding>
+                  <Insets left="20.0" right="20.0" />
+               </padding>
             </VBox>
-         </content>
-      </ScrollPane>
-   </center>
-</BorderPane>
+         </children>
+      </VBox>
+   </content>
+</ScrollPane>

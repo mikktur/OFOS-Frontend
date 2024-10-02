@@ -28,33 +28,10 @@ import java.util.Objects;
 
 public class MMenuController {
     @FXML
-    private HBox navBar;
-    @FXML
-    private HBox leftNav;
-    @FXML
-    private HBox middleNav;
-    @FXML
-    private HBox rightNav;
-    @FXML
-    private ImageView mcButton;
-    @FXML
     private FlowPane restaurantFlowPane;
-    @FXML
-    private Button mVButton;
-    @FXML
-    private Button mCButton;
-    @FXML
-    private Button bmButton;
-    @FXML
-    private Text adminTest;
-    @FXML
-    private ImageView dropDownMenu;
-    @FXML
-    private VBox contentBox2;
+
     @FXML
     private ScrollPane mainScroll;
-    @FXML
-    private VBox contentBox;
 
     @FXML
     private Text returnToMenu;
@@ -63,24 +40,18 @@ public class MMenuController {
     @FXML
     private void goToRestaurant(Restaurant restaurant) throws IOException {
 
+       MainController mainController = AppManager.getInstance().getMainController();
+
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/restaurantMenuUI.fxml"));
-        Parent newCenterContent = loader.load();
-
-
+        ScrollPane newCenterContent = loader.load();
         RMenuController controller = loader.getController();
-
-
         controller.setRestaurant(restaurant);
         controller.createCards();
-
-
-        BorderPane rootPane = (BorderPane) AppManager.getInstance().getPrimaryStage().getScene().getRoot();
-
-
-        rootPane.setCenter(newCenterContent);
+        mainController.setCenterContent(newCenterContent);
     }
-
-    public void initMenu() {
+    @FXML
+    public void initialize() {
         RestaurantList restaurantList = new RestaurantList();
         try {
             restaurantList.setRestaurants(restaurantService.getAllRestaurants());
@@ -102,7 +73,7 @@ public class MMenuController {
                     }
                 });
 
-                // Add card to FlowPane
+
                 restaurantFlowPane.getChildren().add(card);
 
                 mainScroll.widthProperty().addListener((obs, oldVal, newVal) -> {
