@@ -39,7 +39,10 @@ public class DropDownMenuController {
     public void goToSettings(MouseEvent mouseEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/newUserSettingsUI.fxml"));
         Parent root = loader.load();
+        mainController.resetToDefaultCartView();
+
         mainController.setCenterContent(root);
+
     }
 
 

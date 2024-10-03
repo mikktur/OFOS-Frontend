@@ -25,7 +25,7 @@ import java.util.EventListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+//TODO refactor this class to smaller classes or move some of it to RMenuController(initializeCartForRestaurant, , also remove redundant code
 public class ShoppingCartController {
 
     @FXML
