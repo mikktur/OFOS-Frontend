@@ -11,7 +11,7 @@ public class ShoppingCart {
     private final ObservableList<CartItem> items;
     private Restaurant restaurant;
     public ShoppingCart(Restaurant restaurant) {
-        items = FXCollections.observableArrayList();
+        this.items = FXCollections.observableArrayList();
         this.restaurant = restaurant;
     }
 
@@ -33,12 +33,12 @@ public class ShoppingCart {
         return items;
     }
 
-    public void setRestaurant(Restaurant restaurant) {
-        this.restaurant = restaurant;
-    }
-
     public Restaurant getRestaurant() {
         return restaurant;
+    }
+
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
     }
 
     public double getTotalPrice() {

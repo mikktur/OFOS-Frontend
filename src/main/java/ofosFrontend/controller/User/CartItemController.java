@@ -27,16 +27,18 @@ public class CartItemController {
     private Label itemPrice;
     @FXML
     private Label itemQuantity;
+    private VBox cartItemNode;
     private CartItem cartItem;
-    public void setCartItem(CartItem item) {
+    public void setCartItem(CartItem item, VBox cartItemNode) {
         this.cartItem = item;
+        this.cartItemNode = cartItemNode;
 
-        // Set initial values
+
         itemName.setText(item.getProduct().getProductName());
         itemPrice.setText(String.valueOf(item.getProduct().getProductPrice()));
         itemQuantity.textProperty().bind(item.quantityProperty().asString());
 
-        // Set up event handlers
+
         addBtn.setOnMouseClicked(event -> item.addQuantity());
         subBtn.setOnMouseClicked(event -> {
             item.subQuantity();
@@ -47,18 +49,21 @@ public class CartItemController {
         deleteBtn.setOnMouseClicked(event -> removeCartItem());
     }
 
-
     private void removeCartItem() {
         if (cartItem != null) {
+
             ShoppingCart cart = SessionManager.getInstance().getCart(cartItem.getRid());
+            System.out.println("Removing item: " + cartItem.getProduct().getProductName());
             cart.removeItem(cartItem.getProduct());
 
 
-            if (cartItemContainer != null) {
-                cartItemContainer.getChildren().remove(cartItemContainer);
+            if (cartItemNode != null && cartItemNode.getParent() instanceof VBox) {
+                VBox parentContainer = (VBox) cartItemNode.getParent();
+                parentContainer.getChildren().remove(cartItemNode);
             }
         }
     }
+
 
 
     public Label getItemName() {

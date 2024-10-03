@@ -37,7 +37,8 @@ public class ShoppingCartController {
     @FXML
     private VBox cartRoot;
     private MainController mainController;
-    private int rid = 0;
+    private int rid;
+
     public ShoppingCartController() {
     }
 
@@ -54,35 +55,10 @@ public class ShoppingCartController {
         this.mainController = mainController;
     }
 
+
     public void loadCartItems() throws IOException {
+        System.out.println("Entered loadCartItems");
         ObservableList<CartItem> items = SessionManager.getInstance().getCart(rid).getItems();
-        System.out.println("Entered loadCartItems AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-
-        items.addListener((ListChangeListener<CartItem>) change -> {
-            while (change.next()) {
-                if (change.wasAdded()) {
-                    removeEmptyCartMessage();
-                    for (CartItem addedItem : change.getAddedSubList()) {
-                        try {
-                            addCartItemToUI(addedItem);
-                            addQuantityListener(addedItem);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                if (change.wasRemoved()) {
-                    for (CartItem removedItem : change.getRemoved()) {
-                        removeCartItemFromUI(removedItem);
-                    }
-                    if (items.isEmpty()) {
-                        displayEmptyCartMessage();
-                    }
-                }
-            }
-
-            updateSubTotal();
-        });
 
         cartItemContainer.getChildren().clear();
         if (items.isEmpty()) {
@@ -93,41 +69,97 @@ public class ShoppingCartController {
                 addQuantityListener(item);
             }
         }
-
-
         updateSubTotal();
     }
+
+    public void initializeCartForRestaurant(int restaurantId, Restaurant restaurant) {
+        cartItemContainer.getChildren().clear();
+        SessionManager sessionManager = SessionManager.getInstance();
+        ShoppingCart cart = sessionManager.getCart(restaurantId);
+
+        // If there is no cart for this restaurant, create a new one
+        if (cart == null) {
+            cart = new ShoppingCart(restaurant);
+            sessionManager.addCart(restaurantId, cart);
+            addCartListeners(cart);
+        }
+        try {
+            loadCartItems();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    // used to create ui elements to the ui when user adds or removes products to the cart
+    private void addCartListeners(ShoppingCart cart) {
+        ObservableList<CartItem> items = cart.getItems();
+        System.out.println("Adding cart listeners");
+
+        items.addListener((ListChangeListener<CartItem>) change -> {
+            System.out.println("Cart items changed");
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    removeEmptyCartMessage();
+                    for (CartItem addedItem : change.getAddedSubList()) {
+                        try {
+
+                            addCartItemToUI(addedItem);
+                            addQuantityListener(addedItem);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                if (change.wasRemoved()) {
+                    if (items.isEmpty()) {
+                        displayEmptyCartMessage();
+                    }
+                }
+            }
+
+            updateSubTotal();
+        });
+    }
+
+    // renders all the currently active carts for the user. used outside of restaurant and checkout views.
     public void loadAllUserCartItems() {
-        // Get the cartMap from SessionManager
+
         HashMap<Integer, ShoppingCart> userCarts = SessionManager.getInstance().getCartMap();
 
-        cartItemContainer.getChildren().clear(); // Clear previous items
+        cartItemContainer.getChildren().clear();
+        if (userCarts.isEmpty()) {
+            displayEmptyCartMessage();
+        } else {
+            for (Map.Entry<Integer, ShoppingCart> entry : userCarts.entrySet()) {
+                ShoppingCart cart = entry.getValue();
+                try {
 
-        for (Map.Entry<Integer, ShoppingCart> entry : userCarts.entrySet()) {
-            ShoppingCart cart = entry.getValue();
-            try {
-                // Load the FXML for each cart card
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/shoppingCarts.fxml"));
-                Node cartCardNode = loader.load();
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/shoppingCarts.fxml"));
+                    Node cartCardNode = loader.load();
 
-                // Use lookup to find the label and button in the card
-                Label restaurantNameLabel = (Label) cartCardNode.lookup("#cartResName");
-                Button checkoutButton = (Button) cartCardNode.lookup("#cartResBtn");
 
-                // Set the restaurant name on the label
-                restaurantNameLabel.setText(cart.getRestaurant().getRestaurantName());
+                    Label restaurantNameLabel = (Label) cartCardNode.lookup("#cartResName");
+                    Button checkoutButton = (Button) cartCardNode.lookup("#cartResBtn");
 
-                // Add an event handler to the checkout button
-                checkoutButton.setOnAction(event -> handleCheckoutClick(cart.getRestaurant().getId()));
 
-                // Add the card to the container
-                cartItemContainer.getChildren().add(cartCardNode);
-            } catch (IOException e) {
-                e.printStackTrace();
+                    restaurantNameLabel.setText(cart.getRestaurant().getRestaurantName());
+
+
+                    checkoutButton.setOnAction(event -> handleCheckoutClick(cart.getRestaurant().getId()));
+
+
+                    cartItemContainer.getChildren().add(cartCardNode);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
-    public void updateCart(){
+
+    //used to update which cart to show in the ui, if rid is 0, all carts are shown and not specific items.
+    public void updateCart() {
+        System.out.println("Updating cart. Current RID: " + rid);
         cartItemContainer.getChildren().clear();
 
         if (rid != 0) {
@@ -136,31 +168,29 @@ public class ShoppingCartController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else{
-            loadAllUserCartItems();
+        } else {
+            try {
+                cartItemContainer.getChildren().clear();
+                loadAllUserCartItems();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-    }
-    public void renderAllCarts(){
-
     }
 
     public void setRid(int rid) {
         this.rid = rid;
     }
 
-    public int getRid() {
-        return rid;
-    }
 
     // lisää tuotekortin ostoskorin käyttöliittymään
     private void addCartItemToUI(CartItem item) throws IOException {
-
+        System.out.println("Adding cart item to UI");
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/cartItem.fxml"));
         VBox cartItem = loader.load();
 
-
         CartItemController cartItemController = loader.getController();
-        cartItemController.setCartItem(item);
+        cartItemController.setCartItem(item, cartItem);
 
         cartItem.setUserData(item);
 
@@ -168,14 +198,7 @@ public class ShoppingCartController {
     }
 
 
-    // poista tuotekortin ostoskorin käyttöliittymästä
-    private void removeCartItemFromUI(CartItem item) {
-        cartItemContainer.getChildren().removeIf(node -> {
-            CartItem associatedItem = (CartItem) node.getUserData();
-            return associatedItem != null && associatedItem.getProduct().getProductID().equals(item.getProduct().getProductID());
-        });
-    }
-
+    //tekee mitä sanoo.
     public void handleCheckoutClick(int rid) {
         System.out.println("Checkout clicked");
         try {
@@ -187,7 +210,6 @@ public class ShoppingCartController {
     }
 
     public void addListeners() {
-        System.out.println("Listener added");
 
         goToCheckout.setOnAction(event -> {
             handleCheckoutClick(rid);

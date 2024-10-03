@@ -8,8 +8,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import ofosFrontend.model.ShoppingCart;
+import ofosFrontend.session.SessionManager;
 
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.Map;
 
 public class MainController {
 
@@ -26,9 +30,7 @@ public class MainController {
     private StackPane navBar;
     @FXML
     private AnchorPane dropDownRoot;
-    private boolean isSideMenuVisible = false;
-    private boolean isShoppingCartVisible = false;
-    private int restaurantId = 0;
+
 
     @FXML
     public void initialize() {
@@ -45,16 +47,8 @@ public class MainController {
             System.out.println("centerPane is null!");
             return;
         }
-        System.out.println("Setting center content...");
-        System.out.println("Content: " + content);
-        // Clear any existing content
         centerPane.getChildren().clear();
-        System.out.println("Cleared existing content...");
-        System.out.println("Content: " + centerPane.getChildren());
-        // Add the new content
         centerPane.getChildren().add(content);
-        System.out.println("content: " + centerPane.getChildren());
-        // Ensure the content is set to fill the available space (optional)
         StackPane.setAlignment(content, Pos.CENTER);
     }
 
@@ -62,8 +56,13 @@ public class MainController {
     public void loadDefaultContent() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/mainUI.fxml"));
-            restaurantId = 0;
+
             Node content = loader.load();
+            MMenuController mmController = loader.getController();
+            if (mmController != null) {
+                mmController.setMainController(this);
+            }
+            resetToDefaultCartView();
             setCenterContent(content);
         } catch (IOException e) {
             e.printStackTrace();
@@ -80,7 +79,7 @@ public class MainController {
                 System.out.println("NavController is null!");
             }
 
-            // Set up ShoppingCartController
+            // Set up ShoppingCartControllerrrrrrr
             shoppingCartController = (ShoppingCartController) cart.getProperties().get("controller");
             if (shoppingCartController != null) {
                 shoppingCartController.setMainController(this);
@@ -100,18 +99,6 @@ public class MainController {
         }
     }
 
-
-    public void switchToContent(String fxmlPath) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-            Node content = loader.load();
-            setCenterContent(content);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
     public void toggleSideMenu() {
         if (dropDownRoot != null) {
             boolean isVisible = dropDownRoot.isVisible();
@@ -122,7 +109,6 @@ public class MainController {
 
     public void toggleShoppingCart() {
         if (cart != null) {
-            shoppingCartController.setRid(restaurantId);
             shoppingCartController.updateCart();
 
             // Toggle the cart's visibility
@@ -135,13 +121,28 @@ public class MainController {
 
     }
 
-    public void setRestaurantId(int restaurantId) {
-        this.restaurantId = restaurantId;
+    public ShoppingCartController getShoppingCartController() {
+        return shoppingCartController;
     }
+    public void checkEmptyCarts() {
+        SessionManager sessionManager = SessionManager.getInstance();
+        Iterator<Map.Entry<Integer, ShoppingCart>> iterator = sessionManager.getCartMap().entrySet().iterator();
 
-    public int getRestaurantId() {
-        return restaurantId;
+        while (iterator.hasNext()) {
+            Map.Entry<Integer, ShoppingCart> entry = iterator.next();
+            ShoppingCart cart = entry.getValue();
+            if (cart.getItems().isEmpty()) {
+                iterator.remove();
+            }
+        }
     }
-
+    public void resetToDefaultCartView() {
+        if(shoppingCartController == null) {
+            return;
+        }
+        shoppingCartController.setRid(0);
+        checkEmptyCarts();
+        shoppingCartController.updateCart();
+    }
 }
 

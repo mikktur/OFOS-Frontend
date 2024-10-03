@@ -8,9 +8,9 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
+
 import javafx.scene.layout.VBox;
-import ofosFrontend.model.CartItem;
+
 import ofosFrontend.model.Product;
 import ofosFrontend.model.Restaurant;
 import ofosFrontend.model.ShoppingCart;
@@ -23,16 +23,14 @@ import java.util.Objects;
 
 public class RMenuController {
     private Restaurant restaurant;
-    private FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/restaurantMenuUI.fxml"));
     private ProductService productService = new ProductService();
     @FXML
     private FlowPane menuContainer;
     @FXML
     private ScrollPane menuScroll;
-    public RMenuController(Restaurant restaurant) {
-        this.restaurant = restaurant;
 
-    }
+
+
 
     public RMenuController() {
     }
@@ -58,7 +56,6 @@ public class RMenuController {
                 priceLabel.setText(String.valueOf(product.getProductPrice()));
                 addToCartButton.setOnMouseClicked(event -> {
                     addProductToCart(product);
-
                 });
                 imageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/hamburga.jpg"))));//+ product.getPicture()))
                 menuContainer.getChildren().add(card);
@@ -76,14 +73,10 @@ public class RMenuController {
         }
     }
 
-    public int getRestaurantId() {
-        return restaurant.getId();
-    }
     private void addProductToCart(Product product) {
         SessionManager sessionManager = SessionManager.getInstance();
         ShoppingCart cart = sessionManager.getCart(restaurant.getId());
 
-        // If no cart exists, create a new one
         if (cart == null) {
             cart = new ShoppingCart(restaurant);
             sessionManager.addCart(restaurant.getId(), cart);

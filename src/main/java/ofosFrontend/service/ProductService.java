@@ -24,12 +24,12 @@ public class ProductService {
                 .url(API_URL + "api/products/restaurant/"+id)
                 .get()
                 .build();
-        System.out.println(request);
+
         Response response = client.newCall(request).execute();
         String responseBody = response.body().string();
-        System.out.println(responseBody);
+
         List<Product> products = mapper.readValue(responseBody, mapper.getTypeFactory().constructCollectionType(List.class, Product.class));
-        System.out.println(products);
+
         return products;
 
     }

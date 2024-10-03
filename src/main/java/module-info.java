@@ -5,6 +5,7 @@ module ofosfrontend {
     requires okhttp3;
     requires com.fasterxml.jackson.databind;
     requires java.net.http;
+    requires java.logging;
 
     opens ofosFrontend.model to com.fasterxml.jackson.databind; // Open package to Jackson
     opens ofosFrontend.controller to javafx.fxml; // Existing configuration

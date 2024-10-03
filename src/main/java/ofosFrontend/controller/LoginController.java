@@ -41,7 +41,6 @@ public class LoginController extends BasicController {
     private final FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/mainUI.fxml"));
 
 
-
     @FXML
     public void initialize() {
         //used  to initialize the session manager
@@ -98,7 +97,6 @@ public class LoginController extends BasicController {
                 goToMain();
 
 
-
                 System.out.println("Login successful.");
             } else if (response.code() == 401) { // Unauthorized error
                 ObjectMapper objectMapper = new ObjectMapper();
@@ -139,7 +137,6 @@ public class LoginController extends BasicController {
         Parent root = loader.load();
 
         Stage currentStage = (Stage) AppManager.getInstance().getPrimaryStage();
-
 
 
         Scene loginScene = new Scene(root, 650, 400);
@@ -214,28 +211,18 @@ public class LoginController extends BasicController {
         System.out.println(message);
     }
 
-    public void openMainMenu(){
 
-    }
 
-    public void openCart(){
-
-    }
     public void openMainStage() {
         try {
             FXMLLoader rootLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/root.fxml"));
             BorderPane root = rootLoader.load();
-            MainController mainController = rootLoader.getController(); // Get the MainController instance
-            AppManager.getInstance().setMainController(mainController);
+
+
             Stage mainStage = new Stage();
             Scene menuScene = new Scene(root, 1000, 800);
             mainStage.setTitle("OFOS Menu");
             mainStage.setScene(menuScene);
-
-            FXMLLoader mainLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/mainUI.fxml"));
-            ScrollPane newCenterContent = mainLoader.load();
-
-            mainController.setCenterContent(newCenterContent);
 
             mainStage.show();
 
@@ -248,7 +235,7 @@ public class LoginController extends BasicController {
     }
 
 
-    // Close the login stage
+
     private void closeLoginStage() {
         Stage loginStage = (Stage) username.getScene().getWindow();
         loginStage.close();

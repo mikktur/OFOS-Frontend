@@ -7,7 +7,7 @@ import ofosFrontend.session.SessionManager;
 public class CartItem {
     private final Product product;
     private final IntegerProperty quantity;
-    private int rid = 0;
+    private int rid;
     // Constructor
     public CartItem(Product product, int quantity, int rid) {
         this.product = product;
@@ -44,7 +44,7 @@ public class CartItem {
     }
 
     public void subQuantity() {
-        if (quantity.get() > 1) {
+        if (quantity.get() > 0) {
             quantity.set(quantity.get() - 1);
 
         }

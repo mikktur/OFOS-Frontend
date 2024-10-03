@@ -21,12 +21,11 @@ public class RestaurantService {
                 .url(API_URL + "restaurants")
                 .get()
                 .build();
-        System.out.println(request);
+
         Response response = client.newCall(request).execute();
         String responseBody = response.body().string();
-        List<Restaurant> restaurants = mapper.readValue(responseBody, mapper.getTypeFactory().constructCollectionType(List.class, Restaurant.class));
-        System.out.println(restaurants);
-        return restaurants;
+
+        return mapper.readValue(responseBody, mapper.getTypeFactory().constructCollectionType(List.class, Restaurant.class));
 
     }
 
