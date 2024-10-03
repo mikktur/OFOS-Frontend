@@ -39,6 +39,8 @@ public class LoginController extends BasicController {
     private final UserService userService = new UserService();
     private final RestaurantService restaurantService = new RestaurantService();
     private final FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/mainUI.fxml"));
+    private String role;
+
 
 
     @FXML
@@ -74,7 +76,6 @@ public class LoginController extends BasicController {
                 Map<String, String> body = mapper.readValue(responseBody, Map.class);
                 manager.setToken(body.get("token"));
                 manager.setUsername(body.get("username"));
-                System.out.println("role: " + body.get("role"));
                 manager.setRole(body.get("role"));
                 Object userIdObj = body.get("userId");
 
@@ -93,8 +94,11 @@ public class LoginController extends BasicController {
 
                 System.out.println("Token: " + manager.getToken());
                 System.out.println("Username: " + manager.getUsername());
-                System.out.println("Role: " + manager.getRole());
-                goToMain();
+
+                if (manager.getRole().equals("OWNER")) {
+                    goToAdmin();
+                } else
+                    goToMain();;
 
 
                 System.out.println("Login successful.");
@@ -111,6 +115,25 @@ public class LoginController extends BasicController {
             showError("Error processing login response.");
         }
         openMainStage();
+    }
+
+    private void goToAdmin() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/adminMainUI.fxml"));
+            Parent root = loader.load();
+
+            Stage currentStage = (Stage) AppManager.getInstance().getPrimaryStage();
+
+            Scene adminScene = new Scene(root, 650, 400);
+
+            currentStage.setTitle("OFOS Admin");
+
+            currentStage.setScene(adminScene);
+
+            currentStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -137,6 +160,7 @@ public class LoginController extends BasicController {
         Parent root = loader.load();
 
         Stage currentStage = (Stage) AppManager.getInstance().getPrimaryStage();
+
 
 
         Scene loginScene = new Scene(root, 650, 400);

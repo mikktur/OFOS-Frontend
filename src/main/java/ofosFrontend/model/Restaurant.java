@@ -10,11 +10,14 @@ public class Restaurant {
     private String picture;
     private String category;
     private String ownerUsername;
+    private String address;
+    private String businessHours;
 
     public Restaurant(String restaurantName, String restaurantPhone, String picture) {
         this.restaurantName = restaurantName;
         this.restaurantPhone = restaurantPhone;
         this.picture = picture;
+
     }
 
     public Restaurant() {
@@ -54,5 +57,19 @@ public class Restaurant {
 
     public String getCategory() {
         return category;
+    }
+    public String getAddress() {
+        return address;
+    }
+    public String getBusinessHours() {
+        return businessHours;
+    }
+
+    public void setAddress(String newAddress) {
+        this.address = newAddress;
+    }
+
+    public void setHours(String newHours) {
+        this.businessHours = newHours;
     }
 }
