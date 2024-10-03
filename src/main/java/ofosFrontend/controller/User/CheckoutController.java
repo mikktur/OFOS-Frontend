@@ -13,17 +13,18 @@ public class CheckoutController {
     VBox summaryContainer;
     @FXML
     Label subTotal;
-
+    private int rid;
     public CheckoutController() {
+        this.rid = 0;
     }
     @FXML
     public void initialize() {
-        renderSummary();
+
     }
 
     public void renderSummary() {
         SessionManager session = SessionManager.getInstance();
-        ShoppingCart cart = session.getCart();
+        ShoppingCart cart = session.getCart(this.rid);
         for (CartItem item : cart.getItems()) {
             HBox container = new HBox();
             container.setSpacing(5);
@@ -37,5 +38,10 @@ public class CheckoutController {
             summaryContainer.getChildren().add(container);
         }
         subTotal.setText(String.valueOf(cart.getTotalPrice()));
+    }
+
+    public void setRid(int rid) {
+        this.rid = rid;
+        renderSummary();
     }
 }

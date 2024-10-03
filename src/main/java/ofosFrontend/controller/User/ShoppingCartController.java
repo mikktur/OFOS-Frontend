@@ -4,6 +4,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -16,11 +17,14 @@ import ofosFrontend.AppManager;
 import ofosFrontend.model.CartItem;
 import ofosFrontend.model.Product;
 import ofosFrontend.model.Restaurant;
+import ofosFrontend.model.ShoppingCart;
 import ofosFrontend.session.SessionManager;
 
 import java.io.IOException;
 import java.util.EventListener;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ShoppingCartController {
 
@@ -33,27 +37,26 @@ public class ShoppingCartController {
     @FXML
     private VBox cartRoot;
     private MainController mainController;
+    private int rid = 0;
     public ShoppingCartController() {
     }
 
     @FXML
     public void initialize() {
-        try {
-            cartRoot.getProperties().put("controller", this);
-            loadCartItems();
-            addListeners();
 
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        cartRoot.getProperties().put("controller", this);
+        System.out.println("ShoppingCartController initialized");
+        System.out.println("RID: " + rid);
+        addListeners();
     }
+
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
     }
-    public void loadCartItems() throws IOException {
-        ObservableList<CartItem> items = SessionManager.getInstance().getCart().getItems();
 
+    public void loadCartItems() throws IOException {
+        ObservableList<CartItem> items = SessionManager.getInstance().getCart(rid).getItems();
+        System.out.println("Entered loadCartItems AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 
         items.addListener((ListChangeListener<CartItem>) change -> {
             while (change.next()) {
@@ -94,16 +97,76 @@ public class ShoppingCartController {
 
         updateSubTotal();
     }
+    public void loadAllUserCartItems() {
+        // Get the cartMap from SessionManager
+        HashMap<Integer, ShoppingCart> userCarts = SessionManager.getInstance().getCartMap();
+
+        cartItemContainer.getChildren().clear(); // Clear previous items
+
+        for (Map.Entry<Integer, ShoppingCart> entry : userCarts.entrySet()) {
+            ShoppingCart cart = entry.getValue();
+            try {
+                // Load the FXML for each cart card
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/shoppingCarts.fxml"));
+                Node cartCardNode = loader.load();
+
+                // Use lookup to find the label and button in the card
+                Label restaurantNameLabel = (Label) cartCardNode.lookup("#cartResName");
+                Button checkoutButton = (Button) cartCardNode.lookup("#cartResBtn");
+
+                // Set the restaurant name on the label
+                restaurantNameLabel.setText(cart.getRestaurant().getRestaurantName());
+
+                // Add an event handler to the checkout button
+                checkoutButton.setOnAction(event -> handleCheckoutClick(cart.getRestaurant().getId()));
+
+                // Add the card to the container
+                cartItemContainer.getChildren().add(cartCardNode);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public void updateCart(){
+        cartItemContainer.getChildren().clear();
+
+        if (rid != 0) {
+            try {
+                loadCartItems();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else{
+            loadAllUserCartItems();
+        }
+    }
+    public void renderAllCarts(){
+
+    }
+
+    public void setRid(int rid) {
+        this.rid = rid;
+    }
+
+    public int getRid() {
+        return rid;
+    }
+
     // lisää tuotekortin ostoskorin käyttöliittymään
     private void addCartItemToUI(CartItem item) throws IOException {
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/cartItem.fxml"));
         VBox cartItem = loader.load();
+
+
         CartItemController cartItemController = loader.getController();
-        cartItemController.loadCartItem(item);
+        cartItemController.setCartItem(item);
 
         cartItem.setUserData(item);
+
         cartItemContainer.getChildren().add(cartItem);
     }
+
 
     // poista tuotekortin ostoskorin käyttöliittymästä
     private void removeCartItemFromUI(CartItem item) {
@@ -113,10 +176,11 @@ public class ShoppingCartController {
         });
     }
 
-    public void handleCheckoutClick() {
+    public void handleCheckoutClick(int rid) {
         System.out.println("Checkout clicked");
         try {
-            GoToCheckout();
+            System.out.println("RID: ccc " + rid);
+            GoToCheckout(rid);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -126,7 +190,7 @@ public class ShoppingCartController {
         System.out.println("Listener added");
 
         goToCheckout.setOnAction(event -> {
-            handleCheckoutClick();
+            handleCheckoutClick(rid);
         });
 
     }
@@ -151,15 +215,16 @@ public class ShoppingCartController {
     }
 
     private void updateSubTotal() {
-        double subTotal = SessionManager.getInstance().getCart().getTotalPrice();
+        double subTotal = SessionManager.getInstance().getCart(rid).getTotalPrice();
         subTotalLabel.setText("Subtotal: " + subTotal);
     }
 
     @FXML
-    private void GoToCheckout() throws IOException {
+    private void GoToCheckout(int rid) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/checkout.fxml"));
-
         Parent root = loader.load();
+        CheckoutController checkoutController = loader.getController();
+        checkoutController.setRid(rid);
         mainController.setCenterContent(root);
     }
 }

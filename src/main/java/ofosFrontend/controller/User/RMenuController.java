@@ -75,9 +75,19 @@ public class RMenuController {
             e.printStackTrace();
         }
     }
+
+    public int getRestaurantId() {
+        return restaurant.getId();
+    }
     private void addProductToCart(Product product) {
         SessionManager sessionManager = SessionManager.getInstance();
-        ShoppingCart cart = sessionManager.getCart();
+        ShoppingCart cart = sessionManager.getCart(restaurant.getId());
+
+        // If no cart exists, create a new one
+        if (cart == null) {
+            cart = new ShoppingCart(restaurant);
+            sessionManager.addCart(restaurant.getId(), cart);
+        }
         cart.addItem(product, 1);
     }
 

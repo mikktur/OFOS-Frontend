@@ -20,13 +20,15 @@ public class MainController {
     private BorderPane root;
     @FXML
     private VBox cart;
-
+    @FXML
+    ShoppingCartController shoppingCartController;
     @FXML
     private StackPane navBar;
     @FXML
     private AnchorPane dropDownRoot;
     private boolean isSideMenuVisible = false;
     private boolean isShoppingCartVisible = false;
+    private int restaurantId = 0;
 
     @FXML
     public void initialize() {
@@ -60,6 +62,7 @@ public class MainController {
     public void loadDefaultContent() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/mainUI.fxml"));
+            restaurantId = 0;
             Node content = loader.load();
             setCenterContent(content);
         } catch (IOException e) {
@@ -78,7 +81,7 @@ public class MainController {
             }
 
             // Set up ShoppingCartController
-            ShoppingCartController shoppingCartController = (ShoppingCartController) cart.getProperties().get("controller");
+            shoppingCartController = (ShoppingCartController) cart.getProperties().get("controller");
             if (shoppingCartController != null) {
                 shoppingCartController.setMainController(this);
             } else {
@@ -119,10 +122,25 @@ public class MainController {
 
     public void toggleShoppingCart() {
         if (cart != null) {
+            shoppingCartController.setRid(restaurantId);
+            shoppingCartController.updateCart();
+
+            // Toggle the cart's visibility
             boolean isVisible = cart.isVisible();
             cart.setVisible(!isVisible);
             root.setRight(isVisible ? null : cart);
+
+
         }
+
+    }
+
+    public void setRestaurantId(int restaurantId) {
+        this.restaurantId = restaurantId;
+    }
+
+    public int getRestaurantId() {
+        return restaurantId;
     }
 
 }
