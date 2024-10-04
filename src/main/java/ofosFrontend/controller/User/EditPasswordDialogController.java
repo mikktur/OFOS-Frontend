@@ -32,7 +32,7 @@ public class EditPasswordDialogController {
         try {
             PasswordChangeDTO passwordDTO = new PasswordChangeDTO(oldPasswordField.getText(),newPasswordField.getText());
 
-            String url = "http://localhost:8000/api/user/updatePassword";
+            String url = "http://localhost:8000/api/users/updatePassword";
 
             token = SessionManager.getInstance().getToken();
 
