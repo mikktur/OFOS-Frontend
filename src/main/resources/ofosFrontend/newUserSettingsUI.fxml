@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
@@ -20,7 +19,6 @@
       <fx:include source="navBar.fxml" />
    </top>
    <center>
-      <!-- ScrollPane to allow scrolling if needed -->
       <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" style="-fx-background-color: transparent;">
          <content>
             <!-- Outer VBox to center content and add top padding -->
@@ -29,7 +27,7 @@
                   <Insets top="80.0" />
                </padding>
                <children>
-                  <!-- Inner VBox with background color and drop shadow effect -->
+                  <!-- Inner VBox with background color -->
                   <VBox alignment="TOP_CENTER" spacing="20.0" maxWidth="900" VBox.vgrow="ALWAYS"
                         style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 5, 5);">
                      <padding>
