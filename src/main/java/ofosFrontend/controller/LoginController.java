@@ -214,12 +214,10 @@ public class LoginController extends BasicController {
     }
 
     private void updateRegistrationErrorLabels(Map<String, String> errors) {
-        // Handles username error text under the username field
         String usernameError = errors.get("username");
         usernameErrorLabel.setText(usernameError != null ? usernameError : "");
         usernameErrorLabel.setVisible(usernameError != null);
 
-        // Sets the password error text under the password field
         String passwordError = errors.get("password");
         passwordErrorLabel.setText(passwordError != null ? passwordError : "");
         passwordErrorLabel.setVisible(passwordError != null);
@@ -233,13 +231,5 @@ public class LoginController extends BasicController {
     }
     private void showError(String message) {
         System.out.println(message);
-    }
-
-    public void openMainMenu(){
-
-    }
-
-    public void openCart(){
-
     }
 }

@@ -25,59 +25,49 @@ import java.util.Optional;
 
 public class AdminController {
     @FXML
-    private VBox restaurantsVBox; // VBox containing the list of restaurants
+    private VBox restaurantsVBox;
     @FXML
     private VBox restaurantListVBox;
     @FXML
-    private Label addressLabel, phoneLabel, hoursLabel; // Labels for restaurant details
+    private Label addressLabel, phoneLabel, hoursLabel;
     @FXML
-    private ImageView adminLogout; // Logout button
+    private ImageView adminLogout;
     @FXML
-    private Text defaultText; // Default text to display when no restaurant is selected
+    private Text defaultText;
     private int rID;
 
     private RestaurantService restaurantService = new RestaurantService();
-    private Restaurant currentSelectedRestaurant; // Store the currently selected restaurant
+    private Restaurant currentSelectedRestaurant;
 
     @FXML
     public void initialize() {
-        loadRestaurants(); // Load restaurants when the UI initializes
+        loadRestaurants();
     }
 
-    // Method to load the list of restaurants owned by the admin
     public void loadRestaurants() {
         try {
-            // Clear the VBox before adding new restaurant entries
             restaurantListVBox.getChildren().clear();
 
-            // Fetch the list of restaurants from the service
             List<Restaurant> restaurants = restaurantService.getOwnerRestaurants();
 
-            // Iterate through the list of restaurants
             for (Restaurant restaurant : restaurants) {
-                // Create an HBox for each restaurant entry
                 HBox restaurantBox = new HBox();
                 restaurantBox.setSpacing(10.0);
                 restaurantBox.setStyle("-fx-padding: 5px; -fx-background-color: #e8f4fb; -fx-border-color: #000;");
 
-                // Create a Text node for the restaurant name
                 Text restaurantNameText = new Text(restaurant.getRestaurantName());
-                restaurantNameText.setFont(Font.font(12));  // Adjust font size to be smaller
+                restaurantNameText.setFont(Font.font(12));
                 restaurantNameText.setStyle("-fx-font-weight: bold;");
 
-                // Add the restaurant name to the HBox
                 restaurantBox.getChildren().add(restaurantNameText);
 
-                // Add click event to load the selected restaurant's details
                 restaurantBox.setOnMouseClicked(event -> {
                     rID = restaurant.getId();
                     currentSelectedRestaurant = restaurant;
 
-                    // Update the UI with the selected restaurant's details
                     updateRestaurantDetailsUI();
                 });
 
-                // Add the HBox to the VBox (restaurantListVBox)
                 restaurantListVBox.getChildren().add(restaurantBox);
             }
         } catch (IOException e) {
@@ -85,11 +75,8 @@ public class AdminController {
         }
     }
 
-
-    // Unified method to update restaurant details in the UI
     private void updateRestaurantDetailsUI() {
         if (currentSelectedRestaurant != null) {
-            // Update the labels in the UI with the selected restaurant's details
             defaultText.setText(currentSelectedRestaurant.getRestaurantName());
             addressLabel.setText(currentSelectedRestaurant.getAddress());
             phoneLabel.setText(currentSelectedRestaurant.getRestaurantPhone());
@@ -97,11 +84,9 @@ public class AdminController {
         }
     }
 
-    // Method to modify restaurant information
     @FXML
     private void modifyRestaurantInfo() {
         if (currentSelectedRestaurant == null) {
-            // If no restaurant is selected, show an error message
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("No Restaurant Selected");
             alert.setHeaderText("Please select a restaurant to modify.");
@@ -109,7 +94,6 @@ public class AdminController {
             return;
         }
 
-        // Proceed with modifying the selected restaurant
         Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.setTitle("Modify Restaurant Info");
         dialog.setHeaderText("Edit the contact information for the restaurant.");
@@ -134,7 +118,6 @@ public class AdminController {
 
         dialog.getDialogPane().setContent(grid);
 
-        // Convert result
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == modifyButtonType) {
                 return new Pair<>(addressField.getText(), phoneField.getText());
@@ -145,19 +128,15 @@ public class AdminController {
         Optional<Pair<String, String>> result = dialog.showAndWait();
 
         result.ifPresent(info -> {
-            // Update the selected restaurant's details
             currentSelectedRestaurant.setAddress(addressField.getText());
             currentSelectedRestaurant.setRestaurantPhone(phoneField.getText());
             currentSelectedRestaurant.setHours(hoursField.getText());
 
-            // Update the UI with new data
             updateRestaurantDetailsUI();
 
-            // Now update the backend
             try {
                 restaurantService.updateRestaurantInfo(currentSelectedRestaurant);
 
-                // Show success alert
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Information Updated");
                 alert.setHeaderText("Restaurant Information Updated Successfully");
@@ -197,7 +176,6 @@ public class AdminController {
         try {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/AdminFoodMenuUI.fxml"));
-            //add currentRestaurant to the loader
             Parent root = loader.load();
 
             Stage currentStage = (Stage) adminLogout.getScene().getWindow();

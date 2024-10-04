@@ -14,7 +14,6 @@ public class ProductService {
     private final OkHttpClient client = new OkHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
 
-    // Existing method to get products by restaurant ID
     public List<Product> getProductsByRID(int id) throws IOException {
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
@@ -52,21 +51,19 @@ public class ProductService {
 
     public void updateProduct(Product product) throws IOException {
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
-        String productJson = mapper.writeValueAsString(product);  // Serialize the product to JSON
+        String productJson = mapper.writeValueAsString(product);
         SessionManager sessionManager = SessionManager.getInstance();
         String bearerToken = sessionManager.getToken();
         System.out.println("Frontti testi");
 
-        System.out.println("Body testi: " + productJson); // Print the JSON string directly
+        System.out.println("Body testi: " + productJson);
 
         RequestBody body = RequestBody.create(productJson, JSON);
 
-
-        // Create the request with the Bearer token in the Authorization header
         Request request = new Request.Builder()
                 .url(API_URL + "api/products/update")
                 .put(body)
-                .addHeader("Authorization", "Bearer " + bearerToken)  // Add the Bearer token
+                .addHeader("Authorization", "Bearer " + bearerToken)
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
@@ -81,8 +78,8 @@ public class ProductService {
 
         Request request = new Request.Builder()
                 .url(API_URL + "api/products/delete/" + product.getProductID())
-                .delete()  // DELETE method
-                .addHeader("Authorization", "Bearer " + bearerToken)  // Ensure token is correct
+                .delete()
+                .addHeader("Authorization", "Bearer " + bearerToken)
                 .build();
 
 

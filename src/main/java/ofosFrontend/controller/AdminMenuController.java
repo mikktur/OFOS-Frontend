@@ -24,7 +24,7 @@ import java.util.Optional;
 public class AdminMenuController {
 
     @FXML
-    private VBox productListVBox;  // VBox in the FXML where products will be displayed
+    private VBox productListVBox;
     @FXML
     private ImageView adminLogout;
     @FXML
@@ -39,14 +39,12 @@ public class AdminMenuController {
     }
     private void loadProducts() {
         try {
-            productListVBox.getChildren().clear();  // Clear existing product entries in the VBox
+            productListVBox.getChildren().clear();
 
-            // Fetch products by restaurant ID using ProductService
             List<Product> products = productService.getProductsByRID(restaurantID);
 
-            // Iterate through the list of products and add only active ones to the VBox
             for (Product product : products) {
-                if (product.isActive()) {  // Only include active products
+                if (product.isActive()) {
                     HBox productBox = createProductEntry(product);
                     productListVBox.getChildren().add(productBox);
                 }
@@ -56,30 +54,23 @@ public class AdminMenuController {
         }
     }
 
-
-    // Helper method to create an HBox for each product
-    // Helper method to create an HBox for each product
     private HBox createProductEntry(Product product) {
         HBox productBox = new HBox();
         productBox.setSpacing(10.0);
         productBox.setStyle("-fx-padding: 5px; -fx-background-color: #e8f4fb; -fx-border-color: #000;");
 
-        // Create Text nodes for product details
         Text productNameText = new Text("Name: " + product.getProductName());
         Text productDescriptionText = new Text("Description: " + product.getProductDesc());
         Text productPriceText = new Text("Price: $" + String.format("%.2f", product.getProductPrice()));
         Text productCategoryText = new Text("Category: " + product.getCategory());
         Text productStatusText = new Text("Active: " + (product.isActive() ? "Yes" : "No"));
 
-        // Add the Text nodes to the HBox
         productBox.getChildren().addAll(productNameText, productDescriptionText, productPriceText, productCategoryText, productStatusText);
 
-        // Add an "Edit" button for each product
         Button editButton = new Button("Edit");
-        editButton.setOnAction(event -> openEditDialog(product));  // Open edit dialog on click
+        editButton.setOnAction(event -> openEditDialog(product));
         productBox.getChildren().add(editButton);
 
-        // Add a "Delete" button for each product
         Button deleteButton = new Button("Delete");
         deleteButton.setOnAction(event -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -89,7 +80,6 @@ public class AdminMenuController {
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
-                // Delete the product if confirmed
                 deleteProduct(product);
             }
         });
@@ -98,19 +88,15 @@ public class AdminMenuController {
         return productBox;
     }
 
-
-    // Logic for adding a new product
     @FXML
     private void addItem() {
         Dialog<Product> dialog = new Dialog<>();
         dialog.setTitle("Add New Product");
         dialog.setHeaderText("Enter the product details");
 
-        // Create buttons for the dialog
         ButtonType addButtonType = new ButtonType("Add Product", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
 
-        // Create the fields for product name, description, price, category, and status
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
@@ -147,10 +133,8 @@ public class AdminMenuController {
 
         dialog.getDialogPane().setContent(grid);
 
-        // Handle the dialog result
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == addButtonType) {
-                // Validate and create the product object
                 String name = nameField.getText();
                 String description = descriptionField.getText();
                 double price = Double.parseDouble(priceField.getText());
@@ -163,31 +147,26 @@ public class AdminMenuController {
             return null;
         });
 
-        // Show the dialog and get the result
         Optional<Product> result = dialog.showAndWait();
 
         result.ifPresent(product -> {
-            // Add product to the database (You will need to implement this in ProductService)
             try {
-                productService.addProductToRestaurant(product, restaurantID);  // Pass the product and restaurant ID
-                loadProducts();  // Update the UI with the newly added product
+                productService.addProductToRestaurant(product, restaurantID);
+                loadProducts();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
     }
 
-    // Open a dialog to edit a product
     private void openEditDialog(Product product) {
         Dialog<Product> dialog = new Dialog<>();
         dialog.setTitle("Edit Product");
         dialog.setHeaderText("Edit the product details");
 
-        // Create buttons for the dialog
         ButtonType updateButtonType = new ButtonType("Update Product", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(updateButtonType, ButtonType.CANCEL);
 
-        // Pre-fill the fields with existing product data
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
@@ -215,10 +194,8 @@ public class AdminMenuController {
 
         dialog.getDialogPane().setContent(grid);
 
-        // Handle the dialog result
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == updateButtonType) {
-                // Update the product with the new values
                 product.setProductName(nameField.getText());
                 product.setProductDesc(descriptionField.getText());
                 product.setProductPrice(Double.parseDouble(priceField.getText()));
@@ -231,13 +208,12 @@ public class AdminMenuController {
             return null;
         });
 
-        // Show the dialog and get the result
         Optional<Product> result = dialog.showAndWait();
 
         result.ifPresent(updatedProduct -> {
             try {
-                productService.updateProduct(updatedProduct);  // Call service to update the product in the backend
-                loadProducts();  // Refresh the product list
+                productService.updateProduct(updatedProduct);
+                loadProducts();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -261,8 +237,8 @@ public class AdminMenuController {
 
     private void deleteProduct(Product product) {
         try {
-            productService.deleteProduct(product);  // Call service to delete the product
-            loadProducts();  // Refresh the product list after deletion
+            productService.deleteProduct(product);
+            loadProducts();
         } catch (IOException e) {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
