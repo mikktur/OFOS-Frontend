@@ -197,8 +197,7 @@ public class AdminController {
         try {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/AdminFoodMenuUI.fxml"));
-            AdminMenuController controller = loader.getController();
-            controller.setRId(rID);
+            //add currentRestaurant to the loader
             Parent root = loader.load();
 
             Stage currentStage = (Stage) adminLogout.getScene().getWindow();

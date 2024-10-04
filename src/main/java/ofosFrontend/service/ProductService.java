@@ -75,4 +75,24 @@ public class ProductService {
             }
         }
     }
+    public void deleteProduct(Product product) throws IOException {
+        SessionManager sessionManager = SessionManager.getInstance();
+        String bearerToken = sessionManager.getToken();
+
+        Request request = new Request.Builder()
+                .url(API_URL + "api/products/delete/" + product.getProductID())
+                .delete()  // DELETE method
+                .addHeader("Authorization", "Bearer " + bearerToken)  // Ensure token is correct
+                .build();
+
+
+
+
+        Response response = client.newCall(request).execute();
+
+        if (!response.isSuccessful()) {
+            throw new IOException("Failed to delete product: " + response);
+        }
+    }
+
 }

@@ -31,7 +31,7 @@ public class AdminMenuController {
     private Text restaurantNameText;
 
     private ProductService productService = new ProductService();
-    private int restaurantID;
+    private int restaurantID = 1;
 
     @FXML
     public void initialize() {
@@ -44,16 +44,20 @@ public class AdminMenuController {
             // Fetch products by restaurant ID using ProductService
             List<Product> products = productService.getProductsByRID(restaurantID);
 
-            // Iterate through the list of products and add them to the VBox
+            // Iterate through the list of products and add only active ones to the VBox
             for (Product product : products) {
-                HBox productBox = createProductEntry(product);
-                productListVBox.getChildren().add(productBox);
+                if (product.isActive()) {  // Only include active products
+                    HBox productBox = createProductEntry(product);
+                    productListVBox.getChildren().add(productBox);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+
+    // Helper method to create an HBox for each product
     // Helper method to create an HBox for each product
     private HBox createProductEntry(Product product) {
         HBox productBox = new HBox();
@@ -75,8 +79,25 @@ public class AdminMenuController {
         editButton.setOnAction(event -> openEditDialog(product));  // Open edit dialog on click
         productBox.getChildren().add(editButton);
 
+        // Add a "Delete" button for each product
+        Button deleteButton = new Button("Delete");
+        deleteButton.setOnAction(event -> {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Delete Product");
+            alert.setHeaderText("Are you sure you want to delete the product?");
+            alert.setContentText(product.getProductName());
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                // Delete the product if confirmed
+                deleteProduct(product);
+            }
+        });
+        productBox.getChildren().add(deleteButton);
+
         return productBox;
     }
+
 
     // Logic for adding a new product
     @FXML
@@ -237,4 +258,19 @@ public class AdminMenuController {
     public void setRId(int restaurantID) {
         this.restaurantID = restaurantID;
     }
+
+    private void deleteProduct(Product product) {
+        try {
+            productService.deleteProduct(product);  // Call service to delete the product
+            loadProducts();  // Refresh the product list after deletion
+        } catch (IOException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Failed to delete the product.");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
+    }
+
 }
