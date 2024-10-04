@@ -127,9 +127,9 @@ public class UserSettingsController {
                 nameLabel.setText("No name available");
                 emailLabel.setText("No email available");
                 phoneNumberLabel.setText("No phone number available");
-                cityLabel.setText("Ei oo tätäkään");
-                postalCodeLabel.setText("Eikä tätä");
-                addressLabel.setText("Tai tätä");
+                cityLabel.setText("No city available");
+                postalCodeLabel.setText("No postal code available");
+                addressLabel.setText("No address available");
             });
         }
     }
