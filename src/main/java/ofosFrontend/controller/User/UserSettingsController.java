@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -505,6 +506,31 @@ public class UserSettingsController {
     private void handleEditContactInfo() {
         openContactInfoDialog();
     }
+
+    @FXML
+    public void handleChangePassword(ActionEvent actionEvent) {
+        openEditPasswordDialog();
+    }
+
+    private void openEditPasswordDialog() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/editPasswordDialog.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Change Password");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+            fetchUserData();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            showError("An error occurred while opening the change password dialog.");
+        }
+    }
+
 
 }
 

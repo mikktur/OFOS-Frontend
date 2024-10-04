@@ -61,12 +61,12 @@
                                           <!-- Labels and Values -->
                                           <children>
                                              <!-- Labels -->
-                                             <Text text="Nimi:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: bold;" />
-                                             <Text text="Sähköposti:" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: bold;" />
-                                             <Text text="Puhelinnumero:" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight: bold;" />
-                                             <Text text="Osoite:" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight: bold;" />
-                                             <Text text="Kaupunki:" GridPane.rowIndex="4" GridPane.columnIndex="0" style="-fx-font-weight: bold;" />
-                                             <Text text="Postinumero:" GridPane.rowIndex="5" GridPane.columnIndex="0" style="-fx-font-weight: bold;" />
+                                             <Text text="Name:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: bold;" />
+                                             <Text text="Email:" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: bold;" />
+                                             <Text text="Phone:" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight: bold;" />
+                                             <Text text="Street address:" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight: bold;" />
+                                             <Text text="City:" GridPane.rowIndex="4" GridPane.columnIndex="0" style="-fx-font-weight: bold;" />
+                                             <Text text="Postal code:" GridPane.rowIndex="5" GridPane.columnIndex="0" style="-fx-font-weight: bold;" />
                                              <!-- Values -->
                                              <Label fx:id="nameLabel" GridPane.rowIndex="0" GridPane.columnIndex="1" wrapText="true" />
                                              <Label fx:id="emailLabel" GridPane.rowIndex="1" GridPane.columnIndex="1" wrapText="true" />
@@ -78,6 +78,7 @@
                                        </GridPane>
                                     </VBox>
                                     <Button text="Edit Contact Information" onAction="#handleEditContactInfo" />
+                                    <Button text="Change Password" onAction="#handleChangePassword" />
                                  </children>
                               </VBox>
                               <!-- Delivery Addresses VBox -->
