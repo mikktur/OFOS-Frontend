@@ -8,9 +8,9 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
+
 import javafx.scene.layout.VBox;
-import ofosFrontend.model.CartItem;
+
 import ofosFrontend.model.Product;
 import ofosFrontend.model.Restaurant;
 import ofosFrontend.model.ShoppingCart;
@@ -21,18 +21,16 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-public class RMenuController {
+public class RMenuController extends BasicController{
     private Restaurant restaurant;
-    private FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/restaurantMenuUI.fxml"));
     private ProductService productService = new ProductService();
     @FXML
     private FlowPane menuContainer;
     @FXML
     private ScrollPane menuScroll;
-    public RMenuController(Restaurant restaurant) {
-        this.restaurant = restaurant;
 
-    }
+
+
 
     public RMenuController() {
     }
@@ -45,7 +43,7 @@ public class RMenuController {
             products  = productService.getProductsByRID(this.restaurant.getId());
 
             for(Product product : products) {
-                FXMLLoader cardLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/menuItem.fxml"));
+                FXMLLoader cardLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/menuItem.fxml"));
                 VBox card = cardLoader.load();
                 VBox cText = (VBox) card.lookup("#itemInfo");
                 Button addToCartButton = (Button) card.lookup("#addToCart");
@@ -58,7 +56,6 @@ public class RMenuController {
                 priceLabel.setText(String.valueOf(product.getProductPrice()));
                 addToCartButton.setOnMouseClicked(event -> {
                     addProductToCart(product);
-
                 });
                 imageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/hamburga.jpg"))));//+ product.getPicture()))
                 menuContainer.getChildren().add(card);
@@ -75,9 +72,15 @@ public class RMenuController {
             e.printStackTrace();
         }
     }
+
     private void addProductToCart(Product product) {
         SessionManager sessionManager = SessionManager.getInstance();
-        ShoppingCart cart = sessionManager.getCart();
+        ShoppingCart cart = sessionManager.getCart(restaurant.getId());
+
+        if (cart == null) {
+            cart = new ShoppingCart(restaurant);
+            sessionManager.addCart(restaurant.getId(), cart);
+        }
         cart.addItem(product, 1);
     }
 

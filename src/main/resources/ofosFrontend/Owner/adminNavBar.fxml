@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<HBox fx:controller="ofosFrontend.controller.Owner.AdminNavController" fx:id="adminNav" alignment="CENTER_LEFT" prefHeight="42.0" prefWidth="664.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="OFOS" textAlignment="CENTER" wrappingWidth="115.63671875" HBox.hgrow="ALWAYS">
+         <font>
+            <Font name="System Bold" size="36.0" />
+         </font>
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+      </Text>
+      <ImageView fx:id="adminHome" onMouseClicked="#goToHome" fitHeight="38.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
+         <image>
+            <Image url="@../../images/admin.png" />
+         </image>
+      </ImageView>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="ADMIN" textAlignment="CENTER" wrappingWidth="130.63671875" HBox.hgrow="ALWAYS">
+         <font>
+            <Font name="System Bold" size="36.0" />
+         </font>
+      </Text>
+      <ImageView fx:id="adminLogout" fitHeight="39.0" fitWidth="40.0"  onMouseClicked="#ALogout" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
+         <image>
+            <Image url="@../../images/logout.png" />
+         </image>
+         <HBox.margin>
+            <Insets left="210.0" />
+         </HBox.margin>
+      </ImageView>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="AdminName">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+         <HBox.margin>
+            <Insets left="20.0" />
+         </HBox.margin>
+      </Text>
+   </children>
+</HBox>

@@ -7,14 +7,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ofosFrontend.AppManager;
-import ofosFrontend.controller.User.BasicController;
-import ofosFrontend.controller.User.MMenuController;
 import ofosFrontend.service.RestaurantService;
 import ofosFrontend.service.UserService;
 import ofosFrontend.session.SessionManager;
@@ -23,7 +19,7 @@ import okhttp3.Response;
 import java.io.IOException;
 import java.util.Map;
 
-public class LoginController extends BasicController {
+public class LoginController {
     public Label passwordErrorLabel;
     public Label usernameErrorLabel;
     public Label loginPasswordErrorLabel;
@@ -39,8 +35,8 @@ public class LoginController extends BasicController {
     private PasswordField password;
     private final UserService userService = new UserService();
     private final RestaurantService restaurantService = new RestaurantService();
-    private final FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/mainUI.fxml"));
-
+    private final FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/mainUI.fxml"));
+    private String role;
 
 
     @FXML
@@ -65,7 +61,7 @@ public class LoginController extends BasicController {
         }).start();
     }
 
-    private void handleLoginResponse(Response response)  {
+    private void handleLoginResponse(Response response) {
         try {
             ObjectMapper mapper = new ObjectMapper();
 
@@ -76,7 +72,6 @@ public class LoginController extends BasicController {
                 Map<String, String> body = mapper.readValue(responseBody, Map.class);
                 manager.setToken(body.get("token"));
                 manager.setUsername(body.get("username"));
-                System.out.println("role: " + body.get("role"));
                 manager.setRole(body.get("role"));
                 Object userIdObj = body.get("userId");
 
@@ -95,12 +90,8 @@ public class LoginController extends BasicController {
 
                 System.out.println("Token: " + manager.getToken());
                 System.out.println("Username: " + manager.getUsername());
-                System.out.println("Role: " + manager.getRole());
-                super.goToMain();
-
-
-
                 System.out.println("Login successful.");
+                openMainStage();
             } else if (response.code() == 401) { // Unauthorized error
                 ObjectMapper objectMapper = new ObjectMapper();
                 Map<String, String> errors = objectMapper.readValue(response.body().string(), Map.class);
@@ -112,6 +103,26 @@ public class LoginController extends BasicController {
             System.out.println("Failed to handle the response.");
             e.printStackTrace();
             showError("Error processing login response.");
+        }
+
+    }
+
+    private void goToAdmin() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/Owner/adminMainUI.fxml"));
+            Parent root = loader.load();
+
+            Stage currentStage = (Stage) AppManager.getInstance().getPrimaryStage();
+
+            Scene adminScene = new Scene(root, 650, 400);
+
+            currentStage.setTitle("OFOS Admin");
+
+            currentStage.setScene(adminScene);
+
+            currentStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -139,7 +150,6 @@ public class LoginController extends BasicController {
         Parent root = loader.load();
 
         Stage currentStage = (Stage) AppManager.getInstance().getPrimaryStage();
-
 
 
         Scene loginScene = new Scene(root, 650, 400);
@@ -210,15 +220,43 @@ public class LoginController extends BasicController {
         loginPasswordErrorLabel.setText(passwordError != null ? passwordError : "");
         loginPasswordErrorLabel.setVisible(passwordError != null);
     }
+
     private void showError(String message) {
         System.out.println(message);
     }
 
-    public void openMainMenu(){
 
+    public void openMainStage() {
+        FXMLLoader rootLoader;
+
+        if (SessionManager.getInstance().getRole().equals("OWNER")) {
+            rootLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/Owner/ownerRoot.fxml"));
+            System.out.println("Owner logged in.");
+
+        } else {
+            rootLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/root.fxml"));
+        }
+        try {
+
+            BorderPane root = rootLoader.load();
+
+
+            Stage mainStage = new Stage();
+            Scene menuScene = new Scene(root, 1000, 800);
+            mainStage.setTitle("OFOS Menu");
+            mainStage.setScene(menuScene);
+
+            mainStage.show();
+            closeLoginStage();
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Failed to open the main stage.");
+        }
     }
 
-    public void openCart(){
 
+    private void closeLoginStage() {
+        Stage loginStage = (Stage) username.getScene().getWindow();
+        loginStage.close();
     }
 }

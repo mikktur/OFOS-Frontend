@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+  <ScrollPane fx:id="mainScroll" fitToWidth="true" hbarPolicy="NEVER" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.User.MMenuController">
+      <content>
+          <VBox alignment="TOP_CENTER" fillWidth="false" VBox.vgrow="ALWAYS">
+              <children>
+                  <VBox fx:id="contentBox" alignment="TOP_CENTER" fillWidth="false" maxWidth="1300.0" spacing="5.0" VBox.vgrow="ALWAYS">
+                      <children>
+                          <HBox alignment="CENTER" VBox.vgrow="NEVER">
+                              <children>
+                                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Mitä tänään saisi olla?" textAlignment="CENTER" wrappingWidth="652.9375">
+                                      <font>
+                                          <Font name="System Bold" size="24.0" />
+                                      </font>
+                                  </Text>
+                              </children>
+                          </HBox>
+                          <HBox alignment="TOP_CENTER" VBox.vgrow="NEVER">
+                              <children>
+                                  <TilePane fx:id="categoryTile" alignment="CENTER" hgap="20.0" maxWidth="600.0" minWidth="600.0" prefColumns="3" prefHeight="100.0" prefRows="1" prefWidth="600.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" HBox.hgrow="NEVER">
+                                      <children>
+                                          <AnchorPane prefHeight="166.0" prefWidth="159.0" style="-fx-background-color: #ffffff; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
+                                              <children>
+                                                  <ImageView fitHeight="119.0" fitWidth="119.0" layoutX="21.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+                                                      <image>
+                                                          <Image url="@../../images/burger.png" />
+                                                      </image>
+                                                  </ImageView>
+                                                  <Text layoutX="21.0" layoutY="146.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hampurilaiset">
+                                                      <font>
+                                                          <Font name="System Bold" size="18.0" />
+                                                      </font>
+                                                  </Text>
+                                              </children>
+                                          </AnchorPane>
+                                          <AnchorPane prefHeight="166.0" style="-fx-background-color: #ffffff; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
+                                              <children>
+                                                  <ImageView fitHeight="114.0" fitWidth="115.0" layoutX="23.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">
+                                                      <image>
+                                                          <Image url="@../../images/pizza.png" />
+                                                      </image>
+                                                  </ImageView>
+                                                  <Text layoutX="55.0" layoutY="146.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pizzat">
+                                                      <font>
+                                                          <Font name="System Bold" size="18.0" />
+                                                      </font>
+                                                  </Text>
+                                              </children>
+                                          </AnchorPane>
+                                          <AnchorPane prefHeight="166.0" prefWidth="159.0" style="-fx-background-color: #ffffff; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
+                                              <children>
+                                                  <ImageView fitHeight="118.0" fitWidth="119.0" layoutX="21.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
+                                                      <image>
+                                                          <Image url="@../../images/noodles.png" />
+                                                      </image>
+                                                  </ImageView>
+                                                  <Text layoutX="43.0" layoutY="146.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nuudelit">
+                                                      <font>
+                                                          <Font name="System Bold" size="18.0" />
+                                                      </font>
+                                                  </Text>
+                                              </children>
+                                          </AnchorPane>
+                                      </children>
+                                      <HBox.margin>
+                                          <Insets left="40.0" right="40.0" />
+                                      </HBox.margin>
+                                      <padding>
+                                          <Insets bottom="20.0" top="20.0" />
+                                      </padding>
+                                  </TilePane>
+                              </children>
+                          </HBox>
+                          <FlowPane fx:id="restaurantFlowPane" hgap="20.0" prefWrapLength="800.0" style="-fx-background-color: #c4e6fb;" vgap="20.0" VBox.vgrow="ALWAYS">
+                              <padding>
+                                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                              </padding>
+                              <VBox.margin>
+                                  <Insets bottom="20.0" top="20.0" />
+                              </VBox.margin>
+                          </FlowPane>
+                      </children>
+                      <padding>
+                          <Insets left="50.0" right="50.0" top="20.0" />
+                      </padding>
+                  </VBox>
+              </children>
+          </VBox>
+      </content>
+  </ScrollPane>

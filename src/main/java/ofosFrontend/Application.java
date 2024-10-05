@@ -18,6 +18,9 @@ public class Application extends javafx.application.Application {
     }
 
     public static void main(String[] args) {
+        //poistaa rasittavat varotukset yhessä logging.properties filun kanssa.
+        System.setProperty("java.util.logging.config.file", "logging.properties");
+
         launch();
     }
 }

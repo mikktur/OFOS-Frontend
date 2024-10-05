@@ -1,18 +1,13 @@
 package ofosFrontend.controller.User;
 
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import ofosFrontend.model.ContactInfo;
-import ofosFrontend.session.SessionManager;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import ofosFrontend.service.ContactInfoService;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.util.concurrent.CompletableFuture;
 
 public class ContactInfoDialogController {
 
@@ -23,6 +18,8 @@ public class ContactInfoDialogController {
     @FXML private TextField streetAddressField;
     @FXML private TextField cityField;
     @FXML private TextField postalCodeField;
+
+    private ContactInfoService contactInfoService = new ContactInfoService();
 
     @FXML
     private void handleSave() {
@@ -53,42 +50,24 @@ public class ContactInfoDialogController {
     }
 
     private void saveContactInfo(ContactInfo contactInfo) {
-        try {
-            String url = "http://localhost:8000/api/contactinfo/save";
+        Task<Void> task = contactInfoService.saveContactInfo(contactInfo);
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            String requestBody = objectMapper.writeValueAsString(contactInfo);
-
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .header("Content-Type", "application/json")
-                    .header("Authorization", "Bearer " + SessionManager.getInstance().getToken())
-                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                    .build();
-
-            CompletableFuture<HttpResponse<String>> responseFuture = client.sendAsync(request, HttpResponse.BodyHandlers.ofString());
-
-            responseFuture.thenAccept(response -> {
-                if (response.statusCode() == 200) {
-                    Platform.runLater(() -> {
-                        // Close the dialog
-                        Stage stage = (Stage) firstNameField.getScene().getWindow();
-                        stage.close();
-                    });
-                } else {
-                    Platform.runLater(() -> showError("Failed to save contact information. Status code: " + response.statusCode()));
-                }
-            }).exceptionally(ex -> {
-                ex.printStackTrace();
-                Platform.runLater(() -> showError("An error occurred while saving contact information."));
-                return null;
+        task.setOnSucceeded(event -> {
+            Platform.runLater(() -> {
+                Stage stage = (Stage) firstNameField.getScene().getWindow();
+                stage.close();
             });
+        });
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            showError("An error occurred while saving contact information.");
-        }
+        task.setOnFailed(event -> {
+            Throwable exception = task.getException();
+            exception.printStackTrace();
+            Platform.runLater(() -> showError("An error occurred while saving contact information."));
+        });
+
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
     }
 
     @FXML

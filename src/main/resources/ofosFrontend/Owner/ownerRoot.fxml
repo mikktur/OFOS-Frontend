@@ -1,0 +1,11 @@
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+
+<BorderPane fx:id="ownerRoot" xmlns:fx="http://javafx.com/fxml" fx:controller="ofosFrontend.controller.Owner.AdminController">
+    <top>
+        <fx:include source="adminNavBar.fxml" fx:id="adminNavBar" />
+    </top>
+    <center>
+        <StackPane fx:id="ownerCenterPane" alignment="TOP_CENTER" prefHeight="334.0" prefWidth="258.0" BorderPane.alignment="CENTER" />
+    </center>
+</BorderPane>

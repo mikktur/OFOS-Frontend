@@ -9,9 +9,10 @@ import java.util.List;
 
 public class ShoppingCart {
     private final ObservableList<CartItem> items;
-
-    public ShoppingCart() {
-        items = FXCollections.observableArrayList();
+    private Restaurant restaurant;
+    public ShoppingCart(Restaurant restaurant) {
+        this.items = FXCollections.observableArrayList();
+        this.restaurant = restaurant;
     }
 
     public void addItem(Product product, int quantity) {
@@ -21,7 +22,7 @@ public class ShoppingCart {
                 return;
             }
         }
-        items.add(new CartItem(product, quantity));
+        items.add(new CartItem(product, quantity, restaurant.getId()));
     }
 
     public void removeItem(Product product) {
@@ -32,10 +33,22 @@ public class ShoppingCart {
         return items;
     }
 
+    public Restaurant getRestaurant() {
+        return restaurant;
+    }
+
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
+    }
+
     public double getTotalPrice() {
         return items.stream().mapToDouble(CartItem::getTotalPrice).sum();
     }
-
+    public void checkAndRemove(CartItem cartItem) {
+        if (cartItem.getQuantity() <= 0) {
+            removeItem(cartItem.getProduct());
+        }
+    }
     public void clear() {
         items.clear();
     }
