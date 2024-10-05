@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-public class RMenuController {
+public class RMenuController extends BasicController{
     private Restaurant restaurant;
     private ProductService productService = new ProductService();
     @FXML
@@ -43,7 +43,7 @@ public class RMenuController {
             products  = productService.getProductsByRID(this.restaurant.getId());
 
             for(Product product : products) {
-                FXMLLoader cardLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/menuItem.fxml"));
+                FXMLLoader cardLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/menuItem.fxml"));
                 VBox card = cardLoader.load();
                 VBox cText = (VBox) card.lookup("#itemInfo");
                 Button addToCartButton = (Button) card.lookup("#addToCart");

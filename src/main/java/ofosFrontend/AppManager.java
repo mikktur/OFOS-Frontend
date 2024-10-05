@@ -1,13 +1,13 @@
 package ofosFrontend;
 
 import javafx.stage.Stage;
-import ofosFrontend.controller.User.MainController;
+import ofosFrontend.controller.User.UserMainController;
 
 public class AppManager {
 
     private static AppManager instance;
     private Stage primaryStage;
-    private MainController mainController;
+    private UserMainController userMainController;
 
     private AppManager() {
     }
@@ -27,12 +27,12 @@ public class AppManager {
         return primaryStage;
     }
 
-    public void setMainController(MainController controller) {
-        this.mainController = controller;
+    public void setMainController(UserMainController controller) {
+        this.userMainController = controller;
     }
 
-    public MainController getMainController() {
-        return mainController;
+    public UserMainController getMainController() {
+        return userMainController;
     }
 }
 

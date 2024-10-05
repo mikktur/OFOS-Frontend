@@ -8,14 +8,23 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import ofosFrontend.model.ShoppingCart;
-import ofosFrontend.session.SessionManager;
+import ofosFrontend.session.CartManager;
 
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Map;
 
-public class MainController {
+/**
+ * This class is used to control the main UI of the application.
+ * It is responsible for:
+ * <ul>
+ *   <li>Loading the default content into the center pane.</li>
+ *   <li>Setting and updating the center content of the main UI.</li>
+ *   <li>Setting up child controllers, including NavBar, ShoppingCart, and others.</li>
+ *   <li>Managing the visibility of the side menu and shopping cart.</li>
+ * </ul>
+ * The MainController acts as the central hub of the application, coordinating interactions
+ * between various UI components and controllers.
+ */
+public class UserMainController {
 
     @FXML
     private StackPane centerPane;
@@ -30,7 +39,7 @@ public class MainController {
     private StackPane navBar;
     @FXML
     private AnchorPane dropDownRoot;
-
+    private CartManager cartManager = new CartManager();
 
     @FXML
     public void initialize() {
@@ -55,7 +64,7 @@ public class MainController {
 
     public void loadDefaultContent() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/mainUI.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/mainUI.fxml"));
 
             Node content = loader.load();
             MMenuController mmController = loader.getController();
@@ -71,29 +80,20 @@ public class MainController {
 
     public void setControllers() {
         try {
-            // Set up NavBarController
-            NavController navController = (NavController) navBar.getProperties().get("controller");
-            if (navController != null) {
-                navController.setMainController(this);
-            } else {
-                System.out.println("NavController is null!");
-            }
-
-            // Set up ShoppingCartControllerrrrrrr
             shoppingCartController = (ShoppingCartController) cart.getProperties().get("controller");
             if (shoppingCartController != null) {
                 shoppingCartController.setMainController(this);
-            } else {
-                System.out.println("ShoppingCartController is null!");
             }
-            // Set up DropDownMenuController
+
+            NavController navController = (NavController) navBar.getProperties().get("controller");
+            if (navController != null) {
+                navController.setMainController(this);
+            }
+
             DropDownMenuController dropDownMenuController = (DropDownMenuController) dropDownRoot.getProperties().get("controller");
             if (dropDownMenuController != null) {
                 dropDownMenuController.setMainController(this);
-            } else {
-                System.out.println("DropDownMenuController is null!");
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -124,25 +124,12 @@ public class MainController {
     public ShoppingCartController getShoppingCartController() {
         return shoppingCartController;
     }
-    public void checkEmptyCarts() {
-        SessionManager sessionManager = SessionManager.getInstance();
-        Iterator<Map.Entry<Integer, ShoppingCart>> iterator = sessionManager.getCartMap().entrySet().iterator();
 
-        while (iterator.hasNext()) {
-            Map.Entry<Integer, ShoppingCart> entry = iterator.next();
-            ShoppingCart cart = entry.getValue();
-            if (cart.getItems().isEmpty()) {
-                iterator.remove();
-            }
-        }
-    }
     public void resetToDefaultCartView() {
         if(shoppingCartController == null) {
             return;
         }
-        shoppingCartController.setRid(0);
-        checkEmptyCarts();
-        shoppingCartController.updateCart();
+        shoppingCartController.resetCartView();
     }
 }
 

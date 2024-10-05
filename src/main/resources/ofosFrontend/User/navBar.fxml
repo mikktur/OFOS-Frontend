@@ -19,7 +19,7 @@
                   <children>
                       <ImageView fx:id="dropDownMenuBtn" fitHeight="49.0" fitWidth="117.0" pickOnBounds="true" preserveRatio="true">
                           <image>
-                              <Image url="@../images/burger-bar.png" />
+                              <Image url="@../../images/burger-bar.png" />
                           </image>
                           <HBox.margin>
                               <Insets left="10.0" />
@@ -44,7 +44,7 @@
                       </TextField>
                       <ImageView fitHeight="23.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
                           <image>
-                              <Image url="@../images/search.png" />
+                              <Image url="@../../images/search.png" />
                           </image>
                           <HBox.margin>
                               <Insets left="5.0" />
@@ -64,7 +64,7 @@
                       </Label>
                       <ImageView fx:id="openCart" fitHeight="40.0" fitWidth="111.0" pickOnBounds="true" preserveRatio="true">
                           <image>
-                              <Image url="@../images/cart.png" />
+                              <Image url="@../../images/cart.png" />
                           </image>
                           <HBox.margin>
                               <Insets right="20.0" />

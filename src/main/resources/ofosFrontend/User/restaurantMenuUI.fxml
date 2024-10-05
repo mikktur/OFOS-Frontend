@@ -15,7 +15,7 @@
          <children>
             <VBox alignment="TOP_CENTER" maxWidth="1300.0" VBox.vgrow="ALWAYS">
                <children>
-                  <HBox id="menuInfo" alignment="CENTER" minHeight="103.0" spacing="20.0" stylesheets="@styles.css" VBox.vgrow="NEVER">
+                  <HBox id="menuInfo" alignment="CENTER" minHeight="103.0" spacing="20.0" stylesheets="@../styles.css" VBox.vgrow="NEVER">
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="McDonald's" HBox.hgrow="ALWAYS">
                            <HBox.margin>
@@ -45,7 +45,7 @@
                         <Insets bottom="20.0" top="2.0" />
                      </VBox.margin>
                   </HBox>
-                  <HBox id="itemCategory" alignment="CENTER" maxWidth="553.0" spacing="20.0" style="-fx-background-color: #C4E6FB99;" stylesheets="@styles.css" VBox.vgrow="NEVER">
+                  <HBox id="itemCategory" alignment="CENTER" maxWidth="553.0" spacing="20.0" style="-fx-background-color: #C4E6FB99;" stylesheets="@../styles.css" VBox.vgrow="NEVER">
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ateriat" textAlignment="CENTER">
                            <HBox.margin>

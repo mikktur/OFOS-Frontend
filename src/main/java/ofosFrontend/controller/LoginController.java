@@ -11,9 +11,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ofosFrontend.AppManager;
-import ofosFrontend.controller.User.BasicController;
-import ofosFrontend.controller.User.MMenuController;
-import ofosFrontend.controller.User.MainController;
 import ofosFrontend.service.RestaurantService;
 import ofosFrontend.service.UserService;
 import ofosFrontend.session.SessionManager;
@@ -22,7 +19,7 @@ import okhttp3.Response;
 import java.io.IOException;
 import java.util.Map;
 
-public class LoginController extends BasicController {
+public class LoginController {
     public Label passwordErrorLabel;
     public Label usernameErrorLabel;
     public Label loginPasswordErrorLabel;
@@ -38,9 +35,8 @@ public class LoginController extends BasicController {
     private PasswordField password;
     private final UserService userService = new UserService();
     private final RestaurantService restaurantService = new RestaurantService();
-    private final FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/mainUI.fxml"));
+    private final FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/mainUI.fxml"));
     private String role;
-
 
 
     @FXML
@@ -65,7 +61,7 @@ public class LoginController extends BasicController {
         }).start();
     }
 
-    private void handleLoginResponse(Response response)  {
+    private void handleLoginResponse(Response response) {
         try {
             ObjectMapper mapper = new ObjectMapper();
 
@@ -94,14 +90,8 @@ public class LoginController extends BasicController {
 
                 System.out.println("Token: " + manager.getToken());
                 System.out.println("Username: " + manager.getUsername());
-
-                if (manager.getRole().equals("OWNER")) {
-                    goToAdmin();
-                } else
-                    goToMain();;
-
-
                 System.out.println("Login successful.");
+                openMainStage();
             } else if (response.code() == 401) { // Unauthorized error
                 ObjectMapper objectMapper = new ObjectMapper();
                 Map<String, String> errors = objectMapper.readValue(response.body().string(), Map.class);
@@ -114,12 +104,12 @@ public class LoginController extends BasicController {
             e.printStackTrace();
             showError("Error processing login response.");
         }
-        openMainStage();
+
     }
 
     private void goToAdmin() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/adminMainUI.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/Owner/adminMainUI.fxml"));
             Parent root = loader.load();
 
             Stage currentStage = (Stage) AppManager.getInstance().getPrimaryStage();
@@ -160,7 +150,6 @@ public class LoginController extends BasicController {
         Parent root = loader.load();
 
         Stage currentStage = (Stage) AppManager.getInstance().getPrimaryStage();
-
 
 
         Scene loginScene = new Scene(root, 650, 400);
@@ -231,15 +220,24 @@ public class LoginController extends BasicController {
         loginPasswordErrorLabel.setText(passwordError != null ? passwordError : "");
         loginPasswordErrorLabel.setVisible(passwordError != null);
     }
+
     private void showError(String message) {
         System.out.println(message);
     }
 
 
-
     public void openMainStage() {
+        FXMLLoader rootLoader;
+
+        if (SessionManager.getInstance().getRole().equals("OWNER")) {
+            rootLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/Owner/ownerRoot.fxml"));
+            System.out.println("Owner logged in.");
+
+        } else {
+            rootLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/root.fxml"));
+        }
         try {
-            FXMLLoader rootLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/root.fxml"));
+
             BorderPane root = rootLoader.load();
 
 
@@ -249,15 +247,12 @@ public class LoginController extends BasicController {
             mainStage.setScene(menuScene);
 
             mainStage.show();
-
             closeLoginStage();
-
         } catch (Exception e) {
             e.printStackTrace();
             showError("Failed to open the main stage.");
         }
     }
-
 
 
     private void closeLoginStage() {

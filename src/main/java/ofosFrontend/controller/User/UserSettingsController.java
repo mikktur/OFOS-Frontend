@@ -28,7 +28,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.*;
 
-public class UserSettingsController {
+public class UserSettingsController extends BasicController {
 
     @FXML private Label nameLabel;
     @FXML private Label emailLabel;
@@ -136,7 +136,7 @@ public class UserSettingsController {
 
     private void openContactInfoDialog() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/contactInfoDialog.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/contactInfoDialog.fxml"));
             Parent root = loader.load();
 
             Stage stage = new Stage();
@@ -324,7 +324,7 @@ public class UserSettingsController {
     @FXML
     private void handleAddAddress() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/addAddressDialog.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/addAddressDialog.fxml"));
             Parent root = loader.load();
 
             AddAddressDialogController dialogController = loader.getController();
@@ -347,7 +347,7 @@ public class UserSettingsController {
 
     private void handleEditAddress(DeliveryAddress address) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/editAddressDialog.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/Owner/editAddressDialog.fxml"));
             Parent root = loader.load();
 
             EditAddressDialogController dialogController = loader.getController();

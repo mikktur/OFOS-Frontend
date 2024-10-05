@@ -6,42 +6,59 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
-import ofosFrontend.AppManager;
 import ofosFrontend.model.CartItem;
-import ofosFrontend.model.Product;
 import ofosFrontend.model.Restaurant;
 import ofosFrontend.model.ShoppingCart;
+import ofosFrontend.session.CartManager;
 import ofosFrontend.session.SessionManager;
 
 import java.io.IOException;
-import java.util.EventListener;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-//TODO refactor this class to smaller classes or move some of it to RMenuController(initializeCartForRestaurant, , also remove redundant code
-public class ShoppingCartController {
 
+/**
+ * Controller for the shopping cart sidepanel
+ */
+public class ShoppingCartController extends BasicController {
+    /**
+     * The container for the cart items
+     */
     @FXML
     private VBox cartItemContainer;
+    /**
+     * The label for the subtotal
+     */
     @FXML
     private Text subTotalLabel;
+    /**
+     * The button to go to checkout
+     */
     @FXML
     private Button goToCheckout;
+    /**
+     * The root of the cart
+     */
     @FXML
     private VBox cartRoot;
-    private MainController mainController;
+    /**
+     * The restaurant id
+     */
     private int rid;
-
+    /**
+     * The cart manager
+     * @see CartManager
+     */
+    private CartManager cartManager = new CartManager();
     public ShoppingCartController() {
-    }
 
+    }
+    /**
+     * Initializes the controller
+     */
     @FXML
     public void initialize() {
 
@@ -51,14 +68,15 @@ public class ShoppingCartController {
         addListeners();
     }
 
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
-    }
 
-
+    /**
+     * Loads the cart items for the current restaurant
+     * @throws IOException
+     */
     public void loadCartItems() throws IOException {
         System.out.println("Entered loadCartItems");
-        ObservableList<CartItem> items = SessionManager.getInstance().getCart(rid).getItems();
+        System.out.println("RID: " + rid);
+        ObservableList<CartItem> items = cartManager.getCart(rid).getItems();
 
         cartItemContainer.getChildren().clear();
         if (items.isEmpty()) {
@@ -71,16 +89,25 @@ public class ShoppingCartController {
         }
         updateSubTotal();
     }
+    /**
+     * Resets the cart view
+     */
+    public void resetCartView() {
+        setRid(0);
+        cartManager.checkAndRemoveEmptyCarts();
+        updateCart();
+    }
 
+    /**
+     * Initializes the cart for a specific restaurant
+     * @param restaurantId
+     * @param restaurant
+     */
     public void initializeCartForRestaurant(int restaurantId, Restaurant restaurant) {
         cartItemContainer.getChildren().clear();
-        SessionManager sessionManager = SessionManager.getInstance();
-        ShoppingCart cart = sessionManager.getCart(restaurantId);
-
-        // If there is no cart for this restaurant, create a new one
-        if (cart == null) {
-            cart = new ShoppingCart(restaurant);
-            sessionManager.addCart(restaurantId, cart);
+        rid = restaurantId;
+        ShoppingCart cart = cartManager.getOrCreateCart(restaurantId, restaurant);
+        if (cart.getItems().isEmpty()) {
             addCartListeners(cart);
         }
         try {
@@ -135,7 +162,7 @@ public class ShoppingCartController {
                 ShoppingCart cart = entry.getValue();
                 try {
 
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/shoppingCarts.fxml"));
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/shoppingCarts.fxml"));
                     Node cartCardNode = loader.load();
 
 
@@ -186,7 +213,7 @@ public class ShoppingCartController {
     // lisää tuotekortin ostoskorin käyttöliittymään
     private void addCartItemToUI(CartItem item) throws IOException {
         System.out.println("Adding cart item to UI");
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/cartItem.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/cartItem.fxml"));
         VBox cartItem = loader.load();
 
         CartItemController cartItemController = loader.getController();
@@ -243,7 +270,7 @@ public class ShoppingCartController {
 
     @FXML
     private void GoToCheckout(int rid) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/checkout.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/checkout.fxml"));
         Parent root = loader.load();
         CheckoutController checkoutController = loader.getController();
         checkoutController.setRid(rid);

@@ -11,7 +11,10 @@ import ofosFrontend.model.ShoppingCart;
 import ofosFrontend.session.SessionManager;
 
 import java.io.IOException;
-
+/**
+ * Controller for the cart item in the shopping cart, used to make ui cards for the cart items
+ * @see CartItem
+ */
 public class CartItemController {
     @FXML
     VBox cartItemContainer;

@@ -49,7 +49,7 @@
             </Button>
             <ImageView fx:id="deleteBtn" fitHeight="25.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="NEVER">
                <image>
-                  <Image url="@../images/trash.png" />
+                  <Image url="@../../images/trash.png" />
                </image>
                <HBox.margin>
                   <Insets bottom="5.0" left="120.0" />

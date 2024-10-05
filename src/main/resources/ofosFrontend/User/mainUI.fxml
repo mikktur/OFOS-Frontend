@@ -36,7 +36,7 @@
                                               <children>
                                                   <ImageView fitHeight="119.0" fitWidth="119.0" layoutX="21.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                                                       <image>
-                                                          <Image url="@../images/burger.png" />
+                                                          <Image url="@../../images/burger.png" />
                                                       </image>
                                                   </ImageView>
                                                   <Text layoutX="21.0" layoutY="146.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hampurilaiset">
@@ -50,7 +50,7 @@
                                               <children>
                                                   <ImageView fitHeight="114.0" fitWidth="115.0" layoutX="23.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">
                                                       <image>
-                                                          <Image url="@../images/pizza.png" />
+                                                          <Image url="@../../images/pizza.png" />
                                                       </image>
                                                   </ImageView>
                                                   <Text layoutX="55.0" layoutY="146.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pizzat">
@@ -64,7 +64,7 @@
                                               <children>
                                                   <ImageView fitHeight="118.0" fitWidth="119.0" layoutX="21.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
                                                       <image>
-                                                          <Image url="@../images/noodles.png" />
+                                                          <Image url="@../../images/noodles.png" />
                                                       </image>
                                                   </ImageView>
                                                   <Text layoutX="43.0" layoutY="146.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nuudelit">
