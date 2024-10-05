@@ -36,33 +36,37 @@
                             </padding>
                             <children>
                                 <!-- HBox containing the Labels -->
-                                <HBox alignment="TOP_CENTER" spacing="20.0" VBox.vgrow="ALWAYS">
+                                <HBox alignment="TOP_LEFT" spacing="20.0" VBox.vgrow="ALWAYS">
                                     <children>
-                                        <!-- Stackpane to align the labels -->
+                                        <!-- StackPane to align the labels -->
                                         <StackPane prefWidth="100">
-                                            <Label text="Date" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+                                            <Label text="Order ID" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
                                         </StackPane>
                                         <StackPane prefWidth="200">
                                             <Label text="Restaurant" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
                                         </StackPane>
-                                        <StackPane prefWidth="300">
+                                        <StackPane prefWidth="210">
                                             <Label text="Products" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
                                         </StackPane>
-                                        <StackPane prefWidth="100">
-                                            <Label text="Quantity" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+                                        <StackPane prefWidth="70">
+                                            <Label text="Price" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+                                        </StackPane>
+                                        <StackPane prefWidth="120">
+                                            <Label text="Date" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
                                         </StackPane>
                                     </children>
                                 </HBox>
                                 <VBox spacing="10.0" HBox.hgrow="ALWAYS">
                                     <children>
                                         <VBox style="-fx-background-color: white; -fx-padding: 10; -fx-border-color: black; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10;" prefWidth="350.0">
-                                            <GridPane fx:id="dynamicGridPane" gridLinesVisible="true" style="-fx-padding: 10;">
+                                            <GridPane fx:id="historyGridPane" gridLinesVisible="true" style="-fx-padding: 10;">
                                                 <!-- ColumnConstraints to align columns -->
                                                 <columnConstraints>
-                                                    <ColumnConstraints prefWidth="150" />
-                                                    <ColumnConstraints prefWidth="300" />
-                                                    <ColumnConstraints prefWidth="300" />
-                                                    <ColumnConstraints prefWidth="150" />
+                                                    <ColumnConstraints prefWidth="50" />
+                                                    <ColumnConstraints prefWidth="250" />
+                                                    <ColumnConstraints prefWidth="250" />
+                                                    <ColumnConstraints prefWidth="100" />
+                                                    <ColumnConstraints prefWidth="120" />
                                                 </columnConstraints>
                                                 <!-- Dynamic content will be added here -->
                                             </GridPane>
