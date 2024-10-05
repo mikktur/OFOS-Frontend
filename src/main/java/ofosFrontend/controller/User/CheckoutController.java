@@ -44,6 +44,7 @@ public class CheckoutController {
     ChoiceBox<String> paymentMethod;
     @FXML
     Button orderBtn;
+    private int rid;
 
     CheckoutService checkoutService = new CheckoutService();
     private List<DeliveryAddress> deliveryAddressesList = new ArrayList<>();
@@ -55,30 +56,43 @@ public class CheckoutController {
 
     public CheckoutController() {
     }
+
     @FXML
     public void initialize() {
-        renderSummary();
+
+        //renderSummary();
         getDeliveryAddresses();
         populatePaymentMethods();
+        setupListeners();
+    }
 
-        // Add a listener to the deliveryAddresses ChoiceBox
+    public void setupListeners() {
+
+        // Set up the listener for delivery addresses
         deliveryAddresses.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.intValue() >= 0) {
                 selectedAddress = deliveryAddressesList.get(newValue.intValue());
             }
         });
 
-        // Add a listener to the paymentMethod ChoiceBox
+        // Set up the listener for payment methods
         paymentMethod.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.intValue() >= 0) {
                 selectedPaymentMethod = paymentMethod.getItems().get(newValue.intValue());
             }
         });
 
+        // Set up the action for the order button
         orderBtn.setOnAction(event -> openConfirmationDialog());
 
     }
 
+    public void setRid(int rid) {
+        this.rid = rid;
+    }
+    public void updateView() {
+        renderSummary();
+    }
     private void openConfirmationDialog() {
         // Create the confirmation dialog
         Dialog<ButtonType> dialog = new Dialog<>();
@@ -93,7 +107,7 @@ public class CheckoutController {
         cartItemsLabel.setStyle("-fx-font-weight: bold;");
         VBox cartItems = new VBox();
 
-        for (CartItem item : SessionManager.getInstance().getCart().getItems()) {
+        for (CartItem item : SessionManager.getInstance().getCart(rid).getItems()) {
             HBox itemBox = new HBox();
             itemBox.setSpacing(10);
             Label name = new Label("• " + item.getProduct().getProductName());
@@ -144,7 +158,7 @@ public class CheckoutController {
 
     public void renderSummary() {
         SessionManager session = SessionManager.getInstance();
-        ShoppingCart cart = session.getCart();
+        ShoppingCart cart = session.getCart(rid);
         for (CartItem item : cart.getItems()) {
             HBox container = new HBox();
             container.setSpacing(5);
@@ -163,7 +177,7 @@ public class CheckoutController {
 
     private void getDeliveryAddresses() {
         Task<List<DeliveryAddress>> task = checkoutService.fetchDeliveryAddresses();
-
+        System.out.println("Fetching delivery addresses...");
         task.setOnSucceeded(event -> {
             deliveryAddressesList = task.getValue();
             deliveryAddressesList.sort((a, b) -> Boolean.compare(b.isDefaultAddress(), a.isDefaultAddress()));
@@ -183,10 +197,11 @@ public class CheckoutController {
 
                     deliveryAddresses.getSelectionModel().selectFirst();
                     selectedAddress = deliveryAddressesList.get(0);
+                    System.out.println("Delivery addresses fetched successfully.");
                 } else {
                     // Open Add Address Dialog when no addresses are available
                     try {
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/addAddressDialog.fxml"));
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/addAddressDialog.fxml"));
                         Parent root = loader.load();
 
                         AddAddressDialogController dialogController = loader.getController();
@@ -238,18 +253,17 @@ public class CheckoutController {
 
 
     private void populatePaymentMethods() {
-        paymentMethod.getItems().addAll("OFOS Credits","Card", "Cash");
+        paymentMethod.getItems().addAll("OFOS Credits", "Card", "Cash");
         paymentMethod.getSelectionModel().selectFirst();
         selectedPaymentMethod = paymentMethod.getItems().get(0);
     }
 
     public void confirmOrder() {
         // Get shopping cart items
-        List<CartItem> cartItems = SessionManager.getInstance().getCart().getItems();
+        List<CartItem> cartItems = SessionManager.getInstance().getCart(rid).getItems();
         int deliveryAddressId = selectedAddress.getDeliveryAddressId();
-        int restaurantId = 2;  // Hardcoded restaurantID
 
-        Task<Void> task = orderService.confirmOrder(cartItems, deliveryAddressId, restaurantId);
+        Task<Void> task = orderService.confirmOrder(cartItems, deliveryAddressId,rid);
 
         task.setOnSucceeded(event -> {
             // Show confirmation dialog on success

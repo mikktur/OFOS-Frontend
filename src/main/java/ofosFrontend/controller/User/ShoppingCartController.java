@@ -274,6 +274,7 @@ public class ShoppingCartController extends BasicController {
         Parent root = loader.load();
         CheckoutController checkoutController = loader.getController();
         checkoutController.setRid(rid);
+        checkoutController.updateView();
         mainController.setCenterContent(root);
     }
 }

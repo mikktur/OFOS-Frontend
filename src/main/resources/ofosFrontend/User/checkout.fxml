@@ -36,22 +36,12 @@
                         <Insets left="140.0" top="5.0" />
                      </VBox.margin>
                   </Label>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Delivery method">
-                     <VBox.margin>
-                        <Insets left="10.0" />
-                     </VBox.margin>
-                  </Text>
-                  <ChoiceBox fx:id="deliveryMethod" prefWidth="150.0">
-                     <VBox.margin>
-                        <Insets left="10.0" />
-                     </VBox.margin>
-                  </ChoiceBox>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Delivery address">
                      <VBox.margin>
                         <Insets left="10.0" />
                      </VBox.margin>
                   </Text>
-                  <ChoiceBox fx:id="deliveryAddress" prefWidth="150.0">
+                  <ChoiceBox fx:id="deliveryAddresses" prefWidth="200.0">
                      <VBox.margin>
                         <Insets left="10.0" />
                      </VBox.margin>
@@ -61,7 +51,7 @@
                         <Insets left="10.0" />
                      </VBox.margin>
                   </Text>
-                  <ChoiceBox fx:id="paymentMethod" prefWidth="150.0">
+                  <ChoiceBox fx:id="paymentMethod" prefWidth="200.0">
                      <VBox.margin>
                         <Insets left="10.0" />
                      </VBox.margin>
