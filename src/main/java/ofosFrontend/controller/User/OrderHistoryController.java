@@ -59,9 +59,9 @@ public class OrderHistoryController {
                 GridPane.setHalignment(orderIdLabel, HPos.CENTER);
 
                 // ravintola lisätään tähän
-                // Label restaurantLabel = new Label(orderItems.get(0).getRestaurantName());
-                // historyGridPane.add(new Label(restaurantLabel), 1, rowIndex);
-                //GridPane.setHalignment(restaurantLabel, HPos.CENTER);
+                Label restaurantLabel = new Label(orderItems.get(0).getRestaurantName());
+                historyGridPane.add((restaurantLabel), 1, rowIndex);
+                GridPane.setHalignment(restaurantLabel, HPos.CENTER);
 
                 historyGridPane.add(productsBox, 2, rowIndex);
                 GridPane.setHalignment(productsBox, HPos.CENTER);

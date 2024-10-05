@@ -25,7 +25,6 @@ public class EditAddressDialogController {
 
     public void setAddress(DeliveryAddress address) {
         this.address = address;
-        // Pre-fill the fields with existing data
         streetAddressField.setText(address.getStreetAddress());
         cityField.setText(address.getCity());
         postalCodeField.setText(address.getPostalCode());

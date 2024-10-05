@@ -3,18 +3,25 @@ package ofosFrontend.controller.User;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import ofosFrontend.model.CartItem;
 import ofosFrontend.model.DeliveryAddress;
 import ofosFrontend.model.ShoppingCart;
+import ofosFrontend.service.DeliveryAddressService;
 import ofosFrontend.session.SessionManager;
 import javafx.scene.control.Label;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.scene.control.Alert;
 import ofosFrontend.model.OrderItem;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -41,6 +48,8 @@ public class CheckoutController {
     private List<DeliveryAddress> deliveryAddressesList = new ArrayList<>();
     private DeliveryAddress selectedAddress;
     private String selectedPaymentMethod;
+    private DeliveryAddressService deliveryAddressService = new DeliveryAddressService();
+    private int userId = SessionManager.getInstance().getUserId();
 
     public CheckoutController() {
     }
@@ -155,28 +164,57 @@ public class CheckoutController {
 
         task.setOnSucceeded(event -> {
             deliveryAddressesList = task.getValue();
-
-            // Sort the list so that the default address is first
             deliveryAddressesList.sort((a, b) -> Boolean.compare(b.isDefaultAddress(), a.isDefaultAddress()));
 
-            // Update the UI with the addresses on the JavaFX application thread
             Platform.runLater(() -> {
-                deliveryAddresses.getItems().clear(); // Clear previous items if any
-                int index = 1;
-                for (DeliveryAddress address : deliveryAddressesList) {
-                    // Numbering the addresses starting from 1
-                    String formattedAddress = index++ + ". " +
-                            address.getStreetAddress() + ", " +
-                            address.getPostalCode() + " " +
-                            address.getCity() + " (" + address.getInfo() + ")";
-
-                    deliveryAddresses.getItems().add(formattedAddress);
-                }
-
-                // Set the default address as selected (which is now the first in the list)
+                deliveryAddresses.getItems().clear();
                 if (!deliveryAddressesList.isEmpty()) {
-                    deliveryAddresses.getSelectionModel().selectFirst();  // Select the first (default) address
-                    selectedAddress = deliveryAddressesList.get(0);  // Track the selected address
+                    int index = 1;
+                    for (DeliveryAddress address : deliveryAddressesList) {
+                        // Numbering the addresses starting from 1
+                        String formattedAddress = index++ + ". " +
+                                address.getStreetAddress() + ", " +
+                                address.getPostalCode() + " " +
+                                address.getCity() + " (" + address.getInfo() + ")";
+                        deliveryAddresses.getItems().add(formattedAddress);
+                    }
+
+                    deliveryAddresses.getSelectionModel().selectFirst();
+                    selectedAddress = deliveryAddressesList.get(0);
+                } else {
+                    // Open Add Address Dialog when no addresses are available
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/addAddressDialog.fxml"));
+                        Parent root = loader.load();
+
+                        AddAddressDialogController dialogController = loader.getController();
+                        dialogController.setUserId(userId);
+
+                        Stage stage = new Stage();
+                        stage.setTitle("Add New Address");
+                        stage.setScene(new Scene(root));
+                        stage.initModality(Modality.APPLICATION_MODAL);
+                        stage.showAndWait();  // Wait for the dialog to close
+
+                        // After dialog closes, retrieve the new address
+                        DeliveryAddress newAddress = dialogController.getNewAddress();
+
+                        // Validate input before saving
+                        if (dialogController.validateInput()) {
+                            // Call the service to save the new delivery address
+                            deliveryAddressService.saveDeliveryAddress(newAddress, () -> {
+                                // After successful save, refresh addresses
+                                getDeliveryAddresses();
+                            }, () -> {
+                                showError("Failed to save address.");
+                            });
+                        } else {
+                            showError("Invalid address input. Please fill all fields.");
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        showError("An error occurred while opening the add address dialog.");
+                    }
                 }
             });
         });
@@ -190,6 +228,15 @@ public class CheckoutController {
         thread.setDaemon(true);
         thread.start();
     }
+
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
 
     private void populatePaymentMethods() {
         paymentMethod.getItems().addAll("OFOS Credits","Card", "Cash");
@@ -212,7 +259,7 @@ public class CheckoutController {
                             item.getQuantity(),
                             item.getProduct().getProductID(),
                             selectedAddress.getDeliveryAddressId(),
-                            1  // Hardcoded restaurantID
+                            2  // Hardcoded restaurantID
                     );
                     orderItems.add(orderItem);
                 }

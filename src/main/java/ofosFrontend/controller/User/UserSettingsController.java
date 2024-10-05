@@ -20,6 +20,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import ofosFrontend.model.ContactInfo;
 import ofosFrontend.model.DeliveryAddress;
+import ofosFrontend.service.DeliveryAddressService;
+import ofosFrontend.service.UserService;
 import ofosFrontend.session.SessionManager;
 
 import java.io.IOException;
@@ -41,6 +43,8 @@ public class UserSettingsController {
 
     private int userId;
     private List<DeliveryAddress> deliveryAddressesList = new ArrayList<>();
+    private final DeliveryAddressService deliveryAddressService = new DeliveryAddressService();
+    private final UserService userService = new UserService();
 
     public void initialize() {
         this.userId = SessionManager.getInstance().getUserId();
@@ -50,55 +54,35 @@ public class UserSettingsController {
     }
 
     private void fetchUserData() {
-        Task<Void> task = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-                try {
-                    int userId = SessionManager.getInstance().getUserId();
-                    String url = "http://localhost:8000/api/contactinfo/" + userId;
+        int userId = SessionManager.getInstance().getUserId();
+        Task<ContactInfo> task = userService.fetchUserData(userId);
 
-                    HttpClient client = HttpClient.newHttpClient();
-                    HttpRequest request = HttpRequest.newBuilder()
-                            .uri(URI.create(url))
-                            .header("Authorization", "Bearer " + SessionManager.getInstance().getToken())
-                            .GET()
-                            .build();
+        task.setOnSucceeded(event -> {
+            ContactInfo contactInfo = task.getValue();
 
-                    HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-                    if (response.statusCode() == 200) {
-                        ObjectMapper objectMapper = new ObjectMapper();
-                        ContactInfo contactInfo = objectMapper.readValue(response.body(), ContactInfo.class);
-
-                        Platform.runLater(() -> {
-                            // Update UI with contact information
-                            nameLabel.setText(contactInfo.getFirstName() + " " + contactInfo.getLastName());
-                            emailLabel.setText(contactInfo.getEmail());
-                            phoneNumberLabel.setText(contactInfo.getPhoneNumber());
-                            addressLabel.setText(contactInfo.getAddress());
-                            cityLabel.setText(contactInfo.getCity());
-                            postalCodeLabel.setText(contactInfo.getPostalCode());
-                        });
-                    } else if (response.statusCode() == 404) {
-                        // No contact information found
-                        Platform.runLater(() -> {
-                            // Prompt user to enter contact information
-                            promptForContactInfo();
-                        });
-                    } else {
-                        Platform.runLater(() -> {
-                            showError("Failed to fetch contact information. Status code: " + response.statusCode());
-                        });
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Platform.runLater(() -> {
-                        showError("An error occurred while fetching contact information.");
-                    });
-                }
-                return null;
+            if (contactInfo != null) {
+                // Update UI with contact information
+                Platform.runLater(() -> {
+                    nameLabel.setText(contactInfo.getFirstName() + " " + contactInfo.getLastName());
+                    emailLabel.setText(contactInfo.getEmail());
+                    phoneNumberLabel.setText(contactInfo.getPhoneNumber());
+                    addressLabel.setText(contactInfo.getAddress());
+                    cityLabel.setText(contactInfo.getCity());
+                    postalCodeLabel.setText(contactInfo.getPostalCode());
+                });
+            } else {
+                // No contact information found, prompt user to enter it
+                Platform.runLater(this::promptForContactInfo);
             }
-        };
+        });
+
+        task.setOnFailed(event -> {
+            Throwable e = task.getException();
+            e.printStackTrace();
+            Platform.runLater(() -> {
+                showError("An error occurred while fetching contact information.");
+            });
+        });
 
         Thread thread = new Thread(task);
         thread.setDaemon(true);
@@ -158,32 +142,7 @@ public class UserSettingsController {
 
 
     private void fetchDeliveryAddresses() {
-        Task<List<DeliveryAddress>> task = new Task<>() {
-            @Override
-            protected List<DeliveryAddress> call() throws Exception {
-                String url = "http://localhost:8000/api/deliveryaddress/" + userId;
-                HttpClient client = HttpClient.newHttpClient();
-                HttpRequest request = HttpRequest.newBuilder()
-                        .uri(URI.create(url))
-                        .header("Authorization", "Bearer " + SessionManager.getInstance().getToken())
-                        .GET()
-                        .build();
-
-                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-                if (response.statusCode() == 200) {
-                    String responseBody = response.body();
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    List<DeliveryAddress> deliveryAddresses = objectMapper.readValue(
-                            responseBody,
-                            new TypeReference<List<DeliveryAddress>>() {}
-                    );
-                    return deliveryAddresses;
-                } else {
-                    throw new Exception("Failed to fetch delivery addresses. Status code: " + response.statusCode());
-                }
-            }
-        };
+        Task<List<DeliveryAddress>> task = deliveryAddressService.fetchDeliveryAddresses(userId);
 
         task.setOnSucceeded(event -> {
             deliveryAddressesList = task.getValue();
@@ -395,42 +354,11 @@ public class UserSettingsController {
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
             // Proceed to set as default
-            Task<Void> task = new Task<>() {
-                @Override
-                protected Void call() throws Exception {
-                    String url = "http://localhost:8000/api/deliveryaddress/setDefault";
-                    HttpClient client = HttpClient.newHttpClient();
-                    ObjectMapper objectMapper = new ObjectMapper();
-
-                    // Prepare the request body
-                    Map<String, Integer> requestBody = new HashMap<>();
-                    requestBody.put("deliveryAddressId", address.getDeliveryAddressId());
-                    requestBody.put("userId", userId);
-
-                    String requestBodyJson = objectMapper.writeValueAsString(requestBody);
-
-
-                    HttpRequest request = HttpRequest.newBuilder()
-                            .uri(URI.create(url))
-                            .header("Content-Type", "application/json")
-                            .header("Authorization", "Bearer " + SessionManager.getInstance().getToken())
-                            .method("PUT", HttpRequest.BodyPublishers.ofString(requestBodyJson))
-                            .build();
-
-
-                    HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-                    if (response.statusCode() != 200) {
-                        throw new Exception("Failed to set default address. Status code: " + response.statusCode());
-                    }
-
-                    return null;
-                }
-            };
+            Task<Void> task = deliveryAddressService.setDefaultAddress(address, userId);
 
             task.setOnSucceeded(e -> {
                 // Update the UI
-                updateDefaultAddressInUI(address); // Refresh the list of addresses
+                updateDefaultAddressInUI(address);  // Refresh the list of addresses
             });
 
             task.setOnFailed(e -> {
@@ -468,34 +396,20 @@ public class UserSettingsController {
 
 
     private void deleteAddress(DeliveryAddress address) {
-        Task<Void> task = new Task<>() {
-            @Override
-            protected Void call() throws Exception {
-                String url = "http://localhost:8000/api/deliveryaddress/delete/" + address.getDeliveryAddressId();
+        Task<Void> task = deliveryAddressService.deleteAddress(address.getDeliveryAddressId());
 
-                HttpClient client = HttpClient.newHttpClient();
-                HttpRequest request = HttpRequest.newBuilder()
-                        .uri(URI.create(url))
-                        .header("Authorization", "Bearer " + SessionManager.getInstance().getToken())
-                        .DELETE()
-                        .build();
+        task.setOnSucceeded(event -> {
+            // Refresh the delivery addresses after successful deletion
+            Platform.runLater(this::fetchDeliveryAddresses);
+        });
 
-                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-                if (response.statusCode() == 200) {
-                    // Address deleted successfully
-                    Platform.runLater(() -> {
-                        fetchDeliveryAddresses();
-                    });
-                } else {
-                    Platform.runLater(() -> {
-                        showError("Failed to delete address. Status code: " + response.statusCode());
-                    });
-                }
-
-                return null;
-            }
-        };
+        task.setOnFailed(event -> {
+            Throwable exception = task.getException();
+            exception.printStackTrace();
+            Platform.runLater(() -> {
+                showError("Failed to delete address.");
+            });
+        });
 
         Thread thread = new Thread(task);
         thread.setDaemon(true);

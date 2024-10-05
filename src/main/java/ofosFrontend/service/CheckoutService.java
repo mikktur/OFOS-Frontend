@@ -20,7 +20,6 @@ public class CheckoutService {
     public Task<List<DeliveryAddress>> fetchDeliveryAddresses() {
         int userId = SessionManager.getInstance().getUserId();
 
-        // Create a new Task
         Task<List<DeliveryAddress>> task = new Task<>() {
             @Override
             protected List<DeliveryAddress> call() throws Exception {
@@ -47,12 +46,11 @@ public class CheckoutService {
             }
         };
 
-        // When the task succeeds, save the list of addresses in the service
+
         task.setOnSucceeded(event -> {
-            deliveryAddressesList = task.getValue();  // Store the result
+            deliveryAddressesList = task.getValue();
         });
 
-        // Handle failure case with an alert
         task.setOnFailed(event -> {
             Throwable e = task.getException();
             e.printStackTrace();
@@ -63,7 +61,6 @@ public class CheckoutService {
             alert.showAndWait();
         });
 
-        // Return the Task so the controller can attach listeners
         return task;
     }
 
