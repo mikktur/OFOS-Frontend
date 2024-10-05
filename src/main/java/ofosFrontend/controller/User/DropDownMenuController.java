@@ -41,4 +41,20 @@ public class DropDownMenuController extends BasicController {
     }
 
 
+    public void goToHistory(MouseEvent mouseEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/OrderHistoryUI.fxml"));
+        Parent root = loader.load();
+
+        Stage currentStage = (Stage) AppManager.getInstance().getPrimaryStage();
+
+        Scene historyScene = new Scene(root, 800, 600);
+
+        currentStage.setTitle("OFOS Order History");
+        currentStage.setMinWidth(800);
+        currentStage.setMinHeight(600);
+
+        currentStage.setScene(historyScene);
+
+        currentStage.show();
+    }
 }

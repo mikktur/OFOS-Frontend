@@ -41,7 +41,7 @@
             </HBox>
             <HBox alignment="CENTER" VBox.vgrow="NEVER">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="History" textAlignment="CENTER" wrappingWidth="93.13671875" HBox.hgrow="NEVER">
+                  <Text fx:id="historyElement" onMouseClicked="#goToHistory" strokeType="OUTSIDE" strokeWidth="0.0" text="History" textAlignment="CENTER" wrappingWidth="93.13671875" HBox.hgrow="NEVER">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
