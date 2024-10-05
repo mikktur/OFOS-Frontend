@@ -20,27 +20,26 @@ import java.util.Optional;
 
 public class AdminMainMenuController extends AdminBasicController {
     @FXML
-    private VBox restaurantsVBox; // VBox containing the list of restaurants
+    private VBox restaurantsVBox;
     @FXML
     private VBox restaurantListVBox;
     @FXML
-    private Label addressLabel, phoneLabel, hoursLabel; // Labels for restaurant details
+    private Label addressLabel, phoneLabel, hoursLabel;
+
     @FXML
-    private Text defaultText; // Default text to display when no restaurant is selected
-    @FXML
-    private Button editMenuButton; // Button to edit the menu of the selected restaurant
+    private Text defaultText;
+    private int rID;
+
     private RestaurantService restaurantService = new RestaurantService();
-    private Restaurant currentSelectedRestaurant; // Store the currently selected restaurant
+    private Restaurant currentSelectedRestaurant;
 
     @FXML
     public void initialize() {
-
-        loadRestaurants(); // Load restaurants when the UI initializes
+        loadRestaurants();
     }
     public AdminMainMenuController() {
     }
 
-    // Method to load the list of restaurants owned by the admin
     public void loadRestaurants() {
         try {
 
@@ -51,12 +50,10 @@ public class AdminMainMenuController extends AdminBasicController {
 
 
             for (Restaurant restaurant : restaurants) {
-                // Create an HBox for each restaurant entry
                 HBox restaurantBox = new HBox();
                 restaurantBox.setSpacing(10.0);
                 restaurantBox.setStyle("-fx-padding: 5px; -fx-background-color: #e8f4fb; -fx-border-color: #000;");
 
-                // Add the restaurant name to the HBox
                 Text restaurantNameText = new Text(restaurant.getRestaurantName());
                 restaurantNameText.setFont(Font.font(12));
                 restaurantNameText.setStyle("-fx-font-weight: bold;");
@@ -67,6 +64,7 @@ public class AdminMainMenuController extends AdminBasicController {
 
                 restaurantBox.setOnMouseClicked(event -> {
 
+                    rID = restaurant.getId();
                     currentSelectedRestaurant = restaurant;
 
 
@@ -81,8 +79,6 @@ public class AdminMainMenuController extends AdminBasicController {
         }
     }
 
-
-    // Unified method to update restaurant details in the UI
     private void updateRestaurantDetailsUI() {
         if (currentSelectedRestaurant != null) {
             defaultText.setText(currentSelectedRestaurant.getRestaurantName());
@@ -95,20 +91,13 @@ public class AdminMainMenuController extends AdminBasicController {
     @FXML
     private void modifyRestaurantInfo() {
         if (currentSelectedRestaurant == null) {
-            showNoRestaurantSelectedAlert();
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("No Restaurant Selected");
+            alert.setHeaderText("Please select a restaurant to modify.");
+            alert.showAndWait();
             return;
         }
 
-        Optional<Pair<String, String>> result = showModifyRestaurantDialog();
-        result.ifPresent(info -> handleDialogResult(info));
-    }
-    private void showNoRestaurantSelectedAlert() {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("No Restaurant Selected");
-        alert.setHeaderText("Please select a restaurant to modify.");
-        alert.showAndWait();
-    }
-    private Optional<Pair<String, String>> showModifyRestaurantDialog() {
         Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.setTitle("Modify Restaurant Info");
         dialog.setHeaderText("Edit the contact information for the restaurant.");
@@ -116,23 +105,6 @@ public class AdminMainMenuController extends AdminBasicController {
         ButtonType modifyButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(modifyButtonType, ButtonType.CANCEL);
 
-        GridPane grid = createDialogGridPane();
-        dialog.getDialogPane().setContent(grid);
-
-        TextField addressField = new TextField(currentSelectedRestaurant.getAddress());
-        TextField phoneField = new TextField(currentSelectedRestaurant.getRestaurantPhone());
-        TextField hoursField = new TextField(currentSelectedRestaurant.getBusinessHours());
-
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == modifyButtonType) {
-                return new Pair<>(addressField.getText(), phoneField.getText());
-            }
-            return null;
-        });
-
-        return dialog.showAndWait();
-    }
-    private GridPane createDialogGridPane() {
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
@@ -148,38 +120,43 @@ public class AdminMainMenuController extends AdminBasicController {
         grid.add(new Label("Business Hours:"), 0, 2);
         grid.add(hoursField, 1, 2);
 
-        return grid;
-    }
-    private void handleDialogResult(Pair<String, String> info) {
-        updateRestaurantInfo(info);
-        updateRestaurantDetailsUI();
-        try {
-            restaurantService.updateRestaurantInfo(currentSelectedRestaurant);
-            showSuccessAlert(info);
-        } catch (IOException e) {
-            showErrorAlert(e);
-        }
-    }
-    private void updateRestaurantInfo(Pair<String, String> info) {
-        currentSelectedRestaurant.setAddress(info.getKey());
-        currentSelectedRestaurant.setRestaurantPhone(info.getValue());
-    }
-    private void showSuccessAlert(Pair<String, String> info) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Information Updated");
-        alert.setHeaderText("Restaurant Information Updated Successfully");
-        alert.setContentText("Address: " + info.getKey() +
-                "\nPhone: " + info.getValue() +
-                "\nBusiness Hours: " + currentSelectedRestaurant.getBusinessHours());
-        alert.showAndWait();
-    }
-    private void showErrorAlert(IOException e) {
-        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-        errorAlert.setTitle("Error");
-        errorAlert.setHeaderText("Failed to Update Restaurant Information");
-        errorAlert.setContentText("An error occurred while updating the restaurant.");
-        errorAlert.showAndWait();
-        e.printStackTrace();
+        dialog.getDialogPane().setContent(grid);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == modifyButtonType) {
+                return new Pair<>(addressField.getText(), phoneField.getText());
+            }
+            return null;
+        });
+
+        Optional<Pair<String, String>> result = dialog.showAndWait();
+
+        result.ifPresent(info -> {
+            currentSelectedRestaurant.setAddress(addressField.getText());
+            currentSelectedRestaurant.setRestaurantPhone(phoneField.getText());
+            currentSelectedRestaurant.setHours(hoursField.getText());
+
+            updateRestaurantDetailsUI();
+
+            try {
+                restaurantService.updateRestaurantInfo(currentSelectedRestaurant);
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Information Updated");
+                alert.setHeaderText("Restaurant Information Updated Successfully");
+                alert.setContentText("Address: " + addressField.getText() +
+                        "\nPhone: " + phoneField.getText() +
+                        "\nBusiness Hours: " + hoursField.getText());
+                alert.showAndWait();
+            } catch (IOException e) {
+                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                errorAlert.setTitle("Error");
+                errorAlert.setHeaderText("Failed to Update Restaurant Information");
+                errorAlert.setContentText("An error occurred while updating the restaurant.");
+                errorAlert.showAndWait();
+                e.printStackTrace();
+            }
+        });
     }
 
     @FXML
@@ -193,6 +170,4 @@ public class AdminMainMenuController extends AdminBasicController {
             e.printStackTrace();
         }
     }
-
-
 }
