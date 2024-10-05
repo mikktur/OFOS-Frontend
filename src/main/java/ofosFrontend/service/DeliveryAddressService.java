@@ -135,4 +135,33 @@ public class DeliveryAddressService {
             }
         };
     }
+
+    public Task<Void> updateDeliveryAddress(DeliveryAddress address) {
+        return new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                String url = "http://localhost:8000/api/deliveryaddress/update";
+                String token = SessionManager.getInstance().getToken();
+
+                ObjectMapper objectMapper = new ObjectMapper();
+                String requestBody = objectMapper.writeValueAsString(address);
+
+                HttpClient client = HttpClient.newHttpClient();
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(url))
+                        .header("Content-Type", "application/json")
+                        .header("Authorization", "Bearer " + token)
+                        .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
+                        .build();
+
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+                if (response.statusCode() != 200) {
+                    throw new Exception("Failed to update address. Status code: " + response.statusCode());
+                }
+
+                return null;
+            }
+        };
+    }
 }

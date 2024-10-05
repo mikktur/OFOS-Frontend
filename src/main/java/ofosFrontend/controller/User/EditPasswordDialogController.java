@@ -1,25 +1,20 @@
 package ofosFrontend.controller.User;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import ofosFrontend.model.PasswordChangeDTO;
-import ofosFrontend.session.SessionManager;
-
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.util.concurrent.CompletableFuture;
+import ofosFrontend.service.UserService;
 
 public class EditPasswordDialogController {
     public TextField oldPasswordField;
     public TextField newPasswordField;
     String token;
+    private UserService userService = new UserService();
 
     @FXML
     private void handleCancel() {
@@ -28,47 +23,27 @@ public class EditPasswordDialogController {
     }
 
     public void handleSave(ActionEvent actionEvent) {
-        // PUT method to update the password
-        try {
-            PasswordChangeDTO passwordDTO = new PasswordChangeDTO(oldPasswordField.getText(),newPasswordField.getText());
+        PasswordChangeDTO passwordDTO = new PasswordChangeDTO(oldPasswordField.getText(), newPasswordField.getText());
 
-            String url = "http://localhost:8000/api/user/updatePassword";
+        Task<Void> task = userService.updatePassword(passwordDTO);
 
-            token = SessionManager.getInstance().getToken();
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            String requestBody = objectMapper.writeValueAsString(passwordDTO);
-            System.out.println("requestbody"+ requestBody);
-
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .header("Content-Type", "application/json")
-                    .header("Authorization", "Bearer " + token)
-                    .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
-                    .build();
-
-            CompletableFuture<HttpResponse<String>> responseFuture = client.sendAsync(request, HttpResponse.BodyHandlers.ofString());
-
-            responseFuture.thenAccept(response -> {
-                if (response.statusCode() == 200) {
-                    Platform.runLater(() -> {
-                        // Close the dialog
-                        Stage stage = (Stage) oldPasswordField.getScene().getWindow();
-                        stage.close();
-                    });
-                } else {
-                    Platform.runLater(() -> showError("Failed to update the password. Status code: " + response.statusCode()));
-                }
-            }).exceptionally(ex -> {
-                ex.printStackTrace();
-                Platform.runLater(() -> showError("An error occurred while updating the password."));
-                return null;
+        task.setOnSucceeded(event -> {
+            // Close the dialog on success
+            Platform.runLater(() -> {
+                Stage stage = (Stage) oldPasswordField.getScene().getWindow();
+                stage.close();
             });
-          } catch (Exception e) {
-            e.printStackTrace();
-            showError("An error occurred while updating the password.");
-        }
+        });
+
+        task.setOnFailed(event -> {
+            Throwable exception = task.getException();
+            exception.printStackTrace();
+            Platform.runLater(() -> showError("An error occurred while updating the password."));
+        });
+
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
     }
 
 

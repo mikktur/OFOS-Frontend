@@ -2,10 +2,8 @@ package ofosFrontend.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ofosFrontend.model.Order;
-import ofosFrontend.model.OrderHistory;
-import ofosFrontend.model.OrderProducts;
-import ofosFrontend.model.Product;
+import javafx.concurrent.Task;
+import ofosFrontend.model.*;
 import ofosFrontend.session.SessionManager;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -20,46 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-// method to retrieve orders by user id
-// returns a list of objects
+
 public class OrderService {
     private static final String API_URL = "http://localhost:8000/api/";
-    private final OkHttpClient client = new OkHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
 
-    /*
-    public List<Order> getOrdersByUserId(int id) throws IOException {
-        Request request = new Request.Builder()
-                .url(API_URL + "order/" + id)
-                .get()
-                .build();
-
-        Response response = client.newCall(request).execute();
-        String responseBody = response.body().string();
-        System.out.println("Response Body: " + responseBody);
-
-        List<Order> orders = mapper.readValue(responseBody,
-                mapper.getTypeFactory().constructCollectionType(List.class, Order.class));
-
-        return orders;
-    }
-
-    public List<OrderProducts> getOrderProductsByUserId(int id) throws IOException {
-        Request request = new Request.Builder()
-                .url(API_URL + "order/products/" + id)
-                .get()
-                .build();
-
-        Response response = client.newCall(request).execute();
-        String responseBody = response.body().string();
-        System.out.println("Response Body: " + responseBody);
-
-        List<OrderProducts> orderProducts = mapper.readValue(responseBody,
-                mapper.getTypeFactory().constructCollectionType(List.class, OrderProducts.class));
-
-        return orderProducts;
-    }
-    */
 
     public Map<Integer, List<OrderHistory>> getHistory() throws IOException, InterruptedException {
         String url = API_URL + "order/history";
@@ -73,10 +36,46 @@ public class OrderService {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         String responseBody = response.body();
 
-        ObjectMapper mapper = new ObjectMapper();
         Map<Integer, List<OrderHistory>> orderHistoryMap = mapper.readValue(responseBody, new TypeReference<Map<Integer, List<OrderHistory>>>(){});
 
         return orderHistoryMap;
+    }
+
+    public Task<Void> confirmOrder(List<CartItem> cartItems, int deliveryAddressId, int restaurantId) {
+        return new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                List<OrderItem> orderItems = new ArrayList<>();
+                for (CartItem item : cartItems) {
+                    OrderItem orderItem = new OrderItem(
+                            item.getQuantity(),
+                            item.getProduct().getProductID(),
+                            deliveryAddressId,
+                            restaurantId
+                    );
+                    orderItems.add(orderItem);
+                }
+
+                String requestBody = mapper.writeValueAsString(orderItems);
+
+                String url = "http://localhost:8000/api/order";
+                HttpClient client = HttpClient.newHttpClient();
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(url))
+                        .header("Authorization", "Bearer " + SessionManager.getInstance().getToken())
+                        .header("Content-Type", "application/json")
+                        .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                        .build();
+
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+                if (response.statusCode() != 200) {
+                    throw new Exception("Failed to confirm the order. Status code: " + response.statusCode());
+                }
+
+                return null;
+            }
+        };
     }
 }
 

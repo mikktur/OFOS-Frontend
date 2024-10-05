@@ -15,6 +15,7 @@ import ofosFrontend.model.CartItem;
 import ofosFrontend.model.DeliveryAddress;
 import ofosFrontend.model.ShoppingCart;
 import ofosFrontend.service.DeliveryAddressService;
+import ofosFrontend.service.OrderService;
 import ofosFrontend.session.SessionManager;
 import javafx.scene.control.Label;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,6 +51,7 @@ public class CheckoutController {
     private String selectedPaymentMethod;
     private DeliveryAddressService deliveryAddressService = new DeliveryAddressService();
     private int userId = SessionManager.getInstance().getUserId();
+    private OrderService orderService = new OrderService();
 
     public CheckoutController() {
     }
@@ -194,16 +196,13 @@ public class CheckoutController {
                         stage.setTitle("Add New Address");
                         stage.setScene(new Scene(root));
                         stage.initModality(Modality.APPLICATION_MODAL);
-                        stage.showAndWait();  // Wait for the dialog to close
+                        stage.showAndWait();
 
-                        // After dialog closes, retrieve the new address
                         DeliveryAddress newAddress = dialogController.getNewAddress();
 
                         // Validate input before saving
                         if (dialogController.validateInput()) {
-                            // Call the service to save the new delivery address
                             deliveryAddressService.saveDeliveryAddress(newAddress, () -> {
-                                // After successful save, refresh addresses
                                 getDeliveryAddresses();
                             }, () -> {
                                 showError("Failed to save address.");
@@ -245,73 +244,36 @@ public class CheckoutController {
     }
 
     public void confirmOrder() {
-        // Create a background task to send the order request
-        Task<Void> task = new Task<>() {
-            @Override
-            protected Void call() throws Exception {
-                // Get shopping cart items
-                List<CartItem> cartItems = SessionManager.getInstance().getCart().getItems();
+        // Get shopping cart items
+        List<CartItem> cartItems = SessionManager.getInstance().getCart().getItems();
+        int deliveryAddressId = selectedAddress.getDeliveryAddressId();
+        int restaurantId = 2;  // Hardcoded restaurantID
 
-                // Prepare the order data using OrderItem class (hardcoding restaurantID = 1)
-                List<OrderItem> orderItems = new ArrayList<>();
-                for (CartItem item : cartItems) {
-                    OrderItem orderItem = new OrderItem(
-                            item.getQuantity(),
-                            item.getProduct().getProductID(),
-                            selectedAddress.getDeliveryAddressId(),
-                            2  // Hardcoded restaurantID
-                    );
-                    orderItems.add(orderItem);
-                }
+        Task<Void> task = orderService.confirmOrder(cartItems, deliveryAddressId, restaurantId);
 
-                // Convert the orderItems list to JSON
-                ObjectMapper objectMapper = new ObjectMapper();
-                String requestBody = objectMapper.writeValueAsString(orderItems);
-
-                // Send the POST request
-                String url = "http://localhost:8000/api/order";
-                HttpClient client = HttpClient.newHttpClient();
-                HttpRequest request = HttpRequest.newBuilder()
-                        .uri(URI.create(url))
-                        .header("Authorization", "Bearer " + SessionManager.getInstance().getToken())
-                        .header("Content-Type", "application/json")
-                        .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                        .build();
-
-                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-                if (response.statusCode() == 200) {
-                    // Order successful, handle success case here (e.g., display a confirmation dialog)
-                    Platform.runLater(() -> {
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Order Confirmed");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Your order has been successfully placed!");
-                        alert.showAndWait();
-                    });
-                } else {
-                    // Handle error case
-                    throw new Exception("Failed to confirm the order. Status code: " + response.statusCode());
-                }
-
-                return null;
-            }
-        };
-
-        // Handle failure in the task
-        task.setOnFailed(event -> {
-            Throwable e = task.getException();
-            e.printStackTrace();
+        task.setOnSucceeded(event -> {
+            // Show confirmation dialog on success
             Platform.runLater(() -> {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Order Error");
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Order Confirmed");
                 alert.setHeaderText(null);
-                alert.setContentText("An error occurred while placing the order.");
+                alert.setContentText("Your order has been successfully placed!");
                 alert.showAndWait();
             });
         });
 
-        // Run the task in a background thread
+        task.setOnFailed(event -> {
+            Throwable exception = task.getException();
+            exception.printStackTrace();
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Order Failed");
+                alert.setHeaderText(null);
+                alert.setContentText("Failed to place the order.");
+                alert.showAndWait();
+            });
+        });
+
         Thread thread = new Thread(task);
         thread.setDaemon(true);
         thread.start();

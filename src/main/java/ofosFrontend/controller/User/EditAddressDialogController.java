@@ -1,18 +1,12 @@
 package ofosFrontend.controller.User;
 
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import ofosFrontend.model.DeliveryAddress;
-import ofosFrontend.session.SessionManager;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.util.concurrent.CompletableFuture;
+import ofosFrontend.service.DeliveryAddressService;
 
 public class EditAddressDialogController {
 
@@ -22,6 +16,7 @@ public class EditAddressDialogController {
     @FXML private TextArea instructionsArea;
 
     private DeliveryAddress address;
+    private DeliveryAddressService deliveryAddressService = new DeliveryAddressService();
 
     public void setAddress(DeliveryAddress address) {
         this.address = address;
@@ -53,42 +48,24 @@ public class EditAddressDialogController {
     }
 
     private void updateDeliveryAddress(DeliveryAddress address) {
-        try {
-            String url = "http://localhost:8000/api/deliveryaddress/update";
+        Task<Void> task = deliveryAddressService.updateDeliveryAddress(address);
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            String requestBody = objectMapper.writeValueAsString(address);
-
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .header("Content-Type", "application/json")
-                    .header("Authorization", "Bearer " + SessionManager.getInstance().getToken())
-                    .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
-                    .build();
-
-            CompletableFuture<HttpResponse<String>> responseFuture = client.sendAsync(request, HttpResponse.BodyHandlers.ofString());
-
-            responseFuture.thenAccept(response -> {
-                if (response.statusCode() == 200) {
-                    Platform.runLater(() -> {
-                        // Close the dialog
-                        Stage stage = (Stage) streetAddressField.getScene().getWindow();
-                        stage.close();
-                    });
-                } else {
-                    Platform.runLater(() -> showError("Failed to update address. Status code: " + response.statusCode()));
-                }
-            }).exceptionally(ex -> {
-                ex.printStackTrace();
-                Platform.runLater(() -> showError("An error occurred while updating the address."));
-                return null;
+        task.setOnSucceeded(event -> {
+            Platform.runLater(() -> {
+                Stage stage = (Stage) streetAddressField.getScene().getWindow();
+                stage.close();
             });
+        });
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            showError("An error occurred while updating the address.");
-        }
+        task.setOnFailed(event -> {
+            Throwable exception = task.getException();
+            exception.printStackTrace();
+            Platform.runLater(() -> showError("An error occurred while updating the address."));
+        });
+
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
     }
 
     @FXML

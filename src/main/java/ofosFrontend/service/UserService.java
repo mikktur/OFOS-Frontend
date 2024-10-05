@@ -3,6 +3,7 @@ package ofosFrontend.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.concurrent.Task;
 import ofosFrontend.model.ContactInfo;
+import ofosFrontend.model.PasswordChangeDTO;
 import ofosFrontend.model.User;
 import ofosFrontend.session.SessionManager;
 import okhttp3.*;
@@ -36,7 +37,6 @@ public class UserService {
 
         return client.newCall(request).execute();
     }
-
 
     public Response register(String username, String password) throws IOException {
 
@@ -79,6 +79,35 @@ public class UserService {
                 } else {
                     throw new Exception("Failed to fetch contact information. Status code: " + response.statusCode());
                 }
+            }
+        };
+    }
+
+    public Task<Void> updatePassword(PasswordChangeDTO passwordDTO) {
+        return new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                String url = "http://localhost:8000/api/users/updatePassword";
+                String token = SessionManager.getInstance().getToken();
+
+                ObjectMapper objectMapper = new ObjectMapper();
+                String requestBody = objectMapper.writeValueAsString(passwordDTO);
+
+                HttpClient client = HttpClient.newHttpClient();
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(url))
+                        .header("Content-Type", "application/json")
+                        .header("Authorization", "Bearer " + token)
+                        .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
+                        .build();
+
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+                if (response.statusCode() != 200) {
+                    throw new Exception("Failed to update password. Status code: " + response.statusCode() + response.body());
+                }
+
+                return null;
             }
         };
     }
