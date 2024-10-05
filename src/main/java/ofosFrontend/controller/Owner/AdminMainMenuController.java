@@ -11,6 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Pair;
+import ofosFrontend.controller.AdminMenuController;
 import ofosFrontend.model.Restaurant;
 import ofosFrontend.service.RestaurantService;
 
@@ -165,9 +166,12 @@ public class AdminMainMenuController extends AdminBasicController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/Owner/adminFoodMenuUI.fxml"));
 
             Node root = loader.load();
+            AdminMenuController adminMenuController = loader.getController();
+            adminMenuController.setRestaurantID(currentSelectedRestaurant.getId());
             mainController.setCenterContent(root);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 }

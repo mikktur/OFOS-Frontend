@@ -35,7 +35,11 @@ public class AdminMenuController {
 
     @FXML
     public void initialize() {
-        loadProducts();
+
+    }
+    public void setRestaurantID(int restaurantID) {
+        this.restaurantID = restaurantID;
+        loadProducts();  // Now call loadProducts since restaurantID is set
     }
     private void loadProducts() {
         try {

@@ -8,7 +8,7 @@ import ofosFrontend.model.CartItem;
 import ofosFrontend.model.ShoppingCart;
 import ofosFrontend.session.SessionManager;
 
-public class CheckoutController {
+public class CheckoutController extends BasicController {
     @FXML
     VBox summaryContainer;
     @FXML

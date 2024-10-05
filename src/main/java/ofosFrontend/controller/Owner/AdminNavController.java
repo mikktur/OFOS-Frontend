@@ -10,8 +10,14 @@ public class AdminNavController  extends AdminBasicController {
     @FXML
     ImageView adminLogout;
     @FXML
+    ImageView adminHome;
+    @FXML
     public void initialize() {
         adminNav.getProperties().put("controller", this);
+    }
+    @FXML
+    public void goToHome() {
+        mainController.loadDefaultContent();
     }
     @FXML
     public void ALogout() {
