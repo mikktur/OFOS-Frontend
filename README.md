@@ -12,7 +12,7 @@ Sovelluksen avatessa käyttäjä voi luoda tilin tai kirjautua sisään. Sisää
 tai ravintolan tuotteiden perusteella. Näkymästä löytyy painike, josta käyttäjä pääsee muokkaamaan omia tietojaan ja lisäämään toimitusosoitteita tililleen. Ravintolan valittua käyttäjälle näytetään kaikki ravintolan tuotteet ja niiden tiedot.
 Käyttäjä voi valita ravintolan menusta tuotteen ja lisätä sen ostoskoriin. Tämän jälkeen ostoskorista valitsemaan toimitusosoitteen ja pääsee maksamaan tilauksen.
 
->Miten omistajakäyttäjän toimivuus?
+Ravintolan omistaja voi päivittää ravintolansa tuotteita, yhteystietoja ja tuotteiden hintoja sekä lisätä tai poistaa tuotteita ravintoloistaan.
 
 ___
 
