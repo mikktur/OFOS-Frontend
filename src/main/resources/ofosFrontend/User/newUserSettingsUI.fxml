@@ -69,7 +69,7 @@
                                  </GridPane>
                               </VBox>
                               <Button onAction="#handleEditContactInfo" text="Edit Contact Information" />
-                              <Button text="Change Password" onAction="#handleChangePassword" />
+                              <Button fx:id="changePassword" text="Change Password" onAction="#handleChangePassword" />
                            </children>
                         </VBox>
                         <!-- Delivery Addresses VBox -->
