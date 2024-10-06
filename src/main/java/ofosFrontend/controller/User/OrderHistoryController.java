@@ -10,19 +10,16 @@ import ofosFrontend.service.OrderHistorySorter;
 import ofosFrontend.service.OrderService;
 import ofosFrontend.session.SessionManager;
 
-
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+
 
 public class OrderHistoryController {
 
     OrderService orderService = new OrderService();
     int userId = SessionManager.getInstance().getUserId();
-    OrderHistorySorter orderHistorySorter = new OrderHistorySorter();
+
 
     @FXML
     private GridPane historyGridPane;
@@ -41,7 +38,7 @@ public class OrderHistoryController {
             Map<Integer, List<OrderHistory>> orderHistoryMap = orderService.getHistory();
 
             // Sort the order history map and maintain the sorted order
-            orderHistoryMap = OrderHistorySorter.sortOrderHistoryByDate(orderHistoryMap);
+            orderHistoryMap = OrderHistorySorter.sortOrderHistoryById(orderHistoryMap);
 
             int rowIndex = 0;
 
