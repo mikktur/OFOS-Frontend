@@ -60,7 +60,7 @@
                                                   </Text>
                                               </children>
                                           </AnchorPane>
-                                          <AnchorPane prefHeight="166.0" prefWidth="159.0" style="-fx-background-color: #ffffff; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
+                                          <AnchorPane  prefHeight="166.0" prefWidth="159.0" style="-fx-background-color: #ffffff; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
                                               <children>
                                                   <ImageView fitHeight="118.0" fitWidth="119.0" layoutX="21.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
                                                       <image>

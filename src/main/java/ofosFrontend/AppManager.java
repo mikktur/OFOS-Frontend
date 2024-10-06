@@ -7,7 +7,6 @@ public class AppManager {
 
     private static AppManager instance;
     private Stage primaryStage;
-    private UserMainController userMainController;
 
     private AppManager() {
     }
@@ -27,12 +26,8 @@ public class AppManager {
         return primaryStage;
     }
 
-    public void setMainController(UserMainController controller) {
-        this.userMainController = controller;
-    }
 
-    public UserMainController getMainController() {
-        return userMainController;
-    }
+
+
 }
 

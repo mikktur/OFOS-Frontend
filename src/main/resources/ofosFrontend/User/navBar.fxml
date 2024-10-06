@@ -37,7 +37,7 @@
               </HBox>
               <HBox alignment="CENTER" styleClass="middleNav" HBox.hgrow="ALWAYS">
                   <children>
-                      <TextField alignment="CENTER" maxWidth="800.0" prefHeight="35.0" prefWidth="583.0" promptText="hae" style="-fx-background-color: #ffffff;">
+                      <TextField fx:id="searchBar" alignment="CENTER" maxWidth="800.0" prefHeight="35.0" prefWidth="583.0" promptText="hae" style="-fx-background-color: #ffffff;">
                           <font>
                               <Font size="16.0" />
                           </font>

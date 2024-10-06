@@ -22,7 +22,7 @@ import java.io.IOException;
  *   <li>Managing the visibility of the side menu and shopping cart.</li>
  * </ul>
  * The MainController acts as the central hub of the application, coordinating interactions
- * between various UI components and controllers.
+ * between various UI components and controllers. in short it is used to the "what" to show part of the application.
  */
 public class UserMainController {
 
@@ -36,18 +36,24 @@ public class UserMainController {
     @FXML
     ShoppingCartController shoppingCartController;
     @FXML
+    NavController navController;
+    @FXML
     private StackPane navBar;
     @FXML
     private AnchorPane dropDownRoot;
+    @FXML
+    DropDownMenuController dropDownMenuController;
+    MMenuController mmController;
     private CartManager cartManager = new CartManager();
 
     @FXML
     public void initialize() {
-
-        loadDefaultContent();
         setControllers();
+        System.out.println("Main controller initialized");
+
         root.setLeft(null);
         root.setRight(null);
+        loadDefaultContent();
     }
 
 
@@ -56,6 +62,7 @@ public class UserMainController {
             System.out.println("centerPane is null!");
             return;
         }
+
         centerPane.getChildren().clear();
         centerPane.getChildren().add(content);
         StackPane.setAlignment(content, Pos.CENTER);
@@ -67,7 +74,8 @@ public class UserMainController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/mainUI.fxml"));
 
             Node content = loader.load();
-            MMenuController mmController = loader.getController();
+            mmController = loader.getController();
+
             if (mmController != null) {
                 mmController.setMainController(this);
             }
@@ -85,12 +93,12 @@ public class UserMainController {
                 shoppingCartController.setMainController(this);
             }
 
-            NavController navController = (NavController) navBar.getProperties().get("controller");
+            navController = (NavController) navBar.getProperties().get("controller");
             if (navController != null) {
                 navController.setMainController(this);
             }
 
-            DropDownMenuController dropDownMenuController = (DropDownMenuController) dropDownRoot.getProperties().get("controller");
+            dropDownMenuController = (DropDownMenuController) dropDownRoot.getProperties().get("controller");
             if (dropDownMenuController != null) {
                 dropDownMenuController.setMainController(this);
             }
@@ -110,16 +118,19 @@ public class UserMainController {
     public void toggleShoppingCart() {
         if (cart != null) {
             shoppingCartController.updateCart();
-
-            // Toggle the cart's visibility
             boolean isVisible = cart.isVisible();
             cart.setVisible(!isVisible);
             root.setRight(isVisible ? null : cart);
-
-
         }
 
     }
+
+    public void filterRestaurants(String query) {
+        if (mmController != null) {
+            mmController.filterRestaurants(query);
+        }
+    }
+
 
     public ShoppingCartController getShoppingCartController() {
         return shoppingCartController;
