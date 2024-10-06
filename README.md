@@ -20,4 +20,4 @@ ___
 
 Testit suoritettiin JUnitilla, joita käytettiin projektissa CI/CD:tä varten Jenkinsissä. 
 
-![Kuva Jacoco raportista](https://imgur.com/a/92czRRL)
+![Kuva Jacoco raportista](https://i.imgur.com/espPrIj.png)
