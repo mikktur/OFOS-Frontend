@@ -17,7 +17,7 @@
                <children>
                   <HBox id="menuInfo" alignment="CENTER" minHeight="103.0" spacing="20.0" stylesheets="@../styles.css" VBox.vgrow="NEVER">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="McDonald's" HBox.hgrow="ALWAYS">
+                        <Text fx:id="restaurantName" strokeType="OUTSIDE" strokeWidth="0.0" text="McDonald's" HBox.hgrow="ALWAYS">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
@@ -25,17 +25,17 @@
                               <Font name="System Bold" size="24.0" />
                            </font>
                         </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Osoite: Mannerheimintie 105" wrappingWidth="153.1640625">
+                        <Text fx:id="restaurantAddress" strokeType="OUTSIDE" strokeWidth="0.0" text="Osoite: Mannerheimintie 105" wrappingWidth="153.1640625">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
                         </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Aukioloaika: 9-22">
+                        <Text fx:id="restaurantHours" strokeType="OUTSIDE" strokeWidth="0.0" text="Aukioloaika: 9-22">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
                         </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Puhelinnumero: 050 566 7777">
+                        <Text fx:id="restaurantPhone" strokeType="OUTSIDE" strokeWidth="0.0" text="Puhelinnumero: 050 566 7777">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>

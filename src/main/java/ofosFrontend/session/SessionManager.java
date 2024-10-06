@@ -85,7 +85,7 @@ public class SessionManager {
         return cartMap;
     }
     public void removeCart(int id) {
-        cartMap.remove(userId);
+        cartMap.remove(id);
     }
     public ShoppingCart getCart(int restaurantId) {
         return cartMap.get(restaurantId);

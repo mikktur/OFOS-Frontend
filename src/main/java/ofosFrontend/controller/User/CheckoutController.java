@@ -11,16 +11,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import ofosFrontend.model.CartItem;
-import ofosFrontend.model.DeliveryAddress;
-import ofosFrontend.model.ShoppingCart;
+import ofosFrontend.model.*;
 import ofosFrontend.service.DeliveryAddressService;
 import ofosFrontend.service.OrderService;
 import ofosFrontend.session.SessionManager;
 import javafx.scene.control.Label;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.scene.control.Alert;
-import ofosFrontend.model.OrderItem;
 
 import java.io.IOException;
 import java.net.URI;
@@ -102,6 +99,12 @@ public class CheckoutController {
         VBox dialogContent = new VBox();
         dialogContent.setSpacing(10);
 
+        SessionManager session = SessionManager.getInstance();
+        Restaurant restaurant = session.getCart(rid).getRestaurant();
+        Label restaurantLabel = new Label(restaurant.getRestaurantName());
+        restaurantLabel.setStyle("-fx-font-weight: bold;");
+        dialogContent.getChildren().add(restaurantLabel);
+
         // Display cart items
         Label cartItemsLabel = new Label("Cart Items:");
         cartItemsLabel.setStyle("-fx-font-weight: bold;");
@@ -141,6 +144,7 @@ public class CheckoutController {
 
         // Add confirmation and cancel buttons
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
 
         // Show the dialog and wait for response
         dialog.showAndWait().ifPresent(response -> {
@@ -268,6 +272,7 @@ public class CheckoutController {
         task.setOnSucceeded(event -> {
             // Show confirmation dialog on success
             Platform.runLater(() -> {
+                SessionManager.getInstance().removeCart(rid);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Order Confirmed");
                 alert.setHeaderText(null);

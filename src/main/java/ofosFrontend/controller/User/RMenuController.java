@@ -11,6 +11,7 @@ import javafx.scene.layout.FlowPane;
 
 import javafx.scene.layout.VBox;
 
+import javafx.scene.text.Text;
 import ofosFrontend.model.Product;
 import ofosFrontend.model.Restaurant;
 import ofosFrontend.model.ShoppingCart;
@@ -28,9 +29,14 @@ public class RMenuController extends BasicController{
     private FlowPane menuContainer;
     @FXML
     private ScrollPane menuScroll;
-
-
-
+    @FXML
+    private Text restaurantName;
+    @FXML
+    private Text restaurantAddress;
+    @FXML
+    private Text restaurantPhone;
+    @FXML
+    private Text restaurantHours;
 
     public RMenuController() {
     }
@@ -38,6 +44,8 @@ public class RMenuController extends BasicController{
 
     public void createCards() {
         List<Product> products = null;
+        setRestaurantInfo();
+
         System.out.println("Restaurant: " + this.restaurant.getRestaurantName());
         try {
             products  = productService.getProductsByRID(this.restaurant.getId());
@@ -86,6 +94,13 @@ public class RMenuController extends BasicController{
 
     public void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
+    }
+
+    public void setRestaurantInfo() {
+        restaurantName.setText(restaurant.getRestaurantName());
+        restaurantAddress.setText(restaurant.getAddress());
+        restaurantPhone.setText(restaurant.getRestaurantPhone());
+        restaurantHours.setText(restaurant.getBusinessHours());
     }
 
 }
