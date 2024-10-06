@@ -21,3 +21,9 @@ ___
 Testit suoritettiin JUnitilla, joita käytettiin projektissa CI/CD:tä varten Jenkinsissä. 
 
 ![Kuva Jacoco raportista](https://cdn.discordapp.com/attachments/1202240953113382935/1292448920286396446/jacoco-testit.png?ex=6703c65b&is=670274db&hm=9c38afa7c1a9240d7a386f21504126cfc0a9407de4c0c4f1e15e53d329cf8201&)
+
+___
+
+## Linkit
+
+[Dokumentaatio](https://users.metropolia.fi/~mikaelea/javadoc-ofos/)
