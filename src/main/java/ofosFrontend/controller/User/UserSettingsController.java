@@ -2,6 +2,8 @@ package ofosFrontend.controller.User;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.animation.Animation;
+import javafx.animation.RotateTransition;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -18,6 +20,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import ofosFrontend.model.ContactInfo;
 import ofosFrontend.model.DeliveryAddress;
 import ofosFrontend.service.DeliveryAddressService;
@@ -40,6 +43,7 @@ public class UserSettingsController extends BasicController {
     @FXML private Label postalCodeLabel;
     @FXML private Label addressLabel;
     @FXML private VBox deliveryAddressContainer;
+    @FXML private Button changePassword;
 
     private int userId;
     private List<DeliveryAddress> deliveryAddressesList = new ArrayList<>();
@@ -51,6 +55,20 @@ public class UserSettingsController extends BasicController {
 
         fetchUserData();
         fetchDeliveryAddresses();
+        RotateTransition rotate = new RotateTransition(Duration.millis(400), changePassword);
+        rotate.setByAngle(360);
+        changePassword.setOnMouseEntered(event -> {
+            rotate.setCycleCount(Animation.INDEFINITE);
+            rotate.setRate(1);
+            rotate.play();
+        });
+
+        changePassword.setOnMouseExited(event -> {
+            Platform.runLater(() -> {
+                rotate.stop();
+                changePassword.setRotate(0);
+            });
+        });
     }
 
     private void fetchUserData() {
