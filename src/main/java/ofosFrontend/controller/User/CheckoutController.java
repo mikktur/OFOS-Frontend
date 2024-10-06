@@ -103,6 +103,7 @@ public class CheckoutController {
         Restaurant restaurant = session.getCart(rid).getRestaurant();
         Label restaurantLabel = new Label(restaurant.getRestaurantName());
         restaurantLabel.setStyle("-fx-font-weight: bold;");
+        restaurantLabel.setStyle("-fx-font-size: 20px;");
         dialogContent.getChildren().add(restaurantLabel);
 
         // Display cart items
@@ -163,6 +164,11 @@ public class CheckoutController {
     public void renderSummary() {
         SessionManager session = SessionManager.getInstance();
         ShoppingCart cart = session.getCart(rid);
+        Restaurant restaurant = session.getCart(rid).getRestaurant();
+        Label restaurantLabel = new Label(restaurant.getRestaurantName());
+        restaurantLabel.setStyle("-fx-font-weight: bold;");
+
+        summaryContainer.getChildren().add(restaurantLabel);
         for (CartItem item : cart.getItems()) {
             HBox container = new HBox();
             container.setSpacing(5);
@@ -170,11 +176,12 @@ public class CheckoutController {
             Label price = new Label();
             Label quantity = new Label();
             name.setText(item.getProduct().getProductName());
-            price.setText(String.valueOf(item.getTotalPrice()));
-            quantity.setText(String.valueOf(item.getQuantity()));
+            price.setText((item.getProduct().getProductPrice()) + "€");
+            quantity.setText("x " + (item.getQuantity()));
             container.getChildren().addAll(name, price, quantity);
             summaryContainer.getChildren().add(container);
         }
+
         subTotal.setText(String.valueOf(cart.getTotalPrice()));
     }
 
