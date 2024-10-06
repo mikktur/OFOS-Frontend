@@ -30,6 +30,7 @@ public class MMenuController extends BasicController{
     private ScrollPane mainScroll;
     private final RestaurantService restaurantService = new RestaurantService();
     private RestaurantList restaurantList = new RestaurantList();
+    private final String URL = "http://localhost:8000/images/restaurant/";
 
 
     @FXML
@@ -103,7 +104,8 @@ public class MMenuController extends BasicController{
             ImageView imageView = (ImageView) card.lookup("#restaurantImage");
             Label descriptionLabel = (Label) card.lookup("#restaurantDesc");
 
-            imageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/hamburga.jpg"))));
+            //imageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/hamburga.jpg"))));
+            imageView.setImage(new Image(URL + restaurant.getPicture()));
             descriptionLabel.setText(restaurant.getRestaurantName() + "\n" + restaurant.getRestaurantPhone());
 
             card.setOnMouseClicked(event -> {
