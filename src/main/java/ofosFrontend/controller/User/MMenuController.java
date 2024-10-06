@@ -15,65 +15,43 @@ import ofosFrontend.model.ShoppingCart;
 import ofosFrontend.service.RestaurantService;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 public class MMenuController extends BasicController{
     @FXML
     private FlowPane restaurantFlowPane;
-
     @FXML
     private ScrollPane mainScroll;
-
-    @FXML
-    private Text returnToMenu;
     private final RestaurantService restaurantService = new RestaurantService();
+    private RestaurantList restaurantList = new RestaurantList();
+
 
     @FXML
     public void initialize() {
-        RestaurantList restaurantList = new RestaurantList();
         try {
             restaurantList.setRestaurants(restaurantService.getAllRestaurants());
+
             for (Restaurant restaurant : restaurantList.getRestaurantList()) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/restaurant_card.fxml"));
-                VBox card = loader.load();
+                addRestaurantCard(restaurant);
 
-                ImageView imageView = (ImageView) card.lookup("#restaurantImage");
-                Label descriptionLabel = (Label) card.lookup("#restaurantDesc");
-
-                imageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/hamburga.jpg"))));
-                descriptionLabel.setText(restaurant.getRestaurantName() + "\n" + restaurant.getRestaurantPhone());
-
-                card.setOnMouseClicked(event -> {
-                    try {
-                        goToRestaurant(restaurant);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-
-
-                restaurantFlowPane.getChildren().add(card);
-
-                mainScroll.widthProperty().addListener((obs, oldVal, newVal) -> {
-                    restaurantFlowPane.setPrefWrapLength(newVal.doubleValue());
-                    restaurantFlowPane.requestLayout();
-                });
             }
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }
+        mainScroll.widthProperty().addListener((obs, oldVal, newVal) -> {
+            restaurantFlowPane.setPrefWrapLength(newVal.doubleValue());
+            restaurantFlowPane.requestLayout();
+        });
+
     }
 
     @FXML
     private void goToRestaurant(Restaurant restaurant) throws IOException {
         setupRestaurantView(restaurant);
     }
-
-
-
 
 
 
@@ -86,9 +64,56 @@ public class MMenuController extends BasicController{
         controller.setRestaurant(restaurant);
         controller.createCards();
 
-        mainController.setCenterContent(newCenterContent);
+        setCenterContent(newCenterContent);
 
 
     }
+    public MMenuController getController() {
+        return this;
+    }
+    public void filterRestaurants(String query) {
 
+        restaurantFlowPane.getChildren().clear();
+
+
+        if (query.isEmpty()) {
+            for (Restaurant restaurant : restaurantList.getRestaurantList()) {
+                addRestaurantCard(restaurant);
+            }
+            return;
+        }
+
+
+        List<Restaurant> matchedRestaurants = restaurantList.getRestaurantList().stream()
+                .filter(restaurant -> restaurant.getRestaurantName().toLowerCase().contains(query))
+                .collect(Collectors.toList());
+
+        for (Restaurant restaurant : matchedRestaurants) {
+            addRestaurantCard(restaurant);
+        }
+    }
+    private void addRestaurantCard(Restaurant restaurant) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/restaurant_card.fxml"));
+            VBox card = loader.load();
+
+            ImageView imageView = (ImageView) card.lookup("#restaurantImage");
+            Label descriptionLabel = (Label) card.lookup("#restaurantDesc");
+
+            imageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/hamburga.jpg"))));
+            descriptionLabel.setText(restaurant.getRestaurantName() + "\n" + restaurant.getRestaurantPhone());
+
+            card.setOnMouseClicked(event -> {
+                try {
+                    goToRestaurant(restaurant);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
+            restaurantFlowPane.getChildren().add(card);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
