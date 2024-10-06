@@ -6,18 +6,23 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.geometry.HPos;
 import ofosFrontend.model.OrderHistory;
+import ofosFrontend.service.OrderHistorySorter;
 import ofosFrontend.service.OrderService;
 import ofosFrontend.session.SessionManager;
 
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class OrderHistoryController {
 
     OrderService orderService = new OrderService();
     int userId = SessionManager.getInstance().getUserId();
+    OrderHistorySorter orderHistorySorter = new OrderHistorySorter();
 
     @FXML
     private GridPane historyGridPane;
@@ -35,6 +40,9 @@ public class OrderHistoryController {
             // Get the order history for the user
             Map<Integer, List<OrderHistory>> orderHistoryMap = orderService.getHistory();
 
+            // Sort the order history map and maintain the sorted order
+            orderHistoryMap = OrderHistorySorter.sortOrderHistoryByDate(orderHistoryMap);
+
             int rowIndex = 0;
 
             for (Map.Entry<Integer, List<OrderHistory>> entry : orderHistoryMap.entrySet()) {
@@ -46,6 +54,7 @@ public class OrderHistoryController {
 
                 double totalPrice = 0;
 
+                // Iterate through the products in the order
                 for (OrderHistory item : orderItems) {
                     Label productLabel = new Label(item.getProductName() + " (x" + item.getQuantity() + ") " + item.getOrderPrice() + "€");
                     productsBox.getChildren().add(productLabel);
@@ -57,9 +66,8 @@ public class OrderHistoryController {
                 historyGridPane.add(orderIdLabel, 0, rowIndex);
                 GridPane.setHalignment(orderIdLabel, HPos.CENTER);
 
-                // ravintola lisätään tähän
                 Label restaurantLabel = new Label(orderItems.get(0).getRestaurantName());
-                historyGridPane.add((restaurantLabel), 1, rowIndex);
+                historyGridPane.add(restaurantLabel, 1, rowIndex);
                 GridPane.setHalignment(restaurantLabel, HPos.CENTER);
 
                 historyGridPane.add(productsBox, 2, rowIndex);
@@ -73,6 +81,7 @@ public class OrderHistoryController {
                 historyGridPane.add(orderDateLabel, 4, rowIndex);
                 GridPane.setHalignment(orderDateLabel, HPos.CENTER);
 
+                // Move to the next row in the grid pane
                 rowIndex++;
             }
 
@@ -80,4 +89,7 @@ public class OrderHistoryController {
             e.printStackTrace();
         }
     }
+
+
+
 }
