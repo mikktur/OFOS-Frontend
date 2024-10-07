@@ -4,9 +4,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+import ofosFrontend.AppManager;
+import ofosFrontend.session.SessionManager;
 
 import java.io.IOException;
 
@@ -66,12 +71,23 @@ public class AdminController {
         }
     }
     public void logout() {
+        SessionManager adminSessionManager = SessionManager.getInstance();
+        adminSessionManager.logout();
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/loginUI.fxml"));
-            Node root = loader.load();
-            ownerRoot.setCenter(root);
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/loginUI.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = AppManager.getInstance().getPrimaryStage();
+            stage.setScene(new Scene(root, 600, 400));
+            Stage currentStage = AppManager.getInstance().getPrimaryStage();
+            currentStage.close();
+            SessionManager.getInstance().logout();
+            AppManager.getInstance().setPrimaryStage(stage);
+            AppManager.getInstance().getPrimaryStage().setResizable(false);
+            stage.show();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+        adminSessionManager.logout();
     }
 }

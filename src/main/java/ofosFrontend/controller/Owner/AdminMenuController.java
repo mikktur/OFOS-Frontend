@@ -1,4 +1,4 @@
-package ofosFrontend.controller;
+package ofosFrontend.controller.Owner;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -31,16 +31,23 @@ public class AdminMenuController {
     private Text restaurantNameText;
 
     private ProductService productService = new ProductService();
-    private int restaurantID = 1;
+    private int restaurantID;
 
     @FXML
     public void initialize() {
+        System.out.println("Initializing :)");
+    }
 
-    }
-    public void setRestaurantID(int restaurantID) {
+    public void setRestaurantID(int restaurantID, String restaurantName) {
         this.restaurantID = restaurantID;
-        loadProducts();  // Now call loadProducts since restaurantID is set
+        updateRestaurantName(restaurantName);
+        loadProducts();
     }
+
+    private void updateRestaurantName(String restaurantName) {
+        restaurantNameText.setText(restaurantName);
+    }
+
     private void loadProducts() {
         try {
             productListVBox.getChildren().clear();
@@ -48,10 +55,8 @@ public class AdminMenuController {
             List<Product> products = productService.getProductsByRID(restaurantID);
 
             for (Product product : products) {
-                if (product.isActive()) {
-                    HBox productBox = createProductEntry(product);
-                    productListVBox.getChildren().add(productBox);
-                }
+                HBox productBox = createProductEntry(product);
+                productListVBox.getChildren().add(productBox);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -222,21 +227,6 @@ public class AdminMenuController {
                 e.printStackTrace();
             }
         });
-    }
-
-    @FXML
-    public void logOut(MouseEvent mouseEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/loginUI.fxml"));
-        Parent root = loader.load();
-
-        Stage currentStage = (Stage) adminLogout.getScene().getWindow();
-        Scene backToLoginScene = new Scene(root, 650, 400);
-        currentStage.setTitle("OFOS Login");
-        currentStage.setScene(backToLoginScene);
-        currentStage.show();
-    }
-    public void setRId(int restaurantID) {
-        this.restaurantID = restaurantID;
     }
 
     private void deleteProduct(Product product) {
