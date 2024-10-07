@@ -38,7 +38,7 @@ public class CartItemController {
 
 
         itemName.setText(item.getProduct().getProductName());
-        itemPrice.setText(String.valueOf(item.getProduct().getProductPrice()));
+        itemPrice.setText(String.valueOf(item.getProduct().getProductPrice() + " €"));
         itemQuantity.textProperty().bind(item.quantityProperty().asString());
 
 
