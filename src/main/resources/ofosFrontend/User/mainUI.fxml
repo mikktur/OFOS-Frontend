@@ -20,7 +20,7 @@
                       <children>
                           <HBox alignment="CENTER" VBox.vgrow="NEVER">
                               <children>
-                                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Mitä tänään saisi olla?" textAlignment="CENTER" wrappingWidth="652.9375">
+                                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="What would you like today?" textAlignment="CENTER" wrappingWidth="652.9375">
                                       <font>
                                           <Font name="System Bold" size="24.0" />
                                       </font>
@@ -38,7 +38,7 @@
                                                           <Image url="@../../images/burger.png" />
                                                       </image>
                                                   </ImageView>
-                                                  <Text layoutX="21.0" layoutY="146.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hampurilaiset">
+                                                  <Text layoutX="21.0" layoutY="146.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Burgers">
                                                       <font>
                                                           <Font name="System Bold" size="18.0" />
                                                       </font>
@@ -52,7 +52,7 @@
                                                           <Image url="@../../images/pizza.png" />
                                                       </image>
                                                   </ImageView>
-                                                  <Text layoutX="55.0" layoutY="146.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pizzat">
+                                                  <Text layoutX="55.0" layoutY="146.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pizza">
                                                       <font>
                                                           <Font name="System Bold" size="18.0" />
                                                       </font>
@@ -66,7 +66,7 @@
                                                           <Image url="@../../images/noodles.png" />
                                                       </image>
                                                   </ImageView>
-                                                  <Text layoutX="43.0" layoutY="146.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nuudelit">
+                                                  <Text layoutX="43.0" layoutY="146.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Noodles">
                                                       <font>
                                                           <Font name="System Bold" size="18.0" />
                                                       </font>

@@ -13,14 +13,14 @@
    <children>
       <VBox fx:id="restaurantsVBox" prefHeight="268.0" prefWidth="118.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
          <children>
-            <!-- This is the fixed header -->
+            <!-- Fixed header -->
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="My restaurants" textAlignment="CENTER" wrappingWidth="117.13671875">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
             </Text>
 
-            <!-- Container for dynamically loaded restaurant names -->
+            <!-- Dynamically loaded restaurant names -->
             <VBox fx:id="restaurantListVBox" spacing="10.0" style="-fx-padding: 10;">
                   </VBox>
          </children>

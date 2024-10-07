@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -14,8 +16,12 @@
          <children>
             <VBox alignment="TOP_CENTER" maxWidth="1300.0" VBox.vgrow="ALWAYS">
                <children>
-                  <HBox id="menuInfo" alignment="CENTER" minHeight="103.0" spacing="20.0" stylesheets="@../styles.css" VBox.vgrow="NEVER">
+                  <HBox id="menuInfo" alignment="CENTER" minHeight="103.0" spacing="10.0" style="-fx-border-style: solid;" stylesheets="@../styles.css" VBox.vgrow="NEVER">
                      <children>
+                        <ImageView fx:id="restaurantImage" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="false">
+                           <HBox.margin>
+                              <Insets bottom="5.0" right="5.0" top="5.0" />
+                           </HBox.margin></ImageView>
                         <Text fx:id="restaurantName" strokeType="OUTSIDE" strokeWidth="0.0" text="McDonald's" HBox.hgrow="ALWAYS">
                            <HBox.margin>
                               <Insets />
@@ -24,24 +30,27 @@
                               <Font name="System Bold" size="24.0" />
                            </font>
                         </Text>
-                        <Text fx:id="restaurantAddress" strokeType="OUTSIDE" strokeWidth="0.0" text="Osoite: Mannerheimintie 105" wrappingWidth="153.1640625">
+                        <Label prefHeight="17.0" prefWidth="52.0" text="Address:" />
+                        <Text fx:id="restaurantAddress" strokeType="OUTSIDE" strokeWidth="0.0" text="asdasd" wrappingWidth="118.1640625">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
                         </Text>
-                        <Text fx:id="restaurantHours" strokeType="OUTSIDE" strokeWidth="0.0" text="Aukioloaika: 9-22">
+                        <Label prefHeight="17.0" prefWidth="84.0" text="Business hours:" />
+                        <Text fx:id="restaurantHours" strokeType="OUTSIDE" strokeWidth="0.0" text="06-23" wrappingWidth="34.02734375">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
                         </Text>
-                        <Text fx:id="restaurantPhone" strokeType="OUTSIDE" strokeWidth="0.0" text="Puhelinnumero: 050 566 7777">
+                        <Label prefHeight="17.0" prefWidth="82.0" text="Phonenumber:" />
+                        <Text fx:id="restaurantPhone" strokeType="OUTSIDE" strokeWidth="0.0" text="000000000" wrappingWidth="95.71875">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
                         </Text>
                      </children>
                      <VBox.margin>
-                        <Insets bottom="20.0" top="2.0" />
+                        <Insets bottom="10.0" top="10.0" />
                      </VBox.margin>
                   </HBox>
                   <HBox id="itemCategory" alignment="CENTER" maxWidth="553.0" spacing="20.0" style="-fx-background-color: #C4E6FB99; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 5, 0, 2, 2);" stylesheets="@../styles.css" VBox.vgrow="NEVER">

@@ -54,7 +54,7 @@
               </HBox>
               <HBox alignment="CENTER_RIGHT" styleClass="rightNav" HBox.hgrow="ALWAYS">
                   <children>
-                      <Label fx:id="usernameLabel" text="Käyttäjänimi">
+                      <Label fx:id="usernameLabel" text="Username">
                           <font>
                               <Font size="18.0" />
                           </font>

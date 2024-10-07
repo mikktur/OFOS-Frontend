@@ -37,8 +37,11 @@ public class RMenuController extends BasicController{
     private Text restaurantPhone;
     @FXML
     private Text restaurantHours;
+    @FXML
+    private ImageView restaurantImage;
 
     private final String URL = "http://localhost:8000/images/";
+    private final String RURL = "http://localhost:8000/images/restaurant/";
 
     public RMenuController() {
     }
@@ -67,7 +70,6 @@ public class RMenuController extends BasicController{
                 addToCartButton.setOnMouseClicked(event -> {
                     addProductToCart(product);
                 });
-                //imageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/hamburga.jpg"))));//+ product.getPicture()))
                 imageView.setImage(new Image(URL + product.getPicture()));
                 menuContainer.getChildren().add(card);
 
@@ -100,6 +102,8 @@ public class RMenuController extends BasicController{
     }
 
     public void setRestaurantInfo() {
+        System.out.println("image url: " + RURL + restaurant.getPicture());
+        restaurantImage.setImage(new Image(RURL + restaurant.getPicture()));
         restaurantName.setText(restaurant.getRestaurantName());
         restaurantAddress.setText(restaurant.getAddress());
         restaurantPhone.setText(restaurant.getRestaurantPhone());

@@ -52,12 +52,12 @@
                                     <!-- Labels and Values -->
                                     <children>
                                        <!-- Labels -->
-                                       <Text style="-fx-font-weight: bold;" text="Nimi:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                                       <Text style="-fx-font-weight: bold;" text="Sähköposti:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                                       <Text style="-fx-font-weight: bold;" text="Puhelinnumero:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                                       <Text style="-fx-font-weight: bold;" text="Osoite:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                                       <Text style="-fx-font-weight: bold;" text="Kaupunki:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                                       <Text style="-fx-font-weight: bold;" text="Postinumero:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                                       <Text style="-fx-font-weight: bold;" text="Name:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                       <Text style="-fx-font-weight: bold;" text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                       <Text style="-fx-font-weight: bold;" text="Phonenumber:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                       <Text style="-fx-font-weight: bold;" text="Address:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                       <Text style="-fx-font-weight: bold;" text="City:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                                       <Text style="-fx-font-weight: bold;" text="Postal code:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
                                        <!-- Values -->
                                        <Label fx:id="nameLabel" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                                        <Label fx:id="emailLabel" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
