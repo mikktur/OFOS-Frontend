@@ -14,6 +14,7 @@ public class Application extends javafx.application.Application {
         Scene scene = new Scene(fxmlLoader.load(), 600, 400);
         stage.setTitle("OFOS Login");
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
     }
 
