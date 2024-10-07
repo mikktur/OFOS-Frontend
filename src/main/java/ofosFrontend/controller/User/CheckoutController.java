@@ -16,14 +16,9 @@ import ofosFrontend.service.DeliveryAddressService;
 import ofosFrontend.service.OrderService;
 import ofosFrontend.session.SessionManager;
 import javafx.scene.control.Label;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.scene.control.Alert;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 

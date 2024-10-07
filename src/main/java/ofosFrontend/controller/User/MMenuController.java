@@ -40,15 +40,16 @@ public class MMenuController extends BasicController{
 
             for (Restaurant restaurant : restaurantList.getRestaurantList()) {
                 addRestaurantCard(restaurant);
+                mainScroll.widthProperty().addListener((obs, oldVal, newVal) -> {
+                    restaurantFlowPane.setPrefWrapLength(newVal.doubleValue());
+                    restaurantFlowPane.requestLayout();
+                });
 
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        mainScroll.widthProperty().addListener((obs, oldVal, newVal) -> {
-            restaurantFlowPane.setPrefWrapLength(newVal.doubleValue());
-            restaurantFlowPane.requestLayout();
-        });
+
 
     }
 
@@ -107,6 +108,8 @@ public class MMenuController extends BasicController{
             //imageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/hamburga.jpg"))));
             imageView.setImage(new Image(URL + restaurant.getPicture()));
             descriptionLabel.setText(restaurant.getRestaurantName() + "\n" + restaurant.getRestaurantPhone());
+
+
 
             card.setOnMouseClicked(event -> {
                 try {
