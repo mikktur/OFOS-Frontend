@@ -3,6 +3,7 @@ package ofosFrontend.controller.User;
 import javafx.animation.RotateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -36,6 +37,8 @@ public class MMenuController extends BasicController{
     @FXML
     public void initialize() {
         try {
+            restaurantFlowPane.setPrefWrapLength(0);
+            restaurantFlowPane.setAlignment(Pos.CENTER);
             restaurantList.setRestaurants(restaurantService.getAllRestaurants());
 
             for (Restaurant restaurant : restaurantList.getRestaurantList()) {
