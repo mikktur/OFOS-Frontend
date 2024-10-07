@@ -2,6 +2,7 @@ package modelTests;
 
 import ofosFrontend.model.CartItem;
 import ofosFrontend.model.Product;
+import ofosFrontend.model.Restaurant;
 import ofosFrontend.model.ShoppingCart;
 import ofosFrontend.session.SessionManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,15 +16,14 @@ public class CartItemTest {
     private Product product;
     private SessionManager sessionManager;
     private ShoppingCart cart;
-
     @BeforeEach
     public void setUp() {
         product = new Product();
 
-        cartItem = new CartItem(product, 5);
+        cartItem = new CartItem(product, 5,1);
 
         sessionManager = SessionManager.getInstance();
-        cart = sessionManager.getCart();
+        cart = sessionManager.getCart(1);
     }
 
     @Test

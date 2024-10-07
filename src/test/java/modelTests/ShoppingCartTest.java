@@ -3,6 +3,7 @@ package modelTests;
 import javafx.collections.ObservableList;
 import ofosFrontend.model.CartItem;
 import ofosFrontend.model.Product;
+import ofosFrontend.model.Restaurant;
 import ofosFrontend.model.ShoppingCart;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,9 @@ public class ShoppingCartTest {
 
     @BeforeEach
     public void setUp() {
-        shoppingCart = new ShoppingCart();
+        Restaurant restaurant = new Restaurant();
+        restaurant.setId(1);
+        shoppingCart = new ShoppingCart(restaurant);
 
         product1 = new Product("Laptop", 999.99, "High-performance laptop", 12345, "laptop.jpg", "Electronics", true);
         product2 = new Product("Smartphone", 599.99, "Latest smartphone", 54321, "smartphone.jpg", "Electronics", true);
