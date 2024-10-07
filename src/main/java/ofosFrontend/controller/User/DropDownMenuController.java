@@ -43,6 +43,7 @@ public class DropDownMenuController extends BasicController {
             currentStage.close();
             SessionManager.getInstance().logout();
             AppManager.getInstance().setPrimaryStage(stage);
+            AppManager.getInstance().getPrimaryStage().setResizable(false);
             stage.show();
 
         } catch (IOException e) {
