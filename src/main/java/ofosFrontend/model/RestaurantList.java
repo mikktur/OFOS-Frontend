@@ -53,9 +53,9 @@ public class RestaurantList {
     public void getNames() {
         restaurantList.forEach(restaurant1 -> System.out.println(restaurant1.getRestaurantName()));
     }
-    public List<Restaurant> filterByCategory(String category) {
-        return restaurantList.stream()
-                .filter(restaurant -> restaurant.getCategory().equalsIgnoreCase(category))
-                .collect(Collectors.toList());
-    }
+//    public List<Restaurant> filterByCategory(String category) {
+//        return restaurantList.stream()
+//                .filter(restaurant -> restaurant.getCategory().equalsIgnoreCase(category))
+//                .collect(Collectors.toList());
+//    }
 }

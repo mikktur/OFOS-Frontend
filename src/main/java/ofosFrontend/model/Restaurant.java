@@ -1,6 +1,7 @@
 package ofosFrontend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Restaurant {
@@ -8,8 +9,8 @@ public class Restaurant {
     private String restaurantName;
     private String restaurantPhone;
     private String picture;
-    private String category;
-    private String ownerUsername;
+//    private String category;
+//    private String ownerUsername;
     private String address;
     private String businessHours;
 
@@ -55,18 +56,17 @@ public class Restaurant {
         this.picture = picture;
     }
 
-    public String getCategory() {
-        return category;
-    }
+//    public String getCategory() {
+//        return category;
+//    }
     public String getAddress() {
         return address;
     }
-    public String getBusinessHours() {
-        return businessHours;
-    }
-
     public void setAddress(String newAddress) {
         this.address = newAddress;
+    }
+    public String getBusinessHours() {
+        return businessHours;
     }
 
     public void setHours(String newHours) {
