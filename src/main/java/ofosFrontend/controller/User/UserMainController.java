@@ -115,6 +115,7 @@ public class UserMainController {
         }
     }
 
+
     public void toggleShoppingCart() {
         if (cart != null) {
             shoppingCartController.updateCart();
@@ -131,7 +132,6 @@ public class UserMainController {
         }
     }
 
-
     public ShoppingCartController getShoppingCartController() {
         return shoppingCartController;
     }
@@ -142,5 +142,6 @@ public class UserMainController {
         }
         shoppingCartController.resetCartView();
     }
+
 }
 

@@ -20,17 +20,34 @@ public class DropDownMenuController extends BasicController {
     @FXML
     private Text dropDownUsername;
 
+
     @FXML
     private void initialize() {
         dropDownContent.getProperties().put("controller", this);
         SessionManager sessionManager = SessionManager.getInstance();
         dropDownUsername.setText(sessionManager.getUsername());
+
     }
     public DropDownMenuController() {
     }
 
     public void handleLogout() {
         SessionManager sessionManager = SessionManager.getInstance();
+        sessionManager.logout();
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/loginUI.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = AppManager.getInstance().getPrimaryStage();
+            stage.setScene(new Scene(root, 600, 400));
+            Stage currentStage = AppManager.getInstance().getPrimaryStage();
+            currentStage.close();
+            SessionManager.getInstance().logout();
+            AppManager.getInstance().setPrimaryStage(stage);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         sessionManager.logout();
     }
 

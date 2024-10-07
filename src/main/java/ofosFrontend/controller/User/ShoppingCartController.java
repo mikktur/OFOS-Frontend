@@ -33,6 +33,8 @@ public class ShoppingCartController extends BasicController {
      * The label for the subtotal
      */
     @FXML
+    private VBox cartCheckout;
+    @FXML
     private Text subTotalLabel;
     /**
      * The button to go to checkout
@@ -83,9 +85,11 @@ public class ShoppingCartController extends BasicController {
             displayEmptyCartMessage();
         } else {
             for (CartItem item : items) {
+
                 addCartItemToUI(item);
                 addQuantityListener(item);
             }
+            cartCheckout.setVisible(true);
         }
         updateSubTotal();
     }
@@ -95,6 +99,7 @@ public class ShoppingCartController extends BasicController {
     public void resetCartView() {
         setRid(0);
         cartManager.checkAndRemoveEmptyCarts();
+        cartCheckout.setVisible(false);
         updateCart();
     }
 
@@ -128,6 +133,7 @@ public class ShoppingCartController extends BasicController {
             while (change.next()) {
                 if (change.wasAdded()) {
                     removeEmptyCartMessage();
+                    cartCheckout.setVisible(true);
                     for (CartItem addedItem : change.getAddedSubList()) {
                         try {
 
@@ -140,7 +146,9 @@ public class ShoppingCartController extends BasicController {
                 }
                 if (change.wasRemoved()) {
                     if (items.isEmpty()) {
+
                         displayEmptyCartMessage();
+
                     }
                 }
             }
@@ -191,12 +199,14 @@ public class ShoppingCartController extends BasicController {
 
         if (rid != 0) {
             try {
+                cartCheckout.setVisible(true);
                 loadCartItems();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
             try {
+                cartCheckout.setVisible(false);
                 cartItemContainer.getChildren().clear();
                 loadAllUserCartItems();
             } catch (Exception e) {
@@ -251,6 +261,7 @@ public class ShoppingCartController extends BasicController {
 
     public void displayEmptyCartMessage() {
         cartItemContainer.getChildren().clear();
+        cartCheckout.setVisible(false);
         Label emptyItem = new Label("Your cart is empty");
         emptyItem.setId("emptyMessage");
         cartItemContainer.getChildren().add(emptyItem);

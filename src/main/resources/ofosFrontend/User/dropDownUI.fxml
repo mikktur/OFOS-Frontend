@@ -65,7 +65,7 @@
             </HBox>
             <HBox alignment="CENTER" prefHeight="42.0" prefWidth="112.0">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Log out" textAlignment="CENTER" wrappingWidth="93.13671875" HBox.hgrow="NEVER">
+                  <Text fx:id="dropdownLogout" onMouseClicked="#handleLogout" strokeType="OUTSIDE" strokeWidth="0.0" text="Log out" textAlignment="CENTER" wrappingWidth="93.13671875" HBox.hgrow="NEVER">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>

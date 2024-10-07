@@ -16,7 +16,7 @@
             <VBox fx:id="cartItemContainer" alignment="TOP_CENTER" prefWidth="223.0" />
          </content>
       </ScrollPane>
-      <VBox alignment="TOP_CENTER" prefHeight="107.0" prefWidth="225.0" VBox.vgrow="NEVER">
+      <VBox fx:id="cartCheckout" alignment="TOP_CENTER" prefHeight="107.0" prefWidth="225.0" VBox.vgrow="NEVER">
          <children>
             <Label prefHeight="27.0" prefWidth="211.0" text="Subtotal" VBox.vgrow="ALWAYS">
                <VBox.margin>

@@ -245,8 +245,9 @@ public class LoginController {
             Scene menuScene = new Scene(root, 1000, 800);
             mainStage.setTitle("OFOS Menu");
             mainStage.setScene(menuScene);
-
+            AppManager.getInstance().setPrimaryStage(mainStage);
             mainStage.show();
+
             closeLoginStage();
         } catch (Exception e) {
             e.printStackTrace();

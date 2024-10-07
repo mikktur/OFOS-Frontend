@@ -41,6 +41,9 @@ public class SessionManager {
     public void logout() {
         username = null;
         token = null;
+        userId = 0;
+        role = null;
+        cartMap.clear();
 
     }
     public void setRole(String role) {
