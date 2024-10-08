@@ -17,7 +17,9 @@ public class BasicController {
     public void resetToDefaultCartView() {
         mainController.resetToDefaultCartView();
     }
-
+    public void goToMain() {
+        mainController.loadDefaultContent();
+    }
 
 
 

@@ -149,7 +149,6 @@ public class ShoppingCartController extends BasicController {
                     if (items.isEmpty()) {
                         mainController.hideRedDot();
                         displayEmptyCartMessage();
-
                     }
                 }
             }
@@ -166,6 +165,7 @@ public class ShoppingCartController extends BasicController {
         cartItemContainer.getChildren().clear();
         if (userCarts.isEmpty()) {
             displayEmptyCartMessage();
+            mainController.hideRedDot();
         } else {
             for (Map.Entry<Integer, ShoppingCart> entry : userCarts.entrySet()) {
                 ShoppingCart cart = entry.getValue();
@@ -286,6 +286,7 @@ public class ShoppingCartController extends BasicController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/checkout.fxml"));
         Parent root = loader.load();
         CheckoutController checkoutController = loader.getController();
+        checkoutController.setMainController(mainController);
         checkoutController.setRid(rid);
         setRid(rid);
         updateCart();

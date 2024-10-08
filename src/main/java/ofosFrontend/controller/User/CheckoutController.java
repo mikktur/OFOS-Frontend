@@ -25,7 +25,7 @@ import java.util.List;
 import ofosFrontend.service.CheckoutService;
 
 
-public class CheckoutController {
+public class CheckoutController  extends BasicController {
     @FXML
     VBox summaryContainer;
     @FXML
@@ -280,6 +280,8 @@ public class CheckoutController {
                 alert.setHeaderText(null);
                 alert.setContentText("Your order has been successfully placed!");
                 alert.showAndWait();
+                goToMain();
+
             });
         });
 
