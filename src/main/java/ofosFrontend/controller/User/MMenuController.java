@@ -10,6 +10,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
@@ -31,7 +32,7 @@ public class MMenuController extends BasicController{
     private ScrollPane mainScroll;
     private final RestaurantService restaurantService = new RestaurantService();
     private RestaurantList restaurantList = new RestaurantList();
-    private final String URL = "http://localhost:8000/images/restaurant/";
+    private final String URL = "http://10.120.32.94:8000/images/restaurant/";
 
 
     @FXML

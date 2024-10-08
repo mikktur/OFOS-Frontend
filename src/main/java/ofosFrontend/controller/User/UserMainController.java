@@ -126,6 +126,16 @@ public class UserMainController {
 
     }
 
+    public void hideRedDot() {
+        if (navController != null) {
+            navController.hideRedDot();
+        }
+    }
+    public void showRedDot() {
+        if (navController != null) {
+            navController.showRedDot();
+        }
+    }
     public void filterRestaurants(String query) {
         if (mmController != null) {
             mmController.filterRestaurants(query);

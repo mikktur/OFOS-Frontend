@@ -14,7 +14,33 @@
     -fx-background-color: #f0f0f0;
 }
 
+#card {
+    -fx-border-radius: 15px;
+    -fx-border-width: 1px;
+    -fx-border-color: #cacaca;
+    -fx-background-color: #ffffff;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);
+    -fx-background-radius: 15px;
 
+}
+#card:hover {
+    -fx-background-color: #f0f0f0;
+
+}
+#transparent{
+
+}
+#menuInfo {
+    -fx-border-width: 1;
+
+    -fx-border-color: #303030;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);
+    -fx-background-radius: 15px;
+}
+#restaurantImage{
+    -fx-background-radius: 15px;
+
+}
 #itemCard {
     -fx-border-radius: 15px;
     -fx-border-width: 1px;
@@ -22,18 +48,48 @@
     -fx-background-color: #ffffff;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);
     -fx-background-radius: 15px;
+
 }
 
 #itemImage {
     -fx-background-radius: 15px;
-    -fx-clip: true;
+
+
 }
 
 #itemInfo {
-    -fx-border-width: 1px 0 0 0;
-    -fx-border-color: #3d3d3d;
+
     -fx-background-color: #ffffff;
-    -fx-background-radius: 15px;
+
+}
+.scroll{
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-focus-traversable: false;
+    -fx-background-color: transparent;
+    -fx-mouse-transparent: true;
+}
+#rCart{
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);
+    -fx-border-radius: 15px;
+    -fx-border-color: #9d9c9c;
+    -fx-background-color: #ffffff;
+}
+#cart{
+    -fx-border-width: 0 0 0 1px;
+    -fx-border-color: #575757;
+
+}
+.scroll:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-focus-traversable: false;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+
+    -fx-background-color: transparent;
+    -fx-mouse-transparent: true;
 }
 #dropDownName {
     -fx-border-width: 0 0 1px 0;

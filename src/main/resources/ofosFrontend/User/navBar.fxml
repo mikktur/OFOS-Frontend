@@ -6,8 +6,10 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
@@ -59,17 +61,26 @@
                               <Font size="18.0" />
                           </font>
                           <HBox.margin>
-                              <Insets right="50.0" />
+                              <Insets right="30.0" />
                           </HBox.margin>
                       </Label>
-                      <ImageView fx:id="openCart" fitHeight="40.0" fitWidth="111.0" pickOnBounds="true" preserveRatio="true">
-                          <image>
-                              <Image url="@../../images/cart.png" />
-                          </image>
-                          <HBox.margin>
-                              <Insets right="20.0" />
-                          </HBox.margin>
-                      </ImageView>
+                  <StackPane prefHeight="49.0" prefWidth="74.0">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <children>
+                            <ImageView fx:id="openCart" fitHeight="29.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                                <image>
+                                    <Image url="@../../images/cart.png" />
+                                </image>
+                            </ImageView>
+                        <AnchorPane fx:id="redDot" prefHeight="49.0" prefWidth="80.0" styleClass="transparent" stylesheets="@../styles.css" visible="false">
+                           <children>
+                              <Circle fill="#ff1f1f" layoutX="50.0" layoutY="12.0" radius="6.0" stroke="BLACK" strokeType="INSIDE" />
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </StackPane>
                   </children>
               </HBox>
           </children>

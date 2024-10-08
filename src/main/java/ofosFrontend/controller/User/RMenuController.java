@@ -39,8 +39,8 @@ public class RMenuController extends BasicController{
     @FXML
     private ImageView restaurantImage;
 
-    private final String URL = "http://localhost:8000/images/";
-    private final String RURL = "http://localhost:8000/images/restaurant/";
+    private final String URL = "http://10.120.32.94:8000/images/";
+    private final String RURL = "http://10.120.32.94:8000/images/restaurant/";
 
     public RMenuController() {
     }

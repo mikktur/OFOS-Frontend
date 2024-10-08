@@ -23,7 +23,7 @@ public class CheckoutService {
         Task<List<DeliveryAddress>> task = new Task<>() {
             @Override
             protected List<DeliveryAddress> call() throws Exception {
-                String url = "http://localhost:8000/api/deliveryaddress/" + userId;
+                String url = "http://10.120.32.94:8000/api/deliveryaddress/" + userId;
                 HttpClient client = HttpClient.newHttpClient();
                 HttpRequest request = HttpRequest.newBuilder()
                         .uri(URI.create(url))

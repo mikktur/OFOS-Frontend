@@ -8,23 +8,23 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox id="itemCard" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="389.0" prefWidth="250.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<VBox id="itemCard" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="356.0" prefWidth="251.0" stylesheets="@../styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ImageView fx:id="itemImage" fitHeight="258.0" fitWidth="217.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="itemImage" fitHeight="181.0" fitWidth="250.0" pickOnBounds="true" VBox.vgrow="NEVER">
          <VBox.margin>
-            <Insets top="10.0" />
+            <Insets />
          </VBox.margin>
       </ImageView>
-      <VBox id="itemInfo" fx:id="textBox" alignment="CENTER_LEFT" prefHeight="84.0" prefWidth="248.0">
+      <VBox id="itemInfo" fx:id="textBox" alignment="CENTER_LEFT" prefHeight="121.0" prefWidth="249.0">
          <children>
-            <Label fx:id="itemName">
+            <Label fx:id="itemName" prefHeight="61.0" prefWidth="230.0" wrapText="true">
                <font>
-                  <Font name="DejaVu Serif Bold" size="29.0" />
+                  <Font name="DejaVu Serif Bold" size="20.0" />
                </font>
             </Label>
-            <Label fx:id="itemPrice" contentDisplay="TOP" prefHeight="73.0">
+            <Label fx:id="itemPrice" contentDisplay="TOP" prefHeight="30.0" prefWidth="225.0">
                <font>
-                  <Font name="DejaVu Serif Bold Italic" size="23.0" />
+                  <Font name="DejaVu Serif Bold Italic" size="18.0" />
                </font>
             </Label>
             <Label fx:id="itemDesc" prefHeight="27.0" prefWidth="308.0" VBox.vgrow="ALWAYS">
@@ -37,7 +37,7 @@
             <Insets left="10.0" />
          </padding>
       </VBox>
-      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+      <HBox alignment="CENTER" prefHeight="42.0" prefWidth="249.0">
          <children>
             <Button fx:id="addToCart" mnemonicParsing="false" prefHeight="25.0" prefWidth="118.0" text="Lisää ostoskoriin" />
          </children>

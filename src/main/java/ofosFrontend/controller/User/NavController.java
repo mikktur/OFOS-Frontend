@@ -8,6 +8,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Popup;
@@ -35,7 +36,8 @@ public class NavController extends BasicController {
     private Label usernameLabel;
     @FXML
     private ImageView openCart;
-
+    @FXML
+    AnchorPane redDot;
     public NavController() {
 
     }
@@ -68,6 +70,7 @@ public class NavController extends BasicController {
 
     public void initializeUIComponents() {
         setUsernameLabel();
+        redDot.setMouseTransparent(true);
     }
     public void handleDropDownClick() {
         mainController.toggleSideMenu();
@@ -84,6 +87,14 @@ public class NavController extends BasicController {
     @FXML
     private void handleCartClick() {
         mainController.toggleShoppingCart();
+    }
+
+    public void hideRedDot() {
+        redDot.setVisible(false);
+    }
+    public void showRedDot() {
+
+        redDot.setVisible(true);
     }
 
 

@@ -10,18 +10,19 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<ScrollPane fx:id="menuScroll" fitToWidth="true" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.User.RMenuController">
+<ScrollPane fx:id="menuScroll" fitToWidth="true" styleClass="scroll" stylesheets="@../styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.User.RMenuController">
    <content>
       <VBox alignment="TOP_CENTER">
          <children>
             <VBox alignment="TOP_CENTER" maxWidth="1300.0" VBox.vgrow="ALWAYS">
                <children>
-                  <HBox id="menuInfo" alignment="CENTER" minHeight="103.0" spacing="10.0" style="-fx-border-style: solid;" stylesheets="@../styles.css" VBox.vgrow="NEVER">
+                  <HBox id="menuInfo" alignment="CENTER_LEFT" minHeight="103.0" spacing="10.0" stylesheets="@../styles.css" VBox.vgrow="NEVER">
                      <children>
                         <ImageView fx:id="restaurantImage" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="false">
                            <HBox.margin>
-                              <Insets bottom="5.0" right="5.0" top="5.0" />
-                           </HBox.margin></ImageView>
+                              <Insets />
+                           </HBox.margin>
+                        </ImageView>
                         <Text fx:id="restaurantName" strokeType="OUTSIDE" strokeWidth="0.0" text="McDonald's" HBox.hgrow="ALWAYS">
                            <HBox.margin>
                               <Insets />
@@ -103,7 +104,7 @@
                         <Insets bottom="20.0" />
                      </opaqueInsets>
                   </HBox>
-                  <FlowPane fx:id="menuContainer" hgap="20.0" prefWrapLength="800.0" rowValignment="TOP" style="-fx-background-color: #C4E6FB99; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 5, 0, 2, 2);" styleClass="itemContainer" vgap="20.0" VBox.vgrow="ALWAYS">
+                  <FlowPane fx:id="menuContainer" hgap="30.0" prefWrapLength="800.0" rowValignment="TOP" style="-fx-background-color: #C4E6FB99; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 5, 0, 2, 2);" styleClass="itemContainer" vgap="20.0" VBox.vgrow="ALWAYS">
                      <padding>
                         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                      </padding>

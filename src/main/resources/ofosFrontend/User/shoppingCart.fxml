@@ -9,11 +9,11 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox fx:id="cartRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="664.0" prefWidth="225.0" visible="false" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.User.ShoppingCartController">
+<VBox id="cart" fx:id="cartRoot" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="225.0" stylesheets="@../styles.css" visible="false" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.User.ShoppingCartController">
    <children>
-      <ScrollPane fitToHeight="true" hbarPolicy="NEVER" prefHeight="478.0" prefWidth="225.0" VBox.vgrow="ALWAYS">
+      <ScrollPane fitToHeight="true" hbarPolicy="NEVER" prefHeight="478.0" prefWidth="225.0" styleClass="scroll" stylesheets="@../styles.css" VBox.vgrow="ALWAYS">
          <content>
-            <VBox fx:id="cartItemContainer" alignment="TOP_CENTER" prefWidth="223.0" />
+            <VBox fx:id="cartItemContainer" alignment="TOP_CENTER" prefWidth="223.0" spacing="5.0" />
          </content>
       </ScrollPane>
       <VBox fx:id="cartCheckout" alignment="TOP_CENTER" prefHeight="107.0" prefWidth="225.0" VBox.vgrow="NEVER">
@@ -42,6 +42,9 @@
                </VBox.margin>
             </Button>
          </children>
+         <VBox.margin>
+            <Insets bottom="200.0" />
+         </VBox.margin>
       </VBox>
    </children>
 </VBox>

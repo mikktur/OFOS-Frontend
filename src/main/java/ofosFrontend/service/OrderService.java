@@ -20,7 +20,7 @@ import java.util.Map;
 
 
 public class OrderService {
-    private static final String API_URL = "http://localhost:8000/api/";
+    private static final String API_URL = "http://10.120.32.94:8000/api/";
     private final ObjectMapper mapper = new ObjectMapper();
 
 
@@ -58,7 +58,7 @@ public class OrderService {
 
                 String requestBody = mapper.writeValueAsString(orderItems);
 
-                String url = "http://localhost:8000/api/order";
+                String url = "http://10.120.32.94:8000/api/order";
                 HttpClient client = HttpClient.newHttpClient();
                 HttpRequest request = HttpRequest.newBuilder()
                         .uri(URI.create(url))

@@ -20,7 +20,7 @@ public class DeliveryAddressService {
 
     public void saveDeliveryAddress(DeliveryAddress address, Runnable onSuccess, Runnable onFailure) {
         try {
-            String url = "http://localhost:8000/api/deliveryaddress/save";
+            String url = "http://10.120.32.94:8000/api/deliveryaddress/save";
 
             ObjectMapper objectMapper = new ObjectMapper();
             String requestBody = objectMapper.writeValueAsString(address);
@@ -58,7 +58,7 @@ public class DeliveryAddressService {
         return new Task<>() {
             @Override
             protected List<DeliveryAddress> call() throws Exception {
-                String url = "http://localhost:8000/api/deliveryaddress/" + userId;
+                String url = "http://10.120.32.94:8000/api/deliveryaddress/" + userId;
                 HttpClient client = HttpClient.newHttpClient();
                 HttpRequest request = HttpRequest.newBuilder()
                         .uri(URI.create(url))
@@ -83,7 +83,7 @@ public class DeliveryAddressService {
         return new Task<>() {
             @Override
             protected Void call() throws Exception {
-                String url = "http://localhost:8000/api/deliveryaddress/setDefault";
+                String url = "http://10.120.32.94:8000/api/deliveryaddress/setDefault";
                 HttpClient client = HttpClient.newHttpClient();
                 ObjectMapper objectMapper = new ObjectMapper();
 
@@ -116,7 +116,7 @@ public class DeliveryAddressService {
         return new Task<>() {
             @Override
             protected Void call() throws Exception {
-                String url = "http://localhost:8000/api/deliveryaddress/delete/" + deliveryAddressId;
+                String url = "http://10.120.32.94:8000/api/deliveryaddress/delete/" + deliveryAddressId;
 
                 HttpClient client = HttpClient.newHttpClient();
                 HttpRequest request = HttpRequest.newBuilder()
@@ -140,7 +140,7 @@ public class DeliveryAddressService {
         return new Task<>() {
             @Override
             protected Void call() throws Exception {
-                String url = "http://localhost:8000/api/deliveryaddress/update";
+                String url = "http://10.120.32.94:8000/api/deliveryaddress/update";
                 String token = SessionManager.getInstance().getToken();
 
                 ObjectMapper objectMapper = new ObjectMapper();

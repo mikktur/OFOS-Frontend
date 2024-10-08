@@ -46,6 +46,7 @@ public class ShoppingCartController extends BasicController {
      */
     @FXML
     private VBox cartRoot;
+
     /**
      * The restaurant id
      */
@@ -136,7 +137,7 @@ public class ShoppingCartController extends BasicController {
                     cartCheckout.setVisible(true);
                     for (CartItem addedItem : change.getAddedSubList()) {
                         try {
-
+                            mainController.showRedDot();
                             addCartItemToUI(addedItem);
                             addQuantityListener(addedItem);
                         } catch (IOException e) {
@@ -146,7 +147,7 @@ public class ShoppingCartController extends BasicController {
                 }
                 if (change.wasRemoved()) {
                     if (items.isEmpty()) {
-
+                        mainController.hideRedDot();
                         displayEmptyCartMessage();
 
                     }
@@ -179,7 +180,8 @@ public class ShoppingCartController extends BasicController {
 
 
                     restaurantNameLabel.setText(cart.getRestaurant().getRestaurantName());
-
+                    Label cartSum = (Label) cartCardNode.lookup("#cartSum");
+                    cartSum.setText(String.valueOf(cart.getTotalPrice()));
 
                     checkoutButton.setOnAction(event -> handleCheckoutClick(cart.getRestaurant().getId()));
 
@@ -285,6 +287,8 @@ public class ShoppingCartController extends BasicController {
         Parent root = loader.load();
         CheckoutController checkoutController = loader.getController();
         checkoutController.setRid(rid);
+        setRid(rid);
+        updateCart();
         checkoutController.updateView();
         mainController.setCenterContent(root);
     }

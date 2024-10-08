@@ -17,7 +17,7 @@ import java.net.http.HttpResponse;
 
 public class UserService {
 
-    private static final String API_URL = "http://localhost:8000/api/"; //
+    private static final String API_URL = "http://10.120.32.94:8000/api/"; //
 
     private final OkHttpClient client = new OkHttpClient();
 
@@ -59,7 +59,7 @@ public class UserService {
         return new Task<>() {
             @Override
             protected ContactInfo call() throws Exception {
-                String url = "http://localhost:8000/api/contactinfo/" + userId;
+                String url = "http://10.120.32.94:8000/api/contactinfo/" + userId;
 
                 HttpClient client = HttpClient.newHttpClient();
                 HttpRequest request = HttpRequest.newBuilder()
@@ -87,7 +87,7 @@ public class UserService {
         return new Task<>() {
             @Override
             protected Void call() throws Exception {
-                String url = "http://localhost:8000/api/users/updatePassword";
+                String url = "http://10.120.32.94:8000/api/users/updatePassword";
                 String token = SessionManager.getInstance().getToken();
 
                 ObjectMapper objectMapper = new ObjectMapper();

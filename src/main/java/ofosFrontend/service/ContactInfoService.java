@@ -16,7 +16,7 @@ public class ContactInfoService {
         return new Task<>() {
             @Override
             protected Void call() throws Exception {
-                String url = "http://localhost:8000/api/contactinfo/save";
+                String url = "http://10.120.32.94:8000/api/contactinfo/save";
                 String token = SessionManager.getInstance().getToken();
 
                 ObjectMapper objectMapper = new ObjectMapper();
