@@ -177,7 +177,7 @@ public class CheckoutController {
             summaryContainer.getChildren().add(container);
         }
 
-        subTotal.setText(String.valueOf(cart.getTotalPrice()));
+        subTotal.setText((cart.getTotalPrice() + "€"));
     }
 
 

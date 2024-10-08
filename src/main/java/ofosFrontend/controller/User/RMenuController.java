@@ -65,7 +65,7 @@ public class RMenuController extends BasicController{
                 Label nameLabel = (Label) cText.lookup("#itemName");
                 nameLabel.setText(product.getProductName());
                 descriptionLabel.setText(product.getProductDesc());
-                priceLabel.setText(String.valueOf(product.getProductPrice()));
+                priceLabel.setText((product.getProductPrice() + " €"));
                 addToCartButton.setOnMouseClicked(event -> {
                     addProductToCart(product);
                 });

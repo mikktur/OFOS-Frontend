@@ -278,7 +278,7 @@ public class ShoppingCartController extends BasicController {
 
     private void updateSubTotal() {
         double subTotal = SessionManager.getInstance().getCart(rid).getTotalPrice();
-        subTotalLabel.setText("Subtotal: " + subTotal);
+        subTotalLabel.setText("Subtotal: " + subTotal + " €");
     }
 
     @FXML
