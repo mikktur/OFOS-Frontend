@@ -1,5 +1,6 @@
 package ofosFrontend.controller.User;
 
+import com.fasterxml.jackson.databind.introspect.TypeResolutionContext;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -48,7 +49,7 @@ public class UserMainController {
 
     @FXML
     public void initialize() {
-        setControllers();
+
         System.out.println("Main controller initialized");
 
         root.setLeft(null);
