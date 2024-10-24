@@ -1,7 +1,7 @@
 # **Online Food Ordering System**
 
 Tämä projekti on luotu simuloimaan OFOS-applikaatiota, jossa käyttäjä voi selata ravintoloita, valita tuotteita tilattavaksi ja suorittaa tilauksen maksun. Projektin tavoitteena oli tutustua ja oppia Agilen käyttöä Scrumia hyödyntäen
-sekä hyödyntämään CI/CD:tä ohjelmistotuotannossa. Projektin käyttöliittymä toteutettiin JavaFX kirjastolla ja [rajapinta](https://github.com/mikktur/OFOS-Backend) kehitettiin Spring Boot kehyksellä. Projektin testit suoritettiin JUnitilla
+sekä hyödyntämään CI/CD:tä ohjelmistotuotannossa. Projektin käyttöliittymä toteutettiin JavaFX kirjastolla ja [backend](https://github.com/mikktur/OFOS-Backend) kehitettiin Spring Boot kehyksellä. Projektin testit suoritettiin JUnitilla
 ja testien tulosten raportointi Jacocolla. Projektin ulkoasu suunniteltiin Figmassa.
 
 ___
