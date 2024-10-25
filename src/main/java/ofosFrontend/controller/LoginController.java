@@ -13,11 +13,14 @@ import javafx.stage.Stage;
 import ofosFrontend.AppManager;
 import ofosFrontend.service.RestaurantService;
 import ofosFrontend.service.UserService;
+import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
 import okhttp3.Response;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 public class LoginController {
     public Label passwordErrorLabel;
@@ -229,18 +232,20 @@ public class LoginController {
     public void openMainStage() {
         FXMLLoader rootLoader;
 
+        // Select appropriate FXML based on role
         if (SessionManager.getInstance().getRole().equals("OWNER")) {
             rootLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/Owner/ownerRoot.fxml"));
             System.out.println("Owner logged in.");
-
         } else {
             rootLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/root.fxml"));
         }
-        try {
 
+        try {
+            // Use the current ResourceBundle from LocalizationManager
+            rootLoader.setResources(LocalizationManager.getBundle());
             BorderPane root = rootLoader.load();
 
-
+            // Set up the main stage
             Stage mainStage = new Stage();
             Scene menuScene = new Scene(root, 1000, 800);
             mainStage.setTitle("OFOS Menu");
@@ -248,12 +253,14 @@ public class LoginController {
             AppManager.getInstance().setPrimaryStage(mainStage);
             mainStage.show();
 
+            // Close the login stage
             closeLoginStage();
         } catch (Exception e) {
             e.printStackTrace();
             showError("Failed to open the main stage.");
         }
     }
+
 
 
     private void closeLoginStage() {

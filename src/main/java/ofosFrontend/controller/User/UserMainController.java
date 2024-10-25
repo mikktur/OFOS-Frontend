@@ -1,6 +1,5 @@
 package ofosFrontend.controller.User;
 
-import com.fasterxml.jackson.databind.introspect.TypeResolutionContext;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -9,24 +8,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import ofosFrontend.session.FXMLUtils;
 import ofosFrontend.session.CartManager;
+import ofosFrontend.session.LocalizationManager;
 
 import java.io.IOException;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
-/**
- * This class is used to control the main UI of the application.
- * It is responsible for:
- * <ul>
- *   <li>Loading the default content into the center pane.</li>
- *   <li>Setting and updating the center content of the main UI.</li>
- *   <li>Setting up child controllers, including NavBar, ShoppingCart, and others.</li>
- *   <li>Managing the visibility of the side menu and shopping cart.</li>
- * </ul>
- * The MainController acts as the central hub of the application, coordinating interactions
- * between various UI components and controllers. in short it is used to the "what" to show part of the application.
- */
 public class UserMainController {
 
     @FXML
@@ -72,47 +59,58 @@ public class UserMainController {
         StackPane.setAlignment(content, Pos.CENTER);
     }
 
-
     public void loadDefaultContent() {
         try {
-            // Set English as the default locale
-            Locale defaultLocale = new Locale("en", "US");
-            ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", defaultLocale);
-
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/mainUI.fxml"), bundle);
-            Node content = loader.load();
+            // Initialize the FXMLLoader and load the FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/mainUI.fxml"));
+            loader.setResources(LocalizationManager.getBundle());
+            Node mainContent = loader.load();
 
             mmController = loader.getController();
             if (mmController != null) {
                 mmController.setMainController(this);
+            } else {
+                System.out.println("mmController is null");
             }
 
             resetToDefaultCartView();
-            setCenterContent(content);
+            setCenterContent(mainContent);
+            reloadDropDown();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void reloadDropDown() {
+        try {
+            FXMLLoader dropDownLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/dropDownUI.fxml"));
+            dropDownLoader.setResources(LocalizationManager.getBundle());
+            dropDownRoot = dropDownLoader.load();
+            dropDownMenuController = dropDownLoader.getController();
+            dropDownMenuController.setMainController(this);
+
+            root.setLeft(dropDownRoot);
+            toggleSideMenu();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void setControllers() {
-        try {
-            shoppingCartController = (ShoppingCartController) cart.getProperties().get("controller");
-            if (shoppingCartController != null) {
-                shoppingCartController.setMainController(this);
-            }
+        shoppingCartController = (ShoppingCartController) cart.getProperties().get("controller");
+        if (shoppingCartController != null) {
+            shoppingCartController.setMainController(this);
+        }
 
-            navController = (NavController) navBar.getProperties().get("controller");
-            if (navController != null) {
-                navController.setMainController(this);
-            }
+        navController = (NavController) navBar.getProperties().get("controller");
+        if (navController != null) {
+            navController.setMainController(this);
+        }
 
-            dropDownMenuController = (DropDownMenuController) dropDownRoot.getProperties().get("controller");
-            if (dropDownMenuController != null) {
-                dropDownMenuController.setMainController(this);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        dropDownMenuController = (DropDownMenuController) dropDownRoot.getProperties().get("controller");
+        if (dropDownMenuController != null) {
+            dropDownMenuController.setMainController(this);
         }
     }
 
@@ -124,7 +122,6 @@ public class UserMainController {
         }
     }
 
-
     public void toggleShoppingCart() {
         if (cart != null) {
             shoppingCartController.updateCart();
@@ -132,7 +129,6 @@ public class UserMainController {
             cart.setVisible(!isVisible);
             root.setRight(isVisible ? null : cart);
         }
-
     }
 
     public void hideRedDot() {
@@ -140,11 +136,13 @@ public class UserMainController {
             navController.hideRedDot();
         }
     }
+
     public void showRedDot() {
         if (navController != null) {
             navController.showRedDot();
         }
     }
+
     public void filterRestaurants(String query) {
         if (mmController != null) {
             mmController.filterRestaurants(query);
@@ -156,11 +154,11 @@ public class UserMainController {
     }
 
     public void resetToDefaultCartView() {
-        if(shoppingCartController == null) {
+        if (shoppingCartController == null) {
             return;
         }
         shoppingCartController.resetCartView();
     }
-
 }
+
 

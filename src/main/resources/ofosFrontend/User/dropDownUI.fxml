@@ -32,7 +32,7 @@
             </HBox>
             <HBox alignment="CENTER" VBox.vgrow="NEVER">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Favourites" textAlignment="CENTER" wrappingWidth="93.13671875">
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%Favourites" textAlignment="CENTER" wrappingWidth="93.13671875">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
@@ -41,7 +41,7 @@
             </HBox>
             <HBox alignment="CENTER" VBox.vgrow="NEVER">
                <children>
-                  <Text fx:id="historyElement" onMouseClicked="#goToHistory" strokeType="OUTSIDE" strokeWidth="0.0" text="History" textAlignment="CENTER" wrappingWidth="93.13671875" HBox.hgrow="NEVER">
+                  <Text fx:id="historyElement" onMouseClicked="#goToHistory" strokeType="OUTSIDE" strokeWidth="0.0" text="%History" textAlignment="CENTER" wrappingWidth="93.13671875" HBox.hgrow="NEVER">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
@@ -53,7 +53,7 @@
             </HBox>
             <HBox alignment="CENTER">
                <children>
-                  <Text fx:id="settingsElement" onMouseClicked="#goToSettings" strokeType="OUTSIDE" strokeWidth="0.0" text="Settings" textAlignment="CENTER" wrappingWidth="93.13671875" HBox.hgrow="NEVER">
+                  <Text fx:id="settingsElement" onMouseClicked="#goToSettings" strokeType="OUTSIDE" strokeWidth="0.0" text="%Settings" textAlignment="CENTER" wrappingWidth="93.13671875" HBox.hgrow="NEVER">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
@@ -65,7 +65,7 @@
             </HBox>
             <HBox alignment="CENTER" prefHeight="42.0" prefWidth="112.0">
                <children>
-                  <Text fx:id="dropdownLogout" onMouseClicked="#handleLogout" strokeType="OUTSIDE" strokeWidth="0.0" text="Log out" textAlignment="CENTER" wrappingWidth="93.13671875" HBox.hgrow="NEVER">
+                  <Text fx:id="dropdownLogout" onMouseClicked="#handleLogout" strokeType="OUTSIDE" strokeWidth="0.0" text="%Logout" textAlignment="CENTER" wrappingWidth="93.13671875" HBox.hgrow="NEVER">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>

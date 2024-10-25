@@ -27,6 +27,7 @@ public class DropDownMenuController extends BasicController {
         SessionManager sessionManager = SessionManager.getInstance();
         dropDownUsername.setText(sessionManager.getUsername());
 
+
     }
     public DropDownMenuController() {
     }
