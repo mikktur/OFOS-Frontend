@@ -25,7 +25,7 @@
       </HBox>
       <HBox alignment="CENTER">
          <children>
-            <Button fx:id="cartResBtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="72.0" text="Checkkout" />
+            <Button fx:id="cartResBtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="72.0" text="Checkout" />
          </children>
       </HBox>
    </children>

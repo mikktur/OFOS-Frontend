@@ -12,6 +12,8 @@ import javafx.scene.layout.VBox;
 import ofosFrontend.session.CartManager;
 
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * This class is used to control the main UI of the application.
@@ -49,6 +51,7 @@ public class UserMainController {
 
     @FXML
     public void initialize() {
+        setControllers();
 
         System.out.println("Main controller initialized");
 
@@ -72,14 +75,19 @@ public class UserMainController {
 
     public void loadDefaultContent() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/mainUI.fxml"));
+            // Set English as the default locale
+            Locale defaultLocale = new Locale("en", "US");
+            ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", defaultLocale);
 
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/mainUI.fxml"), bundle);
             Node content = loader.load();
-            mmController = loader.getController();
 
+            mmController = loader.getController();
             if (mmController != null) {
                 mmController.setMainController(this);
             }
+
             resetToDefaultCartView();
             setCenterContent(content);
         } catch (IOException e) {
