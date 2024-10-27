@@ -11,6 +11,8 @@ import java.util.Map;
  * @see ShoppingCart
  * @see SessionManager
  */
+
+// someday im gonna finish this
 public class CartManager {
     private final SessionManager sessionManager;
 

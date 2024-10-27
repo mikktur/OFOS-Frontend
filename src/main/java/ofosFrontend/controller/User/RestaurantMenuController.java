@@ -21,7 +21,7 @@ import ofosFrontend.session.SessionManager;
 import java.io.IOException;
 import java.util.List;
 
-public class RMenuController extends BasicController{
+public class RestaurantMenuController extends BasicController{
     private Restaurant restaurant;
     private ProductService productService = new ProductService();
     @FXML
@@ -42,7 +42,7 @@ public class RMenuController extends BasicController{
     private final String URL = "http://10.120.32.94:8000/images/";
     private final String RURL = "http://10.120.32.94:8000/images/restaurant/";
 
-    public RMenuController() {
+    public RestaurantMenuController() {
     }
 
 

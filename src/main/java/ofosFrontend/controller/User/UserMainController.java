@@ -11,7 +11,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import ofosFrontend.model.Restaurant;
-import ofosFrontend.session.FXMLUtils;
 import ofosFrontend.session.CartManager;
 import ofosFrontend.session.LocalizationManager;
 
@@ -37,9 +36,9 @@ public class UserMainController {
     @FXML
     DropDownMenuController dropDownMenuController;
     private ViewFactory viewFactory;
-    MMenuController mmController;
+    MainMenuController mmController;
 
-    private CartManager cartManager = new CartManager();
+    private final CartManager cartManager = new CartManager();
 
     @FXML
     public void initialize() {
@@ -97,7 +96,7 @@ public class UserMainController {
     }
 
     public void refreshPage() {
-
+        //TODO implement some kind of refresh current page
 
     }
 
@@ -108,7 +107,6 @@ public class UserMainController {
             dropDownRoot = dropDownLoader.load();
             dropDownMenuController = dropDownLoader.getController();
             dropDownMenuController.setMainController(this);
-
             root.setLeft(dropDownRoot);
             toggleSideMenu();
         } catch (IOException e) {
@@ -116,6 +114,7 @@ public class UserMainController {
         }
     }
 
+    // could be made better. cba.
     public void setControllers() {
         shoppingCartController = (ShoppingCartController) cart.getProperties().get("controller");
         if (shoppingCartController != null) {

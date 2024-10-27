@@ -1,4 +1,4 @@
-package ofosFrontend.controller.User;
+package ofosFrontend.controller.User.userSettings;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;

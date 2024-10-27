@@ -1,4 +1,4 @@
-package ofosFrontend.controller.User;
+package ofosFrontend.controller.User.userSettings;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -14,7 +14,7 @@ public class AddAddressDialogController {
     @FXML private TextField postalCodeField;
     @FXML private TextArea instructionsArea;
 
-    private DeliveryAddressService deliveryAddressService = new DeliveryAddressService();
+    private final DeliveryAddressService deliveryAddressService = new DeliveryAddressService();
 
     private int userId;
 

@@ -13,84 +13,90 @@
 
 
 <!-- ScrollPane to allow scrolling if needed -->
-<ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;" vbarPolicy="AS_NEEDED" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.User.UserSettingsController">
-   <content>
-      <!-- Outer VBox to center content and add top padding -->
-      <VBox alignment="TOP_CENTER" spacing="20.0" VBox.vgrow="ALWAYS">
+<ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ofosFrontend.controller.User.userSettings.UserSettingsController">
+   <!-- Outer VBox to center content and add top padding -->
+   <VBox alignment="TOP_CENTER" spacing="20.0" VBox.vgrow="ALWAYS">
+      <padding>
+         <Insets top="80.0"/>
+      </padding>
+      <!-- Inner VBox with background color and drop shadow effect -->
+      <VBox alignment="TOP_CENTER" maxWidth="900" spacing="20.0"
+            style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 5, 5);"
+            VBox.vgrow="ALWAYS">
          <padding>
-            <Insets top="80.0" />
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
          </padding>
-         <children>
-            <!-- Inner VBox with background color and drop shadow effect -->
-            <VBox alignment="TOP_CENTER" maxWidth="900" spacing="20.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 5, 5);" VBox.vgrow="ALWAYS">
-               <padding>
-                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-               </padding>
-               <children>
-                  <!-- HBox containing the Contact Information and Delivery Addresses -->
-                  <HBox alignment="TOP_CENTER" spacing="20.0" VBox.vgrow="ALWAYS">
-                     <children>
-                        <!-- Contact Information VBox -->
-                        <VBox spacing="10.0" HBox.hgrow="ALWAYS">
-                           <children>
-                              <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Contact Information" />
-                              <VBox prefWidth="350.0" style="-fx-background-color: white; -fx-padding: 10; -fx-border-color: lightgray; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10;">
-                                 <GridPane>
-                                    <!-- Column and Row Constraints -->
-                                    <columnConstraints>
-                                       <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="110.0" />
-                                       <ColumnConstraints hgrow="ALWAYS" maxWidth="Infinity" minWidth="200.0" prefWidth="200.0" />
-                                    </columnConstraints>
-                                    <rowConstraints>
-                                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    </rowConstraints>
-                                    <!-- Labels and Values -->
-                                    <children>
-                                       <!-- Labels -->
-                                       <Text style="-fx-font-weight: bold;" text="Name:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                                       <Text style="-fx-font-weight: bold;" text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                                       <Text style="-fx-font-weight: bold;" text="Phonenumber:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                                       <Text style="-fx-font-weight: bold;" text="Address:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                                       <Text style="-fx-font-weight: bold;" text="City:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                                       <Text style="-fx-font-weight: bold;" text="Postal code:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-                                       <!-- Values -->
-                                       <Label fx:id="nameLabel" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                                       <Label fx:id="emailLabel" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                       <Label fx:id="phoneNumberLabel" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                       <Label fx:id="addressLabel" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                       <Label fx:id="cityLabel" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                       <Label fx:id="postalCodeLabel" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                                    </children>
-                                 </GridPane>
-                              </VBox>
-                              <Button onAction="#handleEditContactInfo" text="Edit Contact Information" />
-                              <Button fx:id="changePassword" text="Change Password" onAction="#handleChangePassword" />
-                           </children>
-                        </VBox>
-                        <!-- Delivery Addresses VBox -->
-                        <VBox spacing="10.0" HBox.hgrow="ALWAYS">
-                           <children>
-                              <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Delivery Addresses" />
-                              <ScrollPane fitToWidth="true" style="-fx-background-color: #c4e6fb;">
-                                 <content>
-                                    <VBox fx:id="deliveryAddressContainer" spacing="10.0" style="-fx-background-color: #c4e6fb;" VBox.vgrow="ALWAYS">
-                                             <!-- Dynamically added delivery address nodes will be added here -->
-                                          </VBox>
-                                 </content>
-                              </ScrollPane>
-                              <Button mnemonicParsing="false" onAction="#handleAddAddress" text="Add new delivery address" />
-                           </children>
-                        </VBox>
-                     </children>
-                  </HBox>
-               </children>
+         <!-- HBox containing the Contact Information and Delivery Addresses -->
+         <HBox alignment="TOP_CENTER" spacing="20.0" VBox.vgrow="ALWAYS">
+            <!-- Contact Information VBox -->
+            <VBox spacing="10.0" HBox.hgrow="ALWAYS">
+               <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Contact Information"/>
+               <VBox prefWidth="350.0"
+                     style="-fx-background-color: white; -fx-padding: 10; -fx-border-color: lightgray; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10;">
+                  <GridPane>
+                     <!-- Column and Row Constraints -->
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="110.0"/>
+                        <ColumnConstraints hgrow="ALWAYS" maxWidth="Infinity" minWidth="200.0"
+                                           prefWidth="200.0"/>
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                     </rowConstraints>
+                     <!-- Labels and Values -->
+                     <!-- Labels -->
+                     <Text style="-fx-font-weight: bold;" text="Name:" GridPane.columnIndex="0"
+                           GridPane.rowIndex="0"/>
+                     <Text style="-fx-font-weight: bold;" text="Email:" GridPane.columnIndex="0"
+                           GridPane.rowIndex="1"/>
+                     <Text style="-fx-font-weight: bold;" text="Phonenumber:" GridPane.columnIndex="0"
+                           GridPane.rowIndex="2"/>
+                     <Text style="-fx-font-weight: bold;" text="Address:" GridPane.columnIndex="0"
+                           GridPane.rowIndex="3"/>
+                     <Text style="-fx-font-weight: bold;" text="City:" GridPane.columnIndex="0"
+                           GridPane.rowIndex="4"/>
+                     <Text style="-fx-font-weight: bold;" text="Postal code:" GridPane.columnIndex="0"
+                           GridPane.rowIndex="5"/>
+                     <!-- Values -->
+                     <Label fx:id="nameLabel" wrapText="true" GridPane.columnIndex="1"
+                            GridPane.rowIndex="0"/>
+                     <Label fx:id="emailLabel" wrapText="true" GridPane.columnIndex="1"
+                            GridPane.rowIndex="1"/>
+                     <Label fx:id="phoneNumberLabel" wrapText="true" GridPane.columnIndex="1"
+                            GridPane.rowIndex="2"/>
+                     <Label fx:id="addressLabel" wrapText="true" GridPane.columnIndex="1"
+                            GridPane.rowIndex="3"/>
+                     <Label fx:id="cityLabel" wrapText="true" GridPane.columnIndex="1"
+                            GridPane.rowIndex="4"/>
+                     <Label fx:id="postalCodeLabel" wrapText="true" GridPane.columnIndex="1"
+                            GridPane.rowIndex="5"/>
+                  </GridPane>
+               </VBox>
+               <Button onAction="#handleEditContactInfo" text="Edit Contact Information"/>
+               <Button fx:id="changePassword" text="Change Password" onAction="#handleChangePassword"/>
             </VBox>
-         </children>
+            <!-- Delivery Addresses VBox -->
+            <VBox spacing="10.0" HBox.hgrow="ALWAYS">
+               <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Delivery Addresses"/>
+               <ScrollPane fitToWidth="true" style="-fx-background-color: #c4e6fb;">
+                  <content>
+                     <VBox fx:id="deliveryAddressContainer" spacing="10.0"
+                           style="-fx-background-color: #c4e6fb;" VBox.vgrow="ALWAYS">
+                        <!-- Dynamically added delivery address nodes will be added here -->
+                     </VBox>
+                  </content>
+               </ScrollPane>
+               <Button mnemonicParsing="false" onAction="#handleAddAddress"
+                       text="Add new delivery address"/>
+            </VBox>
+         </HBox>
       </VBox>
-   </content>
+   </VBox>
 </ScrollPane>

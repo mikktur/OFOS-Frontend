@@ -1,26 +1,17 @@
 package ofosFrontend.controller.User;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
-import javafx.stage.Popup;
-import ofosFrontend.model.Restaurant;
-import ofosFrontend.model.RestaurantList;
 import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
-
-import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
+
 
 /**
  * Controller for the navigation bar

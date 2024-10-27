@@ -1,4 +1,4 @@
-package ofosFrontend.controller.User;
+package ofosFrontend.controller.User.userSettings;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -13,8 +13,8 @@ import ofosFrontend.service.UserService;
 public class EditPasswordDialogController {
     public TextField oldPasswordField;
     public TextField newPasswordField;
-    String token;
-    private UserService userService = new UserService();
+
+    private final UserService userService = new UserService();
 
     @FXML
     private void handleCancel() {

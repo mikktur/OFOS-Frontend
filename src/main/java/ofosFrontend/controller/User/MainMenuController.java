@@ -1,34 +1,24 @@
 package ofosFrontend.controller.User;
 
-import javafx.animation.RotateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.util.Duration;
 import ofosFrontend.model.Restaurant;
 import ofosFrontend.model.RestaurantList;
-import ofosFrontend.model.ShoppingCart;
 import ofosFrontend.service.RestaurantService;
-import ofosFrontend.session.LocalizationManager;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 
-public class MMenuController extends BasicController {
+public class MainMenuController extends BasicController {
     @FXML
     private FlowPane restaurantFlowPane;
     @FXML
@@ -36,7 +26,7 @@ public class MMenuController extends BasicController {
 
 
     private final RestaurantService restaurantService = new RestaurantService();
-    private RestaurantList restaurantList = new RestaurantList();
+    private final RestaurantList restaurantList = new RestaurantList();
     private final String URL = "http://10.120.32.94:8000/images/restaurant/";
 
     // Reference to the main controller
@@ -48,11 +38,6 @@ public class MMenuController extends BasicController {
         loadRestaurants();
     }
 
-    // Setter for mainController
-    public void setMainController(UserMainController mainController) {
-        System.out.println("MainController set in MMenuController");
-        this.mainController = mainController;
-    }
 
     @FXML
     private void goToRestaurant(Restaurant restaurant) throws IOException {
@@ -79,17 +64,18 @@ public class MMenuController extends BasicController {
 
     }
 
-    private void setupRestaurantView(Restaurant restaurant) throws IOException {
+    private void setupRestaurantView(Restaurant restaurant) {
         if (mainController == null) {
             System.out.println("Error: mainController is null in MMenuController.");
             return;
         }
+        //makes sure that the cart that is used is for the correct restaurant.
         mainController.getShoppingCartController().initializeCartForRestaurant(restaurant.getId(), restaurant);
         mainController.loadRestaurantView(restaurant);
     }
 
 
-    public MMenuController getController() {
+    public MainMenuController getController() {
         return this;
     }
 
@@ -105,7 +91,7 @@ public class MMenuController extends BasicController {
 
         List<Restaurant> matchedRestaurants = restaurantList.getRestaurantList().stream()
                 .filter(restaurant -> restaurant.getRestaurantName().toLowerCase().contains(query))
-                .collect(Collectors.toList());
+                .toList();
 
         for (Restaurant restaurant : matchedRestaurants) {
             addRestaurantCard(restaurant);

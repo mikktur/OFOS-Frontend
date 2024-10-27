@@ -5,7 +5,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
@@ -19,6 +18,8 @@ import ofosFrontend.session.SessionManager;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+
 
 /**
  * Controller for the shopping cart sidepanel
@@ -77,8 +78,6 @@ public class ShoppingCartController extends BasicController {
      * @throws IOException
      */
     public void loadCartItems() throws IOException {
-        System.out.println("Entered loadCartItems");
-        System.out.println("RID: " + rid);
         ObservableList<CartItem> items = cartManager.getCart(rid).getItems();
 
         cartItemContainer.getChildren().clear();
@@ -98,6 +97,7 @@ public class ShoppingCartController extends BasicController {
      * Resets the cart view
      */
     public void resetCartView() {
+        //magic number 0 is used as rid to indicate no restaurant is selected
         setRid(0);
         cartManager.checkAndRemoveEmptyCarts();
         cartCheckout.setVisible(false);
@@ -124,7 +124,7 @@ public class ShoppingCartController extends BasicController {
 
     }
 
-    // used to create ui elements to the ui when user adds or removes products to the cart
+    // used to add ui elements to the ui when user adds or removes products to the cart
     private void addCartListeners(ShoppingCart cart) {
         ObservableList<CartItem> items = cart.getItems();
         System.out.println("Adding cart listeners");

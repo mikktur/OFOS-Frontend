@@ -6,7 +6,7 @@
 
 <VBox xmlns="http://javafx.com/javafx/21"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="ofosFrontend.controller.User.EditAddressDialogController"
+      fx:controller="ofosFrontend.controller.User.userSettings.EditAddressDialogController"
       spacing="10">
 
     <padding>

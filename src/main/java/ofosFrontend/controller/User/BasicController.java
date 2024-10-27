@@ -1,8 +1,7 @@
 package ofosFrontend.controller.User;
 
 
-import javafx.scene.Node;
-
+//pretty useless class, didn't work as i thought it would
 public class BasicController {
     UserMainController mainController;
 
@@ -11,13 +10,6 @@ public class BasicController {
         this.mainController = mainController;
     }
 
-    public void setCenterContent(Node content) {
-        mainController.setCenterContent(content);
-    }
-
-    public void resetToDefaultCartView() {
-        mainController.resetToDefaultCartView();
-    }
     public void goToMain() {
         mainController.loadDefaultContent();
     }

@@ -1,7 +1,6 @@
 package ofosFrontend.controller.User;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -10,14 +9,12 @@ import ofosFrontend.model.CartItem;
 import ofosFrontend.model.ShoppingCart;
 import ofosFrontend.session.SessionManager;
 
-import java.io.IOException;
 /**
  * Controller for the cart item in the shopping cart, used to make ui cards for the cart items
  * @see CartItem
  */
 public class CartItemController {
-    @FXML
-    VBox cartItemContainer;
+
     @FXML
     private Button addBtn;
     @FXML
@@ -38,7 +35,7 @@ public class CartItemController {
 
 
         itemName.setText(item.getProduct().getProductName());
-        itemPrice.setText(String.valueOf(item.getProduct().getProductPrice() + " €"));
+        itemPrice.setText(item.getProduct().getProductPrice() + " €");
         itemQuantity.textProperty().bind(item.quantityProperty().asString());
 
 
@@ -60,36 +57,11 @@ public class CartItemController {
             cart.removeItem(cartItem.getProduct());
 
 
-            if (cartItemNode != null && cartItemNode.getParent() instanceof VBox) {
-                VBox parentContainer = (VBox) cartItemNode.getParent();
+            if (cartItemNode != null && cartItemNode.getParent() instanceof VBox parentContainer) {
                 parentContainer.getChildren().remove(cartItemNode);
             }
         }
     }
 
 
-
-    public Label getItemName() {
-        return itemName;
-    }
-
-    public Label getItemPrice() {
-        return itemPrice;
-    }
-
-    public Label getItemQuantity() {
-        return itemQuantity;
-    }
-
-    public Button getAddBtn() {
-        return addBtn;
-    }
-
-    public Button getSubBtn() {
-        return subBtn;
-    }
-
-    public ImageView getDeleteBtn() {
-        return deleteBtn;
-    }
 }

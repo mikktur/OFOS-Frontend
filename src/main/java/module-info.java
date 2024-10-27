@@ -14,4 +14,6 @@ module ofosfrontend {
     exports ofosFrontend.controller.User;
     opens ofosFrontend.controller.User to javafx.fxml;
     opens ofosFrontend.controller.Owner to javafx.fxml;
+    exports ofosFrontend.controller.User.userSettings;
+    opens ofosFrontend.controller.User.userSettings to javafx.fxml;
 }

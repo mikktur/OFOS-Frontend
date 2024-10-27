@@ -16,7 +16,7 @@ public class ViewFactory {
     public static final String RESTAURANT = "/ofosFrontend/User/restaurantMenuUI.fxml";
     public static final String ORDERHISTORY = "/ofosFrontend/OrderHistoryUI.fxml";
     private final UserMainController mainController;
-    private String currentView = MAIN;
+    public String currentView;
 
     public ViewFactory(UserMainController mainController) {
         this.mainController = mainController;
@@ -51,7 +51,7 @@ public class ViewFactory {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(RESTAURANT));
             ScrollPane newCenterContent = loader.load();
-            RMenuController controller = loader.getController();
+            RestaurantMenuController controller = loader.getController();
             controller.setRestaurant(restaurant);
             controller.createCards();
             currentView = RESTAURANT;
@@ -66,14 +66,14 @@ public class ViewFactory {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(MAIN));
             loader.setResources(LocalizationManager.getBundle());
             Node mainContent = loader.load();
-            MMenuController mmController = loader.getController();
+            MainMenuController mmController = loader.getController();
 
             if (mmController != null) {
                 mmController.setMainController(mainController);
             } else {
                 System.out.println("mmController is null");
             }
-            currentView = MAIN;
+
             return mainContent;
         } catch (IOException e) {
             e.printStackTrace();

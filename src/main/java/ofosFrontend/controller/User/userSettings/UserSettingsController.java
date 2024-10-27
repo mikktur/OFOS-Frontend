@@ -1,7 +1,5 @@
-package ofosFrontend.controller.User;
+package ofosFrontend.controller.User.userSettings;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
 import javafx.application.Platform;
@@ -21,6 +19,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import ofosFrontend.controller.User.BasicController;
 import ofosFrontend.model.ContactInfo;
 import ofosFrontend.model.DeliveryAddress;
 import ofosFrontend.service.DeliveryAddressService;
@@ -28,10 +27,6 @@ import ofosFrontend.service.UserService;
 import ofosFrontend.session.SessionManager;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.*;
 
 public class UserSettingsController extends BasicController {
