@@ -54,12 +54,7 @@ public class DropDownMenuController extends BasicController {
     }
 
     public void goToSettings(MouseEvent mouseEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/newUserSettingsUI.fxml"));
-        Parent root = loader.load();
-        mainController.resetToDefaultCartView();
-
-        mainController.setCenterContent(root);
-
+        mainController.loadSettingsView();
     }
 
 

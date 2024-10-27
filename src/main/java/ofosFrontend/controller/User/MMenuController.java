@@ -84,16 +84,8 @@ public class MMenuController extends BasicController {
             System.out.println("Error: mainController is null in MMenuController.");
             return;
         }
-
         mainController.getShoppingCartController().initializeCartForRestaurant(restaurant.getId(), restaurant);
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/restaurantMenuUI.fxml"));
-        ScrollPane newCenterContent = loader.load();
-        RMenuController controller = loader.getController();
-        controller.setRestaurant(restaurant);
-        controller.createCards();
-
-        mainController.setCenterContent(newCenterContent);
+        mainController.loadRestaurantView(restaurant);
     }
 
 

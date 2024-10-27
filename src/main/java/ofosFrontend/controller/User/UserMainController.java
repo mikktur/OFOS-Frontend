@@ -4,10 +4,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import ofosFrontend.model.Restaurant;
 import ofosFrontend.session.FXMLUtils;
 import ofosFrontend.session.CartManager;
 import ofosFrontend.session.LocalizationManager;
@@ -33,11 +36,14 @@ public class UserMainController {
     private AnchorPane dropDownRoot;
     @FXML
     DropDownMenuController dropDownMenuController;
+    private ViewFactory viewFactory;
     MMenuController mmController;
+
     private CartManager cartManager = new CartManager();
 
     @FXML
     public void initialize() {
+        viewFactory = new ViewFactory(this);
         setControllers();
 
         System.out.println("Main controller initialized");
@@ -58,33 +64,44 @@ public class UserMainController {
         centerPane.getChildren().add(content);
         StackPane.setAlignment(content, Pos.CENTER);
     }
-
-    public void loadDefaultContent() {
-        try {
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/mainUI.fxml"));
-            loader.setResources(LocalizationManager.getBundle());
-            Node mainContent = loader.load();
-
-            mmController = loader.getController();
-            // kinda useless null check... but whatevs.
-            if (mmController != null) {
-
-                mmController.setMainController(this);
-            } else {
-                System.out.println("mmController is null");
-            }
-
-            resetToDefaultCartView();
-            setCenterContent(mainContent);
-            reloadDropDown();
-
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void loadCheckoutView(int rid) {
+        Parent checkoutView = viewFactory.createCheckoutView(rid);
+        if (checkoutView != null) {
+            setCenterContent(checkoutView);
         }
     }
 
-    private void reloadDropDown() {
+    public void loadSettingsView() {
+        Parent settingsView = viewFactory.createSettingsView();
+        if (settingsView != null) {
+            resetToDefaultCartView();
+            setCenterContent(settingsView);
+        }
+    }
+
+    public void loadRestaurantView(Restaurant restaurant) {
+        ScrollPane restaurantView = viewFactory.createRestaurantView(restaurant);
+        if (restaurantView != null) {
+            setCenterContent(restaurantView);
+        }
+    }
+
+    public void loadDefaultContent() {
+        Node defaultContent = viewFactory.createDefaultContent();
+        if (defaultContent != null) {
+            resetToDefaultCartView();
+            reloadDropDown();
+
+            setCenterContent(defaultContent);
+        }
+    }
+
+    public void refreshPage() {
+
+
+    }
+
+    public void reloadDropDown() {
         try {
             FXMLLoader dropDownLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/dropDownUI.fxml"));
             dropDownLoader.setResources(LocalizationManager.getBundle());

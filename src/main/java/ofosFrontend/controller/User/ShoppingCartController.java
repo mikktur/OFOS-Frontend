@@ -283,14 +283,8 @@ public class ShoppingCartController extends BasicController {
 
     @FXML
     private void GoToCheckout(int rid) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/checkout.fxml"));
-        Parent root = loader.load();
-        CheckoutController checkoutController = loader.getController();
-        checkoutController.setMainController(mainController);
-        checkoutController.setRid(rid);
         setRid(rid);
         updateCart();
-        checkoutController.updateView();
-        mainController.setCenterContent(root);
+        mainController.loadCheckoutView(rid);
     }
 }
