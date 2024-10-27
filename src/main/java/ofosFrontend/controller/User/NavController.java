@@ -3,6 +3,7 @@ package ofosFrontend.controller.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -14,9 +15,11 @@ import javafx.scene.text.Text;
 import javafx.stage.Popup;
 import ofosFrontend.model.Restaurant;
 import ofosFrontend.model.RestaurantList;
+import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
@@ -38,6 +41,8 @@ public class NavController extends BasicController {
     private ImageView openCart;
     @FXML
     AnchorPane redDot;
+    @FXML
+    private ComboBox<String> languageSelector;
     public NavController() {
 
     }
@@ -48,10 +53,32 @@ public class NavController extends BasicController {
         initializeUIComponents();
         setupEventHandlers();
         searchBar.addEventHandler(KeyEvent.KEY_RELEASED, event -> handleSearch());
+        setupLanguageSelector();
     }
 
+    private void switchLanguage(String language) {
+        Locale newLocale;
+        if (language.equals("Finnish")) {
+            newLocale = new Locale("fi", "FI");
+        } else {
+            newLocale = new Locale("en", "US");
+        }
 
+        // Updates the locale in LocalizationManager and reloads the main UI
+        LocalizationManager.setLocale(newLocale);
+        mainController.loadDefaultContent();
+    }
+    private void setupLanguageSelector() {
+        languageSelector.setValue(LocalizationManager.selectedLanguageProperty().get());
 
+        languageSelector.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                switchLanguage(newVal);
+            }
+        });
+
+        languageSelector.valueProperty().bindBidirectional(LocalizationManager.selectedLanguageProperty());
+    }
     private void handleSearch() {
         String query = searchBar.getText().toLowerCase();
         System.out.println("Query: " + query);

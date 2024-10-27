@@ -33,19 +33,18 @@ public class MMenuController extends BasicController {
     private FlowPane restaurantFlowPane;
     @FXML
     private ScrollPane mainScroll;
-    @FXML
-    private ComboBox<String> languageSelector;
+
 
     private final RestaurantService restaurantService = new RestaurantService();
     private RestaurantList restaurantList = new RestaurantList();
     private final String URL = "http://10.120.32.94:8000/images/restaurant/";
 
     // Reference to the main controller
-    private UserMainController mainController;
+
 
     @FXML
     public void initialize() {
-        setupLanguageSelector();
+        // DONT ADD ANYTHING HERE THAT USES MAINCONTROLLER IT WONT WORK SINCE ITS NULL. CALL THEM IN THE LOADDEFAULTCONTENT FUNCTION.
         loadRestaurants();
     }
 
@@ -60,26 +59,6 @@ public class MMenuController extends BasicController {
         setupRestaurantView(restaurant);
     }
 
-    private void setupLanguageSelector() {
-        languageSelector.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) {
-                switchLanguage(newVal);
-            }
-        });
-    }
-
-    private void switchLanguage(String language) {
-        Locale newLocale;
-        if (language.equals("Finnish")) {
-            newLocale = new Locale("fi", "FI");
-        } else {
-            newLocale = new Locale("en", "US");
-        }
-
-        // Update the locale in LocalizationManager and reload the main UI
-        LocalizationManager.setLocale(newLocale);
-        mainController.loadDefaultContent();  // Reload the main UI to apply language change
-    }
 
     private void loadRestaurants() {
         try {
@@ -97,6 +76,7 @@ public class MMenuController extends BasicController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     private void setupRestaurantView(Restaurant restaurant) throws IOException {

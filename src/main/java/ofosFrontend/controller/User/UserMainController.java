@@ -61,13 +61,15 @@ public class UserMainController {
 
     public void loadDefaultContent() {
         try {
-            // Initialize the FXMLLoader and load the FXML
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/mainUI.fxml"));
             loader.setResources(LocalizationManager.getBundle());
             Node mainContent = loader.load();
 
             mmController = loader.getController();
+            // kinda useless null check... but whatevs.
             if (mmController != null) {
+
                 mmController.setMainController(this);
             } else {
                 System.out.println("mmController is null");

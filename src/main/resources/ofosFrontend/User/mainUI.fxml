@@ -22,21 +22,7 @@
     <content>
         <!-- Root VBox containing both the language selector and main content -->
         <VBox alignment="TOP_CENTER" spacing="10">
-            <!-- Language Selector HBox at the top -->
-            <HBox alignment="CENTER" spacing="10">
-                <padding>
-                    <Insets bottom="10.0" top="10.0" />
-                </padding>
-                <Text text="%languageText" />
-                <ComboBox fx:id="languageSelector">
-                    <items>
-                        <FXCollections fx:factory="observableArrayList">
-                            <String fx:value="English" />
-                            <String fx:value="Finnish" />
-                        </FXCollections>
-                    </items>
-                </ComboBox>
-            </HBox>
+
 
             <!-- Main Content VBox -->
             <VBox alignment="TOP_CENTER" VBox.vgrow="ALWAYS" spacing="5.0">
