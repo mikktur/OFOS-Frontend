@@ -31,19 +31,19 @@
                               <Font name="System Bold" size="24.0" />
                            </font>
                         </Text>
-                        <Label prefHeight="17.0" prefWidth="52.0" text="Address:" />
+                        <Label prefHeight="17.0" prefWidth="52.0" text="%restaurantAddress" />
                         <Text fx:id="restaurantAddress" strokeType="OUTSIDE" strokeWidth="0.0" text="asdasd" wrappingWidth="118.1640625">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
                         </Text>
-                        <Label prefHeight="17.0" prefWidth="84.0" text="Business hours:" />
+                        <Label prefHeight="17.0" prefWidth="84.0" text="%restaurantHours" />
                         <Text fx:id="restaurantHours" strokeType="OUTSIDE" strokeWidth="0.0" text="06-23" wrappingWidth="34.02734375">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
                         </Text>
-                        <Label prefHeight="17.0" prefWidth="82.0" text="Phonenumber:" />
+                        <Label prefHeight="17.0" prefWidth="82.0" text="%restaurantPhone" />
                         <Text fx:id="restaurantPhone" strokeType="OUTSIDE" strokeWidth="0.0" text="000000000" wrappingWidth="95.71875">
                            <HBox.margin>
                               <Insets />

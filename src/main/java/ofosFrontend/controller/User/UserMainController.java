@@ -93,10 +93,6 @@ public class UserMainController {
         }
     }
 
-    public void refreshPage() {
-        //TODO implement some kind of refresh current page
-
-    }
 
     public void reloadDropDown() {
         try {
@@ -177,6 +173,7 @@ public class UserMainController {
     }
     public void reloadPage(){
         viewFactory.reloadPage();
+        reloadDropDown();
     }
     public Restaurant getCurrentRestaurant() {
         return currentRestaurant;
