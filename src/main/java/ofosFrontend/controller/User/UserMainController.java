@@ -65,6 +65,7 @@ public class UserMainController {
     }
     public void loadCheckoutView(int rid) {
         Parent checkoutView = viewFactory.createCheckoutView(rid);
+
         if (checkoutView != null) {
             setCenterContent(checkoutView);
         }

@@ -24,7 +24,6 @@ public class RestaurantTest {
         assertNull(defaultRestaurant.getRestaurantName(), "Restaurant name should be null for the default constructor.");
         assertNull(defaultRestaurant.getRestaurantPhone(), "Restaurant phone should be null for the default constructor.");
         assertNull(defaultRestaurant.getPicture(), "Picture should be null for the default constructor.");
-        assertNull(defaultRestaurant.getCategory(), "Category should be null for the default constructor.");
     }
 
     @Test

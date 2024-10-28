@@ -23,6 +23,7 @@ public class ViewFactory {
     }
     public Parent createCheckoutView(int rid) {
         try {
+            System.out.println(currentView);
             FXMLLoader loader = new FXMLLoader(getClass().getResource(CHECKOUT));
             loader.setResources(LocalizationManager.getBundle());
             Parent root = loader.load();
@@ -40,6 +41,7 @@ public class ViewFactory {
     }
     public Parent createSettingsView() {
         try {
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource(SETTINGS));
             loader.setResources(LocalizationManager.getBundle());
             Parent root = loader.load();

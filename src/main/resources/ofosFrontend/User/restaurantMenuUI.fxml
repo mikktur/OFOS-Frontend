@@ -15,107 +15,112 @@
       <VBox alignment="TOP_CENTER">
          <children>
             <VBox alignment="TOP_CENTER" maxWidth="1300.0" VBox.vgrow="ALWAYS">
-               <children>
-                  <HBox id="menuInfo" alignment="CENTER_LEFT" minHeight="103.0" spacing="10.0" stylesheets="@../styles.css" VBox.vgrow="NEVER">
-                     <children>
-                        <ImageView fx:id="restaurantImage" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="false">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                        </ImageView>
-                        <Text fx:id="restaurantName" strokeType="OUTSIDE" strokeWidth="0.0" text="McDonald's" HBox.hgrow="ALWAYS">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <font>
-                              <Font name="System Bold" size="24.0" />
-                           </font>
-                        </Text>
-                        <Label prefHeight="17.0" prefWidth="52.0" text="%restaurantAddress" />
-                        <Text fx:id="restaurantAddress" strokeType="OUTSIDE" strokeWidth="0.0" text="asdasd" wrappingWidth="118.1640625">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                        </Text>
-                        <Label prefHeight="17.0" prefWidth="84.0" text="%restaurantHours" />
-                        <Text fx:id="restaurantHours" strokeType="OUTSIDE" strokeWidth="0.0" text="06-23" wrappingWidth="34.02734375">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                        </Text>
-                        <Label prefHeight="17.0" prefWidth="82.0" text="%restaurantPhone" />
-                        <Text fx:id="restaurantPhone" strokeType="OUTSIDE" strokeWidth="0.0" text="000000000" wrappingWidth="95.71875">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                        </Text>
-                     </children>
-                     <VBox.margin>
-                        <Insets bottom="10.0" top="10.0" />
-                     </VBox.margin>
-                  </HBox>
-                  <HBox id="itemCategory" alignment="CENTER" maxWidth="553.0" spacing="20.0" style="-fx-background-color: #C4E6FB99; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 5, 0, 2, 2);" stylesheets="@../styles.css" VBox.vgrow="NEVER">
-                     <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ateriat" textAlignment="CENTER">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <font>
-                              <Font name="System Bold" size="18.0" />
-                           </font>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Burgerit" textAlignment="CENTER">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <font>
-                              <Font name="System Bold" size="18.0" />
-                           </font>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Sormisyötävät">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <font>
-                              <Font name="System Bold" size="18.0" />
-                           </font>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Juomat" textAlignment="CENTER">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <font>
-                              <Font name="System Bold" size="18.0" />
-                           </font>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Dipit" textAlignment="CENTER" HBox.hgrow="ALWAYS">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <font>
-                              <Font name="System Bold" size="18.0" />
-                           </font>
-                        </Text>
-                     </children>
-                     <VBox.margin>
-                        <Insets bottom="20.0" />
-                     </VBox.margin>
-                     <opaqueInsets>
-                        <Insets bottom="20.0" />
-                     </opaqueInsets>
-                  </HBox>
-                  <FlowPane fx:id="menuContainer" hgap="30.0" prefWrapLength="800.0" rowValignment="TOP" style="-fx-background-color: #C4E6FB99; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 5, 0, 2, 2);" styleClass="itemContainer" vgap="20.0" VBox.vgrow="ALWAYS">
-                     <padding>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                     </padding>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                  </FlowPane>
-               </children>
                <padding>
-                  <Insets left="20.0" right="20.0" />
+                  <Insets left="20.0" right="20.0"/>
                </padding>
+               <HBox id="menuInfo" alignment="CENTER_LEFT" minHeight="103.0" spacing="10.0" stylesheets="@../styles.css"
+                     VBox.vgrow="NEVER">
+                  <VBox.margin>
+                     <Insets bottom="10.0" top="10.0"/>
+                  </VBox.margin>
+                  <ImageView fx:id="restaurantImage" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true"
+                             preserveRatio="false">
+                     <HBox.margin>
+                        <Insets/>
+                     </HBox.margin>
+                  </ImageView>
+                  <Text fx:id="restaurantName" strokeType="OUTSIDE" strokeWidth="0.0" text="McDonald's"
+                        HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets/>
+                     </HBox.margin>
+                     <font>
+                        <Font name="System Bold" size="24.0"/>
+                     </font>
+                  </Text>
+                  <Label prefHeight="17.0" prefWidth="52.0" text="%restaurantAddress"/>
+                  <Text fx:id="restaurantAddress" strokeType="OUTSIDE" strokeWidth="0.0" text="asdasd"
+                        wrappingWidth="118.1640625">
+                     <HBox.margin>
+                        <Insets/>
+                     </HBox.margin>
+                  </Text>
+                  <Label prefHeight="17.0" prefWidth="84.0" text="%restaurantHours"/>
+                  <Text fx:id="restaurantHours" strokeType="OUTSIDE" strokeWidth="0.0" text="06-23"
+                        wrappingWidth="34.02734375">
+                     <HBox.margin>
+                        <Insets/>
+                     </HBox.margin>
+                  </Text>
+                  <Label prefHeight="17.0" prefWidth="82.0" text="%restaurantPhone"/>
+                  <Text fx:id="restaurantPhone" strokeType="OUTSIDE" strokeWidth="0.0" text="000000000"
+                        wrappingWidth="95.71875">
+                     <HBox.margin>
+                        <Insets/>
+                     </HBox.margin>
+                  </Text>
+               </HBox>
+               <HBox id="itemCategory" alignment="CENTER" maxWidth="553.0" spacing="20.0"
+                     style="-fx-background-color: #C4E6FB99; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 5, 0, 2, 2);"
+                     stylesheets="@../styles.css" VBox.vgrow="NEVER">
+                  <VBox.margin>
+                     <Insets bottom="20.0"/>
+                  </VBox.margin>
+                  <opaqueInsets>
+                     <Insets bottom="20.0"/>
+                  </opaqueInsets>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ateriat" textAlignment="CENTER">
+                     <HBox.margin>
+                        <Insets/>
+                     </HBox.margin>
+                     <font>
+                        <Font name="System Bold" size="18.0"/>
+                     </font>
+                  </Text>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Burgerit" textAlignment="CENTER">
+                     <HBox.margin>
+                        <Insets/>
+                     </HBox.margin>
+                     <font>
+                        <Font name="System Bold" size="18.0"/>
+                     </font>
+                  </Text>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Sormisyötävät">
+                     <HBox.margin>
+                        <Insets/>
+                     </HBox.margin>
+                     <font>
+                        <Font name="System Bold" size="18.0"/>
+                     </font>
+                  </Text>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Juomat" textAlignment="CENTER">
+                     <HBox.margin>
+                        <Insets/>
+                     </HBox.margin>
+                     <font>
+                        <Font name="System Bold" size="18.0"/>
+                     </font>
+                  </Text>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Dipit" textAlignment="CENTER"
+                        HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets/>
+                     </HBox.margin>
+                     <font>
+                        <Font name="System Bold" size="18.0"/>
+                     </font>
+                  </Text>
+               </HBox>
+               <FlowPane fx:id="menuContainer" hgap="30.0" prefWrapLength="800.0" rowValignment="TOP"
+                         style="-fx-background-color: #C4E6FB99; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 5, 0, 2, 2);"
+                         styleClass="itemContainer" vgap="20.0" VBox.vgrow="ALWAYS">
+                  <padding>
+                     <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                  </padding>
+                  <VBox.margin>
+                     <Insets/>
+                  </VBox.margin>
+               </FlowPane>
             </VBox>
          </children>
       </VBox>
