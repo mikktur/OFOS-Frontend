@@ -24,12 +24,14 @@ public class ViewFactory {
     public Parent createCheckoutView(int rid) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(CHECKOUT));
+            loader.setResources(LocalizationManager.getBundle());
             Parent root = loader.load();
             CheckoutController checkoutController = loader.getController();
             checkoutController.setMainController(mainController);
             checkoutController.setRid(rid);
             checkoutController.updateView();
             currentView = CHECKOUT;
+
             return root;
         } catch (IOException e) {
             e.printStackTrace();
@@ -39,6 +41,7 @@ public class ViewFactory {
     public Parent createSettingsView() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(SETTINGS));
+            loader.setResources(LocalizationManager.getBundle());
             Parent root = loader.load();
             currentView = SETTINGS;
             return root;
@@ -50,6 +53,7 @@ public class ViewFactory {
     public ScrollPane createRestaurantView(Restaurant restaurant) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(RESTAURANT));
+            loader.setResources(LocalizationManager.getBundle());
             ScrollPane newCenterContent = loader.load();
             RestaurantMenuController controller = loader.getController();
             controller.setRestaurant(restaurant);
@@ -73,12 +77,31 @@ public class ViewFactory {
             } else {
                 System.out.println("mmController is null");
             }
-
+            mainController.resetToDefaultCartView();
+            mainController.reloadDropDown();
+            currentView = MAIN;
             return mainContent;
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public void reloadPage(){
+        switch (currentView){
+            case CHECKOUT:
+                mainController.loadCheckoutView(mainController.getCurrentRestaurant().getId());
+                break;
+            case SETTINGS:
+                mainController.loadSettingsView();
+                break;
+            case RESTAURANT:
+                mainController.loadRestaurantView(mainController.getCurrentRestaurant());
+                break;
+            default:
+                mainController.loadDefaultContent();
+        }
+
     }
 
 }

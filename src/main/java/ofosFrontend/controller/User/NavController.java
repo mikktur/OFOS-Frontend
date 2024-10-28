@@ -57,7 +57,7 @@ public class NavController extends BasicController {
 
         // Updates the locale in LocalizationManager and reloads the main UI
         LocalizationManager.setLocale(newLocale);
-
+        mainController.reloadPage();
     }
     private void setupLanguageSelector() {
         languageSelector.setValue(LocalizationManager.selectedLanguageProperty().get());

@@ -37,7 +37,7 @@ public class UserMainController {
     DropDownMenuController dropDownMenuController;
     private ViewFactory viewFactory;
     MainMenuController mmController;
-
+    private Restaurant currentRestaurant;
     private final CartManager cartManager = new CartManager();
 
     @FXML
@@ -81,6 +81,7 @@ public class UserMainController {
     public void loadRestaurantView(Restaurant restaurant) {
         ScrollPane restaurantView = viewFactory.createRestaurantView(restaurant);
         if (restaurantView != null) {
+            currentRestaurant = restaurant;
             setCenterContent(restaurantView);
         }
     }
@@ -88,9 +89,6 @@ public class UserMainController {
     public void loadDefaultContent() {
         Node defaultContent = viewFactory.createDefaultContent();
         if (defaultContent != null) {
-            resetToDefaultCartView();
-            reloadDropDown();
-
             setCenterContent(defaultContent);
         }
     }
@@ -176,6 +174,12 @@ public class UserMainController {
             return;
         }
         shoppingCartController.resetCartView();
+    }
+    public void reloadPage(){
+        viewFactory.reloadPage();
+    }
+    public Restaurant getCurrentRestaurant() {
+        return currentRestaurant;
     }
 }
 
