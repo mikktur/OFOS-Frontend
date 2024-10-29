@@ -93,7 +93,9 @@ public class UserMainController {
             setCenterContent(defaultContent);
         }
     }
-
+    public void setMmController(MainMenuController mainMenuController){
+        mmController = mainMenuController;
+    }
 
     public void reloadDropDown() {
         try {
@@ -157,6 +159,7 @@ public class UserMainController {
     }
 
     public void filterRestaurants(String query) {
+        System.out.println(mmController);
         if (mmController != null) {
             mmController.filterRestaurants(query);
         }
