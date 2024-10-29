@@ -67,13 +67,14 @@ public class ViewFactory {
             return null;
         }
     }
+
     public Node createDefaultContent() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(MAIN));
             loader.setResources(LocalizationManager.getBundle());
             Node mainContent = loader.load();
             MainMenuController mmController = loader.getController();
-
+            mainController.setMmController(mmController);
             if (mmController != null) {
                 mmController.setMainController(mainController);
             } else {
