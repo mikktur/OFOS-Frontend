@@ -13,6 +13,7 @@
 
 
 <!-- ScrollPane to allow scrolling if needed -->
+<?import javafx.scene.layout.Region?>
 <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;"
             xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="ofosFrontend.controller.User.userSettings.UserSettingsController">
@@ -83,18 +84,21 @@
                <Button fx:id="changePassword" text="%Change_Password" onAction="#handleChangePassword"/>
             </VBox>
             <!-- Delivery Addresses VBox -->
-            <VBox spacing="10.0" HBox.hgrow="ALWAYS" style="-fx-background-color: #FF335B" >
+            <VBox spacing="10.0" HBox.hgrow="ALWAYS" style="-fx-background-color: #c4e6fb;" >
                <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="%Delivery_Addresses"/>
-               <ScrollPane fitToWidth="true" style="-fx-background-color: #c4e6fb;">
-                  <content>
-                     <VBox fx:id="deliveryAddressContainer" spacing="10.0"
-                           style="-fx-background-color: #c4e6fb;" VBox.vgrow="ALWAYS">
-                        <!-- Dynamically added delivery address nodes will be added here -->
-                     </VBox>
-                  </content>
-               </ScrollPane>
                <Button mnemonicParsing="false" onAction="#handleAddAddress"
                        text="%Add_new_delivery_address"/>
+               <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                           style="-fx-background-color: transparent;">
+
+               <content>
+                  <VBox fx:id="deliveryAddressContainer" spacing="10.0" style="-fx-background-color: #c4e6fb;">
+                     <!-- Dynamically added address nodes -->
+                  </VBox>
+
+               </content>
+               </ScrollPane>
+
             </VBox>
          </HBox>
       </VBox>
