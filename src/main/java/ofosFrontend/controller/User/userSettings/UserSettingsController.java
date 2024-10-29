@@ -203,7 +203,7 @@ public class UserSettingsController extends BasicController {
     private Node createAddressNode(DeliveryAddress address) {
         // Root VBox for each address node
         VBox rootVBox = new VBox(5);
-        // rootVBox.setPadding(new Insets(10));
+        rootVBox.setPadding(new Insets(10));
         rootVBox.setStyle("-fx-background-color: white; -fx-border-color: lightgray; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10;");
         rootVBox.setPrefWidth(250);
 
@@ -257,6 +257,7 @@ public class UserSettingsController extends BasicController {
             Button defaultButton = new Button();
             defaultButton.setText(bundle.getString("SetAsDefault"));
             defaultButton.setOnAction(e -> handleSetDefaultAddress(address));
+            defaultButton.setMinWidth(150);
             defaultButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: white; -fx-border-radius: 5; -fx-background-radius: 5;");
             Tooltip.install(defaultButton, new Tooltip(bundle.getString("Set_Default_Address")));
             defaultNode = defaultButton;
