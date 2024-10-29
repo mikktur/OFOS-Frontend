@@ -29,19 +29,19 @@
                               <children>
                                   <!-- StackPane to align the labels -->
                                   <StackPane prefWidth="100">
-                                      <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Order ID" />
+                                      <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="%historyOrderId" />
                                   </StackPane>
                                   <StackPane prefWidth="200">
-                                      <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Restaurant" />
+                                      <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="%historyRestaurant" />
                                   </StackPane>
                                   <StackPane prefWidth="210">
-                                      <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Products" />
+                                      <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="%historyProducts" />
                                   </StackPane>
                                   <StackPane prefWidth="70">
-                                      <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Price" />
+                                      <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="%historyPrice" />
                                   </StackPane>
                                   <StackPane prefWidth="120">
-                                      <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Date" />
+                                      <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="%historyDate" />
                                   </StackPane>
                               </children>
                           </HBox>

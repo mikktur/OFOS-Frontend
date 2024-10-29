@@ -92,7 +92,13 @@ public class UserMainController {
     public void setCurrentRestaurant(Restaurant restaurant) {
         currentRestaurant = restaurant;
     }
+    public void loadHistoryView() {
+        Parent historyView = viewFactory.createOrderHistoryView();
 
+        if (historyView != null) {
+            setCenterContent(historyView);
+        }
+    }
     public void loadDefaultContent() {
         Node defaultContent = viewFactory.createDefaultContent();
 
@@ -105,13 +111,21 @@ public class UserMainController {
 
     public void reloadDropDown() {
         try {
+            boolean isVisible = dropDownRoot.isVisible();
+            if(isVisible){
+                toggleSideMenu();
+            }
+            root.setLeft(null);
             FXMLLoader dropDownLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/dropDownUI.fxml"));
             dropDownLoader.setResources(LocalizationManager.getBundle());
             dropDownRoot = dropDownLoader.load();
             dropDownMenuController = dropDownLoader.getController();
             dropDownMenuController.setMainController(this);
-            root.setLeft(dropDownRoot);
-            toggleSideMenu();
+
+            if (isVisible) {
+                root.setLeft(dropDownRoot);
+                toggleSideMenu();
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
