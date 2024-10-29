@@ -13,12 +13,13 @@ import ofosFrontend.model.CartItem;
 import ofosFrontend.model.Restaurant;
 import ofosFrontend.model.ShoppingCart;
 import ofosFrontend.session.CartManager;
+import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.ResourceBundle;
 
 
 /**
@@ -47,6 +48,8 @@ public class ShoppingCartController extends BasicController {
      */
     @FXML
     private VBox cartRoot;
+    //used to check if the listener has been initialized at least once. used in reloading the ui.
+    private boolean listenerInitialized = false;
 
     /**
      * The restaurant id
@@ -81,7 +84,7 @@ public class ShoppingCartController extends BasicController {
         ObservableList<CartItem> items = cartManager.getCart(rid).getItems();
 
         cartItemContainer.getChildren().clear();
-        if (items.isEmpty()) {
+        if (items.isEmpty() ) {
             displayEmptyCartMessage();
         } else {
             for (CartItem item : items) {
@@ -110,11 +113,13 @@ public class ShoppingCartController extends BasicController {
      * @param restaurant
      */
     public void initializeCartForRestaurant(int restaurantId, Restaurant restaurant) {
+
         cartItemContainer.getChildren().clear();
         rid = restaurantId;
         ShoppingCart cart = cartManager.getOrCreateCart(restaurantId, restaurant);
-        if (cart.getItems().isEmpty()) {
+        if (cart.getItems().isEmpty() || !listenerInitialized) {
             addCartListeners(cart);
+            listenerInitialized=true;
         }
         try {
             loadCartItems();
@@ -264,7 +269,8 @@ public class ShoppingCartController extends BasicController {
     public void displayEmptyCartMessage() {
         cartItemContainer.getChildren().clear();
         cartCheckout.setVisible(false);
-        Label emptyItem = new Label("Your cart is empty");
+        ResourceBundle bundle = LocalizationManager.getBundle();
+        Label emptyItem = new Label(bundle.getString("emptyCart"));
         emptyItem.setId("emptyMessage");
         cartItemContainer.getChildren().add(emptyItem);
     }
@@ -278,7 +284,9 @@ public class ShoppingCartController extends BasicController {
 
     private void updateSubTotal() {
         double subTotal = SessionManager.getInstance().getCart(rid).getTotalPrice();
-        subTotalLabel.setText("Subtotal: " + subTotal + " €");
+
+
+        subTotalLabel.setText(subTotal + " €");
     }
 
     @FXML

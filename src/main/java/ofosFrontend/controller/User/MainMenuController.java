@@ -70,7 +70,6 @@ public class MainMenuController extends BasicController {
             return;
         }
         //makes sure that the cart that is used is for the correct restaurant.
-        mainController.getShoppingCartController().initializeCartForRestaurant(restaurant.getId(), restaurant);
         mainController.loadRestaurantView(restaurant);
     }
 
