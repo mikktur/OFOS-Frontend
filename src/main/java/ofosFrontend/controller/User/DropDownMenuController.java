@@ -59,9 +59,7 @@ public class DropDownMenuController extends BasicController {
 
 
     public void goToHistory(MouseEvent mouseEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/OrderHistoryUI.fxml"));
-        Parent root = loader.load();
-        mainController.setCenterContent(root);
+        mainController.loadHistoryView();
 
     }
 }

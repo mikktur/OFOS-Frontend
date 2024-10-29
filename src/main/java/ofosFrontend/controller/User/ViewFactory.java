@@ -52,6 +52,18 @@ public class ViewFactory {
             return null;
         }
     }
+    public Parent createOrderHistoryView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(ORDERHISTORY));
+            loader.setResources(LocalizationManager.getBundle());
+            Parent root = loader.load();
+            currentView = ORDERHISTORY;
+            return root;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     public ScrollPane createRestaurantView(Restaurant restaurant) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(RESTAURANT));
@@ -100,6 +112,9 @@ public class ViewFactory {
                 break;
             case RESTAURANT:
                 mainController.loadRestaurantView(mainController.getCurrentRestaurant());
+                break;
+            case ORDERHISTORY:
+                mainController.loadHistoryView();
                 break;
             default:
                 mainController.loadDefaultContent();

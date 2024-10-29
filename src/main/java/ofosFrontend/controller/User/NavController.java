@@ -11,6 +11,7 @@ import javafx.scene.text.Text;
 import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 
 /**
