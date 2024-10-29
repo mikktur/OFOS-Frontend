@@ -48,6 +48,7 @@ public class UserSettingsController extends BasicController {
     private final UserService userService = new UserService();
 
 
+
     public void initialize() {
 
         this.userId = SessionManager.getInstance().getUserId();
@@ -142,7 +143,7 @@ public class UserSettingsController extends BasicController {
             Parent root = loader.load();
 
             Stage stage = new Stage();
-            stage.setTitle(bundle.getString("Add_Contact_Information"));
+            stage.setTitle(bundle.getString("Modify_Contact_Information"));
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
