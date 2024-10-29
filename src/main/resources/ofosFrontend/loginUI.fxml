@@ -52,7 +52,7 @@
                   </Label>
                   <TextField fx:id="username" layoutX="138.0" layoutY="28.0" promptText="Username" />
                   <PasswordField fx:id="password" layoutX="138.0" layoutY="77.0" promptText="Password" />
-                  <Button fx:id="login" layoutX="133.0" layoutY="119.0" mnemonicParsing="false" onAction="#userLogin" text="Log in" />
+                  <Button defaultButton="true" fx:id="login" layoutX="133.0" layoutY="119.0" mnemonicParsing="false" onAction="#userLogin" text="Log in" />
                    <Label fx:id="loginPasswordErrorLabel" layoutX="135.0" layoutY="100" textFill="red"/>
                    <Text layoutX="93.0" layoutY="174.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Don't have an account?" wrappingWidth="128.13671875" />
                </children>

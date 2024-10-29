@@ -81,16 +81,24 @@ public class UserMainController {
 
     public void loadRestaurantView(Restaurant restaurant) {
         ScrollPane restaurantView = viewFactory.createRestaurantView(restaurant);
+        getShoppingCartController().initializeCartForRestaurant(restaurant.getId(), restaurant);
+
         if (restaurantView != null) {
             currentRestaurant = restaurant;
+            System.out.println(currentRestaurant);
             setCenterContent(restaurantView);
         }
+    }
+    public void setCurrentRestaurant(Restaurant restaurant) {
+        currentRestaurant = restaurant;
     }
 
     public void loadDefaultContent() {
         Node defaultContent = viewFactory.createDefaultContent();
+
         if (defaultContent != null) {
             setCenterContent(defaultContent);
+            currentRestaurant=null;
         }
     }
 
@@ -104,6 +112,36 @@ public class UserMainController {
             dropDownMenuController.setMainController(this);
             root.setLeft(dropDownRoot);
             toggleSideMenu();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void reloadCart() {
+        try {
+            boolean isVisible = cart.isVisible();
+
+            root.setRight(null);
+            if(isVisible){
+                toggleShoppingCart();
+            }
+            FXMLLoader cartLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/shoppingCart.fxml"));
+            cartLoader.setResources(LocalizationManager.getBundle());
+            cart = cartLoader.load();
+            shoppingCartController = cartLoader.getController();
+            shoppingCartController.setMainController(this);
+            if(currentRestaurant!=null){
+                shoppingCartController.setRid(currentRestaurant.getId());
+                shoppingCartController.initializeCartForRestaurant(currentRestaurant.getId(), currentRestaurant);
+                shoppingCartController.loadCartItems();
+
+            }
+
+            if(isVisible){
+                root.setRight(cart);
+                toggleShoppingCart();
+            }
+            shoppingCartController.updateCart();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -173,8 +211,11 @@ public class UserMainController {
         shoppingCartController.resetCartView();
     }
     public void reloadPage(){
+
         viewFactory.reloadPage();
+        reloadCart();
         reloadDropDown();
+
     }
     public Restaurant getCurrentRestaurant() {
         return currentRestaurant;
