@@ -13,7 +13,7 @@
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
 
-    <Label text="%Add_Contact_Information" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+    <Label text="%Modify_Contact_Information" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
 
     <Label text="%FirstName" />
     <TextField fx:id="firstNameField" prefWidth="380"/>
@@ -37,8 +37,8 @@
     <TextField fx:id="postalCodeField" prefWidth="380"/>
 
     <HBox spacing="10" alignment="CENTER_RIGHT">
-        <Button text="%Cancel" onAction="#handleCancel" />
         <Button text="%Save" onAction="#handleSave" />
+        <Button text="%Cancel" onAction="#handleCancel" />
     </HBox>
 
 </VBox>

@@ -140,6 +140,7 @@ public class UserSettingsController extends BasicController {
     private void openContactInfoDialog() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/contactInfoDialog.fxml"));
+            loader.setResources(LocalizationManager.getBundle());
             Parent root = loader.load();
 
             Stage stage = new Stage();
