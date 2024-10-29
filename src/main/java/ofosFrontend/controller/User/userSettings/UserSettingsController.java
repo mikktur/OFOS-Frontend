@@ -24,6 +24,7 @@ import ofosFrontend.model.ContactInfo;
 import ofosFrontend.model.DeliveryAddress;
 import ofosFrontend.service.DeliveryAddressService;
 import ofosFrontend.service.UserService;
+import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
 
 import java.io.IOException;
@@ -40,12 +41,15 @@ public class UserSettingsController extends BasicController {
     @FXML private VBox deliveryAddressContainer;
     @FXML private Button changePassword;
 
+    ResourceBundle bundle = LocalizationManager.getBundle();
     private int userId;
     private List<DeliveryAddress> deliveryAddressesList = new ArrayList<>();
     private final DeliveryAddressService deliveryAddressService = new DeliveryAddressService();
     private final UserService userService = new UserService();
 
+
     public void initialize() {
+
         this.userId = SessionManager.getInstance().getUserId();
 
         fetchUserData();
@@ -93,7 +97,7 @@ public class UserSettingsController extends BasicController {
             Throwable e = task.getException();
             e.printStackTrace();
             Platform.runLater(() -> {
-                showError("An error occurred while fetching contact information.");
+                showError(bundle.getString("An_error_occurred_while_fetching_contact_information"));
             });
         });
 
@@ -104,12 +108,12 @@ public class UserSettingsController extends BasicController {
 
     private void promptForContactInfo() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("No Contact Information");
+        alert.setTitle(bundle.getString("setTitleText"));
         alert.setHeaderText(null);
-        alert.setContentText("You have not set up your contact information yet. Would you like to add it now?");
+        alert.setContentText(bundle.getString("setContentText"));
 
-        ButtonType yesButton = new ButtonType("Yes");
-        ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType yesButton = new ButtonType(bundle.getString("YesButton"));
+        ButtonType noButton = new ButtonType(bundle.getString("NoButton"), ButtonBar.ButtonData.CANCEL_CLOSE);
 
         alert.getButtonTypes().setAll(yesButton, noButton);
 
@@ -122,12 +126,12 @@ public class UserSettingsController extends BasicController {
             // User chose not to add contact information now
             // Update the UI accordingly
             Platform.runLater(() -> {
-                nameLabel.setText("No name available");
-                emailLabel.setText("No email available");
-                phoneNumberLabel.setText("No phone number available");
-                cityLabel.setText("No city available");
-                postalCodeLabel.setText("No postal code available");
-                addressLabel.setText("No address available");
+                nameLabel.setText(bundle.getString("No_name_available"));
+                emailLabel.setText(bundle.getString("No_email_available"));
+                phoneNumberLabel.setText(bundle.getString("No_phone_number_available"));
+                cityLabel.setText(bundle.getString("No_city_available"));
+                postalCodeLabel.setText(bundle.getString("No_postal_code_available"));
+                addressLabel.setText(bundle.getString("No_address_available"));
             });
         }
     }
@@ -138,7 +142,7 @@ public class UserSettingsController extends BasicController {
             Parent root = loader.load();
 
             Stage stage = new Stage();
-            stage.setTitle("Add Contact Information");
+            stage.setTitle(bundle.getString("Add_Contact_Information"));
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
@@ -148,7 +152,7 @@ public class UserSettingsController extends BasicController {
 
         } catch (IOException e) {
             e.printStackTrace();
-            showError("An error occurred while opening the contact information dialog.");
+            showError(bundle.getString("Contact_info_error"));
         }
     }
 
@@ -165,7 +169,7 @@ public class UserSettingsController extends BasicController {
         task.setOnFailed(event -> {
             Throwable e = task.getException();
             e.printStackTrace();
-            showError("An error occurred while retrieving delivery addresses.");
+            showError(bundle.getString("Delivery_address_fetch_error"));
         });
 
         Thread thread = new Thread(task);
@@ -180,7 +184,7 @@ public class UserSettingsController extends BasicController {
 
             if (deliveryAddressesList.isEmpty()) {
                 // If there are no addresses, add the placeholder Label
-                Label placeholderLabel = new Label("No saved delivery addresses");
+                Label placeholderLabel = new Label(bundle.getString("No_saved_delivery_addresses"));
                 placeholderLabel.setStyle("-fx-font-style: italic; -fx-text-fill: gray;");
                 placeholderLabel.setPadding(new Insets(10));
                 deliveryAddressContainer.getChildren().add(placeholderLabel);
@@ -209,7 +213,7 @@ public class UserSettingsController extends BasicController {
 
         // VBox for Address labels and values
         VBox addressVBox = new VBox(2);
-        Label addressLabel = new Label("Address:");
+        Label addressLabel = new Label(bundle.getString("Address"));
         addressLabel.setStyle("-fx-font-weight: bold;");
         Label addressValue = new Label(address.getStreetAddress());
 
@@ -245,21 +249,21 @@ public class UserSettingsController extends BasicController {
             ImageView defaultIndicator = new ImageView(new Image(getClass().getResourceAsStream("/images/star_icon.png")));
             defaultIndicator.setFitWidth(20);
             defaultIndicator.setFitHeight(20);
-            Tooltip.install(defaultIndicator, new Tooltip("Default Address"));
+            Tooltip.install(defaultIndicator, new Tooltip(bundle.getString("Default_Address")));
             defaultNode = defaultIndicator;
         } else {
             // Set as Default Button
             Button defaultButton = new Button();
-            defaultButton.setText("Set as Default");
+            defaultButton.setText(bundle.getString("SetAsDefault"));
             defaultButton.setOnAction(e -> handleSetDefaultAddress(address));
             defaultButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: white; -fx-border-radius: 5; -fx-background-radius: 5;");
-            Tooltip.install(defaultButton, new Tooltip("Set as Default Address"));
+            Tooltip.install(defaultButton, new Tooltip(bundle.getString("Set_Default_Address")));
             defaultNode = defaultButton;
         }
 
         // Add tooltips
-        Tooltip.install(editButton, new Tooltip("Edit Address"));
-        Tooltip.install(deleteButton, new Tooltip("Delete Address"));
+        Tooltip.install(editButton, new Tooltip(bundle.getString("EditAddress")));
+        Tooltip.install(deleteButton, new Tooltip(bundle.getString("DeleteAddress")));
 
         // Add buttons to buttonHBox
         buttonHBox.getChildren().addAll(editButton, deleteButton, defaultNode);
@@ -270,7 +274,7 @@ public class UserSettingsController extends BasicController {
         topHBox.getChildren().addAll(addressVBox, buttonHBox);
 
         // Info Label and Value
-        Label infoLabel = new Label("Info:");
+        Label infoLabel = new Label(bundle.getString("Info"));
         infoLabel.setStyle("-fx-font-weight: bold;");
         String instructions = address.getInfo() != null ? address.getInfo() : "";
         Label infoValue = new Label(instructions);
@@ -304,7 +308,7 @@ public class UserSettingsController extends BasicController {
             dialogController.setUserId(userId);
 
             Stage stage = new Stage();
-            stage.setTitle("Add New Address");
+            stage.setTitle(bundle.getString("Add_New_Address"));
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
@@ -313,7 +317,7 @@ public class UserSettingsController extends BasicController {
             fetchDeliveryAddresses();
         } catch (IOException e) {
             e.printStackTrace();
-            showError("An error occurred while opening the add address dialog.");
+            showError(bundle.getString("Address_dialog_error"));
         }
     }
 
@@ -327,7 +331,7 @@ public class UserSettingsController extends BasicController {
             dialogController.setAddress(address);
 
             Stage stage = new Stage();
-            stage.setTitle("Edit Address");
+            stage.setTitle(bundle.getString("EditAddress"));
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
@@ -335,16 +339,16 @@ public class UserSettingsController extends BasicController {
             fetchDeliveryAddresses();
         } catch (IOException e) {
             e.printStackTrace();
-            showError("An error occurred while opening the edit address dialog.");
+            showError(bundle.getString("Edit_address_dialog_error"));
         }
     }
 
 
     private void handleRemoveAddress(DeliveryAddress address) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Delete Address");
+        alert.setTitle(bundle.getString("DeleteAddress"));
         alert.setHeaderText(null);
-        alert.setContentText("Are you sure you want to delete this address?");
+        alert.setContentText(bundle.getString("Delete_confirmation_message"));
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
@@ -360,9 +364,9 @@ public class UserSettingsController extends BasicController {
     @FXML
     private void handleSetDefaultAddress(DeliveryAddress address) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Set as Default Address");
+        alert.setTitle(bundle.getString("Set_Default_Address"));
         alert.setHeaderText(null);
-        alert.setContentText("Are you sure you want to set this address as your default?");
+        alert.setContentText(bundle.getString("Set_address_confirmation_message"));
         Optional<ButtonType> result = alert.showAndWait();
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
@@ -377,7 +381,7 @@ public class UserSettingsController extends BasicController {
             task.setOnFailed(e -> {
                 Throwable exception = task.getException();
                 exception.printStackTrace();
-                showError("An error occurred while setting the default address.");
+                showError(bundle.getString("Set_default_address_error"));
             });
 
             Thread thread = new Thread(task);
@@ -420,7 +424,7 @@ public class UserSettingsController extends BasicController {
             Throwable exception = task.getException();
             exception.printStackTrace();
             Platform.runLater(() -> {
-                showError("Failed to delete address.");
+                showError(bundle.getString("FailToDelete"));
             });
         });
 
@@ -445,7 +449,7 @@ public class UserSettingsController extends BasicController {
             Parent root = loader.load();
 
             Stage stage = new Stage();
-            stage.setTitle("Change Password");
+            stage.setTitle(bundle.getString("ChangePassword"));
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
@@ -454,7 +458,7 @@ public class UserSettingsController extends BasicController {
 
         } catch (IOException e) {
             e.printStackTrace();
-            showError("An error occurred while opening the change password dialog.");
+            showError(bundle.getString("Open_changePW_dialog"));
         }
     }
 
