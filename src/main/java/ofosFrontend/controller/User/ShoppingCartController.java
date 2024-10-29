@@ -269,7 +269,8 @@ public class ShoppingCartController extends BasicController {
     public void displayEmptyCartMessage() {
         cartItemContainer.getChildren().clear();
         cartCheckout.setVisible(false);
-        Label emptyItem = new Label("Your cart is empty");
+        ResourceBundle bundle = LocalizationManager.getBundle();
+        Label emptyItem = new Label(bundle.getString("emptyCart"));
         emptyItem.setId("emptyMessage");
         cartItemContainer.getChildren().add(emptyItem);
     }
