@@ -83,7 +83,7 @@
                <Button fx:id="changePassword" text="%Change_Password" onAction="#handleChangePassword"/>
             </VBox>
             <!-- Delivery Addresses VBox -->
-            <VBox spacing="10.0" HBox.hgrow="ALWAYS">
+            <VBox spacing="10.0" HBox.hgrow="ALWAYS" style="-fx-background-color: #FF335B" >
                <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="%Delivery_Addresses"/>
                <ScrollPane fitToWidth="true" style="-fx-background-color: #c4e6fb;">
                   <content>

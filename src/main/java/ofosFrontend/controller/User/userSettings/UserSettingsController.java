@@ -203,7 +203,7 @@ public class UserSettingsController extends BasicController {
     private Node createAddressNode(DeliveryAddress address) {
         // Root VBox for each address node
         VBox rootVBox = new VBox(5);
-        rootVBox.setPadding(new Insets(10));
+        // rootVBox.setPadding(new Insets(10));
         rootVBox.setStyle("-fx-background-color: white; -fx-border-color: lightgray; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10;");
         rootVBox.setPrefWidth(250);
 
@@ -216,6 +216,7 @@ public class UserSettingsController extends BasicController {
         Label addressLabel = new Label(bundle.getString("Address"));
         addressLabel.setStyle("-fx-font-weight: bold;");
         Label addressValue = new Label(address.getStreetAddress());
+        addressValue.setWrapText(true);
 
         Label cityPostalLabel = new Label(address.getPostalCode() + ", " + address.getCity());
         addressVBox.getChildren().addAll(addressLabel, addressValue, cityPostalLabel);
