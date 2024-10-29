@@ -5,6 +5,9 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import ofosFrontend.model.DeliveryAddress;
 import ofosFrontend.service.DeliveryAddressService;
+import ofosFrontend.session.LocalizationManager;
+
+import java.util.ResourceBundle;
 
 
 public class AddAddressDialogController {
@@ -14,6 +17,7 @@ public class AddAddressDialogController {
     @FXML private TextField postalCodeField;
     @FXML private TextArea instructionsArea;
 
+    ResourceBundle bundle = LocalizationManager.getBundle();
     private final DeliveryAddressService deliveryAddressService = new DeliveryAddressService();
 
     private int userId;
@@ -30,7 +34,7 @@ public class AddAddressDialogController {
         String instructions = instructionsArea.getText();
 
         if (streetAddress.isEmpty() || city.isEmpty() || postalCode.isEmpty()) {
-            showError("Please fill in all required fields.");
+            showError(bundle.getString("Fill_all_fields"));
             return;
         }
 
@@ -49,7 +53,7 @@ public class AddAddressDialogController {
             Stage stage = (Stage) streetAddressField.getScene().getWindow();
             stage.close();
         }, () -> {
-            showError("Failed to save address.");
+            showError(bundle.getString("Fail_to_save_address"));
         });
     }
 
@@ -62,7 +66,7 @@ public class AddAddressDialogController {
 
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Add Address");
+        alert.setTitle(bundle.getString("Add_New_Address"));
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();

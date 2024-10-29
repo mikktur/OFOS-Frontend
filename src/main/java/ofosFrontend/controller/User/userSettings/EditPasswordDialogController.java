@@ -9,12 +9,16 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import ofosFrontend.model.PasswordChangeDTO;
 import ofosFrontend.service.UserService;
+import ofosFrontend.session.LocalizationManager;
+
+import java.util.ResourceBundle;
 
 public class EditPasswordDialogController {
     public TextField oldPasswordField;
     public TextField newPasswordField;
 
     private final UserService userService = new UserService();
+    ResourceBundle bundle = LocalizationManager.getBundle();
 
     @FXML
     private void handleCancel() {
@@ -38,7 +42,7 @@ public class EditPasswordDialogController {
         task.setOnFailed(event -> {
             Throwable exception = task.getException();
             exception.printStackTrace();
-            Platform.runLater(() -> showError("An error occurred while updating the password."));
+            Platform.runLater(() -> showError(bundle.getString("Update_password_error")));
         });
 
         Thread thread = new Thread(task);
@@ -49,7 +53,7 @@ public class EditPasswordDialogController {
 
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Change password");
+        alert.setTitle(bundle.getString("ChangePassword"));
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();

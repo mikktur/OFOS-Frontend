@@ -7,6 +7,9 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import ofosFrontend.model.DeliveryAddress;
 import ofosFrontend.service.DeliveryAddressService;
+import ofosFrontend.session.LocalizationManager;
+
+import java.util.ResourceBundle;
 
 public class EditAddressDialogController {
 
@@ -15,6 +18,7 @@ public class EditAddressDialogController {
     @FXML private TextField postalCodeField;
     @FXML private TextArea instructionsArea;
 
+    ResourceBundle bundle = LocalizationManager.getBundle();
     private DeliveryAddress address;
     private DeliveryAddressService deliveryAddressService = new DeliveryAddressService();
 
@@ -34,7 +38,7 @@ public class EditAddressDialogController {
         String instructions = instructionsArea.getText();
 
         if (streetAddress.isEmpty() || city.isEmpty() || postalCode.isEmpty()) {
-            showError("Please fill in all required fields.");
+            showError(bundle.getString("Fill_all_fields"));
             return;
         }
 
@@ -60,7 +64,7 @@ public class EditAddressDialogController {
         task.setOnFailed(event -> {
             Throwable exception = task.getException();
             exception.printStackTrace();
-            Platform.runLater(() -> showError("An error occurred while updating the address."));
+            Platform.runLater(() -> showError(bundle.getString("Update_address_error")));
         });
 
         Thread thread = new Thread(task);
@@ -77,7 +81,7 @@ public class EditAddressDialogController {
 
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Edit Address");
+        alert.setTitle(bundle.getString("EditAddress"));
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();

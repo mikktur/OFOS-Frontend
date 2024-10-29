@@ -7,6 +7,9 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import ofosFrontend.model.ContactInfo;
 import ofosFrontend.service.ContactInfoService;
+import ofosFrontend.session.LocalizationManager;
+
+import java.util.ResourceBundle;
 
 
 public class ContactInfoDialogController {
@@ -18,6 +21,7 @@ public class ContactInfoDialogController {
     @FXML private TextField streetAddressField;
     @FXML private TextField cityField;
     @FXML private TextField postalCodeField;
+    ResourceBundle bundle = LocalizationManager.getBundle();
 
     private ContactInfoService contactInfoService = new ContactInfoService();
 
@@ -33,7 +37,7 @@ public class ContactInfoDialogController {
 
         if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || phoneNumber.isEmpty()
                 || streetAddress.isEmpty() || city.isEmpty() || postalCode.isEmpty()) {
-            showError("Please fill in all required fields.");
+            showError(bundle.getString("Fill_all_fields"));
             return;
         }
 
@@ -62,7 +66,7 @@ public class ContactInfoDialogController {
         task.setOnFailed(event -> {
             Throwable exception = task.getException();
             exception.printStackTrace();
-            Platform.runLater(() -> showError("An error occurred while saving contact information."));
+            Platform.runLater(() -> showError(bundle.getString("Contact_info_save_fail")));
         });
 
         Thread thread = new Thread(task);
@@ -79,7 +83,7 @@ public class ContactInfoDialogController {
 
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Contact Information");
+        alert.setTitle(bundle.getString("Contact_Information"));
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
