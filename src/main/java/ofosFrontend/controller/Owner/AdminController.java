@@ -11,6 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import ofosFrontend.AppManager;
+import ofosFrontend.model.Restaurant;
 import ofosFrontend.session.SessionManager;
 
 import java.io.IOException;
@@ -22,12 +23,13 @@ public class AdminController {
     private StackPane ownerCenterPane;
     @FXML
     private BorderPane ownerRoot;
-
+    private AdminViewFactory adminViewFactory;
     public AdminController() {
     }
 
     @FXML
     public void initialize() {
+        adminViewFactory = new AdminViewFactory(this);
         loadDefaultContent();
         setupControllers();
 
@@ -44,20 +46,18 @@ public class AdminController {
     }
 
     public void loadDefaultContent() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/Owner/adminMainUI.fxml"));
-            Node content = loader.load();
-            AdminMainMenuController adminMenuController = loader.getController();
-            if (adminMenuController != null) {
-                adminMenuController.setMainController(this);
-            }
-
+            Parent content = adminViewFactory.createAdminHomeView();
             setCenterContent(content);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
     }
 
+    public void loadRestaurantContent(Restaurant restaurant) {
+        Parent content = adminViewFactory.createAdminRestaurantView(restaurant);
+        setCenterContent(content);
+    }
+    public void reloadPage(){
+        adminViewFactory.reloadPage();
+    }
     public void setupControllers() {
         try {
             AdminNavController navController = (AdminNavController) adminNavBar.getProperties().get("controller");

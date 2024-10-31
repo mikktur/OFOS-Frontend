@@ -39,7 +39,7 @@ public class AdminMainMenuController extends AdminBasicController {
     }
     public AdminMainMenuController() {
     }
-
+    //TODO default to first restaurant and remember last selected restaurant on reload.
     public void loadRestaurants() {
         try {
 
@@ -161,16 +161,8 @@ public class AdminMainMenuController extends AdminBasicController {
 
     @FXML
     public void goToEditMenu(ActionEvent actionEvent) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/Owner/adminFoodMenuUI.fxml"));
+            mainController.loadRestaurantContent(currentSelectedRestaurant);
 
-            Node root = loader.load();
-            AdminMenuController adminMenuController = loader.getController();
-            adminMenuController.setRestaurantID(currentSelectedRestaurant.getId(), currentSelectedRestaurant.getRestaurantName());
-            mainController.setCenterContent(root);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
 }
