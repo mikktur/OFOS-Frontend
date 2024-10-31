@@ -22,7 +22,7 @@
             <Insets bottom="10.0" left="20.0" right="20.0" top="5.0" />
          </VBox.margin>
       </VBox>
-      <Button fx:id="addFoodItem" mnemonicParsing="false" onAction="#addItem" text="Add product" VBox.vgrow="ALWAYS">
+      <Button fx:id="addFoodItem" mnemonicParsing="false" onAction="#addItem" text="%AddButton" VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets bottom="20.0" />
          </VBox.margin>

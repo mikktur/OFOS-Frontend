@@ -16,10 +16,13 @@ import javafx.stage.Stage;
 import ofosFrontend.model.Product;
 import ofosFrontend.model.Restaurant;
 import ofosFrontend.service.ProductService;
+import ofosFrontend.session.LocalizationManager;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.ResourceBundle;
+
 
 public class AdminMenuController  extends AdminBasicController {
 
@@ -51,11 +54,12 @@ public class AdminMenuController  extends AdminBasicController {
     private void loadProducts() {
         try {
             productListVBox.getChildren().clear();
+            ResourceBundle bundle = LocalizationManager.getBundle();
 
             List<Product> products = productService.getProductsByRID(restaurantID);
 
             for (Product product : products) {
-                HBox productBox = createProductEntry(product);
+                HBox productBox = createProductEntry(product, bundle);
                 productListVBox.getChildren().add(productBox);
             }
         } catch (IOException e) {
@@ -63,28 +67,40 @@ public class AdminMenuController  extends AdminBasicController {
         }
     }
 
-    private HBox createProductEntry(Product product) {
+    private HBox createProductEntry(Product product, ResourceBundle bundle) {
         HBox productBox = new HBox();
         productBox.setSpacing(10.0);
         productBox.setStyle("-fx-padding: 5px; -fx-background-color: #e8f4fb; -fx-border-color: #000;");
 
-        Text productNameText = new Text("Name: " + product.getProductName());
-        Text productDescriptionText = new Text("Description: " + product.getProductDesc());
-        Text productPriceText = new Text("Price: $" + String.format("%.2f", product.getProductPrice()));
-        Text productCategoryText = new Text("Category: " + product.getCategory());
-        Text productStatusText = new Text("Active: " + (product.isActive() ? "Yes" : "No"));
+        String nameLabelText = bundle.getString("ProductNameText") + ": " + product.getProductName();
+        String descriptionLabelText = bundle.getString("ProductDescriptionText") + ": " + product.getProductDesc();
+        String priceLabelText = bundle.getString("ProductPriceText") + ": $" + String.format("%.2f", product.getProductPrice());
+        String categoryLabelText = bundle.getString("ProductCategoryText") + ": " + product.getCategory();
+        String statusLabelText = bundle.getString("ProductStatusText") + ": " + (product.isActive() ? "Yes" : "No");
+        String statusYes = bundle.getString("StatusYes");
+        String statusNo = bundle.getString("StatusNo");
+        String editButtonText = bundle.getString("EditButton");
+        String deleteButtonText = bundle.getString("DeleteButton");
+        String deleteDialogTitle = bundle.getString("DeleteDialogTitle");
+        String deleteDialogText = bundle.getString("DeleteDialogText");
+
+        Text productNameText = new Text(nameLabelText + product.getProductName());
+        Text productDescriptionText = new Text(descriptionLabelText + product.getProductDesc());
+        Text productPriceText = new Text(priceLabelText + String.format("%.2f", product.getProductPrice()));
+        Text productCategoryText = new Text(categoryLabelText + product.getCategory());
+        Text productStatusText = new Text(statusLabelText + (product.isActive() ? statusYes : statusNo));
 
         productBox.getChildren().addAll(productNameText, productDescriptionText, productPriceText, productCategoryText, productStatusText);
 
-        Button editButton = new Button("Edit");
+        Button editButton = new Button(editButtonText);
         editButton.setOnAction(event -> openEditDialog(product));
         productBox.getChildren().add(editButton);
 
-        Button deleteButton = new Button("Delete");
+        Button deleteButton = new Button(deleteButtonText);
         deleteButton.setOnAction(event -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Delete Product");
-            alert.setHeaderText("Are you sure you want to delete the product?");
+            alert.setTitle(deleteDialogTitle);
+            alert.setHeaderText(deleteDialogText);
             alert.setContentText(product.getProductName());
 
             Optional<ButtonType> result = alert.showAndWait();
