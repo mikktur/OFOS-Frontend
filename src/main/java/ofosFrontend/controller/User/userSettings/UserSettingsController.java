@@ -306,6 +306,7 @@ public class UserSettingsController extends BasicController {
     private void handleAddAddress() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/addAddressDialog.fxml"));
+            loader.setResources(LocalizationManager.getBundle());
             Parent root = loader.load();
 
             AddAddressDialogController dialogController = loader.getController();
@@ -329,6 +330,7 @@ public class UserSettingsController extends BasicController {
     private void handleEditAddress(DeliveryAddress address) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/Owner/editAddressDialog.fxml"));
+            loader.setResources(LocalizationManager.getBundle());
             Parent root = loader.load();
 
             EditAddressDialogController dialogController = loader.getController();
@@ -450,6 +452,7 @@ public class UserSettingsController extends BasicController {
     private void openEditPasswordDialog() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/editPasswordDialog.fxml"));
+            loader.setResources(LocalizationManager.getBundle());
             Parent root = loader.load();
 
             Stage stage = new Stage();

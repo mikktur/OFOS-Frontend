@@ -13,22 +13,22 @@
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
 
-    <Label text="Add New Delivery Address" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+    <Label text="%Add_new_delivery_address" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
 
-    <Label text="Street Address:" />
+    <Label text="%Address" />
     <TextField fx:id="streetAddressField" />
 
-    <Label text="City:" />
+    <Label text="%City" />
     <TextField fx:id="cityField" />
 
-    <Label text="Postal Code:" />
+    <Label text="%Postal_code" />
     <TextField fx:id="postalCodeField" />
 
-    <Label text="Instructions:" />
+    <Label text="%Info" />
     <TextArea fx:id="instructionsArea" prefRowCount="3" wrapText="true" />
 
     <HBox spacing="10" alignment="CENTER_RIGHT">
-        <Button text="Cancel" onAction="#handleCancel" />
-        <Button text="Save" onAction="#handleSave" />
+        <Button text="%Cancel" onAction="#handleCancel" />
+        <Button text="%Save" onAction="#handleSave" />
     </HBox>
 </VBox>
