@@ -52,7 +52,7 @@
                         <Insets/>
                      </HBox.margin>
                   </Text>
-                  <Label prefHeight="17.0" prefWidth="82.0" text="%restaurantPhone"/>
+                  <Label prefHeight="17.0" prefWidth="100.0" text="%restaurantPhone"/>
                   <Text fx:id="restaurantPhone" strokeType="OUTSIDE" strokeWidth="0.0" text="000000000"
                         wrappingWidth="95.71875">
                      <HBox.margin>

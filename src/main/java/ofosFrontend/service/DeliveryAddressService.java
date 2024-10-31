@@ -20,6 +20,7 @@ public class DeliveryAddressService {
 
     public void saveDeliveryAddress(DeliveryAddress address, Runnable onSuccess, Runnable onFailure) {
         try {
+            System.out.println("Saving delivery address...");
             String url = "http://10.120.32.94:8000/api/deliveryaddress/save";
 
             ObjectMapper objectMapper = new ObjectMapper();

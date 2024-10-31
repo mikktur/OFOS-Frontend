@@ -55,7 +55,7 @@
                                 </image>
                             </ImageView>
                             <Text layoutX="21.0" layoutY="146.0" strokeType="OUTSIDE"
-                                  strokeWidth="0.0" text="Burgers">
+                                  strokeWidth="0.0" text="%Burgers">
                                 <font>
                                     <Font name="System Bold" size="18.0"/>
                                 </font>
@@ -70,7 +70,7 @@
                                 </image>
                             </ImageView>
                             <Text layoutX="55.0" layoutY="146.0" strokeType="OUTSIDE"
-                                  strokeWidth="0.0" text="Pizza">
+                                  strokeWidth="0.0" text="%Pizza">
                                 <font>
                                     <Font name="System Bold" size="18.0"/>
                                 </font>
@@ -83,7 +83,7 @@
                                 <Image url="@../../images/noodles.png"/>
                             </ImageView>
                             <Text layoutX="43.0" layoutY="146.0" strokeType="OUTSIDE"
-                                  strokeWidth="0.0" text="Noodles">
+                                  strokeWidth="0.0" text="%Noodles">
                                 <font>
                                     <Font name="System Bold" size="18.0"/>
                                 </font>

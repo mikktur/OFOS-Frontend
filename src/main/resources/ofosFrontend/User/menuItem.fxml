@@ -39,7 +39,7 @@
       </VBox>
       <HBox alignment="CENTER" prefHeight="42.0" prefWidth="249.0">
          <children>
-            <Button fx:id="addToCart" mnemonicParsing="false" prefHeight="25.0" prefWidth="118.0" text="Lisää ostoskoriin" />
+            <Button fx:id="addToCart" mnemonicParsing="false" prefHeight="25.0" prefWidth="118.0" text="%Add_to_cart" />
          </children>
       </HBox>
    </children>

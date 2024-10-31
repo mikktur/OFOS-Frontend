@@ -16,6 +16,7 @@ import ofosFrontend.model.Product;
 import ofosFrontend.model.Restaurant;
 import ofosFrontend.model.ShoppingCart;
 import ofosFrontend.service.ProductService;
+import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
 
 import java.io.IOException;
@@ -56,6 +57,7 @@ public class RestaurantMenuController extends BasicController{
 
             for(Product product : products) {
                 FXMLLoader cardLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/menuItem.fxml"));
+                cardLoader.setResources(LocalizationManager.getBundle());
                 VBox card = cardLoader.load();
                 VBox cText = (VBox) card.lookup("#itemInfo");
                 Button addToCartButton = (Button) card.lookup("#addToCart");

@@ -15,6 +15,7 @@ import ofosFrontend.controller.User.userSettings.AddAddressDialogController;
 import ofosFrontend.model.*;
 import ofosFrontend.service.DeliveryAddressService;
 import ofosFrontend.service.OrderService;
+import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
 import javafx.scene.control.Label;
 import javafx.scene.control.Alert;
@@ -22,6 +23,7 @@ import javafx.scene.control.Alert;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import ofosFrontend.service.CheckoutService;
 
@@ -37,8 +39,11 @@ public class CheckoutController  extends BasicController {
     ChoiceBox<String> paymentMethod;
     @FXML
     Button orderBtn;
+    @FXML
+    Button addAddressBtn;
     private int rid;
 
+    ResourceBundle bundle = LocalizationManager.getBundle();
     CheckoutService checkoutService = new CheckoutService();
     private List<DeliveryAddress> deliveryAddressesList = new ArrayList<>();
     private DeliveryAddress selectedAddress;
@@ -75,8 +80,38 @@ public class CheckoutController  extends BasicController {
             }
         });
 
-        // Set up the action for the order button
-        orderBtn.setOnAction(event -> openConfirmationDialog());
+        // Set up the action for the order and add address buttons
+
+            orderBtn.setOnAction(event -> openConfirmationDialog());
+        addAddressBtn.setOnAction(event -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/addAddressDialog.fxml"));
+                loader.setResources(LocalizationManager.getBundle());
+                Parent root = loader.load();
+
+                AddAddressDialogController dialogController = loader.getController();
+                dialogController.setUserId(userId);
+
+                Stage stage = new Stage();
+                stage.setTitle(bundle.getString("Add_new_delivery_address"));
+                stage.setScene(new Scene(root));
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.showAndWait();
+
+
+                if (dialogController.validateInput()) {
+                    getDeliveryAddresses(); // Refresh the list after saving
+                } else {
+                    showError(bundle.getString("Invalid_address"));
+                }
+
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                showError(bundle.getString("Address_dialog_error"));
+            }
+        });
 
     }
 
@@ -88,72 +123,76 @@ public class CheckoutController  extends BasicController {
     }
     private void openConfirmationDialog() {
         // Create the confirmation dialog
-        Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle("Confirm Order");
+        if (selectedAddress == null) {
+            showError(bundle.getString("No_address_selected"));
+        } else {
+            Dialog<ButtonType> dialog = new Dialog<>();
+            dialog.setTitle(bundle.getString("Order_confirmation"));
 
-        // Create the layout for the dialog
-        VBox dialogContent = new VBox();
-        dialogContent.setSpacing(10);
+            // Create the layout for the dialog
+            VBox dialogContent = new VBox();
+            dialogContent.setSpacing(10);
 
-        SessionManager session = SessionManager.getInstance();
-        Restaurant restaurant = session.getCart(rid).getRestaurant();
-        Label restaurantLabel = new Label(restaurant.getRestaurantName());
-        restaurantLabel.setStyle("-fx-font-weight: bold;");
-        restaurantLabel.setStyle("-fx-font-size: 20px;");
-        dialogContent.getChildren().add(restaurantLabel);
+            SessionManager session = SessionManager.getInstance();
+            Restaurant restaurant = session.getCart(rid).getRestaurant();
+            Label restaurantLabel = new Label(restaurant.getRestaurantName());
+            restaurantLabel.setStyle("-fx-font-weight: bold;");
+            restaurantLabel.setStyle("-fx-font-size: 20px;");
+            dialogContent.getChildren().add(restaurantLabel);
 
-        // Display cart items
-        Label cartItemsLabel = new Label("Cart Items:");
-        cartItemsLabel.setStyle("-fx-font-weight: bold;");
-        VBox cartItems = new VBox();
+            // Display cart items
+            Label cartItemsLabel = new Label(bundle.getString("Items"));
+            cartItemsLabel.setStyle("-fx-font-weight: bold;");
+            VBox cartItems = new VBox();
 
-        for (CartItem item : SessionManager.getInstance().getCart(rid).getItems()) {
-            HBox itemBox = new HBox();
-            itemBox.setSpacing(10);
-            Label name = new Label("• " + item.getProduct().getProductName());
-            Label quantity = new Label("Quantity: " + item.getQuantity());
-            Label price = new Label("Price: " + item.getTotalPrice());
-            itemBox.getChildren().addAll(name, quantity, price);
-            cartItems.getChildren().add(itemBox);
-        }
-
-        // Display delivery address
-        Label deliveryLabel = new Label("Delivery Address:");
-        Label selectedAddressLabel = new Label(selectedAddress.getStreetAddress() + ", "
-                + selectedAddress.getPostalCode()
-                + " " + selectedAddress.getCity()
-                + " (" + selectedAddress.getInfo() + ")");
-        deliveryLabel.setStyle("-fx-font-weight: bold;");
-
-        // Display selected payment method
-        Label paymentLabel = new Label("Payment Method:");
-        paymentLabel.setStyle("-fx-font-weight: bold;");
-        Label selectedPaymentLabel = new Label(selectedPaymentMethod);
-
-        // Display subtotal
-        Label totalLabel = new Label("Total: " + subTotal.getText());
-        totalLabel.setStyle("-fx-font-weight: bold;");
-
-        // Add all the elements to the dialog layout
-        dialogContent.getChildren().addAll(cartItemsLabel, cartItems, deliveryLabel,
-                selectedAddressLabel, paymentLabel, selectedPaymentLabel, totalLabel);
-        dialog.getDialogPane().setContent(dialogContent);
-
-        // Add confirmation and cancel buttons
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-
-
-        // Show the dialog and wait for response
-        dialog.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                // Handle order confirmation
-                confirmOrder();
-                System.out.println("Order confirmed");
-            } else {
-                // Handle cancel
-                System.out.println("Order cancelled");
+            for (CartItem item : SessionManager.getInstance().getCart(rid).getItems()) {
+                HBox itemBox = new HBox();
+                itemBox.setSpacing(10);
+                Label name = new Label("• " + item.getProduct().getProductName());
+                Label quantity = new Label(bundle.getString("Quantity") + item.getQuantity());
+                Label price = new Label(bundle.getString("Price") + item.getTotalPrice() + "€");
+                itemBox.getChildren().addAll(name, quantity, price);
+                cartItems.getChildren().add(itemBox);
             }
-        });
+
+            // Display delivery address
+            Label deliveryLabel = new Label(bundle.getString("Delivery_Address"));
+            Label selectedAddressLabel = new Label(selectedAddress.getStreetAddress() + ", "
+                    + selectedAddress.getPostalCode()
+                    + " " + selectedAddress.getCity()
+                    + " (" + selectedAddress.getInfo() + ")");
+            deliveryLabel.setStyle("-fx-font-weight: bold;");
+
+            // Display selected payment method
+            Label paymentLabel = new Label(bundle.getString("paymentMethod"));
+            paymentLabel.setStyle("-fx-font-weight: bold;");
+            Label selectedPaymentLabel = new Label(selectedPaymentMethod);
+
+            // Display subtotal
+            Label totalLabel = new Label(bundle.getString("Total") + subTotal.getText());
+            totalLabel.setStyle("-fx-font-weight: bold;");
+
+            // Add all the elements to the dialog layout
+            dialogContent.getChildren().addAll(cartItemsLabel, cartItems, deliveryLabel,
+                    selectedAddressLabel, paymentLabel, selectedPaymentLabel, totalLabel);
+            dialog.getDialogPane().setContent(dialogContent);
+
+            // Add confirmation and cancel buttons
+            dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+
+            // Show the dialog and wait for response
+            dialog.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.OK) {
+                    // Handle order confirmation
+                    confirmOrder();
+                    System.out.println("Order confirmed");
+                } else {
+                    // Handle cancel
+                    System.out.println("Order cancelled");
+                }
+            });
+        }
     }
 
 
@@ -200,48 +239,24 @@ public class CheckoutController  extends BasicController {
                                 address.getPostalCode() + " " +
                                 address.getCity() + " (" + address.getInfo() + ")";
                         deliveryAddresses.getItems().add(formattedAddress);
+                        orderBtn.setDisable(false);
                     }
 
                     deliveryAddresses.getSelectionModel().selectFirst();
                     selectedAddress = deliveryAddressesList.get(0);
                     System.out.println("Delivery addresses fetched successfully.");
                 } else {
-                    // Open Add Address Dialog when no addresses are available
-                    try {
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/addAddressDialog.fxml"));
-                        Parent root = loader.load();
-
-                        AddAddressDialogController dialogController = loader.getController();
-                        dialogController.setUserId(userId);
-
-                        Stage stage = new Stage();
-                        stage.setTitle("Add New Address");
-                        stage.setScene(new Scene(root));
-                        stage.initModality(Modality.APPLICATION_MODAL);
-                        stage.showAndWait();
-
-                        DeliveryAddress newAddress = dialogController.getNewAddress();
-
-                        // Validate input before saving
-                        if (dialogController.validateInput()) {
-                            deliveryAddressService.saveDeliveryAddress(newAddress, () -> {
-                                getDeliveryAddresses();
-                            }, () -> {
-                                showError("Failed to save address.");
-                            });
-                        } else {
-                            showError("Invalid address input. Please fill all fields.");
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        showError("An error occurred while opening the add address dialog.");
-                    }
+                    // Do not open the dialog automatically
+                    // Instead, prompt the user or disable the order button
+                    showError(bundle.getString("No_saved_delivery_addresses"));
+                    // Optionally, disable the order button
+                    orderBtn.setDisable(true);
                 }
             });
         });
 
         task.setOnFailed(event -> {
-            System.out.println("Failed to fetch delivery addresses.");
+            System.out.println(bundle.getString("Delivery_address_fetch_error"));
         });
 
         // Execute the task in a new thread
@@ -249,6 +264,7 @@ public class CheckoutController  extends BasicController {
         thread.setDaemon(true);
         thread.start();
     }
+
 
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -260,7 +276,9 @@ public class CheckoutController  extends BasicController {
 
 
     private void populatePaymentMethods() {
-        paymentMethod.getItems().addAll("OFOS Credits", "Card", "Cash");
+        paymentMethod.getItems().addAll(bundle.getString("OFOS_Credits"));
+        paymentMethod.getItems().addAll(bundle.getString("Card"));
+        paymentMethod.getItems().addAll(bundle.getString("Cash"));
         paymentMethod.getSelectionModel().selectFirst();
         selectedPaymentMethod = paymentMethod.getItems().get(0);
     }
@@ -277,9 +295,9 @@ public class CheckoutController  extends BasicController {
             Platform.runLater(() -> {
                 SessionManager.getInstance().removeCart(rid);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Order Confirmed");
+                alert.setTitle(bundle.getString("Order_confirmation"));
                 alert.setHeaderText(null);
-                alert.setContentText("Your order has been successfully placed!");
+                alert.setContentText(bundle.getString("Order_succesful"));
                 alert.showAndWait();
                 goToMain();
 
@@ -291,9 +309,9 @@ public class CheckoutController  extends BasicController {
             exception.printStackTrace();
             Platform.runLater(() -> {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Order Failed");
+                alert.setTitle(bundle.getString("Order_failed"));
                 alert.setHeaderText(null);
-                alert.setContentText("Failed to place the order.");
+                alert.setContentText(bundle.getString("Order_failed."));
                 alert.showAndWait();
             });
         });
