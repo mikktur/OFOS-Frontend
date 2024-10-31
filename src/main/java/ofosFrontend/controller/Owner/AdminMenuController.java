@@ -115,17 +115,22 @@ public class AdminMenuController  extends AdminBasicController {
 
     @FXML
     private void addItem() {
-        Dialog<Product> dialog = new Dialog<>();
-        dialog.setTitle("Add New Product");
-        dialog.setHeaderText("Enter the product details");
+        ResourceBundle bundle = LocalizationManager.getBundle();
+        String dialogTitle = bundle.getString("AddItemDialogTitle");
+        String dialogHeader = bundle.getString("AddItemDialogHeader");
+        String productButton = bundle.getString("AddProductButton");
 
-        ButtonType addButtonType = new ButtonType("Add Product", ButtonBar.ButtonData.OK_DONE);
+        Dialog<Product> dialog = new Dialog<>();
+        dialog.setTitle(dialogTitle);
+        dialog.setHeaderText(dialogHeader);
+
+        ButtonType addButtonType = new ButtonType(productButton, ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
 
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
-
+        //tästä eteenpäin lokalisaatio ei tehty
         TextField nameField = new TextField();
         nameField.setPromptText("Name");
 
