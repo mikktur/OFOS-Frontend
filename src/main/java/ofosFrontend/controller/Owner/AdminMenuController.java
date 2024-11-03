@@ -77,18 +77,16 @@ public class AdminMenuController  extends AdminBasicController {
         String priceLabelText = bundle.getString("ProductPriceText") + ": $" + String.format("%.2f", product.getProductPrice());
         String categoryLabelText = bundle.getString("ProductCategoryText") + ": " + product.getCategory();
         String statusLabelText = bundle.getString("ProductStatusText") + ": " + (product.isActive() ? "Yes" : "No");
-        String statusYes = bundle.getString("StatusYes");
-        String statusNo = bundle.getString("StatusNo");
         String editButtonText = bundle.getString("EditButton");
         String deleteButtonText = bundle.getString("DeleteButton");
         String deleteDialogTitle = bundle.getString("DeleteDialogTitle");
         String deleteDialogText = bundle.getString("DeleteDialogText");
 
-        Text productNameText = new Text(nameLabelText + product.getProductName());
-        Text productDescriptionText = new Text(descriptionLabelText + product.getProductDesc());
-        Text productPriceText = new Text(priceLabelText + String.format("%.2f", product.getProductPrice()));
-        Text productCategoryText = new Text(categoryLabelText + product.getCategory());
-        Text productStatusText = new Text(statusLabelText + (product.isActive() ? statusYes : statusNo));
+        Text productNameText = new Text(nameLabelText);
+        Text productDescriptionText = new Text(descriptionLabelText);
+        Text productPriceText = new Text(priceLabelText);
+        Text productCategoryText = new Text(categoryLabelText);
+        Text productStatusText = new Text(statusLabelText);
 
         productBox.getChildren().addAll(productNameText, productDescriptionText, productPriceText, productCategoryText, productStatusText);
 
