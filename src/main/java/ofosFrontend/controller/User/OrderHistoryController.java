@@ -8,18 +8,21 @@ import javafx.geometry.HPos;
 import ofosFrontend.model.OrderHistory;
 import ofosFrontend.service.OrderHistorySorter;
 import ofosFrontend.service.OrderService;
+import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.Map;
 
 
 public class OrderHistoryController {
-
+    NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(LocalizationManager.getLocale());
     OrderService orderService = new OrderService();
     int userId = SessionManager.getInstance().getUserId();
-
+    DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM, LocalizationManager.getLocale());
 
     @FXML
     private GridPane historyGridPane;
@@ -53,7 +56,7 @@ public class OrderHistoryController {
 
                 // Iterate through the products in the order
                 for (OrderHistory item : orderItems) {
-                    Label productLabel = new Label(item.getProductName() + " (x" + item.getQuantity() + ") " + item.getOrderPrice() + "€");
+                    Label productLabel = new Label(item.getProductName() + " (x" + item.getQuantity() + ") " + currencyFormatter.format(item.getOrderPrice()));
                     productsBox.getChildren().add(productLabel);
 
                     totalPrice += item.getOrderPrice() * item.getQuantity();
@@ -70,11 +73,12 @@ public class OrderHistoryController {
                 historyGridPane.add(productsBox, 2, rowIndex);
                 GridPane.setHalignment(productsBox, HPos.CENTER);
 
-                Label totalPriceLabel = new Label(String.format("%.2f", totalPrice) + " €");
+                Label totalPriceLabel = new Label(currencyFormatter.format(totalPrice));
                 historyGridPane.add(totalPriceLabel, 3, rowIndex);
                 GridPane.setHalignment(totalPriceLabel, HPos.CENTER);
 
-                Label orderDateLabel = new Label(orderItems.get(0).getOrderDate());
+                String formattedDate = dateFormatter.format(orderItems.getFirst().getOrderDate());
+                Label orderDateLabel = new Label(formattedDate);
                 historyGridPane.add(orderDateLabel, 4, rowIndex);
                 GridPane.setHalignment(orderDateLabel, HPos.CENTER);
 

@@ -17,6 +17,7 @@ import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
 
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -59,6 +60,7 @@ public class ShoppingCartController extends BasicController {
      * The cart manager
      * @see CartManager
      */
+    NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(LocalizationManager.getLocale());
     private CartManager cartManager = new CartManager();
     public ShoppingCartController() {
 
@@ -286,7 +288,7 @@ public class ShoppingCartController extends BasicController {
         double subTotal = SessionManager.getInstance().getCart(rid).getTotalPrice();
 
 
-        subTotalLabel.setText(subTotal + " €");
+        subTotalLabel.setText(currencyFormatter.format(subTotal));
     }
 
     @FXML

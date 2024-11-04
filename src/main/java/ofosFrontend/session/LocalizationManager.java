@@ -33,7 +33,9 @@ public class LocalizationManager {
         return bundle;
     }
 
-
+    public static Locale getLocale() {
+        return locale;
+    }
     public static void setLocale(Locale newLocale) {
         locale = newLocale;
         bundle = ResourceBundle.getBundle(BASE_NAME, locale);

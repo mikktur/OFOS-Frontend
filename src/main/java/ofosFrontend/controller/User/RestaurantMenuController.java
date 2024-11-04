@@ -20,6 +20,7 @@ import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
 
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.List;
 
 public class RestaurantMenuController extends BasicController{
@@ -54,7 +55,7 @@ public class RestaurantMenuController extends BasicController{
         System.out.println("Restaurant: " + this.restaurant.getRestaurantName());
         try {
             products  = productService.getProductsByRID(this.restaurant.getId());
-
+            NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(LocalizationManager.getLocale());
             for(Product product : products) {
                 FXMLLoader cardLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/menuItem.fxml"));
                 cardLoader.setResources(LocalizationManager.getBundle());
@@ -67,7 +68,7 @@ public class RestaurantMenuController extends BasicController{
                 Label nameLabel = (Label) cText.lookup("#itemName");
                 nameLabel.setText(product.getProductName());
                 descriptionLabel.setText(product.getProductDesc());
-                priceLabel.setText((product.getProductPrice() + " €"));
+                priceLabel.setText(currencyFormatter.format(product.getProductPrice()));
                 addToCartButton.setOnMouseClicked(event -> {
                     addProductToCart(product);
                 });
