@@ -54,7 +54,7 @@
                               <Insets left="10.0" />
                            </HBox.margin>
                         </Label>
-                        <Label fx:id="addressLabel" prefHeight="36.0" prefWidth="170.0" text="Current Address">
+                        <Label fx:id="addressLabel" prefHeight="36.0" prefWidth="170.0" text="">
                            <HBox.margin>
                               <Insets bottom="10.0" top="10.0" />
                            </HBox.margin>
@@ -73,7 +73,7 @@
                               <Insets left="10.0" />
                            </HBox.margin>
                         </Label>
-                        <Label fx:id="phoneLabel" prefHeight="36.0" prefWidth="170.0" text="Current Phone Number">
+                        <Label fx:id="phoneLabel" prefHeight="36.0" prefWidth="170.0" text="">
                            <HBox.margin>
                               <Insets bottom="10.0" top="10.0" />
                            </HBox.margin>
@@ -92,21 +92,21 @@
                               <Insets left="10.0" />
                            </HBox.margin>
                         </Label>
-                        <Label fx:id="hoursLabel" prefHeight="36.0" prefWidth="170.0" text="Current Business Hours">
+                        <Label fx:id="hoursLabel" prefHeight="36.0" prefWidth="170.0" text="">
                            <HBox.margin>
                               <Insets bottom="10.0" top="10.0" />
                            </HBox.margin>
                         </Label>
                      </children>
                   </HBox>
-                  <Button mnemonicParsing="false" onAction="#modifyRestaurantInfo" text="Modify info">
+                  <Button mnemonicParsing="false" onAction="#modifyRestaurantInfo" text="%ModifyButton">
                      <VBox.margin>
-                        <Insets bottom="20.0" left="195.0" />
+                        <Insets bottom="20.0" left="200.0" />
                      </VBox.margin>
                   </Button>
 
                   <!-- Edit Menu Button -->
-                  <Button fx:id="editMenuButton" mnemonicParsing="false" onAction="#goToEditMenu" text="Edit menu">
+                  <Button fx:id="editMenuButton" mnemonicParsing="false" onAction="#goToEditMenu" text="%EditMenuButton">
                      <VBox.margin>
                         <Insets bottom="10.0" left="200.0" />
                      </VBox.margin>

@@ -2,8 +2,6 @@ package ofosFrontend.controller.Owner;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -13,10 +11,13 @@ import javafx.scene.text.Text;
 import javafx.util.Pair;
 import ofosFrontend.model.Restaurant;
 import ofosFrontend.service.RestaurantService;
+import ofosFrontend.session.LocalizationManager;
 
-import java.io.IOException;
+import java.io.*;
+import java.util.prefs.Preferences;
 import java.util.List;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 public class AdminMainMenuController extends AdminBasicController {
     @FXML
@@ -33,21 +34,26 @@ public class AdminMainMenuController extends AdminBasicController {
     private RestaurantService restaurantService = new RestaurantService();
     private Restaurant currentSelectedRestaurant;
 
+    private static final String LAST_SELECTED_RESTAURANT_KEY = "lastSelectedRestaurant";
+
+    private Preferences prefs = Preferences.userNodeForPackage(AdminMainMenuController.class);
+
     @FXML
     public void initialize() {
         loadRestaurants();
     }
+
     public AdminMainMenuController() {
     }
-    //TODO default to first restaurant and remember last selected restaurant on reload.
+
     public void loadRestaurants() {
         try {
-
             restaurantListVBox.getChildren().clear();
-
 
             List<Restaurant> restaurants = restaurantService.getOwnerRestaurants();
 
+            int lastSelectedRestaurantId = prefs.getInt(LAST_SELECTED_RESTAURANT_KEY, -1);
+            boolean isRestaurantSelected = false;
 
             for (Restaurant restaurant : restaurants) {
                 HBox restaurantBox = new HBox();
@@ -58,22 +64,32 @@ public class AdminMainMenuController extends AdminBasicController {
                 restaurantNameText.setFont(Font.font(12));
                 restaurantNameText.setStyle("-fx-font-weight: bold;");
 
-
                 restaurantBox.getChildren().add(restaurantNameText);
 
-
                 restaurantBox.setOnMouseClicked(event -> {
-
                     rID = restaurant.getId();
                     currentSelectedRestaurant = restaurant;
 
+                    prefs.putInt(LAST_SELECTED_RESTAURANT_KEY, restaurant.getId());
 
                     updateRestaurantDetailsUI();
                 });
 
-
                 restaurantListVBox.getChildren().add(restaurantBox);
+
+                if (restaurant.getId() == lastSelectedRestaurantId) {
+                    currentSelectedRestaurant = restaurant;
+                    isRestaurantSelected = true;
+                }
             }
+
+            if (!isRestaurantSelected && !restaurants.isEmpty()) {
+                currentSelectedRestaurant = restaurants.get(0);
+                prefs.putInt(LAST_SELECTED_RESTAURANT_KEY, currentSelectedRestaurant.getId());
+            }
+
+            updateRestaurantDetailsUI();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -90,21 +106,38 @@ public class AdminMainMenuController extends AdminBasicController {
 
     @FXML
     private void modifyRestaurantInfo() {
+        ResourceBundle bundle = LocalizationManager.getBundle();
+        String alertTitle = bundle.getString("NoRestaurantSelected");
+        String alertHeader = bundle.getString("SelectRestaurantToModify");
+        String dialogTitle = bundle.getString("ModifyTitle");
+        String dialogHeader = bundle.getString("ModifyHeader");
+        String dialogAddress = bundle.getString("DialogAddress");
+        String dialogPhone = bundle.getString("DialogPhone");
+        String dialogHours = bundle.getString("DialogHours");
+        String saveButton = bundle.getString("SaveButton");
+        String cancelButton = bundle.getString("CancelButton");
+        String infoUpdated = bundle.getString("InfoUpdated");
+        String infoHeader = bundle.getString("InfoUpdateHeader");
+        String errorTitle = bundle.getString("ErrorTitle");
+        String infoFailure = bundle.getString("InfoFailure");
+        String errorContext = bundle.getString("ErrorContext");
+
+
         if (currentSelectedRestaurant == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("No Restaurant Selected");
-            alert.setHeaderText("Please select a restaurant to modify.");
+            alert.setTitle(alertTitle);
+            alert.setHeaderText(alertHeader);
             alert.showAndWait();
             return;
         }
 
         Dialog<Pair<String, String>> dialog = new Dialog<>();
-        dialog.setTitle("Modify Restaurant Info");
-        dialog.setHeaderText("Edit the contact information for the restaurant.");
+        dialog.setTitle(dialogTitle);
+        dialog.setHeaderText(dialogHeader);
 
-        ButtonType modifyButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(modifyButtonType, ButtonType.CANCEL);
-
+        ButtonType modifyButtonType = new ButtonType(saveButton, ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = new ButtonType(cancelButton, ButtonBar.ButtonData.CANCEL_CLOSE); // Localized cancel button
+        dialog.getDialogPane().getButtonTypes().addAll(modifyButtonType, cancelButtonType);
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
@@ -113,11 +146,11 @@ public class AdminMainMenuController extends AdminBasicController {
         TextField phoneField = new TextField(currentSelectedRestaurant.getRestaurantPhone());
         TextField hoursField = new TextField(currentSelectedRestaurant.getBusinessHours());
 
-        grid.add(new Label("Address:"), 0, 0);
+        grid.add(new Label(dialogAddress), 0, 0);
         grid.add(addressField, 1, 0);
-        grid.add(new Label("Phone:"), 0, 1);
+        grid.add(new Label(dialogPhone), 0, 1);
         grid.add(phoneField, 1, 1);
-        grid.add(new Label("Business Hours:"), 0, 2);
+        grid.add(new Label(dialogHours), 0, 2);
         grid.add(hoursField, 1, 2);
 
         dialog.getDialogPane().setContent(grid);
@@ -142,17 +175,17 @@ public class AdminMainMenuController extends AdminBasicController {
                 restaurantService.updateRestaurantInfo(currentSelectedRestaurant);
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Information Updated");
-                alert.setHeaderText("Restaurant Information Updated Successfully");
-                alert.setContentText("Address: " + addressField.getText() +
-                        "\nPhone: " + phoneField.getText() +
-                        "\nBusiness Hours: " + hoursField.getText());
+                alert.setTitle(infoUpdated);
+                alert.setHeaderText(infoHeader);
+                alert.setContentText(dialogAddress + ": "+ addressField.getText() +
+                        "\n" + dialogPhone + ": " + phoneField.getText() + "\n" +
+                        dialogHours + ": " + hoursField.getText());
                 alert.showAndWait();
             } catch (IOException e) {
                 Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                errorAlert.setTitle("Error");
-                errorAlert.setHeaderText("Failed to Update Restaurant Information");
-                errorAlert.setContentText("An error occurred while updating the restaurant.");
+                errorAlert.setTitle(errorTitle);
+                errorAlert.setHeaderText(infoFailure);
+                errorAlert.setContentText(errorContext);
                 errorAlert.showAndWait();
                 e.printStackTrace();
             }
@@ -161,8 +194,7 @@ public class AdminMainMenuController extends AdminBasicController {
 
     @FXML
     public void goToEditMenu(ActionEvent actionEvent) {
-            mainController.loadRestaurantContent(currentSelectedRestaurant);
+        mainController.loadRestaurantContent(currentSelectedRestaurant);
 
     }
-
 }
