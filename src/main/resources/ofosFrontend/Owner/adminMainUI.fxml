@@ -8,112 +8,118 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<HBox alignment="CENTER" prefHeight="100.0" prefWidth="572.0" spacing="30.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.Owner.AdminMainMenuController">
-   <children>
-      <VBox fx:id="restaurantsVBox" prefHeight="268.0" prefWidth="118.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
-         <children>
-            <!-- Fixed header -->
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="My restaurants" textAlignment="CENTER" wrappingWidth="117.13671875">
-               <font>
-                  <Font name="System Bold" size="14.0" />
-               </font>
-            </Text>
+<HBox alignment="CENTER" prefHeight="100.0" prefWidth="572.0" spacing="30.0" xmlns="http://javafx.com/javafx/22"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.Owner.AdminMainMenuController">
+    <children>
+        <VBox fx:id="restaurantsVBox" prefHeight="268.0" prefWidth="118.0"
+              style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
+            <children>
+                <!-- Fixed header -->
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="My restaurants" textAlignment="CENTER"
+                      wrappingWidth="117.13671875">
+                    <font>
+                        <Font name="System Bold" size="14.0"/>
+                    </font>
+                </Text>
 
-            <!-- Dynamically loaded restaurant names -->
-            <VBox fx:id="restaurantListVBox" spacing="10.0" style="-fx-padding: 10;" VBox.vgrow="NEVER">
-                  </VBox>
-         </children>
-         <HBox.margin>
-            <Insets bottom="150.0" left="20.0" top="100.0" />
-         </HBox.margin>
-      </VBox>
+                <!-- Dynamically loaded restaurant names -->
+                <VBox fx:id="restaurantListVBox" spacing="10.0" style="-fx-padding: 10;" VBox.vgrow="NEVER">
+                </VBox>
+            </children>
+            <HBox.margin>
+                <Insets bottom="150.0" left="20.0" top="100.0"/>
+            </HBox.margin>
+        </VBox>
 
-      <VBox>
-         <children>
-            <Text fx:id="defaultText" strokeType="OUTSIDE" strokeWidth="0.0" text="Default restaurant" VBox.vgrow="ALWAYS">
-               <font>
-                  <Font name="System Bold" size="24.0" />
-               </font>
-               <VBox.margin>
-                  <Insets top="30.0" />
-               </VBox.margin>
-            </Text>
-            <VBox style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" VBox.vgrow="NEVER">
-               <VBox.margin>
-                  <Insets right="20.0" top="5.0" />
-               </VBox.margin>
-               <children>
-                  <!-- Display Address -->
-                  <HBox alignment="CENTER_LEFT" prefHeight="72.0" prefWidth="477.0" spacing="73.0">
-                     <children>
-                        <Label text="%AdminHomeAddress">
-                           <font>
-                              <Font name="System Bold" size="18.0" />
-                           </font>
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                        </Label>
-                        <Label fx:id="addressLabel" prefHeight="36.0" prefWidth="170.0" text="">
-                           <HBox.margin>
-                              <Insets bottom="10.0" top="10.0" />
-                           </HBox.margin>
-                        </Label>
-                     </children>
-                  </HBox>
+        <VBox>
+            <children>
+                <Text fx:id="defaultText" strokeType="OUTSIDE" strokeWidth="0.0" text="Default restaurant"
+                      VBox.vgrow="ALWAYS">
+                    <font>
+                        <Font name="System Bold" size="24.0"/>
+                    </font>
+                    <VBox.margin>
+                        <Insets top="30.0"/>
+                    </VBox.margin>
+                </Text>
+                <VBox style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);"
+                      VBox.vgrow="NEVER">
+                    <VBox.margin>
+                        <Insets right="20.0" top="5.0"/>
+                    </VBox.margin>
+                    <children>
+                        <!-- Display Address -->
+                        <HBox alignment="CENTER_LEFT" prefHeight="72.0" prefWidth="477.0" spacing="73.0">
+                            <children>
+                                <Label text="%AdminHomeAddress">
+                                    <font>
+                                        <Font name="System Bold" size="18.0"/>
+                                    </font>
+                                    <HBox.margin>
+                                        <Insets left="10.0"/>
+                                    </HBox.margin>
+                                </Label>
+                                <Label fx:id="addressLabel" prefHeight="36.0" prefWidth="170.0" text="">
+                                    <HBox.margin>
+                                        <Insets bottom="10.0" top="10.0"/>
+                                    </HBox.margin>
+                                </Label>
+                            </children>
+                        </HBox>
 
-                  <!-- Display Phone Number -->
-                  <HBox alignment="CENTER_LEFT" prefHeight="72.0" prefWidth="477.0" spacing="20.0">
-                     <children>
-                        <Label text="%AdminHomePhone">
-                           <font>
-                              <Font name="System Bold" size="18.0" />
-                           </font>
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                        </Label>
-                        <Label fx:id="phoneLabel" prefHeight="36.0" prefWidth="170.0" text="">
-                           <HBox.margin>
-                              <Insets bottom="10.0" top="10.0" />
-                           </HBox.margin>
-                        </Label>
-                     </children>
-                  </HBox>
+                        <!-- Display Phone Number -->
+                        <HBox alignment="CENTER_LEFT" prefHeight="72.0" prefWidth="477.0" spacing="20.0">
+                            <children>
+                                <Label text="%AdminHomePhone">
+                                    <font>
+                                        <Font name="System Bold" size="18.0"/>
+                                    </font>
+                                    <HBox.margin>
+                                        <Insets left="10.0"/>
+                                    </HBox.margin>
+                                </Label>
+                                <Label fx:id="phoneLabel" prefHeight="36.0" prefWidth="170.0" text="">
+                                    <HBox.margin>
+                                        <Insets bottom="10.0" top="10.0"/>
+                                    </HBox.margin>
+                                </Label>
+                            </children>
+                        </HBox>
 
-                  <!-- Display Business Hours -->
-                  <HBox alignment="CENTER_LEFT" prefHeight="72.0" prefWidth="477.0" spacing="15.0">
-                     <children>
-                        <Label text="%AdminHomeHours">
-                           <font>
-                              <Font name="System Bold" size="18.0" />
-                           </font>
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                        </Label>
-                        <Label fx:id="hoursLabel" prefHeight="36.0" prefWidth="170.0" text="">
-                           <HBox.margin>
-                              <Insets bottom="10.0" top="10.0" />
-                           </HBox.margin>
-                        </Label>
-                     </children>
-                  </HBox>
-                  <Button mnemonicParsing="false" onAction="#modifyRestaurantInfo" text="%ModifyButton">
-                     <VBox.margin>
-                        <Insets bottom="20.0" left="200.0" />
-                     </VBox.margin>
-                  </Button>
+                        <!-- Display Business Hours -->
+                        <HBox alignment="CENTER_LEFT" prefHeight="72.0" prefWidth="477.0" spacing="15.0">
+                            <children>
+                                <Label text="%AdminHomeHours">
+                                    <font>
+                                        <Font name="System Bold" size="18.0"/>
+                                    </font>
+                                    <HBox.margin>
+                                        <Insets left="10.0"/>
+                                    </HBox.margin>
+                                </Label>
+                                <Label fx:id="hoursLabel" prefHeight="36.0" prefWidth="170.0" text="">
+                                    <HBox.margin>
+                                        <Insets bottom="10.0" top="10.0"/>
+                                    </HBox.margin>
+                                </Label>
+                            </children>
+                        </HBox>
+                        <Button mnemonicParsing="false" onAction="#modifyRestaurantInfo" text="%ModifyButton">
+                            <VBox.margin>
+                                <Insets bottom="20.0" left="200.0"/>
+                            </VBox.margin>
+                        </Button>
 
-                  <!-- Edit Menu Button -->
-                  <Button fx:id="editMenuButton" mnemonicParsing="false" onAction="#goToEditMenu" text="%EditMenuButton">
-                     <VBox.margin>
-                        <Insets bottom="10.0" left="200.0" />
-                     </VBox.margin>
-                  </Button>
-               </children>
-            </VBox>
-         </children>
-      </VBox>
-   </children>
+                        <!-- Edit Menu Button -->
+                        <Button fx:id="editMenuButton" mnemonicParsing="false" onAction="#goToEditMenu"
+                                text="%EditMenuButton">
+                            <VBox.margin>
+                                <Insets bottom="10.0" left="200.0"/>
+                            </VBox.margin>
+                        </Button>
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+    </children>
 </HBox>

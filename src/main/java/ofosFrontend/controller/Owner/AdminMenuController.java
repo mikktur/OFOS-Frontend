@@ -1,20 +1,14 @@
 package ofosFrontend.controller.Owner;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import ofosFrontend.model.Product;
-import ofosFrontend.model.Restaurant;
 import ofosFrontend.service.ProductService;
 import ofosFrontend.session.LocalizationManager;
 
@@ -24,7 +18,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 
-public class AdminMenuController  extends AdminBasicController {
+public class AdminMenuController extends AdminBasicController {
 
     @FXML
     private VBox productListVBox;
@@ -117,46 +111,54 @@ public class AdminMenuController  extends AdminBasicController {
         String dialogTitle = bundle.getString("AddItemDialogTitle");
         String dialogHeader = bundle.getString("AddItemDialogHeader");
         String productButton = bundle.getString("AddProductButton");
+        String cancelButton = bundle.getString("CancelProduct");
+        String dialogName = bundle.getString("DialogName");
+        String dialogDescription = bundle.getString("DialogDescription");
+        String dialogPrice = bundle.getString("DialogPrice");
+        String dialogCategory = bundle.getString("DialogCategory");
+        String dialogPicture = bundle.getString("DialogPicture");
+        String dialogActive = bundle.getString("DialogActive");
+
 
         Dialog<Product> dialog = new Dialog<>();
         dialog.setTitle(dialogTitle);
         dialog.setHeaderText(dialogHeader);
 
         ButtonType addButtonType = new ButtonType(productButton, ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
+        ButtonType cancelButtonType = new ButtonType(cancelButton, ButtonBar.ButtonData.CANCEL_CLOSE); // Localized cancel button
+        dialog.getDialogPane().getButtonTypes().addAll(addButtonType, cancelButtonType);
 
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
-        //tästä eteenpäin lokalisaatio ei tehty
         TextField nameField = new TextField();
-        nameField.setPromptText("Name");
+        nameField.setPromptText(dialogName);
 
         TextField descriptionField = new TextField();
-        descriptionField.setPromptText("Description");
+        descriptionField.setPromptText(dialogDescription);
 
         TextField priceField = new TextField();
-        priceField.setPromptText("Price");
+        priceField.setPromptText(dialogPrice);
 
         TextField categoryField = new TextField();
-        categoryField.setPromptText("Category");
+        categoryField.setPromptText(dialogCategory);
 
         TextField pictureField = new TextField();
-        pictureField.setPromptText("Picture URL");
+        pictureField.setPromptText(dialogPicture);
 
-        CheckBox activeCheckBox = new CheckBox("Active");
+        CheckBox activeCheckBox = new CheckBox(dialogActive);
 
-        grid.add(new Label("Name:"), 0, 0);
+        grid.add(new Label(dialogName), 0, 0);
         grid.add(nameField, 1, 0);
-        grid.add(new Label("Description:"), 0, 1);
+        grid.add(new Label(dialogDescription), 0, 1);
         grid.add(descriptionField, 1, 1);
-        grid.add(new Label("Price:"), 0, 2);
+        grid.add(new Label(dialogPrice), 0, 2);
         grid.add(priceField, 1, 2);
-        grid.add(new Label("Category:"), 0, 3);
+        grid.add(new Label(dialogCategory), 0, 3);
         grid.add(categoryField, 1, 3);
-        grid.add(new Label("Picture URL:"), 0, 4);
+        grid.add(new Label(dialogPicture), 0, 4);
         grid.add(pictureField, 1, 4);
-        grid.add(new Label("Active:"), 0, 5);
+        grid.add(new Label(dialogActive), 0, 5);
         grid.add(activeCheckBox, 1, 5);
 
         dialog.getDialogPane().setContent(grid);
@@ -188,12 +190,25 @@ public class AdminMenuController  extends AdminBasicController {
     }
 
     private void openEditDialog(Product product) {
-        Dialog<Product> dialog = new Dialog<>();
-        dialog.setTitle("Edit Product");
-        dialog.setHeaderText("Edit the product details");
+        ResourceBundle bundle = LocalizationManager.getBundle();
+        String dialogTitle = bundle.getString("EditItemDialog");
+        String dialogHeader = bundle.getString("EditItemHeader");
+        String updateButton = bundle.getString("UpdateButton");
+        String cancelButton = bundle.getString("CancelEdit");
+        String editActive = bundle.getString("EditActive");
+        String editName = bundle.getString("EditName");
+        String editDescription = bundle.getString("EditDescription");
+        String editPrice = bundle.getString("EditPrice");
+        String editCategory = bundle.getString("EditCategory");
+        String editPicture = bundle.getString("EditPicture");
 
-        ButtonType updateButtonType = new ButtonType("Update Product", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(updateButtonType, ButtonType.CANCEL);
+        Dialog<Product> dialog = new Dialog<>();
+        dialog.setTitle(dialogTitle);
+        dialog.setHeaderText(dialogHeader);
+
+        ButtonType updateButtonType = new ButtonType(updateButton, ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = new ButtonType(cancelButton, ButtonBar.ButtonData.CANCEL_CLOSE); // Localized cancel button
+        dialog.getDialogPane().getButtonTypes().addAll(updateButtonType, cancelButtonType);
 
         GridPane grid = new GridPane();
         grid.setHgap(10);
@@ -204,20 +219,20 @@ public class AdminMenuController  extends AdminBasicController {
         TextField priceField = new TextField(String.valueOf(product.getProductPrice()));
         TextField categoryField = new TextField(product.getCategory());
         TextField pictureField = new TextField(product.getPicture());
-        CheckBox activeCheckBox = new CheckBox("Active");
+        CheckBox activeCheckBox = new CheckBox(editActive);
         activeCheckBox.setSelected(product.isActive());
 
-        grid.add(new Label("Name:"), 0, 0);
+        grid.add(new Label(editName), 0, 0);
         grid.add(nameField, 1, 0);
-        grid.add(new Label("Description:"), 0, 1);
+        grid.add(new Label(editDescription), 0, 1);
         grid.add(descriptionField, 1, 1);
-        grid.add(new Label("Price:"), 0, 2);
+        grid.add(new Label(editPrice), 0, 2);
         grid.add(priceField, 1, 2);
-        grid.add(new Label("Category:"), 0, 3);
+        grid.add(new Label(editCategory), 0, 3);
         grid.add(categoryField, 1, 3);
-        grid.add(new Label("Picture URL:"), 0, 4);
+        grid.add(new Label(editPicture), 0, 4);
         grid.add(pictureField, 1, 4);
-        grid.add(new Label("Active:"), 0, 5);
+        grid.add(new Label(editActive), 0, 5);
         grid.add(activeCheckBox, 1, 5);
 
         dialog.getDialogPane().setContent(grid);
@@ -249,14 +264,17 @@ public class AdminMenuController  extends AdminBasicController {
     }
 
     private void deleteProduct(Product product) {
+        ResourceBundle bundle = LocalizationManager.getBundle();
+        String deleteDialogTitle = bundle.getString("DeleteTitle");
+        String deleteFail = bundle.getString("DeleteFail");
         try {
             productService.deleteProduct(product);
             loadProducts();
         } catch (IOException e) {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Failed to delete the product.");
+            alert.setTitle(deleteDialogTitle);
+            alert.setHeaderText(deleteFail);
             alert.setContentText(e.getMessage());
             alert.showAndWait();
         }

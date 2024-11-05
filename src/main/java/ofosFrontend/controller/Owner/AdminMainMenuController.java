@@ -177,7 +177,7 @@ public class AdminMainMenuController extends AdminBasicController {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle(infoUpdated);
                 alert.setHeaderText(infoHeader);
-                alert.setContentText(dialogAddress + ": "+ addressField.getText() +
+                alert.setContentText(dialogAddress + ": " + addressField.getText() +
                         "\n" + dialogPhone + ": " + phoneField.getText() + "\n" +
                         dialogHours + ": " + hoursField.getText());
                 alert.showAndWait();
