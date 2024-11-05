@@ -24,6 +24,8 @@ public class LocalizationManager {
     static {
         languageMap.put("en", "English");
         languageMap.put("fi", "Finnish");
+        languageMap.put("jp", "Japanese");
+        languageMap.put("ru", "Russian");
 
         selectedLanguage.set(languageMap.getOrDefault(locale.getLanguage(), "English"));
     }

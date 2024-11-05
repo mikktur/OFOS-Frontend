@@ -91,5 +91,21 @@ public class ProductService {
             throw new IOException("Failed to delete product: " + response);
         }
     }
+    public void deleteProductFromRestaurant(int productId, int restaurantId) throws IOException {
+        SessionManager sessionManager = SessionManager.getInstance();
+        String bearerToken = sessionManager.getToken();
+        Request request = new Request.Builder()
+                .url(API_URL + "api/products/delete/" + productId + "/restaurant/" + restaurantId)
+                .delete()
+                .addHeader("Authorization", "Bearer " + bearerToken)
+                .build();
+
+        Response response = client.newCall(request).execute();
+
+        if (!response.isSuccessful()) {
+            throw new IOException("Failed to delete product: " + response);
+        }
+    }
+
 
 }
