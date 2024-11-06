@@ -50,16 +50,27 @@ public class NavController extends BasicController {
 
     private void switchLanguage(String language) {
         Locale newLocale;
-        if (language.equals("Finnish")) {
-            newLocale = new Locale("fi", "FI");
-        } else {
-            newLocale = new Locale("en", "US");
+
+        switch (language) {
+            case "Finnish":
+                newLocale = new Locale("fi", "FI");
+                break;
+            case "Japanese":
+                newLocale = new Locale("ja", "JP");
+                break;
+            case "Russian":
+                newLocale = new Locale("ru", "RU");
+                break;
+            default:
+                newLocale = new Locale("en", "US");
+                break;
         }
 
         // Updates the locale in LocalizationManager and reloads the main UI
         LocalizationManager.setLocale(newLocale);
         mainController.reloadPage();
     }
+
     private void setupLanguageSelector() {
         languageSelector.setValue(LocalizationManager.selectedLanguageProperty().get());
 
