@@ -91,7 +91,4 @@ public class ProductService {
             throw new IOException("Failed to delete product: " + response);
         }
     }
-
-
-
 }
