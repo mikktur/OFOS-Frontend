@@ -9,6 +9,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.AnchorPane;
+import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 import ofosFrontend.model.Restaurant;
 import ofosFrontend.model.RestaurantList;
 import ofosFrontend.service.RestaurantService;
@@ -23,6 +26,13 @@ public class MainMenuController extends BasicController {
     private FlowPane restaurantFlowPane;
     @FXML
     private ScrollPane mainScroll;
+    @FXML
+    private AnchorPane pizza_category;
+    @FXML
+    private AnchorPane burger_category;
+    @FXML
+    private AnchorPane steak_category;
+
 
 
     private final RestaurantService restaurantService = new RestaurantService();
@@ -35,7 +45,7 @@ public class MainMenuController extends BasicController {
     @FXML
     public void initialize() {
         // DONT ADD ANYTHING HERE THAT USES MAINCONTROLLER IT WONT WORK SINCE ITS NULL. CALL THEM IN THE LOADDEFAULTCONTENT FUNCTION.
-        loadRestaurants();
+        loadRestaurantsByCategory("All");
     }
 
 
@@ -44,25 +54,56 @@ public class MainMenuController extends BasicController {
         setupRestaurantView(restaurant);
     }
 
+    @FXML
+    private void handlePizzaCategoryClick(MouseEvent event) {
+        loadRestaurantsByCategory("Pizza");
+    }
 
-    private void loadRestaurants() {
+    @FXML
+    private void handleBurgerCategoryClick(MouseEvent event) {
+        loadRestaurantsByCategory("Burger");
+    }
+
+    @FXML
+    private void handleSteakCategoryClick(MouseEvent event) {
+        loadRestaurantsByCategory("Steak");
+    }
+
+
+
+    private void loadRestaurantsByCategory(String categoryName) {
         try {
+            restaurantFlowPane.getChildren().clear();
             restaurantFlowPane.setPrefWrapLength(0);
             restaurantFlowPane.setAlignment(Pos.CENTER);
-            restaurantList.setRestaurants(restaurantService.getAllRestaurants());
 
-            for (Restaurant restaurant : restaurantList.getRestaurantList()) {
-                addRestaurantCard(restaurant);
-                mainScroll.widthProperty().addListener((obs, oldVal, newVal) -> {
-                    restaurantFlowPane.setPrefWrapLength(newVal.doubleValue());
-                    restaurantFlowPane.requestLayout();
-                });
+            List<Restaurant> restaurants;
+
+            if (categoryName.equals("All")) {
+                restaurants = restaurantService.getAllRestaurants();
+            } else {
+                restaurants = restaurantService.getRestaurantsByCategory(categoryName);
             }
+
+            if (restaurants.isEmpty()) {
+                Label noResultsLabel = new Label("No restaurants found in this category.");
+                restaurantFlowPane.getChildren().add(noResultsLabel);
+            } else {
+                for (Restaurant restaurant : restaurants) {
+                    addRestaurantCard(restaurant);
+                }
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
+            Label errorLabel = new Label("An error occurred while loading restaurants.");
+            restaurantFlowPane.getChildren().add(errorLabel);
         }
-
     }
+
+
+
+
 
     private void setupRestaurantView(Restaurant restaurant) {
         if (mainController == null) {

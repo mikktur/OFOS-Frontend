@@ -6,7 +6,9 @@ import ofosFrontend.session.SessionManager;
 import okhttp3.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RestaurantService {
     private static final String API_URL = "http://10.120.32.94:8000/"; //
@@ -85,7 +87,43 @@ public class RestaurantService {
             throw new IOException("Unexpected code " + response);
         }
     }
+
+    public List<Restaurant> getRestaurantsByCategory(String categoryName) throws IOException {
+        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+
+        // Encode the category name to handle spaces and special characters
+        String encodedCategoryName = java.net.URLEncoder.encode(categoryName, "UTF-8");
+
+        // Build the request URL
+        String url = API_URL + "restaurants/category/" + encodedCategoryName;
+
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
+
+        // Execute the request
+        Response response = client.newCall(request).execute();
+
+        // Check if the response is successful
+        if (!response.isSuccessful()) {
+            if (response.code() == 404) {
+                // Category not found or no restaurants in category
+                return new ArrayList<>();
+            } else {
+                throw new IOException("Unexpected code " + response);
+            }
+        }
+
+        String responseBody = response.body().string();
+
+        // Parse the JSON response into a list of Restaurant objects
+        return mapper.readValue(responseBody,
+                mapper.getTypeFactory().constructCollectionType(List.class, Restaurant.class));
+    }
 }
+
+
 
 
 
