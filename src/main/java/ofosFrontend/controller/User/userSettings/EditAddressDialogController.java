@@ -70,6 +70,11 @@ public class EditAddressDialogController {
 
         task.setOnSucceeded(event -> {
             Platform.runLater(() -> {
+                Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                successAlert.setTitle(bundle.getString("Success"));
+                successAlert.setHeaderText(null);
+                successAlert.setContentText(bundle.getString("Address_edited_successfully"));
+                successAlert.showAndWait();
                 Stage stage = (Stage) streetAddressField.getScene().getWindow();
                 stage.close();
             });

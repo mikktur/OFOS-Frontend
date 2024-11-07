@@ -9,6 +9,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import ofosFrontend.controller.User.userSettings.AddAddressDialogController;
@@ -136,8 +138,7 @@ public class CheckoutController  extends BasicController {
             SessionManager session = SessionManager.getInstance();
             Restaurant restaurant = session.getCart(rid).getRestaurant();
             Label restaurantLabel = new Label(restaurant.getRestaurantName());
-            restaurantLabel.setStyle("-fx-font-weight: bold;");
-            restaurantLabel.setStyle("-fx-font-size: 20px;");
+            restaurantLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 20px;");
             dialogContent.getChildren().add(restaurantLabel);
 
             // Display cart items
@@ -145,7 +146,7 @@ public class CheckoutController  extends BasicController {
             cartItemsLabel.setStyle("-fx-font-weight: bold;");
             VBox cartItems = new VBox();
 
-            for (CartItem item : SessionManager.getInstance().getCart(rid).getItems()) {
+            for (CartItem item : session.getCart(rid).getItems()) {
                 HBox itemBox = new HBox();
                 itemBox.setSpacing(10);
                 Label name = new Label("• " + item.getProduct().getProductName());
@@ -157,11 +158,17 @@ public class CheckoutController  extends BasicController {
 
             // Display delivery address
             Label deliveryLabel = new Label(bundle.getString("Delivery_Address"));
-            Label selectedAddressLabel = new Label(selectedAddress.getStreetAddress() + ", "
-                    + selectedAddress.getPostalCode()
-                    + " " + selectedAddress.getCity()
-                    + " (" + selectedAddress.getInfo() + ")");
             deliveryLabel.setStyle("-fx-font-weight: bold;");
+
+            // Create TextFlow for address to wrap long text
+            TextFlow selectedAddressFlow = new TextFlow();
+            selectedAddressFlow.setMaxWidth(350);
+            selectedAddressFlow.getChildren().addAll(
+                    new Text(selectedAddress.getStreetAddress() + ", "),
+                    new Text(selectedAddress.getPostalCode() + " "),
+                    new Text(selectedAddress.getCity() + " "),
+                    new Text("(" + selectedAddress.getInfo() + ")")
+            );
 
             // Display selected payment method
             Label paymentLabel = new Label(bundle.getString("paymentMethod"));
@@ -174,26 +181,24 @@ public class CheckoutController  extends BasicController {
 
             // Add all the elements to the dialog layout
             dialogContent.getChildren().addAll(cartItemsLabel, cartItems, deliveryLabel,
-                    selectedAddressLabel, paymentLabel, selectedPaymentLabel, totalLabel);
+                    selectedAddressFlow, paymentLabel, selectedPaymentLabel, totalLabel);
             dialog.getDialogPane().setContent(dialogContent);
 
             // Add confirmation and cancel buttons
             dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-
             // Show the dialog and wait for response
             dialog.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.OK) {
-                    // Handle order confirmation
                     confirmOrder();
                     System.out.println("Order confirmed");
                 } else {
-                    // Handle cancel
                     System.out.println("Order cancelled");
                 }
             });
         }
     }
+
 
 
     public void renderSummary() {
