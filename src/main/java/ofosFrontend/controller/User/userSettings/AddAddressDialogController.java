@@ -64,6 +64,11 @@ public class AddAddressDialogController {
 
     private void saveDeliveryAddress(DeliveryAddress address) {
         deliveryAddressService.saveDeliveryAddress(address, () -> {
+            Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+            successAlert.setTitle(bundle.getString("Success"));
+            successAlert.setHeaderText(null);
+            successAlert.setContentText(bundle.getString("Address_added_successfully"));
+            successAlert.showAndWait();
             Stage stage = (Stage) streetAddressField.getScene().getWindow();
             stage.close();
         }, () -> {

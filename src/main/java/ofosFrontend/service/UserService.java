@@ -102,8 +102,10 @@ public class UserService {
                         .build();
 
                 HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-                if (response.statusCode() != 200) {
+                if (response.statusCode() == 400) {
+                    throw new Exception("Unauthorized request. Status code: " + response.statusCode());
+                }
+                else if (response.statusCode() != 200) {
                     throw new Exception("Failed to update password. Status code: " + response.statusCode() + response.body());
                 }
 

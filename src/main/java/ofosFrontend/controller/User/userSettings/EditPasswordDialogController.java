@@ -73,13 +73,24 @@ public class EditPasswordDialogController {
         task.setOnFailed(event -> {
             Throwable exception = task.getException();
             exception.printStackTrace();
-            Platform.runLater(() -> showError(bundle.getString("Update_password_error")));
+
+            Platform.runLater(() -> {
+                String errorMessage = exception.getMessage();
+                if (errorMessage.contains("Unauthorized request")) {
+                    showError(bundle.getString("Password_requirements_not_met"));
+                } else if (errorMessage.contains("Failed to update password")) {
+                    showError(bundle.getString("Update_password_error"));
+                } else {
+                    showError(bundle.getString("General_update_password_error"));
+                }
+            });
         });
 
         Thread thread = new Thread(task);
         thread.setDaemon(true);
         thread.start();
     }
+
 
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);

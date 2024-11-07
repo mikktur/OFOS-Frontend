@@ -31,10 +31,13 @@
          <!-- HBox containing the Contact Information and Delivery Addresses -->
          <HBox alignment="TOP_CENTER" spacing="20.0" VBox.vgrow="ALWAYS">
             <!-- Contact Information VBox -->
+
             <VBox spacing="10.0" HBox.hgrow="ALWAYS">
                <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="%Contact_Information"/>
+               <Button onAction="#handleEditContactInfo" text="%Edit_Contact_Information"/>
                <VBox prefWidth="350.0"
                      style="-fx-background-color: white; -fx-padding: 10; -fx-border-color: lightgray; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10;">
+
                   <GridPane>
                      <!-- Column and Row Constraints -->
                      <columnConstraints>
@@ -79,7 +82,7 @@
                             GridPane.rowIndex="5"/>
                   </GridPane>
                </VBox>
-               <Button onAction="#handleEditContactInfo" text="%Edit_Contact_Information"/>
+
                <Button fx:id="changePassword" text="%Change_Password" onAction="#handleChangePassword"/>
             </VBox>
             <!-- Delivery Addresses VBox -->
