@@ -18,7 +18,7 @@ public class ProductService {
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
         Request request = new Request.Builder()
-                .url(API_URL + "api/products/restaurant/" + id)
+                .url(API_URL + "api/products/restaurant/fi/" + id)
                 .get()
                 .build();
         Response response = client.newCall(request).execute();

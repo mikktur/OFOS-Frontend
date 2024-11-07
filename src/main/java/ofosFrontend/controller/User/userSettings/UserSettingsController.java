@@ -46,7 +46,7 @@ public class UserSettingsController extends BasicController {
     private List<DeliveryAddress> deliveryAddressesList = new ArrayList<>();
     private final DeliveryAddressService deliveryAddressService = new DeliveryAddressService();
     private final UserService userService = new UserService();
-
+    private ContactInfo currentContactInfo;
 
 
     public void initialize() {
@@ -80,6 +80,8 @@ public class UserSettingsController extends BasicController {
 
             if (contactInfo != null) {
                 // Update UI with contact information
+                currentContactInfo = contactInfo;
+
                 Platform.runLater(() -> {
                     nameLabel.setText(contactInfo.getFirstName() + " " + contactInfo.getLastName());
                     emailLabel.setText(contactInfo.getEmail());
@@ -121,8 +123,11 @@ public class UserSettingsController extends BasicController {
         Optional<ButtonType> result = alert.showAndWait();
 
         if (result.isPresent() && result.get() == yesButton) {
+            System.out.println("User chose to add contact information");
+            System.out.println("Opening contact info dialog with contactinfo = null");
+            ContactInfo contactInfo = null;
             // Open the dialog to add contact information
-            openContactInfoDialog();
+            openContactInfoDialog(contactInfo);
         } else {
             // User chose not to add contact information now
             // Update the UI accordingly
@@ -137,11 +142,14 @@ public class UserSettingsController extends BasicController {
         }
     }
 
-    private void openContactInfoDialog() {
+    private void openContactInfoDialog(ContactInfo contactInfo) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/contactInfoDialog.fxml"));
             loader.setResources(LocalizationManager.getBundle());
             Parent root = loader.load();
+
+            ContactInfoDialogController dialogController = loader.getController();
+            dialogController.setContactInfo(contactInfo);
 
             Stage stage = new Stage();
             stage.setTitle(bundle.getString("Modify_Contact_Information"));
@@ -440,8 +448,8 @@ public class UserSettingsController extends BasicController {
     }
 
     @FXML
-    private void handleEditContactInfo() {
-        openContactInfoDialog();
+    private void handleEditContactInfo(ActionEvent actionEvent) {
+        openContactInfoDialog(currentContactInfo);
     }
 
     @FXML

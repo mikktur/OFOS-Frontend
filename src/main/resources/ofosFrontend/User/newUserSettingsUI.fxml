@@ -13,7 +13,6 @@
 
 
 <!-- ScrollPane to allow scrolling if needed -->
-<?import javafx.scene.layout.Region?>
 <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;"
             xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="ofosFrontend.controller.User.userSettings.UserSettingsController">

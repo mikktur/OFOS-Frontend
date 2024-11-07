@@ -21,6 +21,7 @@ public class ContactInfoDialogController {
     @FXML private TextField streetAddressField;
     @FXML private TextField cityField;
     @FXML private TextField postalCodeField;
+    private ContactInfo contactInfo;
     ResourceBundle bundle = LocalizationManager.getBundle();
 
     private ContactInfoService contactInfoService = new ContactInfoService();
@@ -87,5 +88,19 @@ public class ContactInfoDialogController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    public void setContactInfo(ContactInfo contactInfo) {
+        System.out.println("Set Contact Info in contactinfo dialog controller");
+        System.out.println("contactInfo " + contactInfo.getAddress());
+        this.contactInfo = contactInfo;
+        firstNameField.setText(contactInfo.getFirstName());
+        lastNameField.setText(contactInfo.getLastName());
+        emailField.setText(contactInfo.getEmail());
+        phoneNumberField.setText(contactInfo.getPhoneNumber());
+        streetAddressField.setText(contactInfo.getAddress());
+        cityField.setText(contactInfo.getCity());
+        postalCodeField.setText(contactInfo.getPostalCode());
+
     }
 }
