@@ -3,6 +3,7 @@ package ofosFrontend.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ofosFrontend.model.Product;
+import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
 import okhttp3.*;
 
@@ -16,9 +17,10 @@ public class ProductService {
 
     public List<Product> getProductsByRID(int id) throws IOException {
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
-
+        String locale = LocalizationManager.getLocale().getLanguage();
+        System.out.println("Locale: " + locale);
         Request request = new Request.Builder()
-                .url(API_URL + "api/products/restaurant/" + id)
+                .url(API_URL + "api/products/restaurant/"+locale+"/" + id)
                 .get()
                 .build();
         Response response = client.newCall(request).execute();

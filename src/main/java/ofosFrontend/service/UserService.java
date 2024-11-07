@@ -17,7 +17,7 @@ import java.net.http.HttpResponse;
 
 public class UserService {
 
-    private static final String API_URL = "http://localhost/api/"; //
+    private static final String API_URL = "http://10.120.32.94:8000/api/"; //
 
     private final OkHttpClient client = new OkHttpClient();
 
