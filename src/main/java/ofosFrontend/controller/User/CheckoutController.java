@@ -21,6 +21,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Alert;
 
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -42,7 +43,7 @@ public class CheckoutController  extends BasicController {
     @FXML
     Button addAddressBtn;
     private int rid;
-
+    NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(LocalizationManager.getLocale());
     ResourceBundle bundle = LocalizationManager.getBundle();
     CheckoutService checkoutService = new CheckoutService();
     private List<DeliveryAddress> deliveryAddressesList = new ArrayList<>();
@@ -150,7 +151,7 @@ public class CheckoutController  extends BasicController {
                 itemBox.setSpacing(10);
                 Label name = new Label("• " + item.getProduct().getProductName());
                 Label quantity = new Label(bundle.getString("Quantity") + item.getQuantity());
-                Label price = new Label(bundle.getString("Price") + item.getTotalPrice() + "€");
+                Label price = new Label(bundle.getString("Price") + currencyFormatter.format(item.getTotalPrice()));
                 itemBox.getChildren().addAll(name, quantity, price);
                 cartItems.getChildren().add(itemBox);
             }
@@ -211,13 +212,13 @@ public class CheckoutController  extends BasicController {
             Label price = new Label();
             Label quantity = new Label();
             name.setText(item.getProduct().getProductName());
-            price.setText((item.getProduct().getProductPrice()) + "€");
+            price.setText(currencyFormatter.format(item.getTotalPrice()));
             quantity.setText("x " + (item.getQuantity()));
             container.getChildren().addAll(name, price, quantity);
             summaryContainer.getChildren().add(container);
         }
 
-        subTotal.setText((cart.getTotalPrice() + "€"));
+        subTotal.setText((currencyFormatter.format(cart.getTotalPrice())));
     }
 
 

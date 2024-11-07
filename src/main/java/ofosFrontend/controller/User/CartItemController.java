@@ -7,14 +7,17 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import ofosFrontend.model.CartItem;
 import ofosFrontend.model.ShoppingCart;
+import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
+
+import java.text.NumberFormat;
 
 /**
  * Controller for the cart item in the shopping cart, used to make ui cards for the cart items
  * @see CartItem
  */
 public class CartItemController {
-
+    NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(LocalizationManager.getLocale());
     @FXML
     private Button addBtn;
     @FXML
@@ -35,7 +38,7 @@ public class CartItemController {
 
 
         itemName.setText(item.getProduct().getProductName());
-        itemPrice.setText(item.getProduct().getProductPrice() + " €");
+        itemPrice.setText(currencyFormatter.format(item.getProduct().getProductPrice()));
         itemQuantity.textProperty().bind(item.quantityProperty().asString());
 
 
