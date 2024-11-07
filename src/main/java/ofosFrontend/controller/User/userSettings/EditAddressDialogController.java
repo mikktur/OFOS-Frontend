@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import ofosFrontend.model.DeliveryAddress;
 import ofosFrontend.service.DeliveryAddressService;
 import ofosFrontend.session.LocalizationManager;
+import ofosFrontend.session.TextFieldUtils;
 
 import java.util.ResourceBundle;
 
@@ -18,9 +19,22 @@ public class EditAddressDialogController {
     @FXML private TextField postalCodeField;
     @FXML private TextArea instructionsArea;
 
+    private static final int STREET_ADDRESS_MAX_LENGTH = 70;
+    private static final int CITY_MAX_LENGTH = 30;
+    private static final int POSTAL_CODE_MAX_LENGTH = 10;
+    private static final int INSTRUCTIONS_MAX_LENGTH = 50;
+
     ResourceBundle bundle = LocalizationManager.getBundle();
     private DeliveryAddress address;
     private DeliveryAddressService deliveryAddressService = new DeliveryAddressService();
+
+    @FXML
+    public void initialize() {
+        TextFieldUtils.addTextLimiter(streetAddressField, STREET_ADDRESS_MAX_LENGTH);
+        TextFieldUtils.addTextLimiter(cityField, CITY_MAX_LENGTH);
+        TextFieldUtils.addTextLimiter(postalCodeField, POSTAL_CODE_MAX_LENGTH);
+        TextFieldUtils.addTextLimiter(instructionsArea, INSTRUCTIONS_MAX_LENGTH);
+    }
 
     public void setAddress(DeliveryAddress address) {
         this.address = address;

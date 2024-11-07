@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import ofosFrontend.model.ContactInfo;
 import ofosFrontend.service.ContactInfoService;
 import ofosFrontend.session.LocalizationManager;
+import ofosFrontend.session.TextFieldUtils;
 
 import java.util.ResourceBundle;
 
@@ -25,6 +26,25 @@ public class ContactInfoDialogController {
     ResourceBundle bundle = LocalizationManager.getBundle();
 
     private ContactInfoService contactInfoService = new ContactInfoService();
+
+    private static final int FIRST_NAME_MAX_LENGTH = 20;
+    private static final int LAST_NAME_MAX_LENGTH = 20;
+    private static final int EMAIL_MAX_LENGTH = 50;
+    private static final int PHONE_MAX_LENGTH = 15;
+    private static final int ADDRESS_MAX_LENGTH = 70;
+    private static final int CITY_MAX_LENGTH = 30;
+    private static final int POSTAL_CODE_MAX_LENGTH = 10;
+
+    @FXML
+    public void initialize() {
+        TextFieldUtils.addTextLimiter(firstNameField, FIRST_NAME_MAX_LENGTH);
+        TextFieldUtils.addTextLimiter(lastNameField, LAST_NAME_MAX_LENGTH);
+        TextFieldUtils.addTextLimiter(emailField, EMAIL_MAX_LENGTH);
+        TextFieldUtils.addTextLimiter(phoneNumberField, PHONE_MAX_LENGTH);
+        TextFieldUtils.addTextLimiter(streetAddressField, ADDRESS_MAX_LENGTH);
+        TextFieldUtils.addTextLimiter(cityField, CITY_MAX_LENGTH);
+        TextFieldUtils.addTextLimiter(postalCodeField, POSTAL_CODE_MAX_LENGTH);
+    }
 
     @FXML
     private void handleSave() {
@@ -103,4 +123,5 @@ public class ContactInfoDialogController {
         postalCodeField.setText(contactInfo.getPostalCode());
 
     }
+
 }
