@@ -13,6 +13,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
 
 
 public class UserService {
@@ -20,6 +21,7 @@ public class UserService {
     private static final String API_URL = "http://10.120.32.94:8000/api/"; //
 
     private final OkHttpClient client = new OkHttpClient();
+    private final ObjectMapper mapper = new ObjectMapper();
 
     public Response login(String username, String password) throws IOException {
 
@@ -113,4 +115,25 @@ public class UserService {
             }
         };
     }
+
+    public List<User> getAllUsers() throws IOException {
+        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+
+        // Create a GET request
+        Request request = new Request.Builder()
+                .url(API_URL + "users")
+                .get()
+                .build();
+
+        // Execute the request and parse the response
+        Response response = client.newCall(request).execute();
+        if (!response.isSuccessful()) {
+            throw new IOException("Failed to fetch users: " + response.code() + " " + response.message());
+        }
+
+        String responseBody = response.body().string();
+        return mapper.readValue(responseBody, mapper.getTypeFactory().constructCollectionType(List.class, User.class));
+    }
+
+
 }
