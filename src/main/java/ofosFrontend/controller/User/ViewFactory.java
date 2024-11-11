@@ -15,6 +15,7 @@ public class ViewFactory {
     public static final String SETTINGS = "/ofosFrontend/User/newUserSettingsUI.fxml";
     public static final String RESTAURANT = "/ofosFrontend/User/restaurantMenuUI.fxml";
     public static final String ORDERHISTORY = "/ofosFrontend/OrderHistoryUI.fxml";
+    public static final String ADMINDASHBOARD = "/ofosFrontend/User/adminDashboardUI.fxml";
     private final UserMainController mainController;
     public String currentView;
 
@@ -101,6 +102,20 @@ public class ViewFactory {
             return null;
         }
     }
+
+    public Parent createAdminDashboardView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(ADMINDASHBOARD));
+            loader.setResources(LocalizationManager.getBundle());
+            Parent root = loader.load();
+            currentView = ADMINDASHBOARD;
+            return root;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
     public void reloadPage(){
         switch (currentView){

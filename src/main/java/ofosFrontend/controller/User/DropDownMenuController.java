@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 import javafx.stage.Stage;
@@ -19,6 +20,8 @@ public class DropDownMenuController extends BasicController {
     private AnchorPane dropDownContent;
     @FXML
     private Text dropDownUsername;
+    @FXML
+    private HBox adminDashboardElement;
 
 
     @FXML
@@ -26,9 +29,22 @@ public class DropDownMenuController extends BasicController {
         dropDownContent.getProperties().put("controller", this);
         SessionManager sessionManager = SessionManager.getInstance();
         dropDownUsername.setText(sessionManager.getUsername());
+        String role = sessionManager.getRole();
 
-
+        if ("ADMIN".equals(role)) {
+            // Make the admin dashboard element visible and managed
+            adminDashboardElement.setVisible(true);
+            adminDashboardElement.setManaged(true);
+        }
     }
+
+    @FXML
+    public void goToAdminDashboard(MouseEvent mouseEvent) throws IOException {
+        mainController.loadAdminDashboardView();
+    }
+
+
+
     public DropDownMenuController() {
     }
 
@@ -62,4 +78,6 @@ public class DropDownMenuController extends BasicController {
         mainController.loadHistoryView();
 
     }
+
+
 }
