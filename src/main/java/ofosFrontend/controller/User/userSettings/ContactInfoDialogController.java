@@ -112,7 +112,10 @@ public class ContactInfoDialogController {
 
     public void setContactInfo(ContactInfo contactInfo) {
         System.out.println("Set Contact Info in contactinfo dialog controller");
-        System.out.println("contactInfo " + contactInfo.getAddress());
+
+        if (contactInfo == null) {
+            return;
+        }
         this.contactInfo = contactInfo;
         firstNameField.setText(contactInfo.getFirstName());
         lastNameField.setText(contactInfo.getLastName());
