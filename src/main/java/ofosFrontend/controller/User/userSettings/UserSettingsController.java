@@ -478,6 +478,34 @@ public class UserSettingsController extends BasicController {
     }
 
 
+    public void handleDeleteAccount(ActionEvent actionEvent) {
+        Task<Void> deleteTask = userService.deleteUser();
+
+        deleteTask.setOnSucceeded(event -> {
+            // Show a confirmation dialog or notification
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle(bundle.getString("Delete_account_success_title")); // Localized title
+            alert.setHeaderText(null);
+            alert.setContentText(bundle.getString("Delete_account_success_message")); // Localized message
+            alert.showAndWait();
+
+        });
+
+        deleteTask.setOnFailed(event -> {
+            // Use showError for localized error messages
+            Throwable exception = deleteTask.getException();
+            if (exception != null) {
+                showError(bundle.getString("Delete_account_error") + ": " + exception.getMessage());
+            } else {
+                showError(bundle.getString("Delete_account_unknown_error"));
+            }
+        });
+
+        // Run the task on a background thread
+        new Thread(deleteTask).start();
+    }
+
+
 }
 
 

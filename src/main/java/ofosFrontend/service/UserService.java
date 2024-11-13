@@ -135,5 +135,34 @@ public class UserService {
         return mapper.readValue(responseBody, mapper.getTypeFactory().constructCollectionType(List.class, User.class));
     }
 
+    public Task<Void> deleteUser() {
+        return new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                String url = "http://10.120.32.94:8000/api/users/delete";
+                String token = SessionManager.getInstance().getToken();
+
+                HttpClient client = HttpClient.newHttpClient();
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(url))
+                        .header("Authorization", "Bearer " + token)
+                        .DELETE()
+                        .build();
+
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                if (response.statusCode() == 418) { // Status code for "I'm a teapot"
+                    throw new Exception("Owner accounts cannot be deleted. Status code: " + response.statusCode());
+                } else if (response.statusCode() != 200) {
+                    System.out.println("Delete user response: " + response.body());
+                    throw new Exception("Failed to delete user. Status code: " + response.statusCode());
+
+                }
+
+                return null;
+            }
+        };
+    }
+
+
 
 }

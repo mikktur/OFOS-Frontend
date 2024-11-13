@@ -79,6 +79,11 @@ public class ContactInfoDialogController {
 
         task.setOnSucceeded(event -> {
             Platform.runLater(() -> {
+                Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                successAlert.setTitle(bundle.getString("Success"));
+                successAlert.setHeaderText(null);
+                successAlert.setContentText(bundle.getString("Contact_info_added_successfully"));
+                successAlert.showAndWait();
                 Stage stage = (Stage) firstNameField.getScene().getWindow();
                 stage.close();
             });

@@ -84,6 +84,7 @@
                </VBox>
 
                <Button fx:id="changePassword" text="%Change_Password" onAction="#handleChangePassword"/>
+               <Button fx:id="deleteAccount" text="%Delete_Account" onAction="#handleDeleteAccount"/>
             </VBox>
             <!-- Delivery Addresses VBox -->
             <VBox spacing="10.0" HBox.hgrow="ALWAYS" style="-fx-background-color: #c4e6fb;" >
