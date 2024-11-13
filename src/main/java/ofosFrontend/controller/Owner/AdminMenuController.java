@@ -268,7 +268,7 @@ public class AdminMenuController extends AdminBasicController {
         String deleteDialogTitle = bundle.getString("DeleteTitle");
         String deleteFail = bundle.getString("DeleteFail");
         try {
-            productService.deleteProduct(product, restaurantID);
+            productService.deleteProduct(product);
             loadProducts();
         } catch (IOException e) {
             e.printStackTrace();
