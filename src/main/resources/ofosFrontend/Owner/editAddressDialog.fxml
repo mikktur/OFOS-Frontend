@@ -28,7 +28,7 @@
     <TextArea fx:id="instructionsArea" prefRowCount="3" wrapText="true" />
 
     <HBox spacing="10" alignment="CENTER_RIGHT">
-        <Button text="%Cancel" onAction="#handleCancel" />
         <Button text="%Save" onAction="#handleSave" />
+        <Button text="%Cancel" onAction="#handleCancel" />
     </HBox>
 </VBox>

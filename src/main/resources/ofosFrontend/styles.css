@@ -32,7 +32,7 @@
 }
 #menuInfo {
     -fx-border-width: 1;
-
+    -fx-border-radius: 15px;
     -fx-border-color: #303030;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);
     -fx-background-radius: 15px;

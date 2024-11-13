@@ -75,6 +75,20 @@
                   </Text>
                </children>
             </HBox>
+            <HBox fx:id="adminDashboardElement" alignment="CENTER" visible="false" managed="false">
+               <children>
+                  <Text fx:id="adminDashboardText" onMouseClicked="#goToAdminDashboard" strokeType="OUTSIDE" strokeWidth="0.0" text="%Admin_Dashboard" textAlignment="CENTER" wrappingWidth="93.13671875">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets top="10.0" />
+                     </HBox.margin>
+                  </Text>
+               </children>
+            </HBox>
+
+
          </children>
       </VBox>
    </children>

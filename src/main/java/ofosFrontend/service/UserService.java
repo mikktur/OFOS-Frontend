@@ -13,6 +13,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
 
 
 public class UserService {
@@ -20,6 +21,7 @@ public class UserService {
     private static final String API_URL = "http://10.120.32.94:8000/api/"; //
 
     private final OkHttpClient client = new OkHttpClient();
+    private final ObjectMapper mapper = new ObjectMapper();
 
     public Response login(String username, String password) throws IOException {
 
@@ -102,8 +104,10 @@ public class UserService {
                         .build();
 
                 HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-                if (response.statusCode() != 200) {
+                if (response.statusCode() == 400) {
+                    throw new Exception("Unauthorized request. Status code: " + response.statusCode());
+                }
+                else if (response.statusCode() != 200) {
                     throw new Exception("Failed to update password. Status code: " + response.statusCode() + response.body());
                 }
 
@@ -111,4 +115,54 @@ public class UserService {
             }
         };
     }
+
+    public List<User> getAllUsers() throws IOException {
+        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+
+        // Create a GET request
+        Request request = new Request.Builder()
+                .url(API_URL + "users")
+                .get()
+                .build();
+
+        // Execute the request and parse the response
+        Response response = client.newCall(request).execute();
+        if (!response.isSuccessful()) {
+            throw new IOException("Failed to fetch users: " + response.code() + " " + response.message());
+        }
+
+        String responseBody = response.body().string();
+        return mapper.readValue(responseBody, mapper.getTypeFactory().constructCollectionType(List.class, User.class));
+    }
+
+    public Task<Void> deleteUser() {
+        return new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                String url = "http://10.120.32.94:8000/api/users/delete";
+                String token = SessionManager.getInstance().getToken();
+
+                HttpClient client = HttpClient.newHttpClient();
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(url))
+                        .header("Authorization", "Bearer " + token)
+                        .DELETE()
+                        .build();
+
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                if (response.statusCode() == 418) { // Status code for "I'm a teapot"
+                    throw new Exception("Owner accounts cannot be deleted. Status code: " + response.statusCode());
+                } else if (response.statusCode() != 200) {
+                    System.out.println("Delete user response: " + response.body());
+                    throw new Exception("Failed to delete user. Status code: " + response.statusCode());
+
+                }
+
+                return null;
+            }
+        };
+    }
+
+
+
 }

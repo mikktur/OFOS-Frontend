@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import ofosFrontend.model.ContactInfo;
 import ofosFrontend.service.ContactInfoService;
 import ofosFrontend.session.LocalizationManager;
+import ofosFrontend.session.TextFieldUtils;
 
 import java.util.ResourceBundle;
 
@@ -21,9 +22,29 @@ public class ContactInfoDialogController {
     @FXML private TextField streetAddressField;
     @FXML private TextField cityField;
     @FXML private TextField postalCodeField;
+    private ContactInfo contactInfo;
     ResourceBundle bundle = LocalizationManager.getBundle();
 
     private ContactInfoService contactInfoService = new ContactInfoService();
+
+    private static final int FIRST_NAME_MAX_LENGTH = 20;
+    private static final int LAST_NAME_MAX_LENGTH = 20;
+    private static final int EMAIL_MAX_LENGTH = 50;
+    private static final int PHONE_MAX_LENGTH = 15;
+    private static final int ADDRESS_MAX_LENGTH = 70;
+    private static final int CITY_MAX_LENGTH = 30;
+    private static final int POSTAL_CODE_MAX_LENGTH = 10;
+
+    @FXML
+    public void initialize() {
+        TextFieldUtils.addTextLimiter(firstNameField, FIRST_NAME_MAX_LENGTH);
+        TextFieldUtils.addTextLimiter(lastNameField, LAST_NAME_MAX_LENGTH);
+        TextFieldUtils.addTextLimiter(emailField, EMAIL_MAX_LENGTH);
+        TextFieldUtils.addTextLimiter(phoneNumberField, PHONE_MAX_LENGTH);
+        TextFieldUtils.addTextLimiter(streetAddressField, ADDRESS_MAX_LENGTH);
+        TextFieldUtils.addTextLimiter(cityField, CITY_MAX_LENGTH);
+        TextFieldUtils.addTextLimiter(postalCodeField, POSTAL_CODE_MAX_LENGTH);
+    }
 
     @FXML
     private void handleSave() {
@@ -58,6 +79,11 @@ public class ContactInfoDialogController {
 
         task.setOnSucceeded(event -> {
             Platform.runLater(() -> {
+                Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                successAlert.setTitle(bundle.getString("Success"));
+                successAlert.setHeaderText(null);
+                successAlert.setContentText(bundle.getString("Contact_info_added_successfully"));
+                successAlert.showAndWait();
                 Stage stage = (Stage) firstNameField.getScene().getWindow();
                 stage.close();
             });
@@ -88,4 +114,22 @@ public class ContactInfoDialogController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    public void setContactInfo(ContactInfo contactInfo) {
+        System.out.println("Set Contact Info in contactinfo dialog controller");
+
+        if (contactInfo == null) {
+            return;
+        }
+        this.contactInfo = contactInfo;
+        firstNameField.setText(contactInfo.getFirstName());
+        lastNameField.setText(contactInfo.getLastName());
+        emailField.setText(contactInfo.getEmail());
+        phoneNumberField.setText(contactInfo.getPhoneNumber());
+        streetAddressField.setText(contactInfo.getAddress());
+        cityField.setText(contactInfo.getCity());
+        postalCodeField.setText(contactInfo.getPostalCode());
+
+    }
+
 }

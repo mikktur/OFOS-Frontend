@@ -4,6 +4,9 @@ package ofosFrontend.model;
 public class User {
     private String username;
     private String password;
+    private int userId;
+    private int id;
+    private String role;
 
     public User() {
         this.username = "";
@@ -29,5 +32,29 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

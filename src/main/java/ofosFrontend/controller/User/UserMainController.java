@@ -79,6 +79,15 @@ public class UserMainController {
         }
     }
 
+    public void loadAdminDashboardView() {
+        Parent adminDashboardView = viewFactory.createAdminDashboardView();
+        if (adminDashboardView != null) {
+            resetToDefaultCartView();
+            setCenterContent(adminDashboardView);
+        }
+    }
+
+
     public void loadRestaurantView(Restaurant restaurant) {
         ScrollPane restaurantView = viewFactory.createRestaurantView(restaurant);
         getShoppingCartController().initializeCartForRestaurant(restaurant.getId(), restaurant);

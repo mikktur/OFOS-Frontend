@@ -17,10 +17,9 @@ public class ProductService {
 
     public List<Product> getProductsByRID(int id) throws IOException {
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
-        String locale = LocalizationManager.getLocale().getLanguage();
-        System.out.println("Locale: " + locale);
+
         Request request = new Request.Builder()
-                .url(API_URL + "api/products/restaurant/"+locale+"/" + id)
+                .url(API_URL + "api/products/restaurant/fi/" + id)
                 .get()
                 .build();
         Response response = client.newCall(request).execute();
@@ -74,18 +73,18 @@ public class ProductService {
             }
         }
     }
-
-    public void deleteProduct(Product product, int restaurantId) throws IOException {
+    public void deleteProduct(Product product) throws IOException {
         SessionManager sessionManager = SessionManager.getInstance();
         String bearerToken = sessionManager.getToken();
 
-        String url = API_URL + "api/products/delete/" + product.getProductID() + "/restaurant/" + restaurantId;
-
         Request request = new Request.Builder()
-                .url(url)
+                .url(API_URL + "api/products/delete/" + product.getProductID())
                 .delete()
                 .addHeader("Authorization", "Bearer " + bearerToken)
                 .build();
+
+
+
 
         Response response = client.newCall(request).execute();
 
@@ -93,4 +92,5 @@ public class ProductService {
             throw new IOException("Failed to delete product: " + response);
         }
     }
+
 }
