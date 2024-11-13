@@ -14,6 +14,9 @@ import ofosFrontend.session.SessionManager;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -77,7 +80,16 @@ public class OrderHistoryController {
                 historyGridPane.add(totalPriceLabel, 3, rowIndex);
                 GridPane.setHalignment(totalPriceLabel, HPos.CENTER);
 
-                String formattedDate = dateFormatter.format(orderItems.getFirst().getOrderDate());
+                // Parse and format order date
+                String rawOrderDate = orderItems.get(0).getOrderDate();
+                String formattedDate;
+                try {
+                    Date parsedDate = new SimpleDateFormat("yyyy-MM-dd").parse(rawOrderDate);
+                    formattedDate = dateFormatter.format(parsedDate);
+                } catch (ParseException e) {
+                    formattedDate = "Invalid date";
+                    e.printStackTrace();
+                }
                 Label orderDateLabel = new Label(formattedDate);
                 historyGridPane.add(orderDateLabel, 4, rowIndex);
                 GridPane.setHalignment(orderDateLabel, HPos.CENTER);
@@ -90,6 +102,7 @@ public class OrderHistoryController {
             e.printStackTrace();
         }
     }
+
 
 
 
