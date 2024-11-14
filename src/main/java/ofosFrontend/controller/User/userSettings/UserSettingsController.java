@@ -517,36 +517,52 @@ public class UserSettingsController extends BasicController {
 
         // Show the dialog and wait for the user's response
         Optional<String> result = confirmationDialog.showAndWait();
-        if (result.isPresent() && "DELETE".equalsIgnoreCase(result.get())) {
-            // Proceed with account deletion
+        if (result.isPresent()) {
+            if ("DELETE".equals(result.get())) {
+                // Proceed with account deletion
+                Task<Void> deleteTask = userService.deleteUser();
 
-            Task<Void> deleteTask = userService.deleteUser();
+                deleteTask.setOnSucceeded(event -> {
+                    DropDownMenuController dropDownMenuController = new DropDownMenuController();
+                    dropDownMenuController.handleLogout();
+                    // Show a success message
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle(bundle.getString("Delete_account_success_title")); // Localized title
+                    alert.setHeaderText(null);
+                    alert.setContentText(bundle.getString("Delete_account_success_message")); // Localized message
+                    alert.showAndWait();
+                });
 
-            deleteTask.setOnSucceeded(event -> {
-                DropDownMenuController dropDownMenuController = new DropDownMenuController();
-                dropDownMenuController.handleLogout();
-                // Show a success message
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle(bundle.getString("Delete_account_success_title")); // Localized title
+                deleteTask.setOnFailed(event -> {
+                    // Show an error message
+                    Throwable exception = deleteTask.getException();
+                    if (exception != null) {
+                        showError(bundle.getString("Delete_account_error") + ": " + exception.getMessage());
+                    } else {
+                        showError(bundle.getString("Delete_account_unknown_error"));
+                    }
+                });
+
+                // Run the task on a background thread
+                new Thread(deleteTask).start();
+            } else {
+                // Show an error alert if "DELETE" was not entered correctly
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle(bundle.getString("Delete_account_error_title")); // Localized title
                 alert.setHeaderText(null);
-                alert.setContentText(bundle.getString("Delete_account_success_message")); // Localized message
+                alert.setContentText(bundle.getString("Delete_account_error_incorrect_message")); // Localized error message
                 alert.showAndWait();
-            });
-
-            deleteTask.setOnFailed(event -> {
-                // Show an error message
-                Throwable exception = deleteTask.getException();
-                if (exception != null) {
-                    showError(bundle.getString("Delete_account_error") + ": " + exception.getMessage());
-                } else {
-                    showError(bundle.getString("Delete_account_unknown_error"));
-                }
-            });
-
-            // Run the task on a background thread
-            new Thread(deleteTask).start();
+            }
+        } else {
+            // Show an alert if the user cancels the dialog
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle(bundle.getString("Delete_account_cancel_title")); // Localized title
+            alert.setHeaderText(null);
+            alert.setContentText(bundle.getString("Delete_account_cancel_message")); // Localized message
+            alert.showAndWait();
         }
     }
+
 }
 
 
