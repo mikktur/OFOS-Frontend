@@ -317,7 +317,7 @@ public class CheckoutController  extends BasicController {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle(bundle.getString("Order_failed"));
                 alert.setHeaderText(null);
-                alert.setContentText(bundle.getString("Order_failed."));
+                alert.setContentText(bundle.getString("Order_failed"));
                 alert.showAndWait();
             });
         });
