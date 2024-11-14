@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CheckoutService {
+    private static final String API_URL = "http://10.120.32.94:8000/api/";
     private List<DeliveryAddress> deliveryAddressesList = new ArrayList<>();
 
     public Task<List<DeliveryAddress>> fetchDeliveryAddresses() {
@@ -23,7 +24,7 @@ public class CheckoutService {
         Task<List<DeliveryAddress>> task = new Task<>() {
             @Override
             protected List<DeliveryAddress> call() throws Exception {
-                String url = "http://10.120.32.94:8000/api/deliveryaddress/" + userId;
+                String url = API_URL + "deliveryaddress/" + userId;
                 HttpClient client = HttpClient.newHttpClient();
                 HttpRequest request = HttpRequest.newBuilder()
                         .uri(URI.create(url))

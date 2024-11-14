@@ -4,6 +4,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.layout.VBox;
 import ofosFrontend.model.Restaurant;
 import ofosFrontend.model.User;
 import ofosFrontend.service.RestaurantService;
@@ -14,6 +17,12 @@ import java.util.List;
 
 public class AdminDashboardController {
 
+    public ComboBox productSelector;
+    public VBox workingArea;
+    public Label restaurantDetailsLabel;
+    public Label restaurantNameLabel;
+    public ComboBox productLinkSelector;
+    public ListView linkedProductsList;
     @FXML
     private ComboBox<String> restaurantSelector;
 
@@ -79,4 +88,6 @@ public class AdminDashboardController {
         alert.showAndWait();
     }
 
+    public void handleLinkProduct(ActionEvent actionEvent) {
+    }
 }

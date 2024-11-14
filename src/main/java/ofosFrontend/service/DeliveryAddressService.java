@@ -17,11 +17,12 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class DeliveryAddressService {
+    private static final String API_URL = "http://10.120.32.94:8000/api/";
 
     public void saveDeliveryAddress(DeliveryAddress address, Runnable onSuccess, Runnable onFailure) {
         try {
             System.out.println("Saving delivery address...");
-            String url = "http://10.120.32.94:8000/api/deliveryaddress/save";
+            String url = API_URL + "deliveryaddress/save";
 
             ObjectMapper objectMapper = new ObjectMapper();
             String requestBody = objectMapper.writeValueAsString(address);
@@ -59,7 +60,7 @@ public class DeliveryAddressService {
         return new Task<>() {
             @Override
             protected List<DeliveryAddress> call() throws Exception {
-                String url = "http://10.120.32.94:8000/api/deliveryaddress/" + userId;
+                String url = API_URL + "deliveryaddress/" + userId;
                 HttpClient client = HttpClient.newHttpClient();
                 HttpRequest request = HttpRequest.newBuilder()
                         .uri(URI.create(url))
@@ -84,7 +85,7 @@ public class DeliveryAddressService {
         return new Task<>() {
             @Override
             protected Void call() throws Exception {
-                String url = "http://10.120.32.94:8000/api/deliveryaddress/setDefault";
+                String url = API_URL + "deliveryaddress/setDefault";
                 HttpClient client = HttpClient.newHttpClient();
                 ObjectMapper objectMapper = new ObjectMapper();
 
@@ -117,7 +118,7 @@ public class DeliveryAddressService {
         return new Task<>() {
             @Override
             protected Void call() throws Exception {
-                String url = "http://10.120.32.94:8000/api/deliveryaddress/delete/" + deliveryAddressId;
+                String url = API_URL + "deliveryaddress/delete/" + deliveryAddressId;
 
                 HttpClient client = HttpClient.newHttpClient();
                 HttpRequest request = HttpRequest.newBuilder()
@@ -141,7 +142,7 @@ public class DeliveryAddressService {
         return new Task<>() {
             @Override
             protected Void call() throws Exception {
-                String url = "http://10.120.32.94:8000/api/deliveryaddress/update";
+                String url = API_URL + "deliveryaddress/update";
                 String token = SessionManager.getInstance().getToken();
 
                 ObjectMapper objectMapper = new ObjectMapper();

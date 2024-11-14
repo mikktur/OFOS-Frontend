@@ -18,7 +18,8 @@ import java.util.List;
 
 public class UserService {
 
-    private static final String API_URL = "http://10.120.32.94:8000/api/"; //
+    private static final String API_URL = "http://10.120.32.94:8000/api/";
+    private static final String API_URL_LOCAL = "http://localhost:8000/api/";
 
     private final OkHttpClient client = new OkHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
@@ -61,7 +62,7 @@ public class UserService {
         return new Task<>() {
             @Override
             protected ContactInfo call() throws Exception {
-                String url = "http://10.120.32.94:8000/api/contactinfo/" + userId;
+                String url = API_URL + "contactinfo/" + userId;
 
                 HttpClient client = HttpClient.newHttpClient();
                 HttpRequest request = HttpRequest.newBuilder()
@@ -89,7 +90,7 @@ public class UserService {
         return new Task<>() {
             @Override
             protected Void call() throws Exception {
-                String url = "http://10.120.32.94:8000/api/users/updatePassword";
+                String url = API_URL + "users/updatePassword";
                 String token = SessionManager.getInstance().getToken();
 
                 ObjectMapper objectMapper = new ObjectMapper();
@@ -139,7 +140,7 @@ public class UserService {
         return new Task<>() {
             @Override
             protected Void call() throws Exception {
-                String url = "http://10.120.32.94:8000/api/users/delete";
+                String url = API_URL + "users/delete";
                 String token = SessionManager.getInstance().getToken();
 
                 HttpClient client = HttpClient.newHttpClient();

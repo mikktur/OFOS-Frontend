@@ -7,6 +7,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.HBox?>
 <VBox alignment="TOP_CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ofosFrontend.controller.User.AdminDashboardController"
       style="-fx-padding: 20; -fx-background-color: #f7f9fb;">
@@ -14,25 +16,35 @@
         <!-- Title -->
         <Label text="%Admin_Dashboard" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
 
-        <!-- Dropdown for Restaurants -->
-        <VBox spacing="10.0">
-            <Label text="%Manage_Restaurants" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
-            <ComboBox fx:id="restaurantSelector" promptText="%Select_a_Restaurant"/>
-            <Button text="%Edit_Selected_Restaurant" onAction="#handleEditRestaurant"/>
-        </VBox>
 
-        <!-- Dropdown for Users -->
-        <VBox spacing="10.0">
-            <Label text="%Manage_Users" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
-            <ComboBox fx:id="userSelector" promptText="%Select_a_User"/>
-            <Button text="%Edit_Selected_User" onAction="#handleEditUser"/>
-        </VBox>
+        <VBox fx:id="workingArea" spacing="15.0" style="-fx-padding: 15; -fx-background-color: #e9f5fc; -fx-border-color: lightgray; -fx-border-width: 1; -fx-border-radius: 5;" >
+            <HBox spacing="10.0">
 
-        <!-- Dropdown for Products -->
-        <VBox spacing="10.0">
-            <Label text="%Manage_Products" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
-            <ComboBox fx:id="productSelector" promptText="%Select_a_Product"/>
-            <Button text="%Edit_Selected_Product" onAction="#handleEditProduct"/>
+                <VBox spacing="10.0">
+                    <Label text="%Manage_Restaurants" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                    <ComboBox fx:id="restaurantSelector" promptText="%Select_a_Restaurant"/>
+                    <Button text="%Edit_Selected_Restaurant" onAction="#handleEditRestaurant"/>
+                </VBox>
+
+                <!-- Link Products Section -->
+                <VBox spacing="10.0">
+                    <Label text="Link Products" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                    <ComboBox fx:id="productLinkSelector" promptText="Select a Product"/>
+                    <Button text="Link Product" onAction="#handleLinkProduct"/>
+                </VBox>
+                <!-- Dropdown for Users -->
+                <VBox spacing="10.0">
+                    <Label text="%Manage_Users" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                    <ComboBox fx:id="userSelector" promptText="%Select_a_User"/>
+                    <Button text="%Edit_Selected_User" onAction="#handleEditUser"/>
+                </VBox>
+            </HBox>
+
+
+            <VBox spacing="10.0">
+                <Label text="Modify" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                <ListView fx:id="linkedProductsList"/>
+            </VBox>
         </VBox>
     </children>
 </VBox>
