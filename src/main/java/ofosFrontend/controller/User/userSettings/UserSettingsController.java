@@ -519,6 +519,7 @@ public class UserSettingsController extends BasicController {
         Optional<String> result = confirmationDialog.showAndWait();
         if (result.isPresent() && "DELETE".equalsIgnoreCase(result.get())) {
             // Proceed with account deletion
+
             Task<Void> deleteTask = userService.deleteUser();
 
             deleteTask.setOnSucceeded(event -> {
