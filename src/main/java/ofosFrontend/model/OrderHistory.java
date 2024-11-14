@@ -6,9 +6,18 @@ public class OrderHistory {
     private String productName;
     private String orderDate;
     private String restaurantName;
+    private int productId;
 
     public double getOrderPrice() {
         return orderPrice;
+    }
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
 
     public void setOrderPrice(double orderPrice) {

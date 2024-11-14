@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.concurrent.Task;
 import ofosFrontend.model.*;
+import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -25,7 +26,8 @@ public class OrderService {
 
 
     public Map<Integer, List<OrderHistory>> getHistory() throws IOException, InterruptedException {
-        String url = API_URL + "order/history";
+        String lang = LocalizationManager.getLanguageCode();
+        String url = API_URL + "order/"+lang+"/history";
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
