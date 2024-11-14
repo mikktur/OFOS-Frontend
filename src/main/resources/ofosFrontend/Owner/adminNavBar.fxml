@@ -20,7 +20,7 @@
             <Insets left="10.0" />
          </HBox.margin>
       </ImageView>
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="OFOS" textAlignment="CENTER" wrappingWidth="115.63671875" HBox.hgrow="ALWAYS">
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="OFOS" textAlignment="CENTER" wrappingWidth="150" HBox.hgrow="ALWAYS">
          <font>
             <Font name="System Bold" size="36.0" />
          </font>
@@ -28,12 +28,12 @@
             <Insets />
          </HBox.margin>
       </Text>
-      <ImageView fx:id="adminHome" fitHeight="38.0" fitWidth="39.0" onMouseClicked="#goToHome" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
+      <ImageView fx:id="adminHome" fitHeight="38.0" fitWidth="39.0" onMouseClicked="#goToHome"  pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
          <image>
             <Image url="@../../images/admin.png" />
          </image>
       </ImageView>
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="ADMIN" textAlignment="CENTER" wrappingWidth="130.63671875" HBox.hgrow="ALWAYS">
+      <Text fx:id="ownerText" strokeType="OUTSIDE" strokeWidth="0.0" text="%Owner" textAlignment="CENTER" wrappingWidth="175" HBox.hgrow="ALWAYS">
          <font>
             <Font name="System Bold" size="36.0" />
          </font>
