@@ -36,6 +36,16 @@ public class LocalizationManager {
     public static Locale getLocale() {
         return locale;
     }
+
+    /**
+     * Gets the current language code (e.g., "en", "fi", "ja", "ru").
+     *
+     * @return the language code.
+     */
+    public static String getLanguageCode() {
+        return locale.getLanguage();
+    }
+
     public static void setLocale(Locale newLocale) {
         locale = newLocale;
         bundle = ResourceBundle.getBundle(BASE_NAME, locale);

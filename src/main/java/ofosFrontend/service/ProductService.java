@@ -18,8 +18,11 @@ public class ProductService {
     public List<Product> getProductsByRID(int id) throws IOException {
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
+        // Get the current language code dynamically
+        String language = LocalizationManager.getLanguageCode();
+
         Request request = new Request.Builder()
-                .url(API_URL + "api/products/restaurant/fi/" + id)
+                .url(API_URL + "api/products/restaurant/" + language + "/" + id)
                 .get()
                 .build();
         Response response = client.newCall(request).execute();
@@ -27,6 +30,7 @@ public class ProductService {
 
         return mapper.readValue(responseBody, mapper.getTypeFactory().constructCollectionType(List.class, Product.class));
     }
+
 
     public void addProductToRestaurant(Product product, int restaurantId) throws IOException {
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
