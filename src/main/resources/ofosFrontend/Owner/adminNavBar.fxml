@@ -33,7 +33,7 @@
             <Image url="@../../images/admin.png" />
          </image>
       </ImageView>
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="ADMIN" textAlignment="CENTER" wrappingWidth="130.63671875" HBox.hgrow="ALWAYS">
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%OWNER" textAlignment="CENTER" wrappingWidth="130.63671875" HBox.hgrow="ALWAYS">
          <font>
             <Font name="System Bold" size="36.0" />
          </font>

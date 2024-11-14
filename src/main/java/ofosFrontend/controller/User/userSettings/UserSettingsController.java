@@ -20,6 +20,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import ofosFrontend.controller.User.BasicController;
+import ofosFrontend.controller.User.DropDownMenuController;
 import ofosFrontend.model.ContactInfo;
 import ofosFrontend.model.DeliveryAddress;
 import ofosFrontend.service.DeliveryAddressService;
@@ -479,33 +480,72 @@ public class UserSettingsController extends BasicController {
 
 
     public void handleDeleteAccount(ActionEvent actionEvent) {
-        Task<Void> deleteTask = userService.deleteUser();
+        // Create a confirmation dialog
+        Dialog<String> confirmationDialog = new Dialog<>();
+        confirmationDialog.setTitle(bundle.getString("Delete_account_confirm_title")); // Localized title
+        confirmationDialog.setHeaderText(bundle.getString("Delete_account_confirm_message")); // Localized message
 
-        deleteTask.setOnSucceeded(event -> {
-            // Show a confirmation dialog or notification
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle(bundle.getString("Delete_account_success_title")); // Localized title
-            alert.setHeaderText(null);
-            alert.setContentText(bundle.getString("Delete_account_success_message")); // Localized message
-            alert.showAndWait();
+        // Set the button types
+        ButtonType okButtonType = new ButtonType(bundle.getString("OK"), ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = new ButtonType(bundle.getString("Cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
+        confirmationDialog.getDialogPane().getButtonTypes().addAll(okButtonType, cancelButtonType);
 
+        // Create a text field for user input
+        TextField inputField = new TextField();
+        inputField.setPromptText(bundle.getString("Enter_DELETE_to_confirm")); // Localized prompt text
+
+        // Add the text field to the dialog
+        VBox content = new VBox();
+        content.setSpacing(10);
+        content.getChildren().add(inputField);
+        confirmationDialog.getDialogPane().setContent(content);
+
+        // Enable the OK button only if the user enters "DELETE"
+        Node okButton = confirmationDialog.getDialogPane().lookupButton(okButtonType);
+        okButton.setDisable(true);
+        inputField.textProperty().addListener((observable, oldValue, newValue) -> {
+            okButton.setDisable(!"DELETE".equalsIgnoreCase(newValue.trim()));
         });
 
-        deleteTask.setOnFailed(event -> {
-            // Use showError for localized error messages
-            Throwable exception = deleteTask.getException();
-            if (exception != null) {
-                showError(bundle.getString("Delete_account_error") + ": " + exception.getMessage());
-            } else {
-                showError(bundle.getString("Delete_account_unknown_error"));
+        // Process the result
+        confirmationDialog.setResultConverter(dialogButton -> {
+            if (dialogButton == okButtonType) {
+                return inputField.getText();
             }
+            return null;
         });
 
-        // Run the task on a background thread
-        new Thread(deleteTask).start();
+        // Show the dialog and wait for the user's response
+        Optional<String> result = confirmationDialog.showAndWait();
+        if (result.isPresent() && "DELETE".equalsIgnoreCase(result.get())) {
+            // Proceed with account deletion
+            Task<Void> deleteTask = userService.deleteUser();
+
+            deleteTask.setOnSucceeded(event -> {
+                DropDownMenuController dropDownMenuController = new DropDownMenuController();
+                dropDownMenuController.handleLogout();
+                // Show a success message
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle(bundle.getString("Delete_account_success_title")); // Localized title
+                alert.setHeaderText(null);
+                alert.setContentText(bundle.getString("Delete_account_success_message")); // Localized message
+                alert.showAndWait();
+            });
+
+            deleteTask.setOnFailed(event -> {
+                // Show an error message
+                Throwable exception = deleteTask.getException();
+                if (exception != null) {
+                    showError(bundle.getString("Delete_account_error") + ": " + exception.getMessage());
+                } else {
+                    showError(bundle.getString("Delete_account_unknown_error"));
+                }
+            });
+
+            // Run the task on a background thread
+            new Thread(deleteTask).start();
+        }
     }
-
-
 }
 
 

@@ -58,7 +58,7 @@ public class OrderService {
 
                 String requestBody = mapper.writeValueAsString(orderItems);
 
-                String url = "http://10.120.32.94:8000/api/order";
+                String url = API_URL + "order";
                 HttpClient client = HttpClient.newHttpClient();
                 HttpRequest request = HttpRequest.newBuilder()
                         .uri(URI.create(url))
