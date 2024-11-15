@@ -154,7 +154,6 @@ public class UserService {
                 if (response.statusCode() == 418) { // Status code for "I'm a teapot"
                     throw new Exception("Owner accounts cannot be deleted. Status code: " + response.statusCode());
                 } else if (response.statusCode() != 200) {
-                    System.out.println("Delete user response: " + response.body());
                     throw new Exception("Failed to delete user. Status code: " + response.statusCode());
 
                 }
@@ -164,6 +163,40 @@ public class UserService {
         };
     }
 
+    public User getUserByUsername(String selectedUserName) throws IOException {
+        Request request = new Request.Builder()
+                .url(API_URL + "users/username/" + selectedUserName)
+                .get()
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new IOException("Failed to fetch user: " + response.code() + " " + response.message());
+            }
+
+            String responseBody = response.body().string();
+
+            return mapper.readValue(responseBody, User.class);
+        }
+    }
 
 
+    public void banUser(int userId) {
+        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+
+
+        Request request = new Request.Builder()
+                .url(API_URL + "users/ban/" + userId)
+                .post(RequestBody.create("", JSON))
+                .build();
+
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new IOException("Failed to ban user: " + response.code() + " " + response.message());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

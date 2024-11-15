@@ -3,26 +3,30 @@ package ofosFrontend.controller.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 import ofosFrontend.model.Restaurant;
 import ofosFrontend.model.User;
 import ofosFrontend.service.RestaurantService;
 import ofosFrontend.service.UserService;
+import ofosFrontend.session.LocalizationManager;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.ResourceBundle;
 
 public class AdminDashboardController {
 
-    public ComboBox productSelector;
-    public VBox workingArea;
-    public Label restaurantDetailsLabel;
-    public Label restaurantNameLabel;
-    public ComboBox productLinkSelector;
-    public ListView linkedProductsList;
+    @FXML
+    public Button banButton;
+    @FXML
+    public ComboBox<String> bannedUserSelector;
+
+    @FXML
+    private ListView<String> worker;
+
     @FXML
     private ComboBox<String> restaurantSelector;
 
@@ -32,62 +36,122 @@ public class AdminDashboardController {
     private final RestaurantService restaurantService = new RestaurantService();
     private final UserService userService = new UserService();
 
+    ResourceBundle bundle = LocalizationManager.getBundle();
+
     @FXML
     public void initialize() {
         loadRestaurants();
         loadUsers();
+        loadBannedUsers();
+
+        // Add listeners
+        restaurantSelector.setOnAction(event -> displaySelectedRestaurant());
+        userSelector.setOnAction(event -> displaySelectedUser());
+        bannedUserSelector.setOnAction(event -> displaySelectedUser());
     }
 
     private void loadUsers() {
         try {
-            // Fetch the list of users
             List<User> users = userService.getAllUsers();
 
-            // Populate the ComboBox with user names
             for (User user : users) {
                 userSelector.getItems().add(user.getUsername());
             }
 
         } catch (IOException e) {
-            // Handle exception and show an error alert
-            showErrorAlert("Failed to load users", "Could not fetch user data. Please try again later.");
+            showError(bundle.getString("Failed_to_load_user"));
             e.printStackTrace();
         }
     }
 
-    public void handleEditRestaurant(ActionEvent actionEvent) {
-    }
+    private void loadBannedUsers() {
+        try {
+            List<User> users = userService.getAllUsers();
 
-    public void handleEditUser(ActionEvent actionEvent) {
-    }
+            for (User user : users) {
+                // fix if-clause to (!user.getEnabled()) when backend is ready
+                if (user.getEnabled() == null) {
+                    bannedUserSelector.getItems().add(user.getUsername());
+                }
+            }
 
-    public void handleEditProduct(ActionEvent actionEvent) {
+        } catch (IOException e) {
+            showError(bundle.getString("Failed_to_load_user"));
+            e.printStackTrace();
+        }
     }
 
     private void loadRestaurants() {
         try {
-            // Fetch the list of restaurants
             List<Restaurant> restaurants = restaurantService.getAllRestaurants();
 
-            // Populate the ComboBox with restaurant names
             for (Restaurant restaurant : restaurants) {
                 restaurantSelector.getItems().add(restaurant.getRestaurantName());
             }
 
         } catch (IOException e) {
-            // Handle exception and show an error alert
-            showErrorAlert("Failed to load restaurants", "Could not fetch restaurant data. Please try again later.");
+            showError(bundle.getString("Failed_to_load_restaurants"));
             e.printStackTrace();
         }
     }
 
-    private void showErrorAlert(String title, String content) {
+    private void displaySelectedRestaurant() {
+        // Get the selected restaurant name
+        String selectedRestaurantName = restaurantSelector.getValue();
+
+        if (selectedRestaurantName != null) {
+            // Clear the worker area and display the selected restaurant
+            worker.getItems().clear();
+            worker.getItems().add(bundle.getString("Selected_restaurant") + selectedRestaurantName);
+
+        }
+    }
+
+    private void displaySelectedUser() {
+        // Get the selected user
+        String selectedUserName = userSelector.getValue();
+
+        if (selectedUserName != null) {
+            try {
+                User selectedUser = userService.getUserByUsername(selectedUserName);
+
+                // Clear the worker area and display the selected user
+                worker.getItems().clear();
+                worker.getItems().add(bundle.getString("Selected_user") + selectedUserName);
+                worker.getItems().add(bundle.getString("User_ID") + selectedUser.getUserId());
+                worker.getItems().add("Enabled: " + selectedUser.getEnabled());
+            } catch (IOException e) {
+                showError(bundle.getString("Failed_to_load_user"));
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setContentText(content);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
         alert.showAndWait();
     }
 
-    public void handleLinkProduct(ActionEvent actionEvent) {
+    public void banUser() {
+        String selectedUserName = userSelector.getValue();
+        if (selectedUserName != null) {
+            try {
+                User selectedUser = userService.getUserByUsername(selectedUserName);
+
+                if (selectedUser != null) {
+                    userService.banUser(selectedUser.getUserId());
+                    worker.getItems().clear();
+                    worker.getItems().add(bundle.getString("User_banned") + ": " + selectedUserName);
+                }
+            } catch (IOException e) {
+                showError(bundle.getString("Failed_to_load_user"));
+                e.printStackTrace();
+            }
+        }
+        loadUsers();
     }
 }
