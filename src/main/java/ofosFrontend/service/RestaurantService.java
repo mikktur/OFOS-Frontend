@@ -121,6 +121,29 @@ public class RestaurantService {
         return mapper.readValue(responseBody,
                 mapper.getTypeFactory().constructCollectionType(List.class, Restaurant.class));
     }
+
+    public boolean changeOwner(int restaurantId, int newOwnerId) throws IOException {
+        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+        String jsonBody = String.format("{\"restaurantId\": %d, \"newOwnerId\": %d}", restaurantId, newOwnerId);
+
+        RequestBody body = RequestBody.create(jsonBody, JSON);
+
+        Request request = new Request.Builder()
+                .url(API_URL + "restaurants/changeowner")
+                .put(body)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                return true;
+            } else {
+                System.err.println("Change owner failed: " + response.code() + " " + response.message());
+                throw new IOException("Failed to change owner: " + response.code() + " " + response.message());
+            }
+        }
+    }
+
+
 }
 
 

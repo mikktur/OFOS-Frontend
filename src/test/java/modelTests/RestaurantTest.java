@@ -13,7 +13,7 @@ public class RestaurantTest {
     @BeforeEach
     public void setUp() {
         // Initialize the restaurant with the parameterized constructor
-        restaurant = new Restaurant("Sushi Place", "123-456-7890", "sushi.jpg");
+        restaurant = new Restaurant("Sushi Place", "123-456-7890", "sushi.jpg", "seppo");
     }
 
     @Test
@@ -32,6 +32,7 @@ public class RestaurantTest {
         assertEquals("Sushi Place", restaurant.getRestaurantName(), "Restaurant name should be 'Sushi Place'.");
         assertEquals("123-456-7890", restaurant.getRestaurantPhone(), "Restaurant phone should be '123-456-7890'.");
         assertEquals("sushi.jpg", restaurant.getPicture(), "Picture should be 'sushi.jpg'.");
+        assertEquals("seppo", restaurant.getOwnerUsername(), "Owner should be 'seppo'.");
     }
 
     @Test

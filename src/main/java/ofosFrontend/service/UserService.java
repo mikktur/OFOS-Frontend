@@ -181,22 +181,41 @@ public class UserService {
     }
 
 
-    public void banUser(int userId) {
+    public boolean banUser(int userId) throws IOException {
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
-
 
         Request request = new Request.Builder()
                 .url(API_URL + "users/ban/" + userId)
                 .post(RequestBody.create("", JSON))
                 .build();
 
-
         try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) {
-                throw new IOException("Failed to ban user: " + response.code() + " " + response.message());
+            if (response.isSuccessful()) {
+                return true;
+            } else {
+                System.err.println("Failed to ban user: " + response.code() + " " + response.message());
+                return false;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
+
+
+    public boolean unbanUser(int userId) throws IOException {
+        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+
+        Request request = new Request.Builder()
+                .url(API_URL + "users/unban/" + userId)
+                .post(RequestBody.create("", JSON))
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                return true; // Unban operation succeeded
+            } else {
+                System.err.println("Failed to unban user: " + response.code() + " " + response.message());
+                return false; // Unban operation failed
+            }
+        }
+    }
+
 }

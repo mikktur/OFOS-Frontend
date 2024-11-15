@@ -7,45 +7,71 @@
 
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <VBox alignment="TOP_CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ofosFrontend.controller.User.AdminDashboardController"
       style="-fx-padding: 20; -fx-background-color: #f7f9fb;">
-    <children>
-        <!-- Title -->
-        <Label text="%Admin_Dashboard" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+    <Label text="%Admin_Dashboard" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
 
+    <VBox fx:id="workingArea" spacing="15.0"
+          style="-fx-padding: 15; -fx-background-color: #e9f5fc; -fx-border-color: lightgray; -fx-border-width: 1; -fx-border-radius: 5;">
+        <HBox spacing="10.0">
 
-        <VBox fx:id="workingArea" spacing="15.0" style="-fx-padding: 15; -fx-background-color: #e9f5fc; -fx-border-color: lightgray; -fx-border-width: 1; -fx-border-radius: 5;" >
-            <HBox spacing="10.0">
-
+            <VBox spacing="10.0">
                 <VBox spacing="10.0">
                     <Label text="%Manage_Restaurants" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
                     <ComboBox fx:id="restaurantSelector" promptText="%Select_a_Restaurant"/>
                 </VBox>
 
-                <!-- Dropdown for Users -->
                 <VBox spacing="10.0">
                     <Label text="%Active_users" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
                     <ComboBox fx:id="userSelector" promptText="%Select_a_User"/>
                 </VBox>
 
-                <VBox spacing="10.0">
-                    <Label text="%Banned_Users" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
-                    <ComboBox fx:id="bannedUserSelector" promptText="%Select_a_User"/>
-                </VBox>
-            </HBox>
+            </VBox>
 
 
             <VBox spacing="10.0">
-                <Label text="Modify" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
-                <ListView fx:id="worker"/>
-                <HBox spacing="10">
-                    <Button fx:id="banButton" text="%Ban" onAction="#banUser"/>
-                    <Button fx:id="unbanButton" text="%Unban" onAction="#unbanUser"/>
-                    <Button fx:id="changeOwnerButton" text="%Change_Owner" onAction="#changeOwner"/>
-                </HBox>
-
+                <Label text="%Banned_Users" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                <ComboBox fx:id="bannedUserSelector" promptText="%Select_a_User"/>
             </VBox>
+
+        </HBox>
+
+        <VBox spacing="15.0">
+            <!-- Restaurant Details -->
+            <VBox fx:id="Restaurant_Details" spacing="5.0"
+                  style="-fx-padding: 10; -fx-background-color: #ffffff; -fx-border-color: lightgray; -fx-border-width: 1; -fx-border-radius: 5;">
+                <Label text="Restaurant_Details" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+                <Label fx:id="restaurantNameLabel" text="Restaurant_Name:"/>
+                <Label fx:id="restaurantIDLabel" text="Restaurant_ID:"/>
+                <Label fx:id="restaurantOwnerLabel" text="Owner:"/>
+            </VBox>
+
+            <!-- User Details -->
+            <VBox fx:id="userDetails" spacing="5.0"
+                  style="-fx-padding: 10; -fx-background-color: #ffffff; -fx-border-color: lightgray; -fx-border-width: 1; -fx-border-radius: 5;">
+                <Label text="%User_Details" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+                <Label fx:id="userNameLabel" text="%User_Name"/>
+                <Label fx:id="userIDLabel" text="%User_ID"/>
+                <Label fx:id="userEnabledLabel" text="%Enabled"/>
+            </VBox>
+
+            <VBox fx:id="bannedArea" spacing="5.0"
+                  style="-fx-padding: 10; -fx-background-color: #ffffff; -fx-border-color: lightgray; -fx-border-width: 1; -fx-border-radius: 5;">
+                <Label text="BanHandler" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+                <Label fx:id="banUserNameLabel" text="%User_Name"/>
+                <Label fx:id="banUserIDLabel" text="%User_ID"/>
+                <Label fx:id="banUserEnabledLabel" text="%Enabled"/>
+            </VBox>
+
+            <HBox spacing="10">
+                <Button fx:id="changeOwnerButton" text="%Change_Owner" onAction="#changeOwner"/>
+                <Region prefWidth="150"/>
+                <Button fx:id="banButton" text="%Ban" onAction="#banUser"/>
+                <Button fx:id="unbanButton" text="%Unban" onAction="#unbanUser"/>
+            </HBox>
         </VBox>
-    </children>
+    </VBox>
 </VBox>
+
