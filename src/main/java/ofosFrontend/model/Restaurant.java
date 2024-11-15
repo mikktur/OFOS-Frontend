@@ -9,15 +9,16 @@ public class Restaurant {
     private String restaurantName;
     private String restaurantPhone;
     private String picture;
-//    private String category;
-//    private String ownerUsername;
+    private String category;
+    private String ownerUsername;
     private String address;
     private String businessHours;
 
-    public Restaurant(String restaurantName, String restaurantPhone, String picture) {
+    public Restaurant(String restaurantName, String restaurantPhone, String picture, String ownerUsername) {
         this.restaurantName = restaurantName;
         this.restaurantPhone = restaurantPhone;
         this.picture = picture;
+        this.ownerUsername = ownerUsername;
 
     }
 
@@ -56,9 +57,9 @@ public class Restaurant {
         this.picture = picture;
     }
 
-//    public String getCategory() {
-//        return category;
-//    }
+    public String getCategory() {
+        return category;
+    }
     public String getAddress() {
         return address;
     }
@@ -71,5 +72,13 @@ public class Restaurant {
 
     public void setHours(String newHours) {
         this.businessHours = newHours;
+    }
+
+    public String getOwnerUsername() {
+        return ownerUsername;
+    }
+
+    public void setOwnerUsername(String ownerUsername) {
+        this.ownerUsername = ownerUsername;
     }
 }

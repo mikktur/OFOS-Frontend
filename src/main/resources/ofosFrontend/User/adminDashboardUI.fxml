@@ -25,7 +25,7 @@
 
                 <!-- Dropdown for Users -->
                 <VBox spacing="10.0">
-                    <Label text="%Manage_Users" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                    <Label text="%Active_users" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
                     <ComboBox fx:id="userSelector" promptText="%Select_a_User"/>
                 </VBox>
 
@@ -39,7 +39,12 @@
             <VBox spacing="10.0">
                 <Label text="Modify" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
                 <ListView fx:id="worker"/>
-                <Button fx:id="banButton" text="Ban" onAction="#banUser"/>
+                <HBox spacing="10">
+                    <Button fx:id="banButton" text="%Ban" onAction="#banUser"/>
+                    <Button fx:id="unbanButton" text="%Unban" onAction="#unbanUser"/>
+                    <Button fx:id="changeOwnerButton" text="%Change_Owner" onAction="#changeOwner"/>
+                </HBox>
+
             </VBox>
         </VBox>
     </children>

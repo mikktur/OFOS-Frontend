@@ -35,6 +35,9 @@ public class AdminDashboardController {
 
     private final RestaurantService restaurantService = new RestaurantService();
     private final UserService userService = new UserService();
+    private List<Restaurant> restaurants;
+    private Restaurant selectedRestaurant;
+    private User selectedUser;
 
     ResourceBundle bundle = LocalizationManager.getBundle();
 
@@ -83,7 +86,7 @@ public class AdminDashboardController {
 
     private void loadRestaurants() {
         try {
-            List<Restaurant> restaurants = restaurantService.getAllRestaurants();
+            restaurants = restaurantService.getAllRestaurants();
 
             for (Restaurant restaurant : restaurants) {
                 restaurantSelector.getItems().add(restaurant.getRestaurantName());
@@ -96,16 +99,27 @@ public class AdminDashboardController {
     }
 
     private void displaySelectedRestaurant() {
-        // Get the selected restaurant name
+        // Get the selected restaurant name from the ComboBox
         String selectedRestaurantName = restaurantSelector.getValue();
 
         if (selectedRestaurantName != null) {
-            // Clear the worker area and display the selected restaurant
-            worker.getItems().clear();
-            worker.getItems().add(bundle.getString("Selected_restaurant") + selectedRestaurantName);
+            // Find the selected restaurant object by its name
+            selectedRestaurant = restaurants.stream()
+                    .filter(restaurant -> restaurant.getRestaurantName().equals(selectedRestaurantName))
+                    .findFirst()
+                    .orElse(null);
 
+            if (selectedRestaurant != null) {
+                worker.getItems().clear();
+                worker.getItems().add(bundle.getString("Selected_restaurant") + selectedRestaurant.getRestaurantName());
+                worker.getItems().add(bundle.getString("Restaurant_ID") + selectedRestaurant.getId());
+                //worker.getItems().add(bundle.getString("Owner") + selectedRestaurant.getOwner());
+            } else {
+                showError(bundle.getString("Failed_to_load_restaurants"));
+            }
         }
     }
+
 
     private void displaySelectedUser() {
         // Get the selected user
@@ -113,7 +127,7 @@ public class AdminDashboardController {
 
         if (selectedUserName != null) {
             try {
-                User selectedUser = userService.getUserByUsername(selectedUserName);
+                selectedUser = userService.getUserByUsername(selectedUserName);
 
                 // Clear the worker area and display the selected user
                 worker.getItems().clear();
@@ -153,5 +167,24 @@ public class AdminDashboardController {
             }
         }
         loadUsers();
+    }
+
+    public void changeOwner(ActionEvent actionEvent) {
+        if (selectedRestaurant == null) {
+            showError(bundle.getString("NoRestaurantSelected"));
+            return;
+        }
+
+        String currentOwner = selectedRestaurant.getOwnerUsername();
+        String newOwner = userSelector.getValue();
+        System.out.println("newOwner: " + newOwner);
+        System.out.println("currentOwner: " + currentOwner);
+        System.out.println("selectedRestaurant.getId(): " + selectedRestaurant.getId());
+        if (newOwner != null) {
+            //restaurantService.changeOwner(selectedRestaurant.getId(), newOwner);
+        }
+    }
+
+    public void unbanUser(ActionEvent actionEvent) {
     }
 }
