@@ -1,5 +1,8 @@
 package ofosFrontend.model;
 
+import ofosFrontend.service.RestaurantService;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -7,9 +10,14 @@ import java.util.stream.Collectors;
 public class RestaurantList {
     private Restaurant restaurant;
     private List<Restaurant> restaurantList;
-
+    private RestaurantService restaurantService;
     public RestaurantList() {
-        restaurantList = new ArrayList<>();
+        restaurantService = new RestaurantService();
+        try {
+            restaurantList = restaurantService.getAllRestaurants();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public Restaurant getRestaurant() {
@@ -53,9 +61,9 @@ public class RestaurantList {
     public void getNames() {
         restaurantList.forEach(restaurant1 -> System.out.println(restaurant1.getRestaurantName()));
     }
-//    public List<Restaurant> filterByCategory(String category) {
-//        return restaurantList.stream()
-//                .filter(restaurant -> restaurant.getCategory().equalsIgnoreCase(category))
-//                .collect(Collectors.toList());
-//    }
+    public List<Restaurant> filterByCategory(String category) throws IOException {
+
+        restaurantList = restaurantService.getRestaurantsByCategory(category);
+        return restaurantList;
+   }
 }
