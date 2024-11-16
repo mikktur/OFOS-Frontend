@@ -218,4 +218,42 @@ public class UserService {
         }
     }
 
+    public boolean changeRole(int userId, String newRole) {
+        String url = API_URL + "users/changeRole";
+        String token = SessionManager.getInstance().getToken();
+
+        // Create a JSON request body
+        String requestBody = "{\"userId\":" + userId + ",\"newRole\":\"" + newRole + "\"}";
+
+        try {
+            // Create the HTTP client
+            HttpClient client = HttpClient.newHttpClient();
+
+            // Build the HTTP request
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("Content-Type", "application/json")
+                    .header("Authorization", "Bearer " + token)
+                    .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
+                    .build();
+
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 200) {
+                System.out.println("Role changed successfully for user ID: " + userId);
+                return true;
+            } else {
+                System.err.println("Failed to change role. Server responded with: " + response.statusCode());
+                System.err.println("Response body: " + response.body());
+                return false;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
 }

@@ -13,6 +13,7 @@ public class Restaurant {
     private String ownerUsername;
     private String address;
     private String businessHours;
+    private int ownerId;
 
     public Restaurant(String restaurantName, String restaurantPhone, String picture, String ownerUsername) {
         this.restaurantName = restaurantName;
@@ -23,6 +24,15 @@ public class Restaurant {
     }
 
     public Restaurant() {
+    }
+
+    public Restaurant(String name, String phone, String picture, String address, String hours, int ownerId) {
+        this.restaurantName = name;
+        this.restaurantPhone = phone;
+        this.picture = picture;
+        this.address = address;
+        this.businessHours = hours;
+        this.ownerId = ownerId;
     }
 
     public int getId() {
@@ -81,4 +91,9 @@ public class Restaurant {
     public void setOwnerUsername(String ownerUsername) {
         this.ownerUsername = ownerUsername;
     }
+
+    public int getOwnerId() {
+        return ownerId;
+    }
+
 }

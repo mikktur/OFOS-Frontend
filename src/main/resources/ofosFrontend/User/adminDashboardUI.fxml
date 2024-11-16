@@ -22,6 +22,9 @@
                     <Label text="%Manage_Restaurants" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
                     <ComboBox fx:id="restaurantSelector" promptText="%Select_a_Restaurant"/>
                 </VBox>
+                <VBox spacing="10.0">
+                    <Button fx:id="addRestaurantButton" text="%Add_a_restaurant" onAction="#addRestaurant"/>
+                </VBox>
 
                 <VBox spacing="10.0">
                     <Label text="%Active_users" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
@@ -30,7 +33,7 @@
 
             </VBox>
 
-
+            <Region prefWidth="150"/>
             <VBox spacing="10.0">
                 <Label text="%Banned_Users" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
                 <ComboBox fx:id="bannedUserSelector" promptText="%Select_a_User"/>
@@ -54,6 +57,7 @@
                 <Label text="%User_Details" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
                 <Label fx:id="userNameLabel" text="%User_Name"/>
                 <Label fx:id="userIDLabel" text="%User_ID"/>
+                <Label fx:id="userRoleLabel" text="%Role"/>
                 <Label fx:id="userEnabledLabel" text="%Enabled"/>
             </VBox>
 
@@ -67,6 +71,7 @@
 
             <HBox spacing="10">
                 <Button fx:id="changeOwnerButton" text="%Change_Owner" onAction="#changeOwner"/>
+                <Button fx:id="changeRoleButton" text="%Change_Role" onAction="#changeRole"/>
                 <Region prefWidth="150"/>
                 <Button fx:id="banButton" text="%Ban" onAction="#banUser"/>
                 <Button fx:id="unbanButton" text="%Unban" onAction="#unbanUser"/>
@@ -74,4 +79,3 @@
         </VBox>
     </VBox>
 </VBox>
-

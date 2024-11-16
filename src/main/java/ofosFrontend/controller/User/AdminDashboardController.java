@@ -2,8 +2,13 @@ package ofosFrontend.controller.User;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import ofosFrontend.model.Restaurant;
 import ofosFrontend.model.User;
 import ofosFrontend.service.RestaurantService;
@@ -25,6 +30,7 @@ public class AdminDashboardController {
     public Label userEnabledLabel;
     public Label userIDLabel;
     public Label userNameLabel;
+    public Label userRoleLabel;
     public VBox userDetails;
     public Label restaurantOwnerLabel;
     public Label restaurantIDLabel;
@@ -35,6 +41,9 @@ public class AdminDashboardController {
     public Label banUserNameLabel;
     public Label banUserIDLabel;
     public Label banUserEnabledLabel;
+
+    public Button addRestaurantButton;
+    public Button changeRoleButton;
 
 
     @FXML
@@ -128,8 +137,6 @@ public class AdminDashboardController {
         }
     }
 
-
-
     private void displaySelectedUser() {
         String selectedUserName = userSelector.getValue();
 
@@ -140,6 +147,7 @@ public class AdminDashboardController {
                 if (selectedUser != null) {
                     userNameLabel.setText(bundle.getString("User_Name")  + selectedUser.getUsername());
                     userIDLabel.setText(bundle.getString("User_ID") + selectedUser.getUserId());
+                    userRoleLabel.setText(bundle.getString("Role") + ": " + selectedUser.getRole());
                     userEnabledLabel.setText(bundle.getString("Enabled") + ": " + selectedUser.getEnabled());
                 } else {
                     showError(bundle.getString("Failed_to_load_user"));
@@ -171,7 +179,6 @@ public class AdminDashboardController {
             }
         }
     }
-
 
     public void banUser() {
         String selectedUserName = userSelector.getValue();
@@ -228,8 +235,6 @@ public class AdminDashboardController {
 
         loadUsers();
     }
-
-
 
     public void changeOwner(ActionEvent actionEvent) throws IOException {
         if (selectedRestaurant == null) {
@@ -290,7 +295,6 @@ public class AdminDashboardController {
         }
     }
 
-
     public void unbanUser(ActionEvent actionEvent) {
         String selectedUserName = bannedUserSelector.getValue();
         if (selectedUserName == null) {
@@ -345,7 +349,6 @@ public class AdminDashboardController {
         loadUsers();
     }
 
-
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
@@ -353,4 +356,88 @@ public class AdminDashboardController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    public void addRestaurant(ActionEvent actionEvent) {
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/addRestaurantDialog.fxml"));
+            loader.setResources(LocalizationManager.getBundle());
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle(bundle.getString("Add_a_restaurant"));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void changeRole(ActionEvent actionEvent) {
+        if (selectedUser == null) {
+            showError(bundle.getString("NoUserSelected"));
+            return;
+        }
+
+        // Create the dialog
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle(bundle.getString("ChangeRoleTitle"));
+        dialog.setHeaderText(bundle.getString("ChangeRoleHeader"));
+
+        // Create dialog content
+        VBox content = new VBox(10);
+        content.setStyle("-fx-padding: 10;");
+
+        Label usernameLabel = new Label(bundle.getString("Username") + ": " + selectedUser.getUsername());
+        Label userIdLabel = new Label(bundle.getString("UserID") + ": " + selectedUser.getUserId());
+        Label currentRoleLabel = new Label(bundle.getString("CurrentRole") + ": " + selectedUser.getRole());
+
+        ComboBox<String> newRoleSelector = new ComboBox<>();
+        newRoleSelector.getItems().addAll("ADMIN", "OWNER", "USER"); // Add available roles
+        newRoleSelector.setPromptText(bundle.getString("SelectNewRole"));
+
+        content.getChildren().addAll(usernameLabel, userIdLabel, currentRoleLabel, newRoleSelector);
+
+        // Add content to the dialog
+        dialog.getDialogPane().setContent(content);
+
+        // Add buttons to the dialog
+        ButtonType confirmButton = new ButtonType(bundle.getString("Confirm"), ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButton = new ButtonType(bundle.getString("Cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialog.getDialogPane().getButtonTypes().addAll(confirmButton, cancelButton);
+
+        // Show the dialog and wait for the result
+        dialog.showAndWait().ifPresent(buttonType -> {
+            if (buttonType == confirmButton) {
+                String newRole = newRoleSelector.getValue();
+                if (newRole == null || newRole.isEmpty()) {
+                    showError(bundle.getString("RoleNotSelected"));
+                    return;
+                }
+
+                System.out.println("Changing role of user: " + selectedUser.getUsername() +
+                        " with ID: " + selectedUser.getUserId() + " to new role: " + newRole);
+
+                // Call the userService to update the role
+                boolean isChanged = userService.changeRole(selectedUser.getUserId(), newRole);
+
+                // Show success or error message
+                if (isChanged) {
+                    Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                    successAlert.setTitle(bundle.getString("SuccessTitle"));
+                    successAlert.setHeaderText(null);
+                    successAlert.setContentText(bundle.getString("RoleChangeSuccess"));
+                    successAlert.showAndWait();
+                } else {
+                    Alert failureAlert = new Alert(Alert.AlertType.ERROR);
+                    failureAlert.setTitle(bundle.getString("ErrorTitle"));
+                    failureAlert.setHeaderText(null);
+                    failureAlert.setContentText(bundle.getString("RoleChangeFailed"));
+                    failureAlert.showAndWait();
+                }
+            }
+        });
+    }
+
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.ComboBox?>
+<VBox alignment="CENTER" spacing="15.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ofosFrontend.controller.User.AddRestaurantDialogController"
+      style="-fx-padding: 20; -fx-background-color: #ffffff;">
+    <Label text="Add New Restaurant" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+    <TextField fx:id="nameField" promptText="Enter Restaurant Name"/>
+    <TextField fx:id="addressField" promptText="Enter Restaurant Address"/>
+    <TextField fx:id="hoursField" promptText="Enter Business Hours"/>
+    <TextField fx:id="phoneField" promptText="Enter Phone Number"/>
+    <TextField fx:id="pictureURL" promptText="Provide link to picture"/>
+    <ComboBox fx:id="dialogOwnerSelector" promptText="Select Owner"/>
+    <HBox spacing="10">
+        <Button text="Save" onAction="#saveRestaurant"/>
+        <Button text="Cancel" onAction="#closeDialog"/>
+    </HBox>
+</VBox>

@@ -131,6 +131,9 @@ public class ViewFactory {
             case ORDERHISTORY:
                 mainController.loadHistoryView();
                 break;
+            case ADMINDASHBOARD:
+                mainController.loadAdminDashboardView();
+                break;
             default:
                 mainController.loadDefaultContent();
         }
