@@ -154,7 +154,6 @@ public class UserService {
                 if (response.statusCode() == 418) { // Status code for "I'm a teapot"
                     throw new Exception("Owner accounts cannot be deleted. Status code: " + response.statusCode());
                 } else if (response.statusCode() != 200) {
-                    System.out.println("Delete user response: " + response.body());
                     throw new Exception("Failed to delete user. Status code: " + response.statusCode());
 
                 }
@@ -164,6 +163,97 @@ public class UserService {
         };
     }
 
+    public User getUserByUsername(String selectedUserName) throws IOException {
+        Request request = new Request.Builder()
+                .url(API_URL + "users/username/" + selectedUserName)
+                .get()
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new IOException("Failed to fetch user: " + response.code() + " " + response.message());
+            }
+
+            String responseBody = response.body().string();
+
+            return mapper.readValue(responseBody, User.class);
+        }
+    }
+
+
+    public boolean banUser(int userId) throws IOException {
+        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+
+        Request request = new Request.Builder()
+                .url(API_URL + "users/ban/" + userId)
+                .post(RequestBody.create("", JSON))
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                return true;
+            } else {
+                System.err.println("Failed to ban user: " + response.code() + " " + response.message());
+                return false;
+            }
+        }
+    }
+
+
+    public boolean unbanUser(int userId) throws IOException {
+        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+
+        Request request = new Request.Builder()
+                .url(API_URL + "users/unban/" + userId)
+                .post(RequestBody.create("", JSON))
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                return true; // Unban operation succeeded
+            } else {
+                System.err.println("Failed to unban user: " + response.code() + " " + response.message());
+                return false; // Unban operation failed
+            }
+        }
+    }
+
+    public boolean changeRole(int userId, String newRole) {
+        String url = API_URL + "users/changeRole";
+        String token = SessionManager.getInstance().getToken();
+
+        // Create a JSON request body
+        String requestBody = "{\"userId\":" + userId + ",\"newRole\":\"" + newRole + "\"}";
+
+        try {
+            // Create the HTTP client
+            HttpClient client = HttpClient.newHttpClient();
+
+            // Build the HTTP request
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("Content-Type", "application/json")
+                    .header("Authorization", "Bearer " + token)
+                    .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
+                    .build();
+
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 200) {
+                System.out.println("Role changed successfully for user ID: " + userId);
+                return true;
+            } else {
+                System.err.println("Failed to change role. Server responded with: " + response.statusCode());
+                System.err.println("Response body: " + response.body());
+                return false;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
 
 }

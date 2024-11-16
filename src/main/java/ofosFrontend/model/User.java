@@ -7,6 +7,7 @@ public class User {
     private int userId;
     private int id;
     private String role;
+    private Boolean enabled;
 
     public User() {
         this.username = "";
@@ -56,5 +57,13 @@ public class User {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 }

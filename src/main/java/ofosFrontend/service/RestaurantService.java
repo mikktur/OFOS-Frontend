@@ -6,6 +6,10 @@ import ofosFrontend.session.SessionManager;
 import okhttp3.*;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -121,6 +125,75 @@ public class RestaurantService {
         return mapper.readValue(responseBody,
                 mapper.getTypeFactory().constructCollectionType(List.class, Restaurant.class));
     }
+
+    public boolean changeOwner(int restaurantId, int newOwnerId) throws IOException {
+        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+        String jsonBody = String.format("{\"restaurantId\": %d, \"newOwnerId\": %d}", restaurantId, newOwnerId);
+
+        RequestBody body = RequestBody.create(jsonBody, JSON);
+
+        Request request = new Request.Builder()
+                .url(API_URL + "restaurants/changeowner")
+                .put(body)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                return true;
+            } else {
+                System.err.println("Change owner failed: " + response.code() + " " + response.message());
+                throw new IOException("Failed to change owner: " + response.code() + " " + response.message());
+            }
+        }
+    }
+
+
+    public boolean saveRestaurant(Restaurant restaurant) {
+        String url = API_URL + "restaurants/createNew";
+        String token = SessionManager.getInstance().getToken();
+
+        // Create JSON representation of the restaurant
+        String requestBody = String.format(
+                "{\"name\":\"%s\",\"phone\":\"%s\",\"picture\":\"%s\",\"address\":\"%s\",\"hours\":\"%s\",\"ownerId\":%d}",
+                restaurant.getRestaurantName(),
+                restaurant.getRestaurantPhone(),
+                restaurant.getPicture(),
+                restaurant.getAddress(),
+                restaurant.getBusinessHours(),
+                restaurant.getOwnerId()
+        );
+
+        try {
+            // Create the HTTP client
+            HttpClient client = HttpClient.newHttpClient();
+
+            // Build the HTTP request
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("Content-Type", "application/json")
+                    .header("Authorization", "Bearer " + token)
+                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                    .build();
+
+            // Send the request and get the response
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            // Check the response status
+            if (response.statusCode() == 200) {
+                System.out.println("Restaurant created successfully: " + response.body());
+                return true;
+            } else {
+                System.err.println("Failed to create restaurant. Status code: " + response.statusCode());
+                System.err.println("Response body: " + response.body());
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false; // Failure
+        }
+    }
+
+
 }
 
 
