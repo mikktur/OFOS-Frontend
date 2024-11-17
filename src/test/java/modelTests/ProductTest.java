@@ -13,7 +13,7 @@ public class ProductTest {
     @BeforeEach
     public void setUp() {
         // Initialize the product with the parameterized constructor
-        product = new Product("Laptop", 999.99, "High-performance laptop", 12345, "laptop.jpg", "Electronics", true);
+        product = new Product("Laptop", 999.99, "High-performance laptop", 12345, "laptop.jpg", "Electronics","fi", true);
     }
 
     @Test

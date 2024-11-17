@@ -171,8 +171,8 @@ public class AdminMenuController extends AdminBasicController {
                 String category = categoryField.getText();
                 String picture = pictureField.getText();
                 boolean active = activeCheckBox.isSelected();
-
-                return new Product(name, price, description, null, picture, category, active);
+                String lang = LocalizationManager.getLanguageCode();
+                return new Product(name, price, description, null, picture, category,lang, active);
             }
             return null;
         });
@@ -255,7 +255,7 @@ public class AdminMenuController extends AdminBasicController {
 
         result.ifPresent(updatedProduct -> {
             try {
-                productService.updateProduct(updatedProduct);
+                productService.updateProduct(updatedProduct,restaurantID);
                 loadProducts();
             } catch (IOException e) {
                 e.printStackTrace();

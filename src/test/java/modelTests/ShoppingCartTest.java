@@ -22,8 +22,8 @@ public class ShoppingCartTest {
         restaurant.setId(1);
         shoppingCart = new ShoppingCart(restaurant);
 
-        product1 = new Product("Laptop", 999.99, "High-performance laptop", 12345, "laptop.jpg", "Electronics", true);
-        product2 = new Product("Smartphone", 599.99, "Latest smartphone", 54321, "smartphone.jpg", "Electronics", true);
+        product1 = new Product("Laptop", 999.99, "High-performance laptop", 12345, "laptop.jpg", "Electronics","fi", true);
+        product2 = new Product("Smartphone", 599.99, "Latest smartphone", 54321, "smartphone.jpg", "Electronics","fi", true);
     }
 
     @Test

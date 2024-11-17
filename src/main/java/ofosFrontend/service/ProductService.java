@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class ProductService {
-    private static final String API_URL = "http://10.120.32.94:8000/"; //
+    private static final String API_URL = "http://localhost:8000/"; //
     private final OkHttpClient client = new OkHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
 
@@ -54,7 +54,7 @@ public class ProductService {
         }
     }
 
-    public void updateProduct(Product product) throws IOException {
+    public void updateProduct(Product product,int rid) throws IOException {
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
         String productJson = mapper.writeValueAsString(product);
         SessionManager sessionManager = SessionManager.getInstance();
@@ -66,7 +66,7 @@ public class ProductService {
         RequestBody body = RequestBody.create(productJson, JSON);
 
         Request request = new Request.Builder()
-                .url(API_URL + "api/products/update")
+                .url(API_URL + "api/products/update/"+rid)
                 .put(body)
                 .addHeader("Authorization", "Bearer " + bearerToken)
                 .build();

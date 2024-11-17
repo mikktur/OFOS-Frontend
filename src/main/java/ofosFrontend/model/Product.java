@@ -10,9 +10,9 @@ public class Product {
     private String picture;
     private String category;
     private boolean active;
-
+    private String lang;
     // Parameterized constructor
-    public Product(String productName, double productPrice, String productDesc, Integer productID, String picture, String category, boolean active) {
+    public Product(String productName, double productPrice, String productDesc, Integer productID, String picture, String category,String lang, boolean active) {
         this.productName = productName;
         this.productPrice = productPrice;
         this.productDesc = productDesc;
@@ -20,6 +20,7 @@ public class Product {
         this.picture = picture;
         this.category = category;
         this.active = active;
+        this.lang = lang;
     }
 
     // Default constructor
@@ -83,6 +84,13 @@ public class Product {
         this.productID = productID;
     }
 
+    public String getLang() {
+        return lang;
+    }
+
+    public void setLang(String lang) {
+        this.lang = lang;
+    }
     @Override
     public String toString() {
         return "Product{" +

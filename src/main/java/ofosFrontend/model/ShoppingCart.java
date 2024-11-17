@@ -14,7 +14,7 @@ public class ShoppingCart {
         this.items = FXCollections.observableArrayList();
         this.restaurant = restaurant;
     }
-
+    //TODO add functionali
     public void addItem(Product product, int quantity) {
         for (CartItem item : items) {
             if (item.getProduct().getProductID().equals(product.getProductID())) {

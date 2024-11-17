@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class RestaurantService {
-    private static final String API_URL = "http://10.120.32.94:8000/"; //
+    private static final String API_URL = "http://localhost:8000/"; //
 
     private final OkHttpClient client = new OkHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
