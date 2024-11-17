@@ -5,7 +5,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import ofosFrontend.session.LocalizationManager;
-import org.w3c.dom.Text;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -53,13 +52,11 @@ public class AdminNavController  extends AdminBasicController {
                 break;
         }
 
-        // Updates the locale in LocalizationManager and reloads the main UI
         LocalizationManager.setLocale(newLocale);
 
-        // Ensure the navbar text is updated
         updateLocalizedText();
 
-        mainController.reloadPage(); // This will reload the rest of the page
+        mainController.reloadPage();
     }
 
 
