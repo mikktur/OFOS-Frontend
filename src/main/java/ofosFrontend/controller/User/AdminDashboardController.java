@@ -74,11 +74,13 @@ public class AdminDashboardController {
     }
 
     private void loadUsers() {
+        userSelector.getItems().clear();
         try {
             List<User> users = userService.getAllUsers();
 
             for (User user : users) {
-                userSelector.getItems().add(user.getUsername());
+                if (user.getEnabled())
+                    userSelector.getItems().add(user.getUsername());
             }
 
         } catch (IOException e) {
@@ -88,12 +90,12 @@ public class AdminDashboardController {
     }
 
     private void loadBannedUsers() {
+        bannedUserSelector.getItems().clear();
         try {
             List<User> users = userService.getAllUsers();
 
             for (User user : users) {
-                // fix if-clause to (!user.getEnabled()) when backend is ready
-                if (user.getEnabled() == null) {
+                if (!user.getEnabled()) {
                     bannedUserSelector.getItems().add(user.getUsername());
                 }
             }
@@ -234,6 +236,7 @@ public class AdminDashboardController {
         }
 
         loadUsers();
+        loadBannedUsers();
     }
 
     public void changeOwner(ActionEvent actionEvent) throws IOException {
@@ -317,7 +320,7 @@ public class AdminDashboardController {
                 ButtonType result = confirmationDialog.showAndWait().orElse(ButtonType.CANCEL);
 
                 if (result == ButtonType.OK) {
-                    boolean success = userService.unbanUser(selectedUser.getUserId());
+                    boolean success = userService.banUser(selectedUser.getUserId());
 
                     if (success) {
                         Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
@@ -347,6 +350,7 @@ public class AdminDashboardController {
         }
 
         loadUsers();
+        loadBannedUsers();
     }
 
     private void showError(String message) {
