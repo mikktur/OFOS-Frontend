@@ -45,7 +45,9 @@ public class MainMenuController extends BasicController {
     @FXML
     public void initialize() {
         // DONT ADD ANYTHING HERE THAT USES MAINCONTROLLER IT WONT WORK SINCE ITS NULL. CALL THEM IN THE LOADDEFAULTCONTENT FUNCTION.
-        loadRestaurantsByCategory("All");
+
+            loadRestaurantsByCategory("All");
+
     }
 
 
@@ -72,33 +74,36 @@ public class MainMenuController extends BasicController {
 
 
     private void loadRestaurantsByCategory(String categoryName) {
-        try {
+
             restaurantFlowPane.getChildren().clear();
             restaurantFlowPane.setPrefWrapLength(0);
             restaurantFlowPane.setAlignment(Pos.CENTER);
 
-            List<Restaurant> restaurants;
 
             if (categoryName.equals("All")) {
-                restaurants = restaurantService.getAllRestaurants();
+                restaurantList.getRestaurantList().forEach(this::addRestaurantCard);
             } else {
-                restaurants = restaurantService.getRestaurantsByCategory(categoryName);
-            }
-
-            if (restaurants.isEmpty()) {
-                Label noResultsLabel = new Label("No restaurants found in this category.");
-                restaurantFlowPane.getChildren().add(noResultsLabel);
-            } else {
-                for (Restaurant restaurant : restaurants) {
+                try {
+                    restaurantList.setRestaurants(restaurantService.getRestaurantsByCategory(categoryName));
+                    restaurantList.getRestaurantList().forEach(this::addRestaurantCard);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                for (Restaurant restaurant : restaurantList.getRestaurantList()) {
                     addRestaurantCard(restaurant);
                 }
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            Label errorLabel = new Label("An error occurred while loading restaurants.");
-            restaurantFlowPane.getChildren().add(errorLabel);
-        }
+            if (restaurantList.isEmpty()) {
+                Label noResultsLabel = new Label("No restaurants found in this category.");
+                restaurantFlowPane.getChildren().add(noResultsLabel);
+            } else {
+                for (Restaurant restaurant : restaurantList.getRestaurantList()) {
+                    addRestaurantCard(restaurant);
+                }
+            }
+
+
     }
 
 
@@ -121,9 +126,11 @@ public class MainMenuController extends BasicController {
 
     public void filterRestaurants(String query) {
         restaurantFlowPane.getChildren().clear();
-
+        System.out.println(restaurantList.getRestaurantList().size());
         if (query.isEmpty()) {
+
             for (Restaurant restaurant : restaurantList.getRestaurantList()) {
+                System.out.println("test: "+ restaurant.getRestaurantName());
                 addRestaurantCard(restaurant);
             }
             return;
