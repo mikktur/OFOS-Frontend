@@ -110,25 +110,6 @@ public class LoginController {
 
     }
 
-    private void goToAdmin() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/Owner/adminMainUI.fxml"));
-            Parent root = loader.load();
-
-            Stage currentStage = (Stage) AppManager.getInstance().getPrimaryStage();
-
-            Scene adminScene = new Scene(root, 650, 400);
-
-            currentStage.setTitle("OFOS Admin");
-
-            currentStage.setScene(adminScene);
-
-            currentStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     @FXML
     private void goToRegister() throws IOException {
@@ -233,6 +214,7 @@ public class LoginController {
         FXMLLoader rootLoader;
 
         // Select appropriate FXML based on role
+        System.out.println("Role: " + SessionManager.getInstance().getRole());
         if (SessionManager.getInstance().getRole().equals("OWNER")) {
             rootLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/Owner/ownerRoot.fxml"));
             System.out.println("Owner logged in.");

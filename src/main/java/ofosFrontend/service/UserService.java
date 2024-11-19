@@ -219,11 +219,11 @@ public class UserService {
     }
 
     public boolean changeRole(int userId, String newRole) {
-        String url = API_URL + "users/changeRole";
+        String url = API_URL + "users/changerole";
         String token = SessionManager.getInstance().getToken();
 
         // Create a JSON request body
-        String requestBody = "{\"userId\":" + userId + ",\"newRole\":\"" + newRole + "\"}";
+        String requestBody = "{\"userId\":" + userId + ",\"role\":\"" + newRole + "\"}";
 
         try {
             // Create the HTTP client
