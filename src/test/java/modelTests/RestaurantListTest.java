@@ -21,9 +21,9 @@ public class RestaurantListTest {
     public void setUp() {
         // Initialize the RestaurantList and sample Restaurant objects before each test
         restaurantList = new RestaurantList();
-        restaurant1 = new Restaurant("Pizza Place", "123-456-7890", "picture1.jpg");
-        restaurant2 = new Restaurant("Burger Joint", "987-654-3210", "picture2.jpg");
-        restaurant3 = new Restaurant("Sushi Spot", "555-555-5555", "picture3.jpg");
+        restaurant1 = new Restaurant("Pizza Place", "123-456-7890", "picture1.jpg", "seppo");
+        restaurant2 = new Restaurant("Burger Joint", "987-654-3210", "picture2.jpg", "seppo");
+        restaurant3 = new Restaurant("Sushi Spot", "555-555-5555", "picture3.jpg", "seppo");
     }
 
     @Test

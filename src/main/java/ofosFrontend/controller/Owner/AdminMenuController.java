@@ -68,7 +68,7 @@ public class AdminMenuController extends AdminBasicController {
 
         String nameLabelText = bundle.getString("ProductNameText") + ": " + product.getProductName();
         String descriptionLabelText = bundle.getString("ProductDescriptionText") + ": " + product.getProductDesc();
-        String priceLabelText = bundle.getString("ProductPriceText") + ": $" + String.format("%.2f", product.getProductPrice());
+        String priceLabelText = bundle.getString("ProductPriceText") + ": " + String.format("%.2f", product.getProductPrice());
         String categoryLabelText = bundle.getString("ProductCategoryText") + ": " + product.getCategory();
         String statusLabelText = bundle.getString("ProductStatusText") + ": " + (product.isActive() ? "Yes" : "No");
         String editButtonText = bundle.getString("EditButton");
