@@ -85,7 +85,7 @@ public class CheckoutController  extends BasicController {
 
         // Set up the action for the order and add address buttons
 
-            orderBtn.setOnAction(event -> openConfirmationDialog());
+        orderBtn.setOnAction(event -> openConfirmationDialog());
         addAddressBtn.setOnAction(event -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/addAddressDialog.fxml"));
@@ -102,10 +102,11 @@ public class CheckoutController  extends BasicController {
                 stage.showAndWait();
 
 
-                if (dialogController.validateInput()) {
+                String validationError = dialogController.validateInput();
+                if (validationError == null) {
                     getDeliveryAddresses(); // Refresh the list after saving
                 } else {
-                    showError(bundle.getString("Invalid_address"));
+                    showError(validationError); // Show the specific validation error
                 }
 
 
