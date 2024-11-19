@@ -504,7 +504,7 @@ public class UserSettingsController extends BasicController {
         Node okButton = confirmationDialog.getDialogPane().lookupButton(okButtonType);
         okButton.setDisable(true);
         inputField.textProperty().addListener((observable, oldValue, newValue) -> {
-            okButton.setDisable(!"DELETE".equalsIgnoreCase(newValue.trim()));
+            okButton.setDisable(!"DELETE".equals(newValue.trim()));
         });
 
         // Process the result
