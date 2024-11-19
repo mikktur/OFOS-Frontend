@@ -31,6 +31,14 @@ import ofosFrontend.session.SessionManager;
 import java.io.IOException;
 import java.util.*;
 
+import static ofosFrontend.session.Validations.showError;
+
+/**
+ * Controller class for the User Settings view.
+ * Handles the user's contact information, delivery addresses, and password.
+ * The user can view and edit their contact information, add, edit, and delete delivery addresses,
+ * and change their password or delete their account.
+ */
 public class UserSettingsController extends BasicController {
 
     @FXML private Label nameLabel;
@@ -49,7 +57,11 @@ public class UserSettingsController extends BasicController {
     private final UserService userService = new UserService();
     private ContactInfo currentContactInfo;
 
-
+    /**
+     * Initializes the view.
+     * Fetches the user's contact information and delivery addresses.
+     * Sets up the change password button with a rotation animation :D
+     */
     public void initialize() {
 
         this.userId = SessionManager.getInstance().getUserId();
@@ -64,14 +76,17 @@ public class UserSettingsController extends BasicController {
             rotate.play();
         });
 
-        changePassword.setOnMouseExited(event -> {
-            Platform.runLater(() -> {
-                rotate.stop();
-                changePassword.setRotate(0);
-            });
-        });
+        changePassword.setOnMouseExited(event -> Platform.runLater(() -> {
+            rotate.stop();
+            changePassword.setRotate(0);
+        }));
     }
 
+    /**
+     * Fetches the user's contact information from the database.
+     * If the user has no contact information, prompts the user to add it.
+     * If the user has contact information, updates the UI with the information.
+     */
     private void fetchUserData() {
         int userId = SessionManager.getInstance().getUserId();
         Task<ContactInfo> task = userService.fetchUserData(userId);
@@ -100,9 +115,7 @@ public class UserSettingsController extends BasicController {
         task.setOnFailed(event -> {
             Throwable e = task.getException();
             e.printStackTrace();
-            Platform.runLater(() -> {
-                showError(bundle.getString("An_error_occurred_while_fetching_contact_information"));
-            });
+            Platform.runLater(() -> showError(bundle.getString("An_error_occurred_while_fetching_contact_information")));
         });
 
         Thread thread = new Thread(task);
@@ -110,6 +123,12 @@ public class UserSettingsController extends BasicController {
         thread.start();
     }
 
+    /**
+     * Prompts the user to add contact information.
+     * If the user chooses to add contact information, opens the contact info dialog.
+     * If the user chooses not to add contact information, updates the UI accordingly.
+     * If the user has contact information, updates the UI with the information.
+     */
     private void promptForContactInfo() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(bundle.getString("setTitleText"));
@@ -124,8 +143,6 @@ public class UserSettingsController extends BasicController {
         Optional<ButtonType> result = alert.showAndWait();
 
         if (result.isPresent() && result.get() == yesButton) {
-            System.out.println("User chose to add contact information");
-            System.out.println("Opening contact info dialog with contactinfo = null");
             ContactInfo contactInfo = null;
             // Open the dialog to add contact information
             openContactInfoDialog(contactInfo);
@@ -143,6 +160,12 @@ public class UserSettingsController extends BasicController {
         }
     }
 
+    /**
+     * Opens the contact information dialog.
+     * @param contactInfo The contact information object to display in the dialog.
+     * If the contactInfo is null, the dialog will be empty for the user to fill in.
+     * If the contactInfo is not null, the dialog will display the existing information.
+     */
     private void openContactInfoDialog(ContactInfo contactInfo) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/contactInfoDialog.fxml"));
@@ -168,7 +191,10 @@ public class UserSettingsController extends BasicController {
     }
 
 
-
+    /**
+     * Fetches the user's delivery addresses from the database.
+     * Updates the UI with the delivery addresses.
+     */
     private void fetchDeliveryAddresses() {
         Task<List<DeliveryAddress>> task = deliveryAddressService.fetchDeliveryAddresses(userId);
 
@@ -188,7 +214,11 @@ public class UserSettingsController extends BasicController {
         thread.start();
     }
 
-
+    /**
+     * Updates the UI with the user's delivery addresses.
+     * If the user has no delivery addresses, displays a placeholder message.
+     * If the user has delivery addresses, displays each address in a separate node.
+     */
     private void updateDeliveryAddressesUI() {
         Platform.runLater(() -> {
             deliveryAddressContainer.getChildren().clear();
@@ -210,7 +240,13 @@ public class UserSettingsController extends BasicController {
 
 
 
-
+    /**
+     * Creates a new Node for displaying a delivery address.
+     * The Node contains the address information, buttons for editing and deleting the address,
+     * and a button to set the address as the default address.
+     * @param address The DeliveryAddress object to display in the Node.
+     * @return The Node containing the address information and buttons.
+     */
     private Node createAddressNode(DeliveryAddress address) {
         // Root VBox for each address node
         VBox rootVBox = new VBox(5);
@@ -301,16 +337,11 @@ public class UserSettingsController extends BasicController {
     }
 
 
-
-
-    private void showError(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
+    /**
+     * Handles the Add Address button action.
+     * Opens the Add Address dialog for the user to input a new delivery address.
+     * After the dialog is closed, refreshes the delivery addresses.
+     */
     @FXML
     private void handleAddAddress() {
         try {
@@ -335,7 +366,11 @@ public class UserSettingsController extends BasicController {
         }
     }
 
-
+    /**
+     * Handles the Edit Address button action.
+     * @param address The DeliveryAddress object to edit.
+     * Opens the Edit Address dialog for the user to edit the delivery address.
+     */
     private void handleEditAddress(DeliveryAddress address) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/Owner/editAddressDialog.fxml"));
@@ -358,7 +393,13 @@ public class UserSettingsController extends BasicController {
         }
     }
 
-
+    /**
+     * Handles the Remove Address button action.
+     * @param address The DeliveryAddress object to remove.
+     * Prompts the user to confirm the deletion of the address.
+     * If the user confirms, deletes the address from the database.
+     * After the address is deleted, refreshes the delivery addresses.
+     */
     private void handleRemoveAddress(DeliveryAddress address) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(bundle.getString("DeleteAddress"));
@@ -376,6 +417,12 @@ public class UserSettingsController extends BasicController {
         }
     }
 
+    /**
+     * Handles the Set Default Address button action.
+     * @param address The DeliveryAddress object to set as the default address.
+     * Prompts the user to confirm setting the address as the default.
+     * If the user confirms, sets the address as the default in the database.
+     */
     @FXML
     private void handleSetDefaultAddress(DeliveryAddress address) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -405,14 +452,15 @@ public class UserSettingsController extends BasicController {
         }
     }
 
+    /**
+     * Updates the UI with the new default address.
+     * @param newDefaultAddress The DeliveryAddress object that is set as the new default address.
+     * Sets the isDefaultAddress property for the new default address to true.
+     */
     private void updateDefaultAddressInUI(DeliveryAddress newDefaultAddress) {
         // Update the isDefaultAddress property of all addresses
         for (DeliveryAddress addr : deliveryAddressesList) {
-            if (addr.getDeliveryAddressId() == newDefaultAddress.getDeliveryAddressId()) {
-                addr.setDefaultAddress(true);
-            } else {
-                addr.setDefaultAddress(false);
-            }
+            addr.setDefaultAddress(addr.getDeliveryAddressId() == newDefaultAddress.getDeliveryAddressId());
         }
 
         // Refresh the UI nodes
@@ -426,7 +474,10 @@ public class UserSettingsController extends BasicController {
     }
 
 
-
+    /**
+     * Deletes the delivery address from the database.
+     * @param address The DeliveryAddress object to delete.
+     */
     private void deleteAddress(DeliveryAddress address) {
         Task<Void> task = deliveryAddressService.deleteAddress(address.getDeliveryAddressId());
 
@@ -448,16 +499,29 @@ public class UserSettingsController extends BasicController {
         thread.start();
     }
 
+    /**
+     * Handles the Edit Contact Info button action.
+     * @param actionEvent The ActionEvent object that triggered the event.
+     * Opens the contact info dialog for the user to edit their contact information.
+     */
     @FXML
     private void handleEditContactInfo(ActionEvent actionEvent) {
         openContactInfoDialog(currentContactInfo);
     }
 
+    /**
+     * Handles the Change Password button action.
+     * @param actionEvent The ActionEvent object that triggered the event.
+     * Opens the change password dialog for the user to change their password.
+     */
     @FXML
     public void handleChangePassword(ActionEvent actionEvent) {
         openEditPasswordDialog();
     }
 
+    /**
+     * Opens the change password dialog.
+     */
     private void openEditPasswordDialog() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/editPasswordDialog.fxml"));
@@ -478,7 +542,12 @@ public class UserSettingsController extends BasicController {
         }
     }
 
-
+    /**
+     * Handles the Delete Account button action.
+     * @param actionEvent The ActionEvent object that triggered the event.
+     * Prompts the user to confirm the deletion of their account.
+     * If the user confirms, deletes the account from the database.
+     */
     public void handleDeleteAccount(ActionEvent actionEvent) {
         // Create a confirmation dialog
         Dialog<String> confirmationDialog = new Dialog<>();
@@ -503,9 +572,8 @@ public class UserSettingsController extends BasicController {
         // Enable the OK button only if the user enters "DELETE"
         Node okButton = confirmationDialog.getDialogPane().lookupButton(okButtonType);
         okButton.setDisable(true);
-        inputField.textProperty().addListener((observable, oldValue, newValue) -> {
-            okButton.setDisable(!"DELETE".equals(newValue.trim()));
-        });
+        inputField.textProperty().addListener((observable, oldValue, newValue) ->
+                okButton.setDisable(!"DELETE".equals(newValue.trim())));
 
         // Process the result
         confirmationDialog.setResultConverter(dialogButton -> {
