@@ -13,7 +13,11 @@ import ofosFrontend.session.Validations;
 
 import java.util.ResourceBundle;
 
-
+/**
+ * Controller class for the Contact Info dialog.
+ * Handles the user input and saves the contact info to the database.
+ * The dialog is used to add or edit the user's contact information.
+ */
 public class ContactInfoDialogController {
 
     @FXML private TextField firstNameField;

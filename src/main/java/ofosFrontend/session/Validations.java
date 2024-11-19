@@ -109,6 +109,33 @@ public class Validations {
         return null; // All validations passed
     }
 
+    /**
+     * Validates the old and new passwords for the Edit Password dialog.
+     * @param oldPassword The old password input.
+     * @param newPassword The new password input.
+     * @param bundle ResourceBundle for localized error messages.
+     * @return An error message if validation fails, or null if validation passes.
+     */
+    public static String validatePasswordInput(String oldPassword, String newPassword, ResourceBundle bundle) {
+        if (oldPassword == null || oldPassword.trim().isEmpty()) {
+            return bundle.getString("Old_password_required");
+        }
+        if (newPassword == null || newPassword.trim().isEmpty()) {
+            return bundle.getString("New_password_required");
+        }
+        if (newPassword.length() < 6 || newPassword.length() > 20) {
+            return bundle.getString("New_password_length_range");
+        }
+        if (!newPassword.matches(".*[!@#$%^&*(),.?\":{}|<>].*")) {
+            return bundle.getString("New_password_special_character_required");
+        }
+        if (oldPassword.equals(newPassword)) {
+            return bundle.getString("Passwords_must_differ");
+        }
+        return null; // Validation passed
+    }
+
+
 
     /**
      * Shows an error message dialog.
