@@ -7,6 +7,7 @@ import ofosFrontend.model.DeliveryAddress;
 import ofosFrontend.service.DeliveryAddressService;
 import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.TextFieldUtils;
+import ofosFrontend.session.Validations;
 
 import java.util.ResourceBundle;
 
@@ -65,7 +66,7 @@ public class AddAddressDialogController {
     private void handleSave() {
         String validationError = validateInput();
         if (validationError != null) {
-            showError(validationError);
+            Validations.showError(validationError);
             return;
         }
 
@@ -89,7 +90,7 @@ public class AddAddressDialogController {
             successAlert.showAndWait();
             Stage stage = (Stage) streetAddressField.getScene().getWindow();
             stage.close();
-        }, () -> showError(bundle.getString("Fail_to_save_address")));
+        }, () -> Validations.showError(bundle.getString("Fail_to_save_address")));
     }
 
     /**
@@ -123,51 +124,13 @@ public class AddAddressDialogController {
         return newAddress;
     }
 
-
     /**
      * Validates the user input.
      * @return An error message if the input is invalid, or null if the input is valid.
      */
     public String validateInput() {
-
-        if (streetAddressField.getText().isEmpty()) {
-            streetAddressField.setStyle("-fx-border-color: red;");
-            return bundle.getString("Street_address_required");
-        } else {
-            streetAddressField.setStyle(null);
-        }
-
-        if (cityField.getText().isEmpty()) {
-            cityField.setStyle("-fx-border-color: red;");
-            return bundle.getString("City_required");
-        } else {
-            cityField.setStyle(null);
-        }
-
-        String postalCode = postalCodeField.getText();
-        if (postalCode.isEmpty()) {
-            postalCodeField.setStyle("-fx-border-color: red;");
-            return bundle.getString("Postal_code_required");
-        } else if (!postalCode.matches("\\d{5}")) {
-            postalCodeField.setStyle("-fx-border-color: red;");
-            return bundle.getString("Postal_code_invalid");
-        } else {
-            postalCodeField.setStyle(null);
-        }
-        return null;
+        return Validations.validateAddressInput(streetAddressField, cityField, postalCodeField, bundle);
     }
 
-    /**
-     * Shows an error message dialog.
-     * @param message The error message to display.
-     */
-
-    private void showError(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(bundle.getString("Add_New_Address"));
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
 
 }
