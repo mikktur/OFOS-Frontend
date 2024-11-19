@@ -135,6 +135,46 @@ public class Validations {
         return null; // Validation passed
     }
 
+    /**
+     * Validates the input fields for a restaurant form.
+     * @param address The address input.
+     * @param hours The business hours input.
+     * @param name The restaurant name input.
+     * @param phone The phone number input.
+     * @param picture The picture URL input.
+     * @param owner The owner input.
+     * @return An error message if validation fails, or null if validation passes.
+     */
+    public static String validateRestaurantInput(String address, String hours, String name, String phone, String picture, String owner) {
+        ResourceBundle bundle = LocalizationManager.getBundle();
+        if (address == null || address.trim().isEmpty()) {
+            return bundle.getString("Address_required");
+        }
+        if (hours == null || hours.trim().isEmpty()) {
+            return bundle.getString("Hours_required");
+        }
+        if (name == null || name.trim().isEmpty()) {
+            return bundle.getString("Name_required");
+        }
+        if (phone == null || phone.trim().isEmpty()) {
+            return bundle.getString("Phone_required");
+        }
+        if (!phone.matches("\\d+")) { // Ensure phone contains only numbers
+            return bundle.getString("Phone_invalid");
+        }
+        if (picture == null || picture.trim().isEmpty()) {
+            return bundle.getString("Picture_required");
+        }
+        if (picture.length() > 100) { // Check max length for picture URL
+            return bundle.getString("Picture_max_length");
+        }
+        if (owner == null || owner.trim().isEmpty()) {
+            return bundle.getString("Owner_required");
+        }
+        return null; // Validation passed
+    }
+
+
 
 
     /**
@@ -149,5 +189,14 @@ public class Validations {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    public static void showSuccessAlert(String message) {
+        ResourceBundle bundle = LocalizationManager.getBundle();
+        Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+        successAlert.setTitle(bundle.getString("SuccessTitle"));
+        successAlert.setHeaderText(null);
+        successAlert.setContentText(message);
+        successAlert.showAndWait();
     }
 }
