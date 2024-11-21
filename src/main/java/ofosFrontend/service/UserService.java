@@ -75,6 +75,7 @@ public class UserService {
 
                 if (response.statusCode() == 200) {
                     ObjectMapper objectMapper = new ObjectMapper();
+
                     return objectMapper.readValue(response.body(), ContactInfo.class);
                 } else if (response.statusCode() == 404) {
                     // No contact information found, return null

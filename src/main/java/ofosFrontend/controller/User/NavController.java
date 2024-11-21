@@ -1,4 +1,5 @@
 package ofosFrontend.controller.User;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -11,7 +12,7 @@ import javafx.scene.text.Text;
 import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
 import java.util.Locale;
-import java.util.ResourceBundle;
+
 
 
 /**
@@ -65,22 +66,19 @@ public class NavController extends BasicController {
                 newLocale = new Locale("en", "US");
                 break;
         }
-
-        // Updates the locale in LocalizationManager and reloads the main UI
         LocalizationManager.setLocale(newLocale);
         mainController.reloadPage();
+
     }
 
     private void setupLanguageSelector() {
         languageSelector.setValue(LocalizationManager.selectedLanguageProperty().get());
-
-        languageSelector.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) {
-                switchLanguage(newVal);
+        languageSelector.setOnAction(event -> {
+            String selectedLanguage = languageSelector.getValue();
+            if (selectedLanguage != null) {
+                switchLanguage(selectedLanguage);
             }
         });
-
-        languageSelector.valueProperty().bindBidirectional(LocalizationManager.selectedLanguageProperty());
     }
     private void handleSearch() {
         String query = searchBar.getText().toLowerCase();

@@ -18,6 +18,8 @@ public class AdminNavController  extends AdminBasicController {
     @FXML
     ImageView adminHome;
     @FXML
+    private ComboBox<String> adminLanguageSelector;
+    @FXML
     public void initialize() {
         adminNav.getProperties().put("controller", this);
         setupLanguageSelector();
@@ -28,12 +30,12 @@ public class AdminNavController  extends AdminBasicController {
     }
     @FXML
     public void ALogout() {
+
         mainController.logout();
     }
+
+
     @FXML
-    private ComboBox<String> languageSelector;
-
-
     private void switchLanguage(String language) {
         Locale newLocale;
 
@@ -51,25 +53,20 @@ public class AdminNavController  extends AdminBasicController {
                 newLocale = new Locale("en", "US");
                 break;
         }
-
         LocalizationManager.setLocale(newLocale);
-
         updateLocalizedText();
-
         mainController.reloadPage();
     }
 
 
     private void setupLanguageSelector() {
-        languageSelector.setValue(LocalizationManager.selectedLanguageProperty().get());
-
-        languageSelector.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) {
-                switchLanguage(newVal);
+        adminLanguageSelector.setValue(LocalizationManager.selectedLanguageProperty().get());
+        adminLanguageSelector.setOnAction(event -> {
+            String selectedLanguage = adminLanguageSelector.getValue();
+            if (selectedLanguage != null) {
+                switchLanguage(selectedLanguage);
             }
         });
-
-        languageSelector.valueProperty().bindBidirectional(LocalizationManager.selectedLanguageProperty());
     }
 
     private void updateLocalizedText() {

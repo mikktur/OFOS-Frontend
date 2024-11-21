@@ -31,7 +31,7 @@ public class AdminMainMenuController extends AdminBasicController {
     private Text defaultText;
     private int rID;
 
-    private RestaurantService restaurantService = new RestaurantService();
+    private final RestaurantService restaurantService = new RestaurantService();
     private Restaurant currentSelectedRestaurant;
 
     private static final String LAST_SELECTED_RESTAURANT_KEY = "lastSelectedRestaurant";
@@ -49,7 +49,7 @@ public class AdminMainMenuController extends AdminBasicController {
     public void loadRestaurants() {
         try {
             restaurantListVBox.getChildren().clear();
-
+            System.out.println("Loading restaurants in AdminMainMenuController");
             List<Restaurant> restaurants = restaurantService.getOwnerRestaurants();
 
             int lastSelectedRestaurantId = prefs.getInt(LAST_SELECTED_RESTAURANT_KEY, -1);

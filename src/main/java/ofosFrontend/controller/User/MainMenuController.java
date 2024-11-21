@@ -152,8 +152,8 @@ public class MainMenuController extends BasicController {
 
             ImageView imageView = (ImageView) card.lookup("#restaurantImage");
             Label descriptionLabel = (Label) card.lookup("#restaurantDesc");
-
-            imageView.setImage(new Image(URL + restaurant.getPicture()));
+            Image image = new Image(URL + restaurant.getPicture(), true);
+            imageView.setImage(image);
             descriptionLabel.setText(restaurant.getRestaurantName() + "\n" + restaurant.getRestaurantPhone());
 
             card.setOnMouseClicked(event -> {
