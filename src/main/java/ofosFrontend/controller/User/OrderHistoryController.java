@@ -31,6 +31,15 @@ import static ofosFrontend.session.Validations.showError;
  * Controller for the order history view.
  */
 public class OrderHistoryController {
+
+    @FXML
+    private Label historyOrderIdLabel, historyRestaurantLabel, historyPriceLabel, historyDateLabel;
+
+    private boolean sortOrderIdAscending = true;
+    private boolean sortRestaurantAscending = true;
+    private boolean sortPriceAscending = true;
+    private boolean sortDateAscending = true;
+
     private final NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(LocalizationManager.getLocale());
     private final OrderService orderService = new OrderService();
     private final int userId = SessionManager.getInstance().getUserId();
@@ -52,6 +61,60 @@ public class OrderHistoryController {
             );
         }
         loadOrderHistory();
+
+        addSortListener(historyOrderIdLabel, this::handleSortById);
+        addSortListener(historyRestaurantLabel, this::handleSortByRestaurant);
+        addSortListener(historyPriceLabel, this::handleSortByPrice);
+        addSortListener(historyDateLabel, this::handleSortByDate);
+    }
+
+    /**
+     * Adds a sort listener to a label with exception handling.
+     *
+     * @param label  The label to attach the listener to.
+     * @param action The sorting action to execute.
+     */
+    private void addSortListener(Label label, ThrowingRunnable action) {
+        label.setOnMouseClicked(event -> {
+            try {
+                action.run();
+            } catch (IOException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    /**
+     * Functional interface to handle methods that throw exceptions.
+     */
+    @FunctionalInterface
+    private interface ThrowingRunnable {
+        void run() throws IOException, InterruptedException;
+    }
+
+    private void handleSortById() throws IOException, InterruptedException {
+        loadSortedOrderHistory(OrderHistorySorter.sortOrderHistoryById(orderService.getHistory(), sortOrderIdAscending));
+        sortOrderIdAscending = !sortOrderIdAscending;
+    }
+
+    private void handleSortByRestaurant() throws IOException, InterruptedException {
+        loadSortedOrderHistory(OrderHistorySorter.sortOrderHistoryByRestaurant(orderService.getHistory(), sortRestaurantAscending));
+        sortRestaurantAscending = !sortRestaurantAscending;
+    }
+
+    private void handleSortByPrice() throws IOException, InterruptedException {
+        loadSortedOrderHistory(OrderHistorySorter.sortOrderHistoryByPrice(orderService.getHistory(), sortPriceAscending));
+        sortPriceAscending = !sortPriceAscending;
+    }
+
+    private void handleSortByDate() throws IOException, InterruptedException {
+        loadSortedOrderHistory(OrderHistorySorter.sortOrderHistoryByDate(orderService.getHistory(), sortDateAscending));
+        sortDateAscending = !sortDateAscending;
+    }
+
+    private void loadSortedOrderHistory(Map<Integer, List<OrderHistory>> sortedOrderHistory) {
+        historyGridPane.getChildren().clear();
+        displayOrderHistory(sortedOrderHistory);
     }
 
     /**
@@ -74,14 +137,14 @@ public class OrderHistoryController {
     public void loadOrderHistory() {
         try {
             Map<Integer, List<OrderHistory>> orderHistoryMap = orderService.getHistory();
-            orderHistoryMap = OrderHistorySorter.sortOrderHistoryById(orderHistoryMap);
-
+            orderHistoryMap = OrderHistorySorter.sortOrderHistoryById(orderHistoryMap, false); // Default to descending order
             displayOrderHistory(orderHistoryMap);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             showError(bundle.getString("Order_fetch_error"));
         }
     }
+
 
     /**
      * Displays the sorted order history in the GridPane.

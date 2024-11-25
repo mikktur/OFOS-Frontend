@@ -32,17 +32,17 @@
                     <ColumnConstraints percentWidth="25" halignment="CENTER"/>
                 </columnConstraints>
 
-                <Label text="%historyOrderId" GridPane.columnIndex="0" GridPane.halignment="CENTER"
+                <Label text="%historyOrderId" fx:id="historyOrderIdLabel" GridPane.columnIndex="0" GridPane.halignment="CENTER"
                        GridPane.hgrow="ALWAYS" maxWidth="Infinity"
                        style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
 
-                <Label text="%historyRestaurant" GridPane.columnIndex="1" GridPane.halignment="CENTER"
+                <Label text="%historyRestaurant" fx:id="historyRestaurantLabel" GridPane.columnIndex="1" GridPane.halignment="CENTER"
                        style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
                 <Label text="%historyProducts" GridPane.columnIndex="2" GridPane.halignment="CENTER"
                        style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
-                <Label text="%historyPrice" GridPane.columnIndex="3" GridPane.halignment="CENTER"
+                <Label text="%historyPrice" fx:id="historyPriceLabel" GridPane.columnIndex="3" GridPane.halignment="CENTER"
                        style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
-                <Label text="%historyDate" GridPane.columnIndex="4" GridPane.halignment="CENTER"
+                <Label text="%historyDate" fx:id="historyDateLabel" GridPane.columnIndex="4" GridPane.halignment="CENTER"
                        style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
             </GridPane>
 
