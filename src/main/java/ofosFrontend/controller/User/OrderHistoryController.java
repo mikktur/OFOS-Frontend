@@ -69,6 +69,7 @@ public class OrderHistoryController {
 
     /**
      * Loads and displays the user's order history.
+     * Sorts the order history by order ID.
      */
     public void loadOrderHistory() {
         try {
@@ -201,7 +202,7 @@ public class OrderHistoryController {
     /**
      * Applies a custom cell factory to the ComboBox.
      *
-     * @param comboBox        The ComboBox to apply the custom cell factory to.
+     * @param comboBox       The ComboBox to apply the custom cell factory to.
      * @param backgroundColor The background color for the ComboBox.
      */
     private void applyCustomCellFactory(ComboBox<OrderHistory> comboBox, String backgroundColor) {
@@ -219,16 +220,37 @@ public class OrderHistoryController {
             }
         });
 
-        // Custom button cell for the selected item
+        // Custom button cell to display the summary
         comboBox.setButtonCell(new ListCell<>() {
             @Override
             protected void updateItem(OrderHistory item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty || item == null) {
+                if (empty || comboBox.getItems().isEmpty()) {
                     setText(null);
                     setGraphic(null);
                 } else {
-                    setGraphic(createOrderHistoryGrid(item));
+                    // Calculate the total quantity and total price
+                    int totalQuantity = comboBox.getItems().stream()
+                            .mapToInt(OrderHistory::getQuantity)
+                            .sum();
+                    double totalPrice = comboBox.getItems().stream()
+                            .mapToDouble(o -> o.getOrderPrice() * o.getQuantity())
+                            .sum();
+
+                    // Fetch localized strings
+                    String itemLabel = (totalQuantity > 1)
+                            ? bundle.getString("items") // Plural form
+                            : bundle.getString("item"); // Singular form
+                    String totalSumLabel = bundle.getString("total_sum");
+
+                    // Create a localized summary
+                    String summary = String.format("%d %s, %s: %s",
+                            totalQuantity, itemLabel, totalSumLabel, currencyFormatter.format(totalPrice));
+
+                    Label summaryLabel = new Label(summary);
+                    summaryLabel.setStyle("-fx-text-fill: black;");
+
+                    setGraphic(summaryLabel);
                     setStyle("-fx-background-color: " + backgroundColor + ";");
                 }
             }
@@ -237,6 +259,8 @@ public class OrderHistoryController {
         // Overall ComboBox styling
         comboBox.setStyle("-fx-background-color: " + backgroundColor + "; -fx-border-color: transparent;");
     }
+
+
 
     /**
      * Creates a GridPane layout for displaying an OrderHistory item.
