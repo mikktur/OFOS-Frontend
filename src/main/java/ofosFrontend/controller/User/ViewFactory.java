@@ -9,6 +9,10 @@ import ofosFrontend.session.LocalizationManager;
 
 import java.io.IOException;
 // not really creating a view, just loading the fxml file and setupping the views...
+
+/**
+ * Factory for creating views
+ */
 public class ViewFactory {
     public static final String MAIN = "/ofosFrontend/User/mainUI.fxml";
     public static final String CHECKOUT = "/ofosFrontend/User/checkout.fxml";
@@ -22,6 +26,12 @@ public class ViewFactory {
     public ViewFactory(UserMainController mainController) {
         this.mainController = mainController;
     }
+
+    /**
+     * Create the checkout view
+     * @param rid the restaurant id
+     * @return the parent node
+     */
     public Parent createCheckoutView(int rid) {
         try {
             System.out.println(currentView);
@@ -40,6 +50,11 @@ public class ViewFactory {
             return null;
         }
     }
+
+    /**
+     * Create the settings view
+     * @return the parent node
+     */
     public Parent createSettingsView() {
         try {
 
@@ -53,6 +68,11 @@ public class ViewFactory {
             return null;
         }
     }
+
+    /**
+     * Create the order history view
+     * @return the parent node
+     */
     public Parent createOrderHistoryView() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(ORDERHISTORY));
@@ -65,6 +85,12 @@ public class ViewFactory {
             return null;
         }
     }
+
+    /**
+     * Create the restaurant view
+     * @param restaurant the restaurant to display
+     * @return the scroll pane
+     */
     public ScrollPane createRestaurantView(Restaurant restaurant) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(RESTAURANT));
@@ -81,6 +107,10 @@ public class ViewFactory {
         }
     }
 
+    /**
+     * Create the default content
+     * @return the node
+     */
     public Node createDefaultContent() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(MAIN));
@@ -103,6 +133,10 @@ public class ViewFactory {
         }
     }
 
+    /**
+     * Create the admin dashboard view
+     * @return the parent node
+     */
     public Parent createAdminDashboardView() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(ADMINDASHBOARD));
@@ -116,7 +150,9 @@ public class ViewFactory {
         }
     }
 
-
+    /**
+     * Reload the current page
+     */
     public void reloadPage(){
         switch (currentView){
             case CHECKOUT:
