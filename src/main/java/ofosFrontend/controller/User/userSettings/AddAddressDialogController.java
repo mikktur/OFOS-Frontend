@@ -7,26 +7,44 @@ import ofosFrontend.model.DeliveryAddress;
 import ofosFrontend.service.DeliveryAddressService;
 import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.TextFieldUtils;
+import ofosFrontend.session.Validations;
 
 import java.util.ResourceBundle;
 
-
+/**
+ * Controller class for the Add Address dialog.
+ * Handles the user input and saves the new address to the database.
+ * The dialog is used to add a new delivery address to the user's account.
+ * The user can input the street address, city, postal code, and additional instructions.
+ */
 public class AddAddressDialogController {
 
     @FXML private TextField streetAddressField;
     @FXML private TextField cityField;
     @FXML private TextField postalCodeField;
     @FXML private TextArea instructionsArea;
+    private int userId;
 
     private static final int STREET_ADDRESS_MAX_LENGTH = 70;
     private static final int CITY_MAX_LENGTH = 30;
-    private static final int POSTAL_CODE_MAX_LENGTH = 10;
+    private static final int POSTAL_CODE_MAX_LENGTH = 5;
     private static final int INSTRUCTIONS_MAX_LENGTH = 50;
 
     ResourceBundle bundle = LocalizationManager.getBundle();
-    private final DeliveryAddressService deliveryAddressService = new DeliveryAddressService();
+    private final DeliveryAddressService deliveryAddressService;
 
-    private int userId;
+    public AddAddressDialogController(DeliveryAddressService deliveryAddressService) {
+        this.deliveryAddressService = deliveryAddressService;
+    }
+
+    /**
+     * Default constructor.
+     * Initializes the delivery address service.
+     */
+    public AddAddressDialogController() {
+        this.deliveryAddressService = new DeliveryAddressService();
+    }
+
 
     public void setUserId(int userId) {
         this.userId = userId;
@@ -40,28 +58,29 @@ public class AddAddressDialogController {
         TextFieldUtils.addTextLimiter(instructionsArea, INSTRUCTIONS_MAX_LENGTH);
     }
 
+    /**
+     * Handles the save button click event.
+     * Validates the input fields and saves the new address to the database.
+     */
     @FXML
     private void handleSave() {
-        String streetAddress = streetAddressField.getText();
-        String city = cityField.getText();
-        String postalCode = postalCodeField.getText();
-        String instructions = instructionsArea.getText();
-
-        if (streetAddress.isEmpty() || city.isEmpty() || postalCode.isEmpty()) {
-            showError(bundle.getString("Fill_all_fields"));
+        String validationError = validateInput();
+        if (validationError != null) {
+            Validations.showError(validationError);
             return;
         }
 
-        DeliveryAddress newAddress = new DeliveryAddress();
-        newAddress.setStreetAddress(streetAddress);
-        newAddress.setCity(city);
-        newAddress.setPostalCode(postalCode);
-        newAddress.setInfo(instructions);
-
+        DeliveryAddress newAddress = getNewAddress();
+        System.out.println("New Address: " + newAddress);
         saveDeliveryAddress(newAddress);
     }
 
 
+    /**
+     * Saves the new delivery address to the database.
+     * @param address The object containing the new delivery address to save.
+     * The address is saved to the database using the delivery address service.
+     */
     private void saveDeliveryAddress(DeliveryAddress address) {
         deliveryAddressService.saveDeliveryAddress(address, () -> {
             Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
@@ -71,37 +90,47 @@ public class AddAddressDialogController {
             successAlert.showAndWait();
             Stage stage = (Stage) streetAddressField.getScene().getWindow();
             stage.close();
-        }, () -> {
-            showError(bundle.getString("Fail_to_save_address"));
-        });
+        }, () -> Validations.showError(bundle.getString("Fail_to_save_address")));
     }
 
+    /**
+     * Handles the cancel button click event.
+     * Closes the dialog window.
+     */
     @FXML
     private void handleCancel() {
-        // Close the dialog
         Stage stage = (Stage) streetAddressField.getScene().getWindow();
         stage.close();
     }
 
-    private void showError(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(bundle.getString("Add_New_Address"));
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
+
+    /**
+     * Creates a new DeliveryAddress object from the user input.
+     * @return The new DeliveryAddress object containing the user input.
+     */
     public DeliveryAddress getNewAddress() {
         DeliveryAddress newAddress = new DeliveryAddress();
-        newAddress.setStreetAddress(streetAddressField.getText());
-        newAddress.setPostalCode(postalCodeField.getText());
-        newAddress.setCity(cityField.getText());
-        newAddress.setInfo(instructionsArea.getText());
+
+        String streetAddress = streetAddressField.getText();
+        String city = cityField.getText();
+        String postalCode = postalCodeField.getText();
+        String instructions = instructionsArea.getText();
+
+        newAddress.setStreetAddress(streetAddress != null ? streetAddress : "");
+        newAddress.setCity(city != null ? city : "");
+        newAddress.setPostalCode(postalCode != null ? postalCode : "");
+        newAddress.setInfo(instructions);
+
         return newAddress;
     }
 
-    public boolean validateInput() {
-        return !streetAddressField.getText().isEmpty() &&
-                !postalCodeField.getText().isEmpty() &&
-                !cityField.getText().isEmpty();
+    /**
+     * Validates the user input.
+     * @return An error message if the input is invalid, or null if the input is valid.
+     */
+    public String validateInput() {
+        return Validations.validateAddressInput(streetAddressField, cityField, postalCodeField, bundle);
     }
+
+
 }

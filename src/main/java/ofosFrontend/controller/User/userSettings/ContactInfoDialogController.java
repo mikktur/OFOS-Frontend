@@ -9,10 +9,15 @@ import ofosFrontend.model.ContactInfo;
 import ofosFrontend.service.ContactInfoService;
 import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.TextFieldUtils;
+import ofosFrontend.session.Validations;
 
 import java.util.ResourceBundle;
 
-
+/**
+ * Controller class for the Contact Info dialog.
+ * Handles the user input and saves the contact info to the database.
+ * The dialog is used to add or edit the user's contact information.
+ */
 public class ContactInfoDialogController {
 
     @FXML private TextField firstNameField;
@@ -22,10 +27,10 @@ public class ContactInfoDialogController {
     @FXML private TextField streetAddressField;
     @FXML private TextField cityField;
     @FXML private TextField postalCodeField;
-    private ContactInfo contactInfo;
+
     ResourceBundle bundle = LocalizationManager.getBundle();
 
-    private ContactInfoService contactInfoService = new ContactInfoService();
+    private final ContactInfoService contactInfoService = new ContactInfoService();
 
     private static final int FIRST_NAME_MAX_LENGTH = 20;
     private static final int LAST_NAME_MAX_LENGTH = 20;
@@ -33,7 +38,7 @@ public class ContactInfoDialogController {
     private static final int PHONE_MAX_LENGTH = 15;
     private static final int ADDRESS_MAX_LENGTH = 70;
     private static final int CITY_MAX_LENGTH = 30;
-    private static final int POSTAL_CODE_MAX_LENGTH = 10;
+    private static final int POSTAL_CODE_MAX_LENGTH = 5;
 
     @FXML
     public void initialize() {
@@ -46,59 +51,72 @@ public class ContactInfoDialogController {
         TextFieldUtils.addTextLimiter(postalCodeField, POSTAL_CODE_MAX_LENGTH);
     }
 
+    /**
+     * Handles the save button action.
+     * Validates the input fields and saves the contact info to the database.
+     */
+
     @FXML
     private void handleSave() {
-        String firstName = firstNameField.getText().trim();
-        String lastName = lastNameField.getText().trim();
-        String email = emailField.getText().trim();
-        String phoneNumber = phoneNumberField.getText().trim();
-        String streetAddress = streetAddressField.getText().trim();
-        String city = cityField.getText().trim();
-        String postalCode = postalCodeField.getText().trim();
+        String validationError = Validations.validateContactInfo(
+                firstNameField, lastNameField, emailField, phoneNumberField,
+                streetAddressField, cityField, postalCodeField, bundle
+        );
 
-        if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || phoneNumber.isEmpty()
-                || streetAddress.isEmpty() || city.isEmpty() || postalCode.isEmpty()) {
-            showError(bundle.getString("Fill_all_fields"));
+        if (validationError != null) {
+            Validations.showError(validationError);
             return;
         }
 
         ContactInfo contactInfo = new ContactInfo();
-        contactInfo.setFirstName(firstName);
-        contactInfo.setLastName(lastName);
-        contactInfo.setEmail(email);
-        contactInfo.setPhoneNumber(phoneNumber);
-        contactInfo.setAddress(streetAddress);
-        contactInfo.setCity(city);
-        contactInfo.setPostalCode(postalCode);
+        contactInfo.setFirstName(firstNameField.getText().trim());
+        contactInfo.setLastName(lastNameField.getText().trim());
+        contactInfo.setEmail(emailField.getText().trim());
+        contactInfo.setPhoneNumber(phoneNumberField.getText().trim());
+        contactInfo.setAddress(streetAddressField.getText().trim());
+        contactInfo.setCity(cityField.getText().trim());
+        contactInfo.setPostalCode(postalCodeField.getText().trim());
 
         saveContactInfo(contactInfo);
     }
 
+
+    /**
+     * Saves the contact info to the database.
+     * Shows a success message if the operation is successful.
+     * Shows an error message if the operation fails.
+     *
+     * @param contactInfo The contact info to save.
+     */
+
     private void saveContactInfo(ContactInfo contactInfo) {
         Task<Void> task = contactInfoService.saveContactInfo(contactInfo);
 
-        task.setOnSucceeded(event -> {
-            Platform.runLater(() -> {
-                Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-                successAlert.setTitle(bundle.getString("Success"));
-                successAlert.setHeaderText(null);
-                successAlert.setContentText(bundle.getString("Contact_info_added_successfully"));
-                successAlert.showAndWait();
-                Stage stage = (Stage) firstNameField.getScene().getWindow();
-                stage.close();
-            });
-        });
+        task.setOnSucceeded(event -> Platform.runLater(() -> {
+            Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+            successAlert.setTitle(bundle.getString("Success"));
+            successAlert.setHeaderText(null);
+            successAlert.setContentText(bundle.getString("Contact_info_added_successfully"));
+            successAlert.showAndWait();
+            Stage stage = (Stage) firstNameField.getScene().getWindow();
+            stage.close();
+        }));
 
         task.setOnFailed(event -> {
             Throwable exception = task.getException();
             exception.printStackTrace();
-            Platform.runLater(() -> showError(bundle.getString("Contact_info_save_fail")));
+            Platform.runLater(() -> Validations.showError(bundle.getString("Contact_info_save_fail")));
         });
 
         Thread thread = new Thread(task);
         thread.setDaemon(true);
         thread.start();
     }
+
+    /**
+     * Handles the cancel button action.
+     * Closes the dialog window.
+     */
 
     @FXML
     private void handleCancel() {
@@ -107,21 +125,15 @@ public class ContactInfoDialogController {
         stage.close();
     }
 
-    private void showError(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(bundle.getString("Contact_Information"));
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
+    /**
+     * Sets the contact info to display in the dialog.
+     *
+     * @param contactInfo The contact info to display.
+     */
     public void setContactInfo(ContactInfo contactInfo) {
-        System.out.println("Set Contact Info in contactinfo dialog controller");
 
-        if (contactInfo == null) {
-            return;
-        }
-        this.contactInfo = contactInfo;
+        if (contactInfo == null) return;
+
         firstNameField.setText(contactInfo.getFirstName());
         lastNameField.setText(contactInfo.getLastName());
         emailField.setText(contactInfo.getEmail());
@@ -129,7 +141,5 @@ public class ContactInfoDialogController {
         streetAddressField.setText(contactInfo.getAddress());
         cityField.setText(contactInfo.getCity());
         postalCodeField.setText(contactInfo.getPostalCode());
-
     }
-
 }

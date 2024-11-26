@@ -2,7 +2,6 @@ package ofosFrontend.controller.User;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -17,26 +16,36 @@ import java.io.IOException;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import static ofosFrontend.session.Validations.*;
+
+/**
+ * Controller class for the Add Restaurant dialog.
+ * Handles the user input and saves the restaurant to the database.
+ * The dialog is used to add a new restaurant to the system.
+ */
 public class AddRestaurantDialogController {
 
-    public TextField addressField;
-    public TextField hoursField;
-    public TextField nameField;
-    public TextField phoneField;
-    public TextField pictureURL;
-    @FXML
-    public ComboBox<String> dialogOwnerSelector;
+    @FXML private TextField addressField;
+    @FXML private TextField hoursField;
+    @FXML private TextField nameField;
+    @FXML private TextField phoneField;
+    @FXML private TextField pictureURL;
+    @FXML private ComboBox<String> dialogOwnerSelector;
+
     private static final int STREET_ADDRESS_MAX_LENGTH = 70;
     private static final int HOURS_MAX_LENGTH = 20;
     private static final int NAME_MAX_LENGTH = 50;
     private static final int PHONE_MAX_LENGTH = 15;
     private static final int PICTURE_MAX_LENGTH = 100;
+
     private final UserService userService = new UserService();
     private final RestaurantService restaurantService = new RestaurantService();
+    private final ResourceBundle bundle = LocalizationManager.getBundle();
 
-
-    ResourceBundle bundle = LocalizationManager.getBundle();
-
+    /**
+     * Initializes the dialog.
+     * Adds text limiters to the input fields and populates the owner selector.
+     */
     public void initialize() {
         TextFieldUtils.addTextLimiter(addressField, STREET_ADDRESS_MAX_LENGTH);
         TextFieldUtils.addTextLimiter(hoursField, HOURS_MAX_LENGTH);
@@ -46,16 +55,24 @@ public class AddRestaurantDialogController {
         populateOwnerSelector();
     }
 
+    /**
+     * Handles the save button action.
+     * @param actionEvent The event that triggered the action.
+     * Validates the input fields and saves the restaurant to the database.
+     */
+    @FXML
     public void saveRestaurant(ActionEvent actionEvent) {
-        String address = addressField.getText();
-        String hours = hoursField.getText();
-        String name = nameField.getText();
-        String phone = phoneField.getText();
-        String picture = pictureURL.getText();
+        String address = addressField.getText().trim();
+        String hours = hoursField.getText().trim();
+        String name = nameField.getText().trim();
+        String phone = phoneField.getText().trim();
+        String picture = pictureURL.getText().trim();
         String owner = dialogOwnerSelector.getValue();
 
-        if (address.isEmpty() || hours.isEmpty() || name.isEmpty() || phone.isEmpty() || picture.isEmpty() || owner.isEmpty()) {
-            showError(bundle.getString("Fill_all_fields"));
+        // Validate input
+        String validationError = validateRestaurantInput(address, hours, name, phone, picture, owner);
+        if (validationError != null) {
+            showError(validationError);
             return;
         }
 
@@ -66,56 +83,49 @@ public class AddRestaurantDialogController {
             return;
         }
 
-        int ownerId = Integer.parseInt(parts[1].trim());
+        int ownerId;
+        try {
+            ownerId = Integer.parseInt(parts[1].trim());
+        } catch (NumberFormatException e) {
+            showError(bundle.getString("Invalid_owner_selection"));
+            return;
+        }
 
-        boolean isSaved = restaurantService.saveRestaurant(new Restaurant(name, phone, picture, address, hours, ownerId));
+        Restaurant restaurant = new Restaurant(name, phone, picture, address, hours, ownerId);
+        boolean isSaved = restaurantService.saveRestaurant(restaurant);
 
         if (isSaved) {
-            // Success alert
-            Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-            successAlert.setTitle(bundle.getString("SuccessTitle"));
-            successAlert.setHeaderText(null);
-            successAlert.setContentText(bundle.getString("RestaurantSavedSuccessfully"));
-            successAlert.showAndWait();
+            showSuccessAlert(bundle.getString("RestaurantSavedSuccessfully"));
         } else {
-            // Failure alert
-            Alert failureAlert = new Alert(Alert.AlertType.ERROR);
-            failureAlert.setTitle(bundle.getString("ErrorTitle"));
-            failureAlert.setHeaderText(null);
-            failureAlert.setContentText(bundle.getString("Failed_to_save_restaurant"));
-            failureAlert.showAndWait();
+            showError(bundle.getString("Failed_to_save_restaurant"));
         }
 
         closeDialog();
     }
 
-
-    public void populateOwnerSelector() {
+    /**
+     * Populates the owner selector with all users that have the role "OWNER".
+     */
+    private void populateOwnerSelector() {
         try {
             List<User> users = userService.getAllUsers();
-
-            for (User user : users) {
-                if (user.getRole().equals("OWNER"))
-                    dialogOwnerSelector.getItems().add(user.getUsername() + " ID: " + user.getId());
-            }
-
+            users.stream()
+                    .filter(user -> "OWNER".equals(user.getRole()))
+                    .forEach(user -> dialogOwnerSelector.getItems().add(user.getUsername() + " ID: " + user.getId()));
         } catch (IOException e) {
             showError(bundle.getString("Failed_to_load_user"));
             e.printStackTrace();
         }
     }
 
-    public void closeDialog() {
+    /**
+     * Closes the dialog.
+     */
+    @FXML
+    private void closeDialog() {
         Stage stage = (Stage) addressField.getScene().getWindow();
         stage.close();
     }
 
-    private void showError(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
 
 }

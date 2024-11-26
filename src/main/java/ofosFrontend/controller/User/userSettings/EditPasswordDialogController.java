@@ -9,9 +9,17 @@ import javafx.stage.Stage;
 import ofosFrontend.model.PasswordChangeDTO;
 import ofosFrontend.service.UserService;
 import ofosFrontend.session.LocalizationManager;
+import ofosFrontend.session.Validations;
 
 import java.util.ResourceBundle;
 
+import static ofosFrontend.session.Validations.showError;
+
+/**
+ * Controller class for the Edit Password dialog.
+ * Handles the user input and updates the password in the database.
+ * The dialog is used to change the user's password.
+ */
 public class EditPasswordDialogController {
 
     @FXML private TextField oldPasswordField;
@@ -27,6 +35,10 @@ public class EditPasswordDialogController {
         togglePasswordVisibility();  // Initialize with hidden passwords
     }
 
+    /**
+     * Toggles the visibility of the password fields.
+     * The user can choose to show or hide the password.
+     */
     @FXML
     private void togglePasswordVisibility() {
         boolean showPassword = showPasswordCheckBox.isSelected();
@@ -44,36 +56,50 @@ public class EditPasswordDialogController {
         newPasswordHiddenField.setText(newPasswordField.getText());
     }
 
+    /**
+     * Closes the dialog when the cancel button is clicked.
+     */
     @FXML
     private void handleCancel() {
         Stage stage = (Stage) oldPasswordField.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * Handles the save button action.
+     * Validates the input fields and updates the password in the database.
+     */
     @FXML
     public void handleSave(ActionEvent actionEvent) {
         String oldPassword = showPasswordCheckBox.isSelected() ? oldPasswordField.getText() : oldPasswordHiddenField.getText();
         String newPassword = showPasswordCheckBox.isSelected() ? newPasswordField.getText() : newPasswordHiddenField.getText();
+
+        // Validate input
+        String validationError = Validations.validatePasswordInput(oldPassword, newPassword, bundle);
+        if (validationError != null) {
+            showError(validationError);
+            return;
+        }
+
+        // Prepare DTO
         PasswordChangeDTO passwordDTO = new PasswordChangeDTO(oldPassword, newPassword);
 
+        // Trigger the update password logic
         Task<Void> task = userService.updatePassword(passwordDTO);
 
-        task.setOnSucceeded(event -> {
-            Platform.runLater(() -> {
-                Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-                successAlert.setTitle(bundle.getString("ChangePassword"));
-                successAlert.setHeaderText(null);
-                successAlert.setContentText(bundle.getString("Password_change_success"));
-                successAlert.showAndWait();
-                Stage stage = (Stage) oldPasswordField.getScene().getWindow();
-                stage.close();
-            });
-        });
+        task.setOnSucceeded(event -> Platform.runLater(() -> {
+            Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+            successAlert.setTitle(bundle.getString("ChangePassword"));
+            successAlert.setHeaderText(null);
+            successAlert.setContentText(bundle.getString("Password_change_success"));
+            successAlert.showAndWait();
+            Stage stage = (Stage) oldPasswordField.getScene().getWindow();
+            stage.close();
+        }));
 
         task.setOnFailed(event -> {
             Throwable exception = task.getException();
             exception.printStackTrace();
-
             Platform.runLater(() -> {
                 String errorMessage = exception.getMessage();
                 if (errorMessage.contains("Unauthorized request")) {
@@ -89,14 +115,5 @@ public class EditPasswordDialogController {
         Thread thread = new Thread(task);
         thread.setDaemon(true);
         thread.start();
-    }
-
-
-    private void showError(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(bundle.getString("ChangePassword"));
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 }

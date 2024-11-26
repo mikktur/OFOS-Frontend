@@ -23,6 +23,11 @@ import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.List;
 
+/**
+ * Controller for the restaurant menu view
+ * This class is responsible for creating the product cards for the restaurant
+ * and adding them to the menu container
+ */
 public class RestaurantMenuController extends BasicController{
     private Restaurant restaurant;
     private ProductService productService = new ProductService();
@@ -47,7 +52,10 @@ public class RestaurantMenuController extends BasicController{
     public RestaurantMenuController() {
     }
 
-
+    /**
+     * Create the product cards for the restaurant
+     * and add them to the menu container
+     */
     public void createCards() {
         List<Product> products = null;
         setRestaurantInfo();
@@ -88,6 +96,10 @@ public class RestaurantMenuController extends BasicController{
         }
     }
 
+    /**
+     * Add a product to the shopping cart
+     * @param product the product to add
+     */
     private void addProductToCart(Product product) {
         SessionManager sessionManager = SessionManager.getInstance();
         ShoppingCart cart = sessionManager.getCart(restaurant.getId());
@@ -103,6 +115,10 @@ public class RestaurantMenuController extends BasicController{
         this.restaurant = restaurant;
     }
 
+    /**
+     * Set the restaurant information
+     * This method sets the restaurant image, name, address, phone, and hours
+     */
     public void setRestaurantInfo() {
         System.out.println("image url: " + RURL + restaurant.getPicture());
         restaurantImage.setImage(new Image(RURL + restaurant.getPicture()));

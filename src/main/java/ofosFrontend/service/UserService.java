@@ -199,6 +199,9 @@ public class UserService {
         }
     }
 
+    /*
+
+    // We can use the ban method to unban users also, so this is not needed anymore
 
     public boolean unbanUser(int userId) throws IOException {
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
@@ -216,7 +219,10 @@ public class UserService {
                 return false; // Unban operation failed
             }
         }
+
     }
+    */
+
 
     public boolean changeRole(int userId, String newRole) {
         String url = API_URL + "users/changeRole";
@@ -254,6 +260,4 @@ public class UserService {
             return false;
         }
     }
-
-
 }

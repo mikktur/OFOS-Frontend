@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import ofosFrontend.session.GenericHelper;
 import ofosFrontend.session.LocalizationManager;
 
 import java.util.Locale;
@@ -35,29 +36,12 @@ public class AdminNavController  extends AdminBasicController {
 
 
     private void switchLanguage(String language) {
-        Locale newLocale;
-
-        switch (language) {
-            case "Finnish":
-                newLocale = new Locale("fi", "FI");
-                break;
-            case "Japanese":
-                newLocale = new Locale("ja", "JP");
-                break;
-            case "Russian":
-                newLocale = new Locale("ru", "RU");
-                break;
-            default:
-                newLocale = new Locale("en", "US");
-                break;
-        }
-
-        LocalizationManager.setLocale(newLocale);
-
+        GenericHelper.switchLanguage(language);
         updateLocalizedText();
 
         mainController.reloadPage();
     }
+
 
 
     private void setupLanguageSelector() {

@@ -15,6 +15,11 @@ import ofosFrontend.session.SessionManager;
 
 import java.io.IOException;
 
+/**
+ * Controller for the drop down menu in the user interface
+ * Contains methods to navigate to the admin dashboard, settings and history views
+ * Also contains a method to handle logout
+ */
 public class DropDownMenuController extends BasicController {
     @FXML
     private AnchorPane dropDownContent;
@@ -23,7 +28,11 @@ public class DropDownMenuController extends BasicController {
     @FXML
     private HBox adminDashboardElement;
 
-
+    /**
+     * Initializes the drop down menu
+     * Sets the username in the drop down menu to the current user's username
+     * If the user is an admin, makes the admin dashboard element visible
+     */
     @FXML
     private void initialize() {
         dropDownContent.getProperties().put("controller", this);
@@ -32,12 +41,15 @@ public class DropDownMenuController extends BasicController {
         String role = sessionManager.getRole();
 
         if ("ADMIN".equals(role)) {
-            // Make the admin dashboard element visible and managed
+            // Make the admin dashboard element visible
             adminDashboardElement.setVisible(true);
             adminDashboardElement.setManaged(true);
         }
     }
 
+    /**
+     * Navigates to the admin dashboard view
+     */
     @FXML
     public void goToAdminDashboard(MouseEvent mouseEvent) throws IOException {
         mainController.loadAdminDashboardView();
@@ -48,6 +60,10 @@ public class DropDownMenuController extends BasicController {
     public DropDownMenuController() {
     }
 
+    /**
+     * Handles the logout of the user
+     * Logs the user out and navigates to the login view
+     */
     public void handleLogout() {
         SessionManager sessionManager = SessionManager.getInstance();
         sessionManager.logout();
@@ -69,11 +85,20 @@ public class DropDownMenuController extends BasicController {
         sessionManager.logout();
     }
 
+    /**
+     * Navigates to the settings view
+     * @param mouseEvent the mouse event that triggered the method
+     * @throws IOException if the view cannot be loaded
+     */
     public void goToSettings(MouseEvent mouseEvent) throws IOException {
         mainController.loadSettingsView();
     }
 
-
+    /**
+     * Navigates to the history view
+     * @param mouseEvent the mouse event that triggered the method
+     * @throws IOException if the view cannot be loaded
+     */
     public void goToHistory(MouseEvent mouseEvent) throws IOException {
         mainController.loadHistoryView();
 

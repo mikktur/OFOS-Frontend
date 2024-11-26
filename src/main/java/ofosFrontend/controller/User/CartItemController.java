@@ -14,7 +14,7 @@ import java.text.NumberFormat;
 
 /**
  * Controller for the cart item in the shopping cart, used to make ui cards for the cart items
- * @see CartItem
+ * @see CartItem for the model
  */
 public class CartItemController {
     NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(LocalizationManager.getLocale());
@@ -32,6 +32,12 @@ public class CartItemController {
     private Label itemQuantity;
     private VBox cartItemNode;
     private CartItem cartItem;
+
+    /**
+     * Sets the cart item and the node that represents it
+     * @param item the cart item
+     * @param cartItemNode the node that represents the cart item
+     */
     public void setCartItem(CartItem item, VBox cartItemNode) {
         this.cartItem = item;
         this.cartItemNode = cartItemNode;
@@ -52,6 +58,9 @@ public class CartItemController {
         deleteBtn.setOnMouseClicked(event -> removeCartItem());
     }
 
+    /**
+     * Removes the cart item from the shopping cart
+     */
     private void removeCartItem() {
         if (cartItem != null) {
 

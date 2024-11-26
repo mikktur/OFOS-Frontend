@@ -15,7 +15,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import ofosFrontend.controller.User.userSettings.AddAddressDialogController;
 import ofosFrontend.model.*;
-import ofosFrontend.service.DeliveryAddressService;
 import ofosFrontend.service.OrderService;
 import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
@@ -30,7 +29,14 @@ import java.util.ResourceBundle;
 
 import ofosFrontend.service.CheckoutService;
 
+import static ofosFrontend.session.GenericHelper.executeTask;
+import static ofosFrontend.session.Validations.showError;
 
+/**
+ * Controller class for the checkout view.
+ * The view is used to confirm the order and select the delivery address and payment method.
+ * The user can also add a new delivery address.
+ */
 public class CheckoutController  extends BasicController {
     @FXML
     VBox summaryContainer;
@@ -44,20 +50,27 @@ public class CheckoutController  extends BasicController {
     Button orderBtn;
     @FXML
     Button addAddressBtn;
+
     private int rid;
+    private final int userId = SessionManager.getInstance().getUserId();
+
     NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(LocalizationManager.getLocale());
     ResourceBundle bundle = LocalizationManager.getBundle();
     CheckoutService checkoutService = new CheckoutService();
+
     private List<DeliveryAddress> deliveryAddressesList = new ArrayList<>();
     private DeliveryAddress selectedAddress;
     private String selectedPaymentMethod;
-    private DeliveryAddressService deliveryAddressService = new DeliveryAddressService();
-    private int userId = SessionManager.getInstance().getUserId();
-    private OrderService orderService = new OrderService();
+    private final OrderService orderService = new OrderService();
 
     public CheckoutController() {
     }
 
+    /**
+     * Initializes the view.
+     * Fetches the delivery addresses and populates the payment methods.
+     * Sets up the listeners for the choice boxes and buttons.
+     */
     @FXML
     public void initialize() {
 
@@ -67,6 +80,12 @@ public class CheckoutController  extends BasicController {
         setupListeners();
     }
 
+    /**
+     * Sets up the listeners for the choice boxes and buttons.
+     * The listener for the delivery addresses updates the selected address.
+     * The listener for the payment methods updates the selected payment method.
+     * The action for the order button opens the confirmation dialog.
+     */
     public void setupListeners() {
 
         // Set up the listener for delivery addresses
@@ -85,7 +104,7 @@ public class CheckoutController  extends BasicController {
 
         // Set up the action for the order and add address buttons
 
-            orderBtn.setOnAction(event -> openConfirmationDialog());
+        orderBtn.setOnAction(event -> openConfirmationDialog());
         addAddressBtn.setOnAction(event -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/addAddressDialog.fxml"));
@@ -102,10 +121,11 @@ public class CheckoutController  extends BasicController {
                 stage.showAndWait();
 
 
-                if (dialogController.validateInput()) {
+                String validationError = dialogController.validateInput();
+                if (validationError == null) {
                     getDeliveryAddresses(); // Refresh the list after saving
                 } else {
-                    showError(bundle.getString("Invalid_address"));
+                    showError(validationError); // Show the specific validation error
                 }
 
 
@@ -124,84 +144,113 @@ public class CheckoutController  extends BasicController {
     public void updateView() {
         renderSummary();
     }
+
+    /**
+     * Opens the confirmation dialog for the order.
+     */
     private void openConfirmationDialog() {
-        // Create the confirmation dialog
         if (selectedAddress == null) {
             showError(bundle.getString("No_address_selected"));
-        } else {
-            Dialog<ButtonType> dialog = new Dialog<>();
-            dialog.setTitle(bundle.getString("Order_confirmation"));
-
-            // Create the layout for the dialog
-            VBox dialogContent = new VBox();
-            dialogContent.setSpacing(10);
-
-            SessionManager session = SessionManager.getInstance();
-            Restaurant restaurant = session.getCart(rid).getRestaurant();
-            Label restaurantLabel = new Label(restaurant.getRestaurantName());
-            restaurantLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 20px;");
-            dialogContent.getChildren().add(restaurantLabel);
-
-            // Display cart items
-            Label cartItemsLabel = new Label(bundle.getString("Items"));
-            cartItemsLabel.setStyle("-fx-font-weight: bold;");
-            VBox cartItems = new VBox();
-
-            for (CartItem item : session.getCart(rid).getItems()) {
-                HBox itemBox = new HBox();
-                itemBox.setSpacing(10);
-                Label name = new Label("• " + item.getProduct().getProductName());
-                Label quantity = new Label(bundle.getString("Quantity") + item.getQuantity());
-                Label price = new Label(bundle.getString("Price") + currencyFormatter.format(item.getTotalPrice()));
-                itemBox.getChildren().addAll(name, quantity, price);
-                cartItems.getChildren().add(itemBox);
-            }
-
-            // Display delivery address
-            Label deliveryLabel = new Label(bundle.getString("Delivery_Address"));
-            deliveryLabel.setStyle("-fx-font-weight: bold;");
-
-            // Create TextFlow for address to wrap long text
-            TextFlow selectedAddressFlow = new TextFlow();
-            selectedAddressFlow.setMaxWidth(350);
-            selectedAddressFlow.getChildren().addAll(
-                    new Text(selectedAddress.getStreetAddress() + ", "),
-                    new Text(selectedAddress.getPostalCode() + " "),
-                    new Text(selectedAddress.getCity() + " "),
-                    new Text("(" + selectedAddress.getInfo() + ")")
-            );
-
-            // Display selected payment method
-            Label paymentLabel = new Label(bundle.getString("paymentMethod"));
-            paymentLabel.setStyle("-fx-font-weight: bold;");
-            Label selectedPaymentLabel = new Label(selectedPaymentMethod);
-
-            // Display subtotal
-            Label totalLabel = new Label(bundle.getString("Total") + subTotal.getText());
-            totalLabel.setStyle("-fx-font-weight: bold;");
-
-            // Add all the elements to the dialog layout
-            dialogContent.getChildren().addAll(cartItemsLabel, cartItems, deliveryLabel,
-                    selectedAddressFlow, paymentLabel, selectedPaymentLabel, totalLabel);
-            dialog.getDialogPane().setContent(dialogContent);
-
-            // Add confirmation and cancel buttons
-            dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-
-            // Show the dialog and wait for response
-            dialog.showAndWait().ifPresent(response -> {
-                if (response == ButtonType.OK) {
-                    confirmOrder();
-                    System.out.println("Order confirmed");
-                } else {
-                    System.out.println("Order cancelled");
-                }
-            });
+            return;
         }
+
+        Dialog<ButtonType> dialog = createOrderConfirmationDialog();
+        dialog.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                confirmOrder();
+            }
+        });
+    }
+
+    private Dialog<ButtonType> createOrderConfirmationDialog() {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle(bundle.getString("Order_confirmation"));
+
+        VBox dialogContent = buildOrderSummary();
+        dialog.getDialogPane().setContent(dialogContent);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        return dialog;
+    }
+
+    private VBox buildOrderSummary() {
+        VBox content = new VBox(10);
+
+        Label restaurantLabel = new Label(SessionManager.getInstance().getCart(rid).getRestaurant().getRestaurantName());
+        restaurantLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 20px;");
+        content.getChildren().add(restaurantLabel);
+
+        content.getChildren().addAll(
+                createCartSummary(),
+                createDeliveryAddressSummary(),
+                createPaymentMethodSummary(),
+                createTotalSummary()
+        );
+
+        return content;
+    }
+
+    private VBox createCartSummary() {
+        VBox cartSummary = new VBox();
+        Label cartItemsLabel = new Label(bundle.getString("Items"));
+        cartItemsLabel.setStyle("-fx-font-weight: bold;");
+
+        VBox cartItems = new VBox();
+        for (CartItem item : SessionManager.getInstance().getCart(rid).getItems()) {
+            HBox itemBox = new HBox(10);
+            itemBox.getChildren().addAll(
+                    new Label("• " + item.getProduct().getProductName()),
+                    new Label(bundle.getString("Quantity") + item.getQuantity()),
+                    new Label(bundle.getString("Price") + currencyFormatter.format(item.getTotalPrice()))
+            );
+            cartItems.getChildren().add(itemBox);
+        }
+
+        cartSummary.getChildren().addAll(cartItemsLabel, cartItems);
+        return cartSummary;
+    }
+
+    private VBox createDeliveryAddressSummary() {
+        VBox addressSummary = new VBox();
+        Label deliveryLabel = new Label(bundle.getString("Delivery_Address"));
+        deliveryLabel.setStyle("-fx-font-weight: bold;");
+
+        TextFlow addressFlow = new TextFlow(
+                new Text(selectedAddress.getStreetAddress() + ", "),
+                new Text(selectedAddress.getPostalCode() + " "),
+                new Text(selectedAddress.getCity() + " "),
+                new Text("(" + selectedAddress.getInfo() + ")")
+        );
+        addressFlow.setMaxWidth(350);
+
+        addressSummary.getChildren().addAll(deliveryLabel, addressFlow);
+        return addressSummary;
+    }
+
+    private VBox createPaymentMethodSummary() {
+        VBox paymentSummary = new VBox();
+        Label paymentLabel = new Label(bundle.getString("paymentMethod"));
+        paymentLabel.setStyle("-fx-font-weight: bold;");
+        Label selectedPaymentLabel = new Label(selectedPaymentMethod);
+
+        paymentSummary.getChildren().addAll(paymentLabel, selectedPaymentLabel);
+        return paymentSummary;
+    }
+
+    private VBox createTotalSummary() {
+        VBox totalSummary = new VBox();
+        Label totalLabel = new Label(bundle.getString("Total") + subTotal.getText());
+        totalLabel.setStyle("-fx-font-weight: bold;");
+        totalSummary.getChildren().add(totalLabel);
+        return totalSummary;
     }
 
 
 
+    /**
+     * Renders the summary of the order.
+     * Displays the restaurant name, cart items, and subtotal.
+     */
     public void renderSummary() {
         SessionManager session = SessionManager.getInstance();
         ShoppingCart cart = session.getCart(rid);
@@ -226,69 +275,89 @@ public class CheckoutController  extends BasicController {
         subTotal.setText((currencyFormatter.format(cart.getTotalPrice())));
     }
 
-
+    /**
+     * Fetches the delivery addresses for the user.
+     * Populates the choice box with the addresses.
+     */
     private void getDeliveryAddresses() {
         Task<List<DeliveryAddress>> task = checkoutService.fetchDeliveryAddresses();
-        System.out.println("Fetching delivery addresses...");
-        task.setOnSucceeded(event -> {
-            deliveryAddressesList = task.getValue();
-            deliveryAddressesList.sort((a, b) -> Boolean.compare(b.isDefaultAddress(), a.isDefaultAddress()));
 
-            Platform.runLater(() -> {
-                deliveryAddresses.getItems().clear();
-                if (!deliveryAddressesList.isEmpty()) {
-                    int index = 1;
-                    for (DeliveryAddress address : deliveryAddressesList) {
-                        // Numbering the addresses starting from 1
-                        String formattedAddress = index++ + ". " +
-                                address.getStreetAddress() + ", " +
-                                address.getPostalCode() + " " +
-                                address.getCity() + " (" + address.getInfo() + ")";
-                        deliveryAddresses.getItems().add(formattedAddress);
-                        orderBtn.setDisable(false);
-                    }
+        executeTask(
+                task,
+                this::processFetchedAddresses, // Action to perform on success
+                () -> showError(bundle.getString("Delivery_address_fetch_error")) // Action to perform on failure
+        );
+    }
 
-                    deliveryAddresses.getSelectionModel().selectFirst();
-                    selectedAddress = deliveryAddressesList.get(0);
-                    System.out.println("Delivery addresses fetched successfully.");
-                } else {
-                    // Do not open the dialog automatically
-                    // Instead, prompt the user or disable the order button
-                    showError(bundle.getString("No_saved_delivery_addresses"));
-                    // Optionally, disable the order button
-                    orderBtn.setDisable(true);
+    /**
+     * Processes the fetched delivery addresses.
+     * @param addresses The list of delivery addresses.
+     * Sorts the addresses by default address first.
+     */
+    private void processFetchedAddresses(List<DeliveryAddress> addresses) {
+        deliveryAddressesList = addresses;
+        deliveryAddressesList.sort((a, b) -> Boolean.compare(b.isDefaultAddress(), a.isDefaultAddress()));
+        updateDeliveryAddressesUI();
+    }
+
+    /**
+     * Updates the delivery addresses in the choice box.
+     */
+    private void updateDeliveryAddressesUI() {
+        Platform.runLater(() -> {
+            deliveryAddresses.getItems().clear();
+
+            if (!deliveryAddressesList.isEmpty()) {
+                int index = 1;
+                for (DeliveryAddress address : deliveryAddressesList) {
+                    String formattedAddress = formatDeliveryAddress(address, index++);
+                    deliveryAddresses.getItems().add(formattedAddress);
                 }
-            });
+                deliveryAddresses.getSelectionModel().selectFirst();
+                selectedAddress = deliveryAddressesList.get(0);
+                orderBtn.setDisable(false);
+            } else {
+                showError(bundle.getString("No_saved_delivery_addresses"));
+                orderBtn.setDisable(true);
+            }
         });
+    }
 
-        task.setOnFailed(event -> {
-            System.out.println(bundle.getString("Delivery_address_fetch_error"));
-        });
-
-        // Execute the task in a new thread
-        Thread thread = new Thread(task);
-        thread.setDaemon(true);
-        thread.start();
+    /**
+     * Formats the delivery address for display in the choice box.
+     * @param address The delivery address.
+     * @param index The index of the address in the list.
+     * @return The formatted address string.
+     */
+    private String formatDeliveryAddress(DeliveryAddress address, int index) {
+        return index + ". " +
+                address.getStreetAddress() + ", " +
+                address.getPostalCode() + " " +
+                address.getCity() + " (" + address.getInfo() + ")";
     }
 
 
-    private void showError(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-
+    /**
+     * Populates the payment methods in the choice box.
+     */
     private void populatePaymentMethods() {
-        paymentMethod.getItems().addAll(bundle.getString("OFOS_Credits"));
-        paymentMethod.getItems().addAll(bundle.getString("Card"));
-        paymentMethod.getItems().addAll(bundle.getString("Cash"));
+        List<String> paymentOptions = List.of(
+                bundle.getString("OFOS_Credits"),
+                bundle.getString("Card"),
+                bundle.getString("Cash")
+        );
+
+        paymentMethod.getItems().setAll(paymentOptions);
         paymentMethod.getSelectionModel().selectFirst();
-        selectedPaymentMethod = paymentMethod.getItems().get(0);
+        selectedPaymentMethod = paymentMethod.getSelectionModel().getSelectedItem();
     }
 
+
+    /**
+     * Confirms the order and saves it to the database.
+     * Shows a confirmation dialog on success.
+     * Shows an error dialog on failure.
+     */
     public void confirmOrder() {
         // Get shopping cart items
         List<CartItem> cartItems = SessionManager.getInstance().getCart(rid).getItems();

@@ -31,6 +31,15 @@ import ofosFrontend.session.SessionManager;
 import java.io.IOException;
 import java.util.*;
 
+import static ofosFrontend.session.GenericHelper.executeTask;
+import static ofosFrontend.session.Validations.showError;
+
+/**
+ * Controller class for the User Settings view.
+ * Handles the user's contact information, delivery addresses, and password.
+ * The user can view and edit their contact information, add, edit, and delete delivery addresses,
+ * and change their password or delete their account.
+ */
 public class UserSettingsController extends BasicController {
 
     @FXML private Label nameLabel;
@@ -49,7 +58,11 @@ public class UserSettingsController extends BasicController {
     private final UserService userService = new UserService();
     private ContactInfo currentContactInfo;
 
-
+    /**
+     * Initializes the view.
+     * Fetches the user's contact information and delivery addresses.
+     * Sets up the change password button with a rotation animation :D
+     */
     public void initialize() {
 
         this.userId = SessionManager.getInstance().getUserId();
@@ -64,52 +77,54 @@ public class UserSettingsController extends BasicController {
             rotate.play();
         });
 
-        changePassword.setOnMouseExited(event -> {
-            Platform.runLater(() -> {
-                rotate.stop();
-                changePassword.setRotate(0);
-            });
-        });
+        changePassword.setOnMouseExited(event -> Platform.runLater(() -> {
+            rotate.stop();
+            changePassword.setRotate(0);
+        }));
     }
 
+    /**
+     * Fetches the user's contact information from the database.
+     * If the user has no contact information, prompts the user to add it.
+     * If the user has contact information, updates the UI with the information.
+     */
     private void fetchUserData() {
         int userId = SessionManager.getInstance().getUserId();
-        Task<ContactInfo> task = userService.fetchUserData(userId);
 
-        task.setOnSucceeded(event -> {
-            ContactInfo contactInfo = task.getValue();
-
-            if (contactInfo != null) {
-                // Update UI with contact information
-                currentContactInfo = contactInfo;
-
-                Platform.runLater(() -> {
-                    nameLabel.setText(contactInfo.getFirstName() + " " + contactInfo.getLastName());
-                    emailLabel.setText(contactInfo.getEmail());
-                    phoneNumberLabel.setText(contactInfo.getPhoneNumber());
-                    addressLabel.setText(contactInfo.getAddress());
-                    cityLabel.setText(contactInfo.getCity());
-                    postalCodeLabel.setText(contactInfo.getPostalCode());
-                });
-            } else {
-                // No contact information found, prompt user to enter it
-                Platform.runLater(this::promptForContactInfo);
-            }
-        });
-
-        task.setOnFailed(event -> {
-            Throwable e = task.getException();
-            e.printStackTrace();
-            Platform.runLater(() -> {
-                showError(bundle.getString("An_error_occurred_while_fetching_contact_information"));
-            });
-        });
-
-        Thread thread = new Thread(task);
-        thread.setDaemon(true);
-        thread.start();
+        executeTask(
+                userService.fetchUserData(userId),
+                contactInfo -> Platform.runLater(() -> updateContactInfoUI(contactInfo)),
+                () -> showError(bundle.getString("An_error_occurred_while_fetching_contact_information"))
+        );
     }
 
+    /**
+     * Updates the UI with the user's contact information.
+     * @param contactInfo The ContactInfo object to display in the UI.
+     * If the contactInfo is null, prompts the user to add contact information.
+     * If the contactInfo is not null, updates the UI with the information.
+     */
+    private void updateContactInfoUI(ContactInfo contactInfo) {
+        if (contactInfo == null) {
+            promptForContactInfo();
+            return;
+        }
+
+        currentContactInfo = contactInfo;
+        nameLabel.setText(contactInfo.getFirstName() + " " + contactInfo.getLastName());
+        emailLabel.setText(contactInfo.getEmail());
+        phoneNumberLabel.setText(contactInfo.getPhoneNumber());
+        addressLabel.setText(contactInfo.getAddress());
+        cityLabel.setText(contactInfo.getCity());
+        postalCodeLabel.setText(contactInfo.getPostalCode());
+    }
+
+    /**
+     * Prompts the user to add contact information.
+     * If the user chooses to add contact information, opens the contact info dialog.
+     * If the user chooses not to add contact information, updates the UI accordingly.
+     * If the user has contact information, updates the UI with the information.
+     */
     private void promptForContactInfo() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(bundle.getString("setTitleText"));
@@ -124,8 +139,6 @@ public class UserSettingsController extends BasicController {
         Optional<ButtonType> result = alert.showAndWait();
 
         if (result.isPresent() && result.get() == yesButton) {
-            System.out.println("User chose to add contact information");
-            System.out.println("Opening contact info dialog with contactinfo = null");
             ContactInfo contactInfo = null;
             // Open the dialog to add contact information
             openContactInfoDialog(contactInfo);
@@ -143,6 +156,12 @@ public class UserSettingsController extends BasicController {
         }
     }
 
+    /**
+     * Opens the contact information dialog.
+     * @param contactInfo The contact information object to display in the dialog.
+     * If the contactInfo is null, the dialog will be empty for the user to fill in.
+     * If the contactInfo is not null, the dialog will display the existing information.
+     */
     private void openContactInfoDialog(ContactInfo contactInfo) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/contactInfoDialog.fxml"));
@@ -168,149 +187,217 @@ public class UserSettingsController extends BasicController {
     }
 
 
-
+    /**
+     * Fetches the user's delivery addresses from the database.
+     * Updates the UI with the delivery addresses.
+     */
     private void fetchDeliveryAddresses() {
-        Task<List<DeliveryAddress>> task = deliveryAddressService.fetchDeliveryAddresses(userId);
-
-        task.setOnSucceeded(event -> {
-            deliveryAddressesList = task.getValue();
-            updateDeliveryAddressesUI();
-        });
-
-        task.setOnFailed(event -> {
-            Throwable e = task.getException();
-            e.printStackTrace();
-            showError(bundle.getString("Delivery_address_fetch_error"));
-        });
-
-        Thread thread = new Thread(task);
-        thread.setDaemon(true);
-        thread.start();
+        executeTask(
+                deliveryAddressService.fetchDeliveryAddresses(userId),
+                addresses -> {
+                    deliveryAddressesList = addresses;
+                    updateDeliveryAddressesUI();
+                },
+                () -> showError(bundle.getString("Delivery_address_fetch_error"))
+        );
     }
 
 
+    /**
+     * Updates the UI with the user's delivery addresses.
+     * If the user has no delivery addresses, displays a placeholder message.
+     * If the user has delivery addresses, displays each address in a separate node.
+     */
     private void updateDeliveryAddressesUI() {
         Platform.runLater(() -> {
             deliveryAddressContainer.getChildren().clear();
 
             if (deliveryAddressesList.isEmpty()) {
-                // If there are no addresses, add the placeholder Label
-                Label placeholderLabel = new Label(bundle.getString("No_saved_delivery_addresses"));
-                placeholderLabel.setStyle("-fx-font-style: italic; -fx-text-fill: gray;");
-                placeholderLabel.setPadding(new Insets(10));
-                deliveryAddressContainer.getChildren().add(placeholderLabel);
+                addPlaceholderToContainer();
             } else {
-                for (DeliveryAddress address : deliveryAddressesList) {
-                    Node addressNode = createAddressNode(address);
-                    deliveryAddressContainer.getChildren().add(addressNode);
-                }
+                deliveryAddressesList.forEach(address -> deliveryAddressContainer.getChildren().add(createAddressNode(address)));
             }
         });
     }
 
+    /**
+     * Adds a placeholder message to the delivery address container.
+     */
+    private void addPlaceholderToContainer() {
+        Label placeholderLabel = new Label(bundle.getString("No_saved_delivery_addresses"));
+        placeholderLabel.setStyle("-fx-font-style: italic; -fx-text-fill: gray;");
+        placeholderLabel.setPadding(new Insets(10));
+        deliveryAddressContainer.getChildren().add(placeholderLabel);
+    }
 
-
-
+    /**
+     * Creates a new Node for displaying a delivery address.
+     * The Node contains the address information, buttons for editing and deleting the address,
+     * and a button to set the address as the default address.
+     * @param address The DeliveryAddress object to display in the Node.
+     * @return The Node containing the address information and buttons.
+     */
     private Node createAddressNode(DeliveryAddress address) {
-        // Root VBox for each address node
+        VBox rootVBox = setupAddressNodeStyle();
+
+        HBox topHBox = createTopHBox(address);
+        Label infoLabel = createInfoLabel();
+        Label infoValue = createInfoValue(address);
+
+        rootVBox.getChildren().addAll(topHBox, infoLabel, infoValue);
+        return rootVBox;
+    }
+
+
+    /**
+     * Sets up the style for the address node.
+     * @return The VBox containing the address node with the specified style.
+     */
+    private VBox setupAddressNodeStyle() {
         VBox rootVBox = new VBox(5);
         rootVBox.setPadding(new Insets(10));
         rootVBox.setStyle("-fx-background-color: white; -fx-border-color: lightgray; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10;");
         rootVBox.setPrefWidth(250);
+        return rootVBox;
+    }
 
-        // Top HBox containing Address information and buttons
+    /**
+     * Creates the top HBox for the address node.
+     * @param address The DeliveryAddress object to display.
+     * @return The HBox containing the address information and buttons.
+     */
+    private HBox createTopHBox(DeliveryAddress address) {
         HBox topHBox = new HBox(10);
         topHBox.setAlignment(Pos.CENTER_LEFT);
 
-        // VBox for Address labels and values
+        VBox addressVBox = createAddressVBox(address);
+        HBox buttonHBox = createButtonHBox(address);
+
+        topHBox.getChildren().addAll(addressVBox, buttonHBox);
+        return topHBox;
+    }
+
+    /**
+     * Creates the info label for the address node.
+     * @return The Label containing the info label.
+     */
+    private Label createInfoLabel() {
+        Label infoLabel = new Label(bundle.getString("Info"));
+        infoLabel.setStyle("-fx-font-weight: bold;");
+        return infoLabel;
+    }
+
+    /**
+     * Creates the info value for the address node.
+     * @param address The DeliveryAddress object to display.
+     * @return The Label containing the info value.
+     */
+    private Label createInfoValue(DeliveryAddress address) {
+        String instructions = address.getInfo() != null ? address.getInfo() : bundle.getString("No_info_available");
+        Label infoValue = new Label(instructions);
+        infoValue.setStyle("-fx-text-fill: gray;");
+        infoValue.setWrapText(true);
+        return infoValue;
+    }
+
+    /**
+     * Creates a VBox for displaying the address information.
+     * @param address The DeliveryAddress object to display.
+     * @return The VBox containing the address information.
+     */
+    private VBox createAddressVBox(DeliveryAddress address) {
         VBox addressVBox = new VBox(2);
         Label addressLabel = new Label(bundle.getString("Address"));
         addressLabel.setStyle("-fx-font-weight: bold;");
+
         Label addressValue = new Label(address.getStreetAddress());
         addressValue.setWrapText(true);
 
         Label cityPostalLabel = new Label(address.getPostalCode() + ", " + address.getCity());
-        addressVBox.getChildren().addAll(addressLabel, addressValue, cityPostalLabel);
 
-        // HBox for Buttons
+        addressVBox.getChildren().addAll(addressLabel, addressValue, cityPostalLabel);
+        return addressVBox;
+    }
+
+    /**
+     * Creates the button HBox for the address node.
+     * @param address The DeliveryAddress object to display.
+     * @return The HBox containing the buttons for editing, deleting, and setting the default address.
+     */
+    private HBox createButtonHBox(DeliveryAddress address) {
         HBox buttonHBox = new HBox(5);
         buttonHBox.setAlignment(Pos.TOP_RIGHT);
 
-        // Edit Button
+        Button editButton = createEditButton(address);
+        Button deleteButton = createDeleteButton(address);
+        Node defaultNode = address.isDefaultAddress() ? createDefaultIndicator() : createSetDefaultButton(address);
+
+        buttonHBox.getChildren().addAll(editButton, deleteButton, defaultNode);
+        return buttonHBox;
+    }
+
+    /**
+     * Creates the Edit button for the address node.
+     * @param address The DeliveryAddress object to edit.
+     * @return The Button for editing the address.
+     */
+    private Button createEditButton(DeliveryAddress address) {
         Button editButton = new Button();
         ImageView editIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/edit_icon.png")));
         editIcon.setFitWidth(16);
         editIcon.setFitHeight(16);
         editButton.setGraphic(editIcon);
-        editButton.setOnAction(e -> handleEditAddress(address));
         editButton.setStyle("-fx-background-color: transparent;");
+        editButton.setOnAction(e -> handleEditAddress(address));
+        return editButton;
+    }
 
-        // Delete Button
+    /**
+     * Creates the Delete button for the address node.
+     * @param address The DeliveryAddress object to delete.
+     * @return The Button for deleting the address.
+     */
+    private Button createDeleteButton(DeliveryAddress address) {
         Button deleteButton = new Button();
         ImageView deleteIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/delete_icon.png")));
         deleteIcon.setFitWidth(16);
         deleteIcon.setFitHeight(16);
         deleteButton.setGraphic(deleteIcon);
-        deleteButton.setOnAction(e -> handleRemoveAddress(address));
         deleteButton.setStyle("-fx-background-color: transparent;");
-
-        // Create defaultNode
-        Node defaultNode;
-        if (address.isDefaultAddress()) {
-            // Default Indicator
-            ImageView defaultIndicator = new ImageView(new Image(getClass().getResourceAsStream("/images/star_icon.png")));
-            defaultIndicator.setFitWidth(20);
-            defaultIndicator.setFitHeight(20);
-            Tooltip.install(defaultIndicator, new Tooltip(bundle.getString("Default_Address")));
-            defaultNode = defaultIndicator;
-        } else {
-            // Set as Default Button
-            Button defaultButton = new Button();
-            defaultButton.setText(bundle.getString("SetAsDefault"));
-            defaultButton.setOnAction(e -> handleSetDefaultAddress(address));
-            defaultButton.setMinWidth(150);
-            defaultButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: white; -fx-border-radius: 5; -fx-background-radius: 5;");
-            Tooltip.install(defaultButton, new Tooltip(bundle.getString("Set_Default_Address")));
-            defaultNode = defaultButton;
-        }
-
-        // Add tooltips
-        Tooltip.install(editButton, new Tooltip(bundle.getString("EditAddress")));
-        Tooltip.install(deleteButton, new Tooltip(bundle.getString("DeleteAddress")));
-
-        // Add buttons to buttonHBox
-        buttonHBox.getChildren().addAll(editButton, deleteButton, defaultNode);
-
-        HBox.setHgrow(addressVBox, Priority.ALWAYS);
-
-        // Add addressVBox and buttonHBox to topHBox
-        topHBox.getChildren().addAll(addressVBox, buttonHBox);
-
-        // Info Label and Value
-        Label infoLabel = new Label(bundle.getString("Info"));
-        infoLabel.setStyle("-fx-font-weight: bold;");
-        String instructions = address.getInfo() != null ? address.getInfo() : "";
-        Label infoValue = new Label(instructions);
-        infoValue.setStyle("-fx-text-fill: gray;");
-        infoValue.setWrapText(true);
-
-        // Add components to rootVBox
-        rootVBox.getChildren().addAll(topHBox, infoLabel, infoValue);
-
-        return rootVBox;
+        deleteButton.setOnAction(e -> handleRemoveAddress(address));
+        return deleteButton;
     }
 
-
-
-
-    private void showError(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+    /**
+     * Creates the Default indicator for the address node.
+     * @return The Node for indicating the default address.
+     */
+    private Node createDefaultIndicator() {
+        ImageView defaultIndicator = new ImageView(new Image(getClass().getResourceAsStream("/images/star_icon.png")));
+        defaultIndicator.setFitWidth(20);
+        defaultIndicator.setFitHeight(20);
+        Tooltip.install(defaultIndicator, new Tooltip(bundle.getString("Default_Address")));
+        return defaultIndicator;
     }
 
+    /**
+     * Creates the Set Default button for the address node.
+     * @param address The DeliveryAddress object to set as the default address.
+     * @return The Button for setting the address as the default.
+     */
+    private Button createSetDefaultButton(DeliveryAddress address) {
+        Button defaultButton = new Button(bundle.getString("SetAsDefault"));
+        defaultButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: white; -fx-border-radius: 5; -fx-background-radius: 5;");
+        defaultButton.setOnAction(e -> handleSetDefaultAddress(address));
+        Tooltip.install(defaultButton, new Tooltip(bundle.getString("Set_Default_Address")));
+        return defaultButton;
+    }
+
+    /**
+     * Handles the Add Address button action.
+     * Opens the Add Address dialog for the user to input a new delivery address.
+     * After the dialog is closed, refreshes the delivery addresses.
+     */
     @FXML
     private void handleAddAddress() {
         try {
@@ -335,7 +422,11 @@ public class UserSettingsController extends BasicController {
         }
     }
 
-
+    /**
+     * Handles the Edit Address button action.
+     * @param address The DeliveryAddress object to edit.
+     * Opens the Edit Address dialog for the user to edit the delivery address.
+     */
     private void handleEditAddress(DeliveryAddress address) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/Owner/editAddressDialog.fxml"));
@@ -358,7 +449,13 @@ public class UserSettingsController extends BasicController {
         }
     }
 
-
+    /**
+     * Handles the Remove Address button action.
+     * @param address The DeliveryAddress object to remove.
+     * Prompts the user to confirm the deletion of the address.
+     * If the user confirms, deletes the address from the database.
+     * After the address is deleted, refreshes the delivery addresses.
+     */
     private void handleRemoveAddress(DeliveryAddress address) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(bundle.getString("DeleteAddress"));
@@ -376,6 +473,12 @@ public class UserSettingsController extends BasicController {
         }
     }
 
+    /**
+     * Handles the Set Default Address button action.
+     * @param address The DeliveryAddress object to set as the default address.
+     * Prompts the user to confirm setting the address as the default.
+     * If the user confirms, sets the address as the default in the database.
+     */
     @FXML
     private void handleSetDefaultAddress(DeliveryAddress address) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -405,14 +508,15 @@ public class UserSettingsController extends BasicController {
         }
     }
 
+    /**
+     * Updates the UI with the new default address.
+     * @param newDefaultAddress The DeliveryAddress object that is set as the new default address.
+     * Sets the isDefaultAddress property for the new default address to true.
+     */
     private void updateDefaultAddressInUI(DeliveryAddress newDefaultAddress) {
         // Update the isDefaultAddress property of all addresses
         for (DeliveryAddress addr : deliveryAddressesList) {
-            if (addr.getDeliveryAddressId() == newDefaultAddress.getDeliveryAddressId()) {
-                addr.setDefaultAddress(true);
-            } else {
-                addr.setDefaultAddress(false);
-            }
+            addr.setDefaultAddress(addr.getDeliveryAddressId() == newDefaultAddress.getDeliveryAddressId());
         }
 
         // Refresh the UI nodes
@@ -425,8 +529,10 @@ public class UserSettingsController extends BasicController {
         });
     }
 
-
-
+    /**
+     * Deletes the delivery address from the database.
+     * @param address The DeliveryAddress object to delete.
+     */
     private void deleteAddress(DeliveryAddress address) {
         Task<Void> task = deliveryAddressService.deleteAddress(address.getDeliveryAddressId());
 
@@ -448,16 +554,29 @@ public class UserSettingsController extends BasicController {
         thread.start();
     }
 
+    /**
+     * Handles the Edit Contact Info button action.
+     * @param actionEvent The ActionEvent object that triggered the event.
+     * Opens the contact info dialog for the user to edit their contact information.
+     */
     @FXML
     private void handleEditContactInfo(ActionEvent actionEvent) {
         openContactInfoDialog(currentContactInfo);
     }
 
+    /**
+     * Handles the Change Password button action.
+     * @param actionEvent The ActionEvent object that triggered the event.
+     * Opens the change password dialog for the user to change their password.
+     */
     @FXML
     public void handleChangePassword(ActionEvent actionEvent) {
         openEditPasswordDialog();
     }
 
+    /**
+     * Opens the change password dialog.
+     */
     private void openEditPasswordDialog() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/editPasswordDialog.fxml"));
@@ -478,7 +597,12 @@ public class UserSettingsController extends BasicController {
         }
     }
 
-
+    /**
+     * Handles the Delete Account button action.
+     * @param actionEvent The ActionEvent object that triggered the event.
+     * Prompts the user to confirm the deletion of their account.
+     * If the user confirms, deletes the account from the database.
+     */
     public void handleDeleteAccount(ActionEvent actionEvent) {
         // Create a confirmation dialog
         Dialog<String> confirmationDialog = new Dialog<>();
@@ -503,9 +627,8 @@ public class UserSettingsController extends BasicController {
         // Enable the OK button only if the user enters "DELETE"
         Node okButton = confirmationDialog.getDialogPane().lookupButton(okButtonType);
         okButton.setDisable(true);
-        inputField.textProperty().addListener((observable, oldValue, newValue) -> {
-            okButton.setDisable(!"DELETE".equalsIgnoreCase(newValue.trim()));
-        });
+        inputField.textProperty().addListener((observable, oldValue, newValue) ->
+                okButton.setDisable(!"DELETE".equals(newValue.trim())));
 
         // Process the result
         confirmationDialog.setResultConverter(dialogButton -> {

@@ -9,9 +9,16 @@ import ofosFrontend.model.DeliveryAddress;
 import ofosFrontend.service.DeliveryAddressService;
 import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.TextFieldUtils;
+import ofosFrontend.session.Validations;
 
 import java.util.ResourceBundle;
 
+/**
+ * Controller class for the Edit Address dialog.
+ * Handles the user input and updates the address in the database.
+ * The dialog is used to edit an existing delivery address.
+ * The user can input the street address, city, postal code, and additional instructions.
+ */
 public class EditAddressDialogController {
 
     @FXML private TextField streetAddressField;
@@ -26,7 +33,7 @@ public class EditAddressDialogController {
 
     ResourceBundle bundle = LocalizationManager.getBundle();
     private DeliveryAddress address;
-    private DeliveryAddressService deliveryAddressService = new DeliveryAddressService();
+    private final DeliveryAddressService deliveryAddressService = new DeliveryAddressService();
 
     @FXML
     public void initialize() {
@@ -36,6 +43,10 @@ public class EditAddressDialogController {
         TextFieldUtils.addTextLimiter(instructionsArea, INSTRUCTIONS_MAX_LENGTH);
     }
 
+    /**
+     * Sets the delivery address to be edited and populates the fields with the address data.
+     * @param address The delivery address object to be edited.
+     */
     public void setAddress(DeliveryAddress address) {
         this.address = address;
         streetAddressField.setText(address.getStreetAddress());
@@ -44,27 +55,32 @@ public class EditAddressDialogController {
         instructionsArea.setText(address.getInfo());
     }
 
+    /**
+     * Handles the save button action.
+     * Validates the input fields and updates the address in the database.
+     */
     @FXML
     private void handleSave() {
-        String streetAddress = streetAddressField.getText();
-        String city = cityField.getText();
-        String postalCode = postalCodeField.getText();
-        String instructions = instructionsArea.getText();
+        String validationError = Validations.validateAddressInput(streetAddressField, cityField, postalCodeField, bundle);
 
-        if (streetAddress.isEmpty() || city.isEmpty() || postalCode.isEmpty()) {
-            showError(bundle.getString("Fill_all_fields"));
+        if (validationError != null) {
+            Validations.showError(validationError);
             return;
         }
 
         // Update the address object
-        address.setStreetAddress(streetAddress);
-        address.setCity(city);
-        address.setPostalCode(postalCode);
-        address.setInfo(instructions);
+        address.setStreetAddress(streetAddressField.getText().trim());
+        address.setCity(cityField.getText().trim());
+        address.setPostalCode(postalCodeField.getText().trim());
+        address.setInfo(instructionsArea.getText().trim());
 
         updateDeliveryAddress(address);
     }
 
+    /**
+     * Updates the delivery address in the database.
+     * @param address The DeliveryAddress object containing the updated delivery address.
+     */
     private void updateDeliveryAddress(DeliveryAddress address) {
         Task<Void> task = deliveryAddressService.updateDeliveryAddress(address);
 
@@ -75,15 +91,14 @@ public class EditAddressDialogController {
                 successAlert.setHeaderText(null);
                 successAlert.setContentText(bundle.getString("Address_edited_successfully"));
                 successAlert.showAndWait();
-                Stage stage = (Stage) streetAddressField.getScene().getWindow();
-                stage.close();
+                closeDialog();
             });
         });
 
         task.setOnFailed(event -> {
             Throwable exception = task.getException();
             exception.printStackTrace();
-            Platform.runLater(() -> showError(bundle.getString("Update_address_error")));
+            Platform.runLater(() -> Validations.showError(bundle.getString("Update_address_error")));
         });
 
         Thread thread = new Thread(task);
@@ -91,6 +106,9 @@ public class EditAddressDialogController {
         thread.start();
     }
 
+    /**
+     * Handles the cancel button action to close the dialog.
+     */
     @FXML
     private void handleCancel() {
         // Close the dialog
@@ -98,11 +116,11 @@ public class EditAddressDialogController {
         stage.close();
     }
 
-    private void showError(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(bundle.getString("EditAddress"));
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+    /**
+     * Closes the current dialog window.
+     */
+    private void closeDialog() {
+        Stage stage = (Stage) streetAddressField.getScene().getWindow();
+        stage.close();
     }
 }
