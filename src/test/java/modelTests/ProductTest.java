@@ -12,13 +12,11 @@ public class ProductTest {
 
     @BeforeEach
     public void setUp() {
-        // Initialize the product with the parameterized constructor
-        product = new Product("Laptop", 999.99, "High-performance laptop", 12345, "laptop.jpg", "Electronics", true);
+        product = new Product("Laptop", 999.99, "High-performance laptop", 12345, "laptop.jpg", "Electronics", true, "Hyvä läppäri", "高性能ノートパソコン", "Высокопроизводительный ноутбук");
     }
 
     @Test
     public void testDefaultConstructor() {
-        // Test that the default constructor initializes fields to default values
         Product defaultProduct = new Product();
         assertNull(defaultProduct.getProductName(), "Product name should be null for the default constructor.");
         assertEquals(0.0, defaultProduct.getProductPrice(), 0.001, "Product price should be 0.0 for the default constructor.");

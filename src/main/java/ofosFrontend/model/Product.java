@@ -1,5 +1,7 @@
 package ofosFrontend.model;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Product {
 
@@ -11,8 +13,13 @@ public class Product {
     private String category;
     private boolean active;
 
-    // Parameterized constructor
-    public Product(String productName, double productPrice, String productDesc, Integer productID, String picture, String category, boolean active) {
+    // Translation fields
+    private String finnishTranslation;
+    private String japaneseTranslation;
+    private String russianTranslation;
+
+    // Parameterized constructor with translations
+    public Product(String productName, double productPrice, String productDesc, Integer productID, String picture, String category, boolean active, String finnishTranslation, String japaneseTranslation, String russianTranslation) {
         this.productName = productName;
         this.productPrice = productPrice;
         this.productDesc = productDesc;
@@ -20,13 +27,16 @@ public class Product {
         this.picture = picture;
         this.category = category;
         this.active = active;
+        this.finnishTranslation = finnishTranslation;
+        this.japaneseTranslation = japaneseTranslation;
+        this.russianTranslation = russianTranslation;
     }
 
     // Default constructor
     public Product() {
     }
 
-    // Getters and Setters
+    // Getters and setters for the original fields
     public boolean isActive() {
         return active;
     }
@@ -83,6 +93,30 @@ public class Product {
         this.productID = productID;
     }
 
+    public String getFinnishTranslation() {
+        return finnishTranslation;
+    }
+
+    public void setFinnishTranslation(String finnishTranslation) {
+        this.finnishTranslation = finnishTranslation;
+    }
+
+    public String getJapaneseTranslation() {
+        return japaneseTranslation;
+    }
+
+    public void setJapaneseTranslation(String japaneseTranslation) {
+        this.japaneseTranslation = japaneseTranslation;
+    }
+
+    public String getRussianTranslation() {
+        return russianTranslation;
+    }
+
+    public void setRussianTranslation(String russianTranslation) {
+        this.russianTranslation = russianTranslation;
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -93,6 +127,9 @@ public class Product {
                 ", picture='" + picture + '\'' +
                 ", category='" + category + '\'' +
                 ", active=" + active +
+                ", finnishTranslation='" + finnishTranslation + '\'' +
+                ", japaneseTranslation='" + japaneseTranslation + '\'' +
+                ", russianTranslation='" + russianTranslation + '\'' +
                 '}';
     }
 }

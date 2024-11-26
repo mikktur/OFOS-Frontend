@@ -1,7 +1,6 @@
 package ofosFrontend.controller.Owner;
 
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -119,6 +118,10 @@ public class AdminMenuController extends AdminBasicController {
         String dialogPicture = bundle.getString("DialogPicture");
         String dialogActive = bundle.getString("DialogActive");
 
+        // New translation fields
+        String dialogFinnish = "Finnish Translation";
+        String dialogJapanese = "Japanese Translation";
+        String dialogRussian = "Russian Translation";
 
         Dialog<Product> dialog = new Dialog<>();
         dialog.setTitle(dialogTitle);
@@ -148,6 +151,16 @@ public class AdminMenuController extends AdminBasicController {
 
         CheckBox activeCheckBox = new CheckBox(dialogActive);
 
+        // Add translation fields
+        TextField finnishField = new TextField();
+        finnishField.setPromptText(dialogFinnish);
+
+        TextField japaneseField = new TextField();
+        japaneseField.setPromptText(dialogJapanese);
+
+        TextField russianField = new TextField();
+        russianField.setPromptText(dialogRussian);
+
         grid.add(new Label(dialogName), 0, 0);
         grid.add(nameField, 1, 0);
         grid.add(new Label(dialogDescription), 0, 1);
@@ -161,6 +174,14 @@ public class AdminMenuController extends AdminBasicController {
         grid.add(new Label(dialogActive), 0, 5);
         grid.add(activeCheckBox, 1, 5);
 
+        // Add translation fields to grid
+        grid.add(new Label(dialogFinnish), 0, 6);
+        grid.add(finnishField, 1, 6);
+        grid.add(new Label(dialogJapanese), 0, 7);
+        grid.add(japaneseField, 1, 7);
+        grid.add(new Label(dialogRussian), 0, 8);
+        grid.add(russianField, 1, 8);
+
         dialog.getDialogPane().setContent(grid);
 
         dialog.setResultConverter(dialogButton -> {
@@ -172,7 +193,12 @@ public class AdminMenuController extends AdminBasicController {
                 String picture = pictureField.getText();
                 boolean active = activeCheckBox.isSelected();
 
-                return new Product(name, price, description, null, picture, category, active);
+                // Collect translations
+                String finnish = finnishField.getText();
+                String japanese = japaneseField.getText();
+                String russian = russianField.getText();
+
+                return new Product(name, price, description, null, picture, category, active, finnish, japanese, russian);
             }
             return null;
         });
@@ -189,6 +215,7 @@ public class AdminMenuController extends AdminBasicController {
         });
     }
 
+
     private void openEditDialog(Product product) {
         ResourceBundle bundle = LocalizationManager.getBundle();
         String dialogTitle = bundle.getString("EditItemDialog");
@@ -201,6 +228,11 @@ public class AdminMenuController extends AdminBasicController {
         String editPrice = bundle.getString("EditPrice");
         String editCategory = bundle.getString("EditCategory");
         String editPicture = bundle.getString("EditPicture");
+
+        // Translation fields
+        String editFinnish = "Edit Finnish Translation";
+        String editJapanese = "Edit Japanese Translation";
+        String editRussian = "Edit Russian Translation";
 
         Dialog<Product> dialog = new Dialog<>();
         dialog.setTitle(dialogTitle);
@@ -222,6 +254,16 @@ public class AdminMenuController extends AdminBasicController {
         CheckBox activeCheckBox = new CheckBox(editActive);
         activeCheckBox.setSelected(product.isActive());
 
+        // Translation fields
+        TextField finnishField = new TextField(product.getFinnishTranslation());
+        finnishField.setPromptText(editFinnish);
+
+        TextField japaneseField = new TextField(product.getJapaneseTranslation());
+        japaneseField.setPromptText(editJapanese);
+
+        TextField russianField = new TextField(product.getRussianTranslation());
+        russianField.setPromptText(editRussian);
+
         grid.add(new Label(editName), 0, 0);
         grid.add(nameField, 1, 0);
         grid.add(new Label(editDescription), 0, 1);
@@ -235,6 +277,14 @@ public class AdminMenuController extends AdminBasicController {
         grid.add(new Label(editActive), 0, 5);
         grid.add(activeCheckBox, 1, 5);
 
+        // Add translation fields
+        grid.add(new Label(editFinnish), 0, 6);
+        grid.add(finnishField, 1, 6);
+        grid.add(new Label(editJapanese), 0, 7);
+        grid.add(japaneseField, 1, 7);
+        grid.add(new Label(editRussian), 0, 8);
+        grid.add(russianField, 1, 8);
+
         dialog.getDialogPane().setContent(grid);
 
         dialog.setResultConverter(dialogButton -> {
@@ -245,6 +295,11 @@ public class AdminMenuController extends AdminBasicController {
                 product.setCategory(categoryField.getText());
                 product.setPicture(pictureField.getText());
                 product.setActive(activeCheckBox.isSelected());
+
+                // Update translations
+                product.setFinnishTranslation(finnishField.getText());
+                product.setJapaneseTranslation(japaneseField.getText());
+                product.setRussianTranslation(russianField.getText());
 
                 return product;
             }
@@ -279,6 +334,4 @@ public class AdminMenuController extends AdminBasicController {
             alert.showAndWait();
         }
     }
-
-
 }
