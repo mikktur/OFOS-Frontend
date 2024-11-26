@@ -49,6 +49,11 @@ public class OrderHistoryController {
     @FXML
     private GridPane historyGridPane;
 
+    /**
+     * Initializes the order history view.
+     * Loads the user's order history and sorts the view by order ID.
+     * Adds sort listeners to the column headers.
+     */
     @FXML
     public void initialize() {
         if (historyGridPane.getColumnConstraints().isEmpty()) {
@@ -69,7 +74,7 @@ public class OrderHistoryController {
     }
 
     /**
-     * Adds a sort listener to a label with exception handling.
+     * Helper method that adds a sort listener to a label with exception handling.
      *
      * @param label  The label to attach the listener to.
      * @param action The sorting action to execute.
@@ -92,26 +97,54 @@ public class OrderHistoryController {
         void run() throws IOException, InterruptedException;
     }
 
+    /**
+     * Handles the sorting action for the Order ID column.
+     * @throws IOException If an I/O error occurs.
+     * @throws InterruptedException If the thread is interrupted.
+     * @see OrderHistorySorter#sortOrderHistoryById(Map, boolean)
+     */
     private void handleSortById() throws IOException, InterruptedException {
         loadSortedOrderHistory(OrderHistorySorter.sortOrderHistoryById(orderService.getHistory(), sortOrderIdAscending));
         sortOrderIdAscending = !sortOrderIdAscending;
     }
 
+    /**
+     * Handles the sorting action for the Restaurant Name column.
+     * @throws IOException If an I/O error occurs.
+     * @throws InterruptedException If the thread is interrupted.
+     * @see OrderHistorySorter#sortOrderHistoryByRestaurant(Map, boolean)
+     */
     private void handleSortByRestaurant() throws IOException, InterruptedException {
         loadSortedOrderHistory(OrderHistorySorter.sortOrderHistoryByRestaurant(orderService.getHistory(), sortRestaurantAscending));
         sortRestaurantAscending = !sortRestaurantAscending;
     }
 
+    /**
+     * Handles the sorting action for the Price column.
+     * @throws IOException If an I/O error occurs.
+     * @throws InterruptedException If the thread is interrupted.
+     * @see OrderHistorySorter#sortOrderHistoryByPrice(Map, boolean)
+     */
     private void handleSortByPrice() throws IOException, InterruptedException {
         loadSortedOrderHistory(OrderHistorySorter.sortOrderHistoryByPrice(orderService.getHistory(), sortPriceAscending));
         sortPriceAscending = !sortPriceAscending;
     }
 
+    /**
+     * Handles the sorting action for the Date column.
+     * @throws IOException If an I/O error occurs.
+     * @throws InterruptedException If the thread is interrupted.
+     * @see OrderHistorySorter#sortOrderHistoryByDate(Map, boolean)
+     */
     private void handleSortByDate() throws IOException, InterruptedException {
         loadSortedOrderHistory(OrderHistorySorter.sortOrderHistoryByDate(orderService.getHistory(), sortDateAscending));
         sortDateAscending = !sortDateAscending;
     }
 
+    /**
+     * Loads the sorted order history into the GridPane.
+     * @param sortedOrderHistory The sorted order history to display.
+     */
     private void loadSortedOrderHistory(Map<Integer, List<OrderHistory>> sortedOrderHistory) {
         historyGridPane.getChildren().clear();
         displayOrderHistory(sortedOrderHistory);

@@ -111,8 +111,8 @@ public class ShoppingCartController extends BasicController {
 
     /**
      * Initializes the cart for a specific restaurant
-     * @param restaurantId
-     * @param restaurant
+     * @param restaurantId the id of the restaurant
+     * @param restaurant the restaurant
      */
     public void initializeCartForRestaurant(int restaurantId, Restaurant restaurant) {
 
@@ -132,6 +132,12 @@ public class ShoppingCartController extends BasicController {
     }
 
     // used to add ui elements to the ui when user adds or removes products to the cart
+
+    /**
+     * Adds listeners to the cart
+     * @param cart the cart to add listeners to
+     *             @see ShoppingCart
+     */
     private void addCartListeners(ShoppingCart cart) {
         ObservableList<CartItem> items = cart.getItems();
         System.out.println("Adding cart listeners");
