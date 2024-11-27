@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+/**
+ * Model class representing a restaurant
+ */
 public class Restaurant {
     private int Id;
     private String restaurantName;

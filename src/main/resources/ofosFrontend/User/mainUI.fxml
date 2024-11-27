@@ -37,9 +37,7 @@
                 <HBox alignment="TOP_CENTER" VBox.vgrow="NEVER">
                     <TilePane fx:id="categoryTile" alignment="CENTER" hgap="20.0" maxWidth="600.0"
                               minWidth="600.0" prefColumns="3" prefHeight="100.0" prefRows="1"
-                              prefWidth="600.0"
-                              style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);"
-                              HBox.hgrow="NEVER">
+                              prefWidth="600.0" styleClass="category-container" HBox.hgrow="NEVER">
                         <HBox.margin>
                             <Insets left="40.0" right="40.0"/>
                         </HBox.margin>
@@ -49,8 +47,9 @@
                         <AnchorPane fx:id="burger_category"
                                     onMouseClicked="#handleCategoryClick"
                                     prefHeight="166.0" prefWidth="159.0"
-                                    style="-fx-background-color: #ffffff; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
-                            <ImageView fitHeight="119.0" fitWidth="119.0" layoutX="21.0"
+                                    styleClass="category-button">
+
+                        <ImageView fitHeight="119.0" fitWidth="119.0" layoutX="21.0"
                                        layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                                 <image>
                                     <Image url="@../../images/burger.png"/>
@@ -65,9 +64,10 @@
                         </AnchorPane>
                         <AnchorPane fx:id="pizza_category"
                                     onMouseClicked="#handleCategoryClick"
-                                    prefHeight="166.0"
-                                    style="-fx-background-color: #ffffff; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
-                            <ImageView fitHeight="114.0" fitWidth="115.0" layoutX="23.0"
+                                    prefHeight="166.0" prefWidth="159.0"
+                                    styleClass="category-button">
+
+                        <ImageView fitHeight="114.0" fitWidth="115.0" layoutX="23.0"
                                        layoutY="7.0" pickOnBounds="true" preserveRatio="true">
                                 <image>
                                     <Image url="@../../images/pizza.png"/>
@@ -83,8 +83,9 @@
                         <AnchorPane fx:id="steak_category"
                                     onMouseClicked="#handleCategoryClick"
                                     prefHeight="166.0" prefWidth="159.0"
-                                    style="-fx-background-color: #ffffff; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
-                            <ImageView fitHeight="118.0" fitWidth="119.0" layoutX="21.0"
+                                    styleClass="category-button">
+
+                        <ImageView fitHeight="118.0" fitWidth="119.0" layoutX="21.0"
                                        layoutY="6.0" pickOnBounds="true" preserveRatio="true">
                                 <Image url="@../../images/noodles.png"/>
                             </ImageView>

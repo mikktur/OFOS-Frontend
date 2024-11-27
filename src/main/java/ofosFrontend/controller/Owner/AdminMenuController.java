@@ -17,7 +17,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-
+/**
+ * Controller for the owner menu view
+ */
 public class AdminMenuController extends AdminBasicController {
 
     @FXML
@@ -35,16 +37,29 @@ public class AdminMenuController extends AdminBasicController {
         System.out.println("Initializing :)");
     }
 
+    /**
+     * Set the restaurant ID and load the products
+     * @param restaurantID The restaurant ID
+     * @param restaurantName The restaurant name
+     */
     public void setRestaurantID(int restaurantID, String restaurantName) {
         this.restaurantID = restaurantID;
         updateRestaurantName(restaurantName);
         loadProducts();
     }
 
+    /**
+     * Update the restaurant name
+     * @param restaurantName The new restaurant name
+     */
     private void updateRestaurantName(String restaurantName) {
         restaurantNameText.setText(restaurantName);
     }
 
+    /**
+     * Load the products for the restaurant
+     * and add them to the product list
+     */
     private void loadProducts() {
         try {
             productListVBox.getChildren().clear();
@@ -61,6 +76,12 @@ public class AdminMenuController extends AdminBasicController {
         }
     }
 
+    /**
+     * Create a product entry for the product list
+     * @param product The product to create the entry for
+     * @param bundle The resource bundle
+     * @return The product entry
+     */
     private HBox createProductEntry(Product product, ResourceBundle bundle) {
         HBox productBox = new HBox();
         productBox.setSpacing(10.0);
@@ -105,6 +126,9 @@ public class AdminMenuController extends AdminBasicController {
         return productBox;
     }
 
+    /**
+     * Add a new product to the restaurant
+     */
     @FXML
     private void addItem() {
         ResourceBundle bundle = LocalizationManager.getBundle();
@@ -125,7 +149,7 @@ public class AdminMenuController extends AdminBasicController {
         dialog.setHeaderText(dialogHeader);
 
         ButtonType addButtonType = new ButtonType(productButton, ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButtonType = new ButtonType(cancelButton, ButtonBar.ButtonData.CANCEL_CLOSE); // Localized cancel button
+        ButtonType cancelButtonType = new ButtonType(cancelButton, ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getDialogPane().getButtonTypes().addAll(addButtonType, cancelButtonType);
 
         GridPane grid = new GridPane();
@@ -189,6 +213,10 @@ public class AdminMenuController extends AdminBasicController {
         });
     }
 
+    /**
+     * Open the edit dialog for a product
+     * @param product The product to edit
+     */
     private void openEditDialog(Product product) {
         ResourceBundle bundle = LocalizationManager.getBundle();
         String dialogTitle = bundle.getString("EditItemDialog");
@@ -263,6 +291,10 @@ public class AdminMenuController extends AdminBasicController {
         });
     }
 
+    /**
+     * Delete a product from the restaurant
+     * @param product The product to delete
+     */
     private void deleteProduct(Product product) {
         ResourceBundle bundle = LocalizationManager.getBundle();
         String deleteDialogTitle = bundle.getString("DeleteTitle");

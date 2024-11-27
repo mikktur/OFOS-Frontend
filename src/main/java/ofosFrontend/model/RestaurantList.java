@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Model class representing a list of restaurants
+ */
 public class RestaurantList {
     private Restaurant restaurant;
     private List<Restaurant> restaurantList;

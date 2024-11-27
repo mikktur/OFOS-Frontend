@@ -2,8 +2,11 @@ package ofosFrontend.model;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import ofosFrontend.session.SessionManager;
 
+/**
+ * Class to represent a cart item in the shopping cart
+ * @see ShoppingCart
+ */
 public class CartItem {
     private final Product product;
     private final IntegerProperty quantity;

@@ -1,5 +1,8 @@
 package ofosFrontend.model;
 
+/**
+ * Model class representing a password change request
+ */
 public class PasswordChangeDTO {
     private String oldPassword;
     private String newPassword;

@@ -20,7 +20,6 @@ import ofosFrontend.session.LocalizationManager;
 import java.io.IOException;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 import static ofosFrontend.session.Validations.showError;
 
@@ -32,14 +31,7 @@ public class MainMenuController extends BasicController {
     ResourceBundle bundle = LocalizationManager.getBundle();
     @FXML
     private FlowPane restaurantFlowPane;
-    @FXML
-    private ScrollPane mainScroll;
-    @FXML
-    private AnchorPane pizza_category;
-    @FXML
-    private AnchorPane burger_category;
-    @FXML
-    private AnchorPane steak_category;
+
 
 
 

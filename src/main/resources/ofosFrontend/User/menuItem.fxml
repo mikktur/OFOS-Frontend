@@ -8,34 +8,36 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.shape.Rectangle?>
 <VBox id="itemCard" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="356.0" prefWidth="251.0" stylesheets="@../styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ImageView fx:id="itemImage" fitHeight="181.0" fitWidth="250.0" pickOnBounds="true" VBox.vgrow="NEVER">
          <VBox.margin>
             <Insets />
          </VBox.margin>
+         <clip>
+            <Rectangle width="250.0" height="181.0" arcWidth="15.0" arcHeight="15.0" />
+         </clip>
       </ImageView>
       <VBox id="itemInfo" fx:id="textBox" alignment="CENTER_LEFT" prefHeight="121.0" prefWidth="249.0">
-         <children>
-            <Label fx:id="itemName" prefHeight="61.0" prefWidth="230.0" wrapText="true">
-               <font>
-                  <Font name="DejaVu Serif Bold" size="20.0" />
-               </font>
-            </Label>
-            <Label fx:id="itemPrice" contentDisplay="TOP" prefHeight="30.0" prefWidth="225.0">
-               <font>
-                  <Font name="DejaVu Serif Bold Italic" size="18.0" />
-               </font>
-            </Label>
-            <Label fx:id="itemDesc" prefHeight="27.0" prefWidth="308.0" VBox.vgrow="ALWAYS">
-               <font>
-                  <Font name="System Italic" size="14.0" />
-               </font>
-            </Label>
-         </children>
          <padding>
-            <Insets left="10.0" />
+            <Insets left="10.0"/>
          </padding>
+         <Label fx:id="itemName" prefHeight="61.0" prefWidth="230.0" wrapText="true">
+            <font>
+               <Font name="DejaVu Serif Bold" size="20.0"/>
+            </font>
+         </Label>
+         <Label fx:id="itemPrice" contentDisplay="TOP" prefHeight="30.0" prefWidth="225.0">
+            <font>
+               <Font name="DejaVu Serif Bold Italic" size="18.0"/>
+            </font>
+         </Label>
+         <Label fx:id="itemDesc" prefHeight="27.0" prefWidth="308.0" VBox.vgrow="ALWAYS">
+            <font>
+               <Font name="System Italic" size="14.0"/>
+            </font>
+         </Label>
       </VBox>
       <HBox alignment="CENTER" prefHeight="42.0" prefWidth="249.0">
          <children>
