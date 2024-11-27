@@ -149,3 +149,12 @@
     -fx-cursor: hand;
 }
 
+.welcome-text {
+    -fx-font-family: "Poppins";
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-fill: #333333;
+    -fx-text-alignment: center;
+}
+
+
