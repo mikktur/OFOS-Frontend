@@ -1,6 +1,5 @@
 package ofosFrontend.model;
 
-import java.util.Date;
 
 public class Order {
     // price, quantity, name, date, id

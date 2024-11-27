@@ -6,6 +6,8 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import ofosFrontend.model.DeliveryAddress;
 import ofosFrontend.session.SessionManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -18,22 +20,27 @@ import java.util.concurrent.CompletableFuture;
 
 public class DeliveryAddressService {
     private static final String API_URL = "http://10.120.32.94:8000/api/";
+    private final Logger logger = LogManager.getLogger(DeliveryAddressService.class);
+    public static final String CONTENT_TYPE = "Content-Type";
+    public static final String CONTENT_JSON = "application/json";
+    public static final String AUTHORIZATION = "Authorization";
+    public static final String BEARER_PREFIX = "Bearer ";
 
     public void saveDeliveryAddress(DeliveryAddress address, Runnable onSuccess, Runnable onFailure) {
         try {
-            System.out.println("Saving delivery address...");
+            logger.info("Saving delivery address...");
             String url = API_URL + "deliveryaddress/save";
 
             ObjectMapper objectMapper = new ObjectMapper();
             String requestBody = objectMapper.writeValueAsString(address);
 
-            System.out.println("Request Body: " + requestBody);
+            logger.info("Request Body: {}", requestBody);
 
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
-                    .header("Content-Type", "application/json")
-                    .header("Authorization", "Bearer " + SessionManager.getInstance().getToken())
+                    .header(CONTENT_TYPE, CONTENT_JSON)
+                    .header(AUTHORIZATION, BEARER_PREFIX + SessionManager.getInstance().getToken())
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                     .build();
 
@@ -64,7 +71,7 @@ public class DeliveryAddressService {
                 HttpClient client = HttpClient.newHttpClient();
                 HttpRequest request = HttpRequest.newBuilder()
                         .uri(URI.create(url))
-                        .header("Authorization", "Bearer " + SessionManager.getInstance().getToken())
+                        .header(AUTHORIZATION, BEARER_PREFIX + SessionManager.getInstance().getToken())
                         .GET()
                         .build();
 
@@ -73,7 +80,8 @@ public class DeliveryAddressService {
                 if (response.statusCode() == 200) {
                     String responseBody = response.body();
                     ObjectMapper objectMapper = new ObjectMapper();
-                    return objectMapper.readValue(responseBody, new TypeReference<List<DeliveryAddress>>() {});
+                    return objectMapper.readValue(responseBody, new TypeReference<List<DeliveryAddress>>() {
+                    });
                 } else {
                     throw new Exception("Failed to fetch delivery addresses. Status code: " + response.statusCode());
                 }
@@ -98,8 +106,8 @@ public class DeliveryAddressService {
 
                 HttpRequest request = HttpRequest.newBuilder()
                         .uri(URI.create(url))
-                        .header("Content-Type", "application/json")
-                        .header("Authorization", "Bearer " + SessionManager.getInstance().getToken())
+                        .header(CONTENT_TYPE, CONTENT_JSON)
+                        .header(AUTHORIZATION, BEARER_PREFIX + SessionManager.getInstance().getToken())
                         .method("PUT", HttpRequest.BodyPublishers.ofString(requestBodyJson))
                         .build();
 
@@ -123,7 +131,7 @@ public class DeliveryAddressService {
                 HttpClient client = HttpClient.newHttpClient();
                 HttpRequest request = HttpRequest.newBuilder()
                         .uri(URI.create(url))
-                        .header("Authorization", "Bearer " + SessionManager.getInstance().getToken())
+                        .header(AUTHORIZATION, BEARER_PREFIX + SessionManager.getInstance().getToken())
                         .DELETE()
                         .build();
 
@@ -151,8 +159,8 @@ public class DeliveryAddressService {
                 HttpClient client = HttpClient.newHttpClient();
                 HttpRequest request = HttpRequest.newBuilder()
                         .uri(URI.create(url))
-                        .header("Content-Type", "application/json")
-                        .header("Authorization", "Bearer " + token)
+                        .header(CONTENT_TYPE, CONTENT_JSON)
+                        .header(AUTHORIZATION, BEARER_PREFIX + token)
                         .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
                         .build();
 

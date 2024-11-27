@@ -51,13 +51,14 @@ public class DropDownMenuController extends BasicController {
      * Navigates to the admin dashboard view
      */
     @FXML
-    public void goToAdminDashboard(MouseEvent mouseEvent) throws IOException {
+    public void goToAdminDashboard(MouseEvent mouseEvent) {
         mainController.loadAdminDashboardView();
     }
 
 
 
     public DropDownMenuController() {
+        // required by FXML loader
     }
 
     /**

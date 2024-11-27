@@ -6,6 +6,8 @@ import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
 import ofosFrontend.model.Restaurant;
 import ofosFrontend.session.LocalizationManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 // not really creating a view, just loading the fxml file and setupping the views...
@@ -17,14 +19,14 @@ public class ViewFactory {
     public static final String ORDERHISTORY = "/ofosFrontend/OrderHistoryUI.fxml";
     public static final String ADMINDASHBOARD = "/ofosFrontend/User/adminDashboardUI.fxml";
     private final UserMainController mainController;
-    public String currentView;
-
+    private String currentView;
+    private final Logger logger = LogManager.getLogger(ViewFactory.class);
     public ViewFactory(UserMainController mainController) {
         this.mainController = mainController;
     }
     public Parent createCheckoutView(int rid) {
         try {
-            System.out.println(currentView);
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource(CHECKOUT));
             loader.setResources(LocalizationManager.getBundle());
             Parent root = loader.load();
@@ -91,7 +93,7 @@ public class ViewFactory {
             if (mmController != null) {
                 mmController.setMainController(mainController);
             } else {
-                System.out.println("mmController is null");
+                logger.error("mmController is null");
             }
             mainController.resetToDefaultCartView();
             mainController.reloadDropDown();

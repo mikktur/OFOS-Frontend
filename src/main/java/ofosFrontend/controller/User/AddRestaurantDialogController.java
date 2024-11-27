@@ -12,6 +12,7 @@ import ofosFrontend.service.UserService;
 import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.TextFieldUtils;
 
+
 import java.io.IOException;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -25,12 +26,18 @@ import static ofosFrontend.session.Validations.*;
  */
 public class AddRestaurantDialogController {
 
-    @FXML private TextField addressField;
-    @FXML private TextField hoursField;
-    @FXML private TextField nameField;
-    @FXML private TextField phoneField;
-    @FXML private TextField pictureURL;
-    @FXML private ComboBox<String> dialogOwnerSelector;
+    @FXML
+    private TextField addressField;
+    @FXML
+    private TextField hoursField;
+    @FXML
+    private TextField nameField;
+    @FXML
+    private TextField phoneField;
+    @FXML
+    private TextField pictureURL;
+    @FXML
+    private ComboBox<String> dialogOwnerSelector;
 
     private static final int STREET_ADDRESS_MAX_LENGTH = 70;
     private static final int HOURS_MAX_LENGTH = 20;

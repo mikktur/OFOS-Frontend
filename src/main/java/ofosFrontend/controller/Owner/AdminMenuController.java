@@ -1,7 +1,6 @@
 package ofosFrontend.controller.Owner;
 
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -11,6 +10,9 @@ import javafx.scene.text.Text;
 import ofosFrontend.model.Product;
 import ofosFrontend.service.ProductService;
 import ofosFrontend.session.LocalizationManager;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,7 +21,7 @@ import java.util.ResourceBundle;
 
 
 public class AdminMenuController extends AdminBasicController {
-
+    private static final Logger logger = LogManager.getLogger(AdminMenuController.class);
     @FXML
     private VBox productListVBox;
     @FXML
@@ -32,7 +34,7 @@ public class AdminMenuController extends AdminBasicController {
 
     @FXML
     public void initialize() {
-        System.out.println("Initializing :)");
+        logger.log(Level.INFO,"Initializing :");
     }
 
     public void setRestaurantID(int restaurantID, String restaurantName) {

@@ -50,9 +50,8 @@ public class CheckoutController  extends BasicController {
     Button orderBtn;
     @FXML
     Button addAddressBtn;
-
+    private static final String FONT_WEIGHT_BOLD = "-fx-font-weight: bold;";
     private int rid;
-    private final int userId = SessionManager.getInstance().getUserId();
 
     NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(LocalizationManager.getLocale());
     ResourceBundle bundle = LocalizationManager.getBundle();
@@ -64,6 +63,7 @@ public class CheckoutController  extends BasicController {
     private final OrderService orderService = new OrderService();
 
     public CheckoutController() {
+        // Required by FXML loader
     }
 
     /**
@@ -74,7 +74,7 @@ public class CheckoutController  extends BasicController {
     @FXML
     public void initialize() {
 
-        //renderSummary();
+
         getDeliveryAddresses();
         populatePaymentMethods();
         setupListeners();
@@ -112,7 +112,6 @@ public class CheckoutController  extends BasicController {
                 Parent root = loader.load();
 
                 AddAddressDialogController dialogController = loader.getController();
-                dialogController.setUserId(userId);
 
                 Stage stage = new Stage();
                 stage.setTitle(bundle.getString("Add_new_delivery_address"));
@@ -193,7 +192,7 @@ public class CheckoutController  extends BasicController {
     private VBox createCartSummary() {
         VBox cartSummary = new VBox();
         Label cartItemsLabel = new Label(bundle.getString("Items"));
-        cartItemsLabel.setStyle("-fx-font-weight: bold;");
+        cartItemsLabel.setStyle(FONT_WEIGHT_BOLD);
 
         VBox cartItems = new VBox();
         for (CartItem item : SessionManager.getInstance().getCart(rid).getItems()) {
@@ -213,7 +212,7 @@ public class CheckoutController  extends BasicController {
     private VBox createDeliveryAddressSummary() {
         VBox addressSummary = new VBox();
         Label deliveryLabel = new Label(bundle.getString("Delivery_Address"));
-        deliveryLabel.setStyle("-fx-font-weight: bold;");
+        deliveryLabel.setStyle(FONT_WEIGHT_BOLD);
 
         TextFlow addressFlow = new TextFlow(
                 new Text(selectedAddress.getStreetAddress() + ", "),
@@ -230,7 +229,7 @@ public class CheckoutController  extends BasicController {
     private VBox createPaymentMethodSummary() {
         VBox paymentSummary = new VBox();
         Label paymentLabel = new Label(bundle.getString("paymentMethod"));
-        paymentLabel.setStyle("-fx-font-weight: bold;");
+        paymentLabel.setStyle(FONT_WEIGHT_BOLD);
         Label selectedPaymentLabel = new Label(selectedPaymentMethod);
 
         paymentSummary.getChildren().addAll(paymentLabel, selectedPaymentLabel);
@@ -240,7 +239,7 @@ public class CheckoutController  extends BasicController {
     private VBox createTotalSummary() {
         VBox totalSummary = new VBox();
         Label totalLabel = new Label(bundle.getString("Total") + subTotal.getText());
-        totalLabel.setStyle("-fx-font-weight: bold;");
+        totalLabel.setStyle(FONT_WEIGHT_BOLD);
         totalSummary.getChildren().add(totalLabel);
         return totalSummary;
     }
@@ -256,7 +255,7 @@ public class CheckoutController  extends BasicController {
         ShoppingCart cart = session.getCart(rid);
         Restaurant restaurant = session.getCart(rid).getRestaurant();
         Label restaurantLabel = new Label(restaurant.getRestaurantName());
-        restaurantLabel.setStyle("-fx-font-weight: bold;");
+        restaurantLabel.setStyle(FONT_WEIGHT_BOLD);
 
         summaryContainer.getChildren().add(restaurantLabel);
         for (CartItem item : cart.getItems()) {
@@ -365,19 +364,17 @@ public class CheckoutController  extends BasicController {
 
         Task<Void> task = orderService.confirmOrder(cartItems, deliveryAddressId,rid);
 
-        task.setOnSucceeded(event -> {
-            // Show confirmation dialog on success
-            Platform.runLater(() -> {
-                SessionManager.getInstance().removeCart(rid);
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle(bundle.getString("Order_confirmation"));
-                alert.setHeaderText(null);
-                alert.setContentText(bundle.getString("Order_succesful"));
-                alert.showAndWait();
-                goToMain();
-
-            });
-        });
+        task.setOnSucceeded(event ->
+                Platform.runLater(() -> {
+                    SessionManager.getInstance().removeCart(rid);
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle(bundle.getString("Order_confirmation"));
+                    alert.setHeaderText(null);
+                    alert.setContentText(bundle.getString("Order_successful"));
+                    alert.showAndWait();
+                    goToMain();
+                })
+        );
 
         task.setOnFailed(event -> {
             Throwable exception = task.getException();

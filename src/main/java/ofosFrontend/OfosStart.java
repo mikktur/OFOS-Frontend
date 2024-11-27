@@ -6,11 +6,11 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class Application extends javafx.application.Application {
+public class OfosStart extends javafx.application.Application {
     @Override
     public void start(Stage stage) throws IOException {
         AppManager.getInstance().setPrimaryStage(stage);
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("loginUI.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(OfosStart.class.getResource("loginUI.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 600, 400);
         stage.setTitle("OFOS Login");
         stage.setScene(scene);

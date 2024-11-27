@@ -1,6 +1,5 @@
 package ofosFrontend.controller.User;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,36 +13,39 @@ import ofosFrontend.model.User;
 import ofosFrontend.service.RestaurantService;
 import ofosFrontend.service.UserService;
 import ofosFrontend.session.LocalizationManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.ResourceBundle;
 
+
+@SuppressWarnings({"checkstyle:MissingJavadocType", "checkstyle:Indentation"})
 public class AdminDashboardController {
 
     @FXML
-    public Button banButton;
+    private ComboBox<String> bannedUserSelector;
     @FXML
-    public ComboBox<String> bannedUserSelector;
-    public Button changeOwnerButton;
-    public Button unbanButton;
-    public Label userEnabledLabel;
-    public Label userIDLabel;
-    public Label userNameLabel;
-    public Label userRoleLabel;
-    public VBox userDetails;
-    public Label restaurantOwnerLabel;
-    public Label restaurantIDLabel;
-    public Label restaurantNameLabel;
-    public VBox Restaurant_Details;
-    public VBox workingArea;
-    public VBox bannedArea;
-    public Label banUserNameLabel;
-    public Label banUserIDLabel;
-    public Label banUserEnabledLabel;
-
-    public Button addRestaurantButton;
-    public Button changeRoleButton;
+    private Label userEnabledLabel;
+    @FXML
+    private Label userIDLabel;
+    @FXML
+    private Label userNameLabel;
+    @FXML
+    private Label userRoleLabel;
+    @FXML
+    private Label restaurantOwnerLabel;
+    @FXML
+    private Label restaurantIDLabel;
+    @FXML
+    private Label restaurantNameLabel;
+    @FXML
+    private Label banUserNameLabel;
+    @FXML
+    private Label banUserIDLabel;
+    @FXML
+    private Label banUserEnabledLabel;
 
 
     @FXML
@@ -57,9 +59,17 @@ public class AdminDashboardController {
     private List<Restaurant> restaurants;
     private Restaurant selectedRestaurant;
     private User selectedUser;
-    private User bannedSelectedUser;
-
+    private static final String CANCEL_TITLE = "CancelTitle";
+    private static final String ERROR_HEADER = "ErrorHeader";
+    private static final String USER_ID = "User_ID";
+    private static final String USERNAME = "User_Name";
+    private static final String NO_USER_SELECTED_KEY = "NoUserSelected";
+    private static final String SUCCESS_TITLE_KEY = "SuccessTitle";
+    private static final String ERROR_TITLE_KEY = "ErrorTitle";
+    private static final String FAILED_TO_LOAD_USER = "Failed_to_load_user";
+    private final Logger logger = LogManager.getLogger(this.getClass());
     ResourceBundle bundle = LocalizationManager.getBundle();
+
 
     @FXML
     public void initialize() {
@@ -84,7 +94,7 @@ public class AdminDashboardController {
             }
 
         } catch (IOException e) {
-            showError(bundle.getString("Failed_to_load_user"));
+            showError(bundle.getString(FAILED_TO_LOAD_USER));
             e.printStackTrace();
         }
     }
@@ -101,7 +111,7 @@ public class AdminDashboardController {
             }
 
         } catch (IOException e) {
-            showError(bundle.getString("Failed_to_load_user"));
+            showError(bundle.getString(FAILED_TO_LOAD_USER));
             e.printStackTrace();
         }
     }
@@ -147,15 +157,15 @@ public class AdminDashboardController {
                 selectedUser = userService.getUserByUsername(selectedUserName);
 
                 if (selectedUser != null) {
-                    userNameLabel.setText(bundle.getString("User_Name")  + selectedUser.getUsername());
-                    userIDLabel.setText(bundle.getString("User_ID") + selectedUser.getUserId());
+                    userNameLabel.setText(bundle.getString(USERNAME) + selectedUser.getUsername());
+                    userIDLabel.setText(bundle.getString(USER_ID) + selectedUser.getUserId());
                     userRoleLabel.setText(bundle.getString("Role") + ": " + selectedUser.getRole());
                     userEnabledLabel.setText(bundle.getString("Enabled") + ": " + selectedUser.getEnabled());
                 } else {
-                    showError(bundle.getString("Failed_to_load_user"));
+                    showError(bundle.getString(FAILED_TO_LOAD_USER));
                 }
             } catch (IOException e) {
-                showError(bundle.getString("Failed_to_load_user"));
+                showError(bundle.getString(FAILED_TO_LOAD_USER));
                 e.printStackTrace();
             }
         }
@@ -166,17 +176,17 @@ public class AdminDashboardController {
 
         if (selectedUserName != null) {
             try {
-                bannedSelectedUser = userService.getUserByUsername(selectedUserName);
+                User bannedSelectedUser = userService.getUserByUsername(selectedUserName);
 
                 if (bannedSelectedUser != null) {
-                    banUserNameLabel.setText(bundle.getString("User_Name") + bannedSelectedUser.getUsername());
-                    banUserIDLabel.setText(bundle.getString("User_ID") + bannedSelectedUser.getUserId());
+                    banUserNameLabel.setText(bundle.getString(USERNAME) + bannedSelectedUser.getUsername());
+                    banUserIDLabel.setText(bundle.getString(USER_ID) + bannedSelectedUser.getUserId());
                     banUserEnabledLabel.setText(bundle.getString("Enabled") + ": " + bannedSelectedUser.getEnabled());
                 } else {
-                    showError(bundle.getString("Failed_to_load_user"));
+                    showError(bundle.getString(FAILED_TO_LOAD_USER));
                 }
             } catch (IOException e) {
-                showError(bundle.getString("Failed_to_load_user"));
+                showError(bundle.getString(FAILED_TO_LOAD_USER));
                 e.printStackTrace();
             }
         }
@@ -185,12 +195,12 @@ public class AdminDashboardController {
     public void banUser() {
         String selectedUserName = userSelector.getValue();
         if (selectedUserName == null) {
-            showError(bundle.getString("NoUserSelected"));
+            showError(bundle.getString(NO_USER_SELECTED_KEY));
             return;
         }
 
         try {
-            User selectedUser = userService.getUserByUsername(selectedUserName);
+            selectedUser = userService.getUserByUsername(selectedUserName);
 
             if (selectedUser != null) {
                 // Confirmation dialog
@@ -198,8 +208,8 @@ public class AdminDashboardController {
                 confirmationDialog.setTitle(bundle.getString("BanUserTitle"));
                 confirmationDialog.setHeaderText(bundle.getString("BanUserHeader"));
                 confirmationDialog.setContentText(bundle.getString("BanUserContent") + "\n\n" +
-                        bundle.getString("User_Name") + selectedUser.getUsername() + "\n" +
-                        bundle.getString("User_ID") + selectedUser.getUserId());
+                        bundle.getString(USERNAME) + selectedUser.getUsername() + "\n" +
+                        bundle.getString(USER_ID) + selectedUser.getUserId());
 
                 // Show the dialog and wait for user response
                 ButtonType result = confirmationDialog.showAndWait().orElse(ButtonType.CANCEL);
@@ -210,28 +220,28 @@ public class AdminDashboardController {
 
                     if (success) {
                         Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-                        successAlert.setTitle(bundle.getString("SuccessTitle"));
+                        successAlert.setTitle(bundle.getString(SUCCESS_TITLE_KEY));
                         successAlert.setHeaderText(bundle.getString("BanSuccessHeader"));
                         successAlert.setContentText(bundle.getString("UserBanned") + "\n" +
-                                bundle.getString("User_Name") + ": " + selectedUser.getUsername());
+                                bundle.getString(USERNAME) + ": " + selectedUser.getUsername());
                         successAlert.showAndWait();
                     } else {
                         Alert failureAlert = new Alert(Alert.AlertType.ERROR);
-                        failureAlert.setTitle(bundle.getString("ErrorTitle"));
-                        failureAlert.setHeaderText(bundle.getString("ErrorHeader"));
+                        failureAlert.setTitle(bundle.getString(ERROR_TITLE_KEY));
+                        failureAlert.setHeaderText(bundle.getString(ERROR_HEADER));
                         failureAlert.setContentText(bundle.getString("BanFailed"));
                         failureAlert.showAndWait();
                     }
                 } else {
                     Alert cancelAlert = new Alert(Alert.AlertType.INFORMATION);
-                    cancelAlert.setTitle(bundle.getString("CancelTitle"));
+                    cancelAlert.setTitle(bundle.getString(CANCEL_TITLE));
                     cancelAlert.setContentText(bundle.getString("BanCanceled"));
                     cancelAlert.showAndWait();
-                    System.out.println("Ban operation canceled.");
+                    logger.info("Ban operation canceled.");
                 }
             }
         } catch (IOException e) {
-            showError(bundle.getString("Failed_to_load_user"));
+            showError(bundle.getString(FAILED_TO_LOAD_USER));
             e.printStackTrace();
         }
 
@@ -239,14 +249,14 @@ public class AdminDashboardController {
         loadBannedUsers();
     }
 
-    public void changeOwner(ActionEvent actionEvent) throws IOException {
+    public void changeOwner() throws IOException {
         if (selectedRestaurant == null) {
             showError(bundle.getString("NoRestaurantSelected"));
             return;
         }
 
         if (selectedUser == null) {
-            showError(bundle.getString("NoUserSelected"));
+            showError(bundle.getString(NO_USER_SELECTED_KEY));
             return;
         }
 
@@ -273,7 +283,7 @@ public class AdminDashboardController {
 
                 if (success) {
                     Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-                    successAlert.setTitle(bundle.getString("SuccessTitle"));
+                    successAlert.setTitle(bundle.getString(SUCCESS_TITLE_KEY));
                     successAlert.setHeaderText(bundle.getString("SuccessHeader"));
                     successAlert.setContentText(bundle.getString("OwnerChanged") + "\n" +
                             bundle.getString("Restaurant") + selectedRestaurant.getRestaurantName() + "\n" +
@@ -282,31 +292,31 @@ public class AdminDashboardController {
                 }
             } catch (IOException e) {
                 Alert failureAlert = new Alert(Alert.AlertType.ERROR);
-                failureAlert.setTitle(bundle.getString("ErrorTitle"));
-                failureAlert.setHeaderText(bundle.getString("ErrorHeader"));
+                failureAlert.setTitle(bundle.getString(ERROR_TITLE_KEY));
+                failureAlert.setHeaderText(bundle.getString(ERROR_HEADER));
                 failureAlert.setContentText(bundle.getString("ChangeOwnerFailed") + "\n\n" + e.getMessage());
                 failureAlert.showAndWait();
                 e.printStackTrace();
             }
         } else {
             Alert cancelAlert = new Alert(Alert.AlertType.INFORMATION);
-            cancelAlert.setTitle(bundle.getString("CancelTitle"));
+            cancelAlert.setTitle(bundle.getString(CANCEL_TITLE));
             cancelAlert.setHeaderText(bundle.getString("CancelHeader"));
             cancelAlert.setContentText(bundle.getString("ChangeOwnerCanceled"));
             cancelAlert.showAndWait();
-            System.out.println("Change owner operation canceled.");
+            logger.info("Change owner operation canceled.");
         }
     }
 
-    public void unbanUser(ActionEvent actionEvent) {
+    public void unbanUser() {
         String selectedUserName = bannedUserSelector.getValue();
         if (selectedUserName == null) {
-            showError(bundle.getString("NoUserSelected"));
+            showError(bundle.getString(NO_USER_SELECTED_KEY));
             return;
         }
 
         try {
-            User selectedUser = userService.getUserByUsername(selectedUserName);
+            selectedUser = userService.getUserByUsername(selectedUserName);
 
             if (selectedUser != null) {
                 // Confirmation dialog
@@ -314,8 +324,8 @@ public class AdminDashboardController {
                 confirmationDialog.setTitle(bundle.getString("UnbanUserTitle"));
                 confirmationDialog.setHeaderText(bundle.getString("UnbanUserHeader"));
                 confirmationDialog.setContentText(bundle.getString("UnbanUserContent") + "\n\n" +
-                        bundle.getString("User_Name") + selectedUser.getUsername() + "\n" +
-                        bundle.getString("User_ID") + selectedUser.getUserId());
+                        bundle.getString(USERNAME) + selectedUser.getUsername() + "\n" +
+                        bundle.getString(USER_ID) + selectedUser.getUserId());
 
                 ButtonType result = confirmationDialog.showAndWait().orElse(ButtonType.CANCEL);
 
@@ -324,28 +334,28 @@ public class AdminDashboardController {
 
                     if (success) {
                         Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-                        successAlert.setTitle(bundle.getString("SuccessTitle"));
+                        successAlert.setTitle(bundle.getString(SUCCESS_TITLE_KEY));
                         successAlert.setHeaderText(bundle.getString("UnbanSuccessHeader"));
                         successAlert.setContentText(bundle.getString("UserUnbanned") + "\n" +
-                                bundle.getString("User_Name") + ": " + selectedUser.getUsername());
+                                bundle.getString(USERNAME) + ": " + selectedUser.getUsername());
                         successAlert.showAndWait();
                     } else {
                         Alert failureAlert = new Alert(Alert.AlertType.ERROR);
-                        failureAlert.setTitle(bundle.getString("ErrorTitle"));
-                        failureAlert.setHeaderText(bundle.getString("ErrorHeader"));
+                        failureAlert.setTitle(bundle.getString(ERROR_TITLE_KEY));
+                        failureAlert.setHeaderText(bundle.getString(ERROR_HEADER));
                         failureAlert.setContentText(bundle.getString("UnbanFailed"));
                         failureAlert.showAndWait();
                     }
                 } else {
                     Alert cancelAlert = new Alert(Alert.AlertType.INFORMATION);
-                    cancelAlert.setTitle(bundle.getString("CancelTitle"));
+                    cancelAlert.setTitle(bundle.getString(CANCEL_TITLE));
                     cancelAlert.setContentText(bundle.getString("UnbanCanceled"));
                     cancelAlert.showAndWait();
-                    System.out.println("Unban operation canceled.");
+                    logger.info("Unban operation canceled.");
                 }
             }
         } catch (IOException e) {
-            showError(bundle.getString("Failed_to_load_user"));
+            showError(bundle.getString(FAILED_TO_LOAD_USER));
             e.printStackTrace();
         }
 
@@ -361,7 +371,7 @@ public class AdminDashboardController {
         alert.showAndWait();
     }
 
-    public void addRestaurant(ActionEvent actionEvent) {
+    public void addRestaurant() {
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/addRestaurantDialog.fxml"));
@@ -378,9 +388,9 @@ public class AdminDashboardController {
         }
     }
 
-    public void changeRole(ActionEvent actionEvent) {
+    public void changeRole() {
         if (selectedUser == null) {
-            showError(bundle.getString("NoUserSelected"));
+            showError(bundle.getString(NO_USER_SELECTED_KEY));
             return;
         }
 
@@ -420,8 +430,10 @@ public class AdminDashboardController {
                     return;
                 }
 
-                System.out.println("Changing role of user: " + selectedUser.getUsername() +
-                        " with ID: " + selectedUser.getUserId() + " to new role: " + newRole);
+                logger.info("Changing role of user: {} with ID: {} to new role: {}",
+                        selectedUser.getUsername(),
+                        selectedUser.getUserId(),
+                        newRole);
 
                 // Call the userService to update the role
                 boolean isChanged = userService.changeRole(selectedUser.getUserId(), newRole);
@@ -429,13 +441,13 @@ public class AdminDashboardController {
                 // Show success or error message
                 if (isChanged) {
                     Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-                    successAlert.setTitle(bundle.getString("SuccessTitle"));
+                    successAlert.setTitle(bundle.getString(SUCCESS_TITLE_KEY));
                     successAlert.setHeaderText(null);
                     successAlert.setContentText(bundle.getString("RoleChangeSuccess"));
                     successAlert.showAndWait();
                 } else {
                     Alert failureAlert = new Alert(Alert.AlertType.ERROR);
-                    failureAlert.setTitle(bundle.getString("ErrorTitle"));
+                    failureAlert.setTitle(bundle.getString(ERROR_TITLE_KEY));
                     failureAlert.setHeaderText(null);
                     failureAlert.setContentText(bundle.getString("RoleChangeFailed"));
                     failureAlert.showAndWait();

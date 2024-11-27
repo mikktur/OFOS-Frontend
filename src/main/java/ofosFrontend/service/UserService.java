@@ -7,6 +7,8 @@ import ofosFrontend.model.PasswordChangeDTO;
 import ofosFrontend.model.User;
 import ofosFrontend.session.SessionManager;
 import okhttp3.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.URI;
@@ -19,14 +21,17 @@ import java.util.List;
 public class UserService {
 
     private static final String API_URL = "http://10.120.32.94:8000/api/";
-    private static final String API_URL_LOCAL = "http://localhost:8000/api/";
 
     private final OkHttpClient client = new OkHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
+    private final Logger logger = LogManager.getLogger(UserService.class);
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String BEARER = "Bearer ";
+    private static final String MEDIA_TYPE = "application/json; charset=utf-8";
 
     public Response login(String username, String password) throws IOException {
 
-        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+        MediaType JSON = MediaType.get(MEDIA_TYPE);
 
         User user = new User(username, password);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -43,7 +48,7 @@ public class UserService {
 
     public Response register(String username, String password) throws IOException {
 
-        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+        MediaType JSON = MediaType.get(MEDIA_TYPE);
 
         User user = new User(username, password);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -64,23 +69,26 @@ public class UserService {
             protected ContactInfo call() throws Exception {
                 String url = API_URL + "contactinfo/" + userId;
 
-                HttpClient client = HttpClient.newHttpClient();
-                HttpRequest request = HttpRequest.newBuilder()
-                        .uri(URI.create(url))
-                        .header("Authorization", "Bearer " + SessionManager.getInstance().getToken())
-                        .GET()
+                Request request = new Request.Builder()
+                        .url(url)
+                        .header(AUTHORIZATION, BEARER + SessionManager.getInstance().getToken())
+                        .get()
                         .build();
 
-                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-                if (response.statusCode() == 200) {
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    return objectMapper.readValue(response.body(), ContactInfo.class);
-                } else if (response.statusCode() == 404) {
-                    // No contact information found, return null
-                    return null;
-                } else {
-                    throw new Exception("Failed to fetch contact information. Status code: " + response.statusCode());
+                try (Response response = client.newCall(request).execute()) {
+                    if (response.code() == 200) {
+
+                        ObjectMapper objectMapper = new ObjectMapper();
+                        return objectMapper.readValue(response.body().string(), ContactInfo.class);
+                    } else if (response.code() == 404) {
+
+                        return null;
+                    } else {
+                        throw new Exception("Failed to fetch contact information. Status code: " + response.code());
+                    }
+                } catch (IOException e) {
+                    throw new Exception("Network error occurred while fetching user data", e);
                 }
             }
         };
@@ -96,20 +104,22 @@ public class UserService {
                 ObjectMapper objectMapper = new ObjectMapper();
                 String requestBody = objectMapper.writeValueAsString(passwordDTO);
 
-                HttpClient client = HttpClient.newHttpClient();
-                HttpRequest request = HttpRequest.newBuilder()
-                        .uri(URI.create(url))
+                Request request = new Request.Builder()
+                        .url(url)
                         .header("Content-Type", "application/json")
-                        .header("Authorization", "Bearer " + token)
-                        .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
+                        .header(AUTHORIZATION, BEARER + token)
+                        .put(RequestBody.create(requestBody, MediaType.get(MEDIA_TYPE)))
                         .build();
 
-                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-                if (response.statusCode() == 400) {
-                    throw new Exception("Unauthorized request. Status code: " + response.statusCode());
-                }
-                else if (response.statusCode() != 200) {
-                    throw new Exception("Failed to update password. Status code: " + response.statusCode() + response.body());
+                try (Response response = client.newCall(request).execute()) {
+                    if (response.code() == 400) {
+                        throw new Exception("Unauthorized request. Status code: " + response.code());
+                    } else if (!response.isSuccessful()) {
+                        throw new Exception("Failed to update password. Status code: " + response.code() +
+                                ". Response body: " + response.body().string());
+                    }
+                } catch (IOException e) {
+                    throw new Exception("Network error occurred while updating password", e);
                 }
 
                 return null;
@@ -118,15 +128,13 @@ public class UserService {
     }
 
     public List<User> getAllUsers() throws IOException {
-        MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
-        // Create a GET request
+
         Request request = new Request.Builder()
                 .url(API_URL + "users")
                 .get()
                 .build();
 
-        // Execute the request and parse the response
         Response response = client.newCall(request).execute();
         if (!response.isSuccessful()) {
             throw new IOException("Failed to fetch users: " + response.code() + " " + response.message());
@@ -143,19 +151,20 @@ public class UserService {
                 String url = API_URL + "users/delete";
                 String token = SessionManager.getInstance().getToken();
 
-                HttpClient client = HttpClient.newHttpClient();
-                HttpRequest request = HttpRequest.newBuilder()
-                        .uri(URI.create(url))
-                        .header("Authorization", "Bearer " + token)
-                        .DELETE()
+                Request request = new Request.Builder()
+                        .url(url)
+                        .header(AUTHORIZATION, BEARER + token)
+                        .delete()
                         .build();
 
-                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-                if (response.statusCode() == 418) { // Status code for "I'm a teapot"
-                    throw new Exception("Owner accounts cannot be deleted. Status code: " + response.statusCode());
-                } else if (response.statusCode() != 200) {
-                    throw new Exception("Failed to delete user. Status code: " + response.statusCode());
-
+                try (Response response = client.newCall(request).execute()) {
+                    if (response.code() == 418) { // Status code for "I'm a teapot"
+                        throw new Exception("Owner accounts cannot be deleted. Status code: " + response.code());
+                    } else if (!response.isSuccessful()) {
+                        throw new Exception("Failed to delete user. Status code: " + response.code());
+                    }
+                } catch (IOException e) {
+                    throw new Exception("Network error occurred while trying to delete user", e);
                 }
 
                 return null;
@@ -182,7 +191,7 @@ public class UserService {
 
 
     public boolean banUser(int userId) throws IOException {
-        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+        MediaType JSON = MediaType.get(MEDIA_TYPE);
 
         Request request = new Request.Builder()
                 .url(API_URL + "users/ban/" + userId)
@@ -193,65 +202,39 @@ public class UserService {
             if (response.isSuccessful()) {
                 return true;
             } else {
-                System.err.println("Failed to ban user: " + response.code() + " " + response.message());
+                logger.error("Failed to ban user: {} {}", response.code(), response.message());
                 return false;
             }
         }
     }
-
-    /*
-
-    // We can use the ban method to unban users also, so this is not needed anymore
-
-    public boolean unbanUser(int userId) throws IOException {
-        MediaType JSON = MediaType.get("application/json; charset=utf-8");
-
-        Request request = new Request.Builder()
-                .url(API_URL + "users/unban/" + userId)
-                .post(RequestBody.create("", JSON))
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            if (response.isSuccessful()) {
-                return true; // Unban operation succeeded
-            } else {
-                System.err.println("Failed to unban user: " + response.code() + " " + response.message());
-                return false; // Unban operation failed
-            }
-        }
-
-    }
-    */
 
 
     public boolean changeRole(int userId, String newRole) {
         String url = API_URL + "users/changeRole";
         String token = SessionManager.getInstance().getToken();
 
-        // Create a JSON request body
         String requestBody = "{\"userId\":" + userId + ",\"newRole\":\"" + newRole + "\"}";
 
+        RequestBody body = RequestBody.create(
+                requestBody,
+                MediaType.get(MEDIA_TYPE)
+        );
+
+        Request request = new Request.Builder()
+                .url(url)
+                .header("Content-Type", "application/json")
+                .header(AUTHORIZATION, BEARER + token)
+                .put(body)
+                .build();
+
         try {
-            // Create the HTTP client
-            HttpClient client = HttpClient.newHttpClient();
+            Response response = client.newCall(request).execute();
 
-            // Build the HTTP request
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .header("Content-Type", "application/json")
-                    .header("Authorization", "Bearer " + token)
-                    .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
-                    .build();
-
-
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            if (response.statusCode() == 200) {
-                System.out.println("Role changed successfully for user ID: " + userId);
+            if (response.isSuccessful()) {
+                logger.info("Role changed successfully for user ID: {}", userId);
                 return true;
             } else {
-                System.err.println("Failed to change role. Server responded with: " + response.statusCode());
-                System.err.println("Response body: " + response.body());
+                logger.error("Failed to change role. Server responded with: {}", response.code());
                 return false;
             }
 

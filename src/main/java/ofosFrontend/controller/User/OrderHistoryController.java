@@ -13,7 +13,6 @@ import ofosFrontend.model.OrderHistory;
 import ofosFrontend.service.OrderHistorySorter;
 import ofosFrontend.service.OrderService;
 import ofosFrontend.session.LocalizationManager;
-import ofosFrontend.session.SessionManager;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -21,6 +20,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -33,7 +33,13 @@ import static ofosFrontend.session.Validations.showError;
 public class OrderHistoryController {
 
     @FXML
-    private Label historyOrderIdLabel, historyRestaurantLabel, historyPriceLabel, historyDateLabel;
+    private Label historyOrderIdLabel;
+    @FXML
+    private Label historyRestaurantLabel;
+    @FXML
+    private Label historyPriceLabel;
+    @FXML
+    private Label historyDateLabel;
 
     private boolean sortOrderIdAscending = true;
     private boolean sortRestaurantAscending = true;
@@ -42,10 +48,9 @@ public class OrderHistoryController {
 
     private final NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(LocalizationManager.getLocale());
     private final OrderService orderService = new OrderService();
-    private final int userId = SessionManager.getInstance().getUserId();
     private final DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM, LocalizationManager.getLocale());
     ResourceBundle bundle = LocalizationManager.getBundle();
-
+    private static final String TEXT_FILL = "-fx-text-fill: black;";
     @FXML
     private GridPane historyGridPane;
 
@@ -99,7 +104,8 @@ public class OrderHistoryController {
 
     /**
      * Handles the sorting action for the Order ID column.
-     * @throws IOException If an I/O error occurs.
+     *
+     * @throws IOException          If an I/O error occurs.
      * @throws InterruptedException If the thread is interrupted.
      * @see OrderHistorySorter#sortOrderHistoryById(Map, boolean)
      */
@@ -110,7 +116,8 @@ public class OrderHistoryController {
 
     /**
      * Handles the sorting action for the Restaurant Name column.
-     * @throws IOException If an I/O error occurs.
+     *
+     * @throws IOException          If an I/O error occurs.
      * @throws InterruptedException If the thread is interrupted.
      * @see OrderHistorySorter#sortOrderHistoryByRestaurant(Map, boolean)
      */
@@ -121,7 +128,8 @@ public class OrderHistoryController {
 
     /**
      * Handles the sorting action for the Price column.
-     * @throws IOException If an I/O error occurs.
+     *
+     * @throws IOException          If an I/O error occurs.
      * @throws InterruptedException If the thread is interrupted.
      * @see OrderHistorySorter#sortOrderHistoryByPrice(Map, boolean)
      */
@@ -132,7 +140,8 @@ public class OrderHistoryController {
 
     /**
      * Handles the sorting action for the Date column.
-     * @throws IOException If an I/O error occurs.
+     *
+     * @throws IOException          If an I/O error occurs.
      * @throws InterruptedException If the thread is interrupted.
      * @see OrderHistorySorter#sortOrderHistoryByDate(Map, boolean)
      */
@@ -143,6 +152,7 @@ public class OrderHistoryController {
 
     /**
      * Loads the sorted order history into the GridPane.
+     *
      * @param sortedOrderHistory The sorted order history to display.
      */
     private void loadSortedOrderHistory(Map<Integer, List<OrderHistory>> sortedOrderHistory) {
@@ -275,7 +285,8 @@ public class OrderHistoryController {
 
     /**
      * Creates a ComboBox with the given order items and background color.
-     * @param orderItems The list of products in the order.
+     *
+     * @param orderItems      The list of products in the order.
      * @param backgroundColor The background color for the ComboBox.
      * @return A ComboBox with the order items.
      */
@@ -287,7 +298,7 @@ public class OrderHistoryController {
         // Add OrderHistory objects directly to the ComboBox
         comboBox.getItems().addAll(orderItems);
         if (!orderItems.isEmpty()) {
-            comboBox.setValue(orderItems.getFirst());
+            comboBox.setValue(orderItems.get(0));
         }
 
         applyCustomCellFactory(comboBox, backgroundColor);
@@ -298,7 +309,7 @@ public class OrderHistoryController {
     /**
      * Applies a custom cell factory to the ComboBox.
      *
-     * @param comboBox       The ComboBox to apply the custom cell factory to.
+     * @param comboBox        The ComboBox to apply the custom cell factory to.
      * @param backgroundColor The background color for the ComboBox.
      */
     private void applyCustomCellFactory(ComboBox<OrderHistory> comboBox, String backgroundColor) {
@@ -344,7 +355,7 @@ public class OrderHistoryController {
                             totalQuantity, itemLabel, totalSumLabel, currencyFormatter.format(totalPrice));
 
                     Label summaryLabel = new Label(summary);
-                    summaryLabel.setStyle("-fx-text-fill: black;");
+                    summaryLabel.setStyle(TEXT_FILL);
 
                     setGraphic(summaryLabel);
                     setStyle("-fx-background-color: " + backgroundColor + ";");
@@ -355,7 +366,6 @@ public class OrderHistoryController {
         // Overall ComboBox styling
         comboBox.setStyle("-fx-background-color: " + backgroundColor + "; -fx-border-color: transparent;");
     }
-
 
 
     /**
@@ -370,19 +380,19 @@ public class OrderHistoryController {
 
         // Product Name
         Label nameLabel = new Label(item.getProductName());
-        nameLabel.setStyle("-fx-text-fill: black;");
+        nameLabel.setStyle(TEXT_FILL);
         GridPane.setConstraints(nameLabel, 0, 0);
         grid.getChildren().add(nameLabel);
 
         // Quantity
         Label quantityLabel = new Label("(x" + item.getQuantity() + ")");
-        quantityLabel.setStyle("-fx-text-fill: black;");
+        quantityLabel.setStyle(TEXT_FILL);
         GridPane.setConstraints(quantityLabel, 1, 0);
         grid.getChildren().add(quantityLabel);
 
         // Price
         Label priceLabel = new Label(currencyFormatter.format(item.getOrderPrice()));
-        priceLabel.setStyle("-fx-text-fill: black;");
+        priceLabel.setStyle(TEXT_FILL);
         GridPane.setConstraints(priceLabel, 2, 0);
         grid.getChildren().add(priceLabel);
 

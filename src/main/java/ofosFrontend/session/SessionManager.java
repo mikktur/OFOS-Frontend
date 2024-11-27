@@ -1,9 +1,9 @@
 package ofosFrontend.session;
 
-import ofosFrontend.model.Restaurant;
 import ofosFrontend.model.ShoppingCart;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class SessionManager {
 
@@ -22,13 +22,9 @@ public class SessionManager {
         role = null;
     }
 
-    public static SessionManager getInstance() {
+    public static synchronized SessionManager getInstance() {
         if (session == null) {
-            synchronized (SessionManager.class) {
-                if (session == null) {
-                    session = new SessionManager();
-                }
-            }
+            session = new SessionManager();
         }
         return session;
     }
@@ -46,6 +42,7 @@ public class SessionManager {
         cartMap.clear();
 
     }
+
     public void setRole(String role) {
         this.role = role;
     }
@@ -53,6 +50,7 @@ public class SessionManager {
     public String getRole() {
         return role;
     }
+
     public String getUsername() {
         return username != null ? username : "";
     }
@@ -84,12 +82,17 @@ public class SessionManager {
     public void addCart(int restaurantId, ShoppingCart cart) {
         cartMap.put(restaurantId, cart);
     }
-    public HashMap<Integer, ShoppingCart> getCartMap() {
-        return cartMap;
+
+    public Map<Integer, ShoppingCart> getCartMap() {
+        HashMap<Integer, ShoppingCart> newCartMap = new HashMap<>();
+        newCartMap.putAll(this.cartMap);
+        return newCartMap;
     }
+
     public void removeCart(int id) {
         cartMap.remove(id);
     }
+
     public ShoppingCart getCart(int restaurantId) {
         return cartMap.get(restaurantId);
     }
@@ -97,7 +100,6 @@ public class SessionManager {
     public void clearAllCarts() {
         cartMap.clear();
     }
-
 
 
 }

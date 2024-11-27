@@ -11,21 +11,26 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ofosFrontend.AppManager;
-import ofosFrontend.service.RestaurantService;
 import ofosFrontend.service.UserService;
 import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
 import okhttp3.Response;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.Locale;
+
 import java.util.Map;
-import java.util.ResourceBundle;
+
 
 public class LoginController {
-    public Label passwordErrorLabel;
-    public Label usernameErrorLabel;
-    public Label loginPasswordErrorLabel;
+    @FXML
+    private Label passwordErrorLabel;
+    @FXML
+    private Label usernameErrorLabel;
+    @FXML
+    private Label loginPasswordErrorLabel;
     @FXML
     private Button signUpButton;
     @FXML
@@ -37,9 +42,7 @@ public class LoginController {
     @FXML
     private PasswordField password;
     private final UserService userService = new UserService();
-    private final RestaurantService restaurantService = new RestaurantService();
-    private final FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/mainUI.fxml"));
-    private String role;
+    private final Logger logger = LogManager.getLogger(LoginController.class);
 
 
     @FXML
@@ -56,7 +59,7 @@ public class LoginController {
                 Platform.runLater(() -> handleLoginResponse(response));
             } catch (IOException e) {
                 Platform.runLater(() -> {
-                    System.out.println("Login failed.");
+                    logger.error("Login failed.");
                     e.printStackTrace();
                     showError("Login error: " + e.getMessage());
                 });
@@ -89,11 +92,8 @@ public class LoginController {
 
                     throw new IllegalArgumentException("Invalid userId type: " + userIdObj);
                 }
-                System.out.println("User ID: " + manager.getUserId());
+                logger.info("User ID: {}", manager.getUserId());
 
-                System.out.println("Token: " + manager.getToken());
-                System.out.println("Username: " + manager.getUsername());
-                System.out.println("Login successful.");
                 openMainStage();
             } else if (response.code() == 401) { // Unauthorized error
                 ObjectMapper objectMapper = new ObjectMapper();
@@ -103,31 +103,13 @@ public class LoginController {
                 showError("Unexpected response code: " + response.code());
             }
         } catch (IOException e) {
-            System.out.println("Failed to handle the response.");
+            logger.log(Level.ERROR,"Failed to handle the response.");
             e.printStackTrace();
             showError("Error processing login response.");
         }
 
     }
 
-    private void goToAdmin() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/Owner/adminMainUI.fxml"));
-            Parent root = loader.load();
-
-            Stage currentStage = (Stage) AppManager.getInstance().getPrimaryStage();
-
-            Scene adminScene = new Scene(root, 650, 400);
-
-            currentStage.setTitle("OFOS Admin");
-
-            currentStage.setScene(adminScene);
-
-            currentStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
 
     @FXML
@@ -135,7 +117,7 @@ public class LoginController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/registerUI.fxml"));
         Parent root = loader.load();
 
-        Stage currentStage = (Stage) AppManager.getInstance().getPrimaryStage();
+        Stage currentStage = AppManager.getInstance().getPrimaryStage();
 
         Scene registerScene = new Scene(root, 650, 400);
 
@@ -152,7 +134,7 @@ public class LoginController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/loginUI.fxml"));
         Parent root = loader.load();
 
-        Stage currentStage = (Stage) AppManager.getInstance().getPrimaryStage();
+        Stage currentStage = AppManager.getInstance().getPrimaryStage();
 
 
         Scene loginScene = new Scene(root, 650, 400);
@@ -172,7 +154,7 @@ public class LoginController {
                 Platform.runLater(() -> handleRegisterResponse(response));
             } catch (IOException e) {
                 Platform.runLater(() -> {
-                    System.out.println("Registration failed.");
+                    logger.log(Level.ERROR,"Registration failed.");
                     e.printStackTrace();
                     showError("Registration error: " + e.getMessage());
                 });
@@ -190,7 +172,7 @@ public class LoginController {
                 currentStage.setTitle("OFOS Login");
                 currentStage.setScene(registerScene);
                 currentStage.show();
-                System.out.println("User registration successful.");
+                logger.info("User registration successful.");
             } else if (response.code() == 400) {
                 ObjectMapper objectMapper = new ObjectMapper();
                 Map<String, String> errors = objectMapper.readValue(response.body().string(), Map.class);
@@ -199,7 +181,7 @@ public class LoginController {
                 showError("Unexpected response code: " + response.code());
             }
         } catch (IOException e) {
-            System.out.println("Failed to handle the response.");
+            logger.log(Level.ERROR,"Failed to handle the response.");
             e.printStackTrace();
             showError("Error processing registration response.");
         }
@@ -225,7 +207,7 @@ public class LoginController {
     }
 
     private void showError(String message) {
-        System.out.println(message);
+        logger.info(message);
     }
 
 
@@ -235,7 +217,7 @@ public class LoginController {
         // Select appropriate FXML based on role
         if (SessionManager.getInstance().getRole().equals("OWNER")) {
             rootLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/Owner/ownerRoot.fxml"));
-            System.out.println("Owner logged in.");
+            logger.info("Owner logged in.");
         } else {
             rootLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/root.fxml"));
         }

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ofosFrontend.model.Restaurant;
 import ofosFrontend.session.SessionManager;
 import okhttp3.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.URI;
@@ -12,17 +14,16 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 public class RestaurantService {
     private static final String API_URL = "http://10.120.32.94:8000/"; //
-
+    private final Logger logger = LogManager.getLogger(RestaurantService.class);
     private final OkHttpClient client = new OkHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
+    private static final String MEDIA_TYPE = "application/json; charset=utf-8";
     public List<Restaurant> getAllRestaurants() throws IOException {
 
-        MediaType JSON = MediaType.get("application/json; charset=utf-8");
-        ObjectMapper objectMapper = new ObjectMapper();
 
         Request request = new Request.Builder()
                 .url(API_URL + "restaurants")
@@ -41,22 +42,18 @@ public class RestaurantService {
         SessionManager sessionManager = SessionManager.getInstance();
         int ownerId = sessionManager.getUserId();
 
-        MediaType JSON = MediaType.get("application/json; charset=utf-8");
-        ObjectMapper objectMapper = new ObjectMapper();
 
         Request request = new Request.Builder()
                 .url(API_URL + "restaurants/owner/" + ownerId)
                 .get()
                 .build();
-        System.out.println(request);
         Response response = client.newCall(request).execute();
         String responseBody = response.body().string();
         List<Restaurant> restaurants = mapper.readValue(responseBody, mapper.getTypeFactory().constructCollectionType(List.class, Restaurant.class));
-        System.out.println(restaurants);
         return restaurants;
     }
     public void updateRestaurantInfo(Restaurant restaurant) throws IOException {
-        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+        MediaType JSON = MediaType.get(MEDIA_TYPE);
 
         String restaurantJson = mapper.writeValueAsString(restaurant);
 
@@ -73,27 +70,10 @@ public class RestaurantService {
             throw new IOException("Unexpected code " + response);
         }
     }
-    public void getRestaurantID(Restaurant restaurant) throws IOException {
-        MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
-        String restaurantJson = mapper.writeValueAsString(restaurant);
-
-        RequestBody body = RequestBody.create(restaurantJson, JSON);
-
-        Request request = new Request.Builder()
-                .url(API_URL + "restaurants/" + restaurant.getId())
-                .put(body)
-                .build();
-
-        Response response = client.newCall(request).execute();
-
-        if (!response.isSuccessful()) {
-            throw new IOException("Unexpected code " + response);
-        }
-    }
 
     public List<Restaurant> getRestaurantsByCategory(String categoryName) throws IOException {
-        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+
 
         // Encode the category name to handle spaces and special characters
         String encodedCategoryName = java.net.URLEncoder.encode(categoryName, "UTF-8");
@@ -127,7 +107,7 @@ public class RestaurantService {
     }
 
     public boolean changeOwner(int restaurantId, int newOwnerId) throws IOException {
-        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+        MediaType JSON = MediaType.get(MEDIA_TYPE);
         String jsonBody = String.format("{\"restaurantId\": %d, \"newOwnerId\": %d}", restaurantId, newOwnerId);
 
         RequestBody body = RequestBody.create(jsonBody, JSON);
@@ -141,7 +121,7 @@ public class RestaurantService {
             if (response.isSuccessful()) {
                 return true;
             } else {
-                System.err.println("Change owner failed: " + response.code() + " " + response.message());
+                logger.error("Change owner failed: {} {}", response.code(), response.message());
                 throw new IOException("Failed to change owner: " + response.code() + " " + response.message());
             }
         }
@@ -180,11 +160,10 @@ public class RestaurantService {
 
             // Check the response status
             if (response.statusCode() == 200) {
-                System.out.println("Restaurant created successfully: " + response.body());
+                logger.info("Restaurant created successfully: " + response.body());
                 return true;
             } else {
-                System.err.println("Failed to create restaurant. Status code: " + response.statusCode());
-                System.err.println("Response body: " + response.body());
+                logger.error("Failed to create restaurant. Status code: {}", response.statusCode());
                 return false;
             }
         } catch (Exception e) {

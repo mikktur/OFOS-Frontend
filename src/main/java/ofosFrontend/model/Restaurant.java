@@ -1,11 +1,10 @@
 package ofosFrontend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Restaurant {
-    private int Id;
+    private int id;
     private String restaurantName;
     private String restaurantPhone;
     private String picture;
@@ -36,11 +35,11 @@ public class Restaurant {
     }
 
     public int getId() {
-        return Id;
+        return id;
     }
 
-    public void setId(int Id) {
-        this.Id = Id;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getRestaurantName() {

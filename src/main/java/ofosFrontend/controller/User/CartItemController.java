@@ -9,6 +9,9 @@ import ofosFrontend.model.CartItem;
 import ofosFrontend.model.ShoppingCart;
 import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.text.NumberFormat;
 
@@ -32,7 +35,7 @@ public class CartItemController {
     private Label itemQuantity;
     private VBox cartItemNode;
     private CartItem cartItem;
-
+    private final Logger logger = LogManager.getLogger(this.getClass() );
     /**
      * Sets the cart item and the node that represents it
      * @param item the cart item
@@ -65,7 +68,7 @@ public class CartItemController {
         if (cartItem != null) {
 
             ShoppingCart cart = SessionManager.getInstance().getCart(cartItem.getRid());
-            System.out.println("Removing item: " + cartItem.getProduct().getProductName());
+            logger.log(Level.INFO,"Removing item: {}", cartItem.getProduct().getProductName());
             cart.removeItem(cartItem.getProduct());
 
 

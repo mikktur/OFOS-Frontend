@@ -48,9 +48,7 @@ public class CheckoutService {
         };
 
 
-        task.setOnSucceeded(event -> {
-            deliveryAddressesList = task.getValue();
-        });
+        task.setOnSucceeded(event -> deliveryAddressesList = task.getValue());
 
         task.setOnFailed(event -> {
             Throwable e = task.getException();

@@ -1,32 +1,27 @@
 package ofosFrontend.session;
 
-import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class LocalizationManager {
 
     private static final String BASE_NAME = "MessagesBundle";
-    private static Locale locale = new Locale("en", "US");
+    private static Locale locale = Locale.ENGLISH;
     private static ResourceBundle bundle = ResourceBundle.getBundle(BASE_NAME, locale);
 
     // Map with key as language code and value as display name
-    private static final Map<String, String> languageMap = new HashMap<>();
+    private static final Map<String, String> languageMap = Map.of(
+            "en", "English",
+            "fi", "Finnish",
+            "ja", "Japanese",
+            "ru", "Russian"
+    );
 
     private static final StringProperty selectedLanguage = new SimpleStringProperty();
 
-    static {
-        languageMap.put("en", "English");
-        languageMap.put("fi", "Finnish");
-        languageMap.put("ja", "Japanese");
-        languageMap.put("ru", "Russian");
-
-        selectedLanguage.set(languageMap.getOrDefault(locale.getLanguage(), "English"));
+    private LocalizationManager() {
     }
 
     public static ResourceBundle getBundle() {
@@ -47,20 +42,17 @@ public class LocalizationManager {
     }
 
     public static void setLocale(Locale newLocale) {
-        locale = newLocale;
-        bundle = ResourceBundle.getBundle(BASE_NAME, locale);
-
-        selectedLanguage.set(languageMap.getOrDefault(locale.getLanguage(), "English"));
-    }
-
-    public static void setSelectedLanguage(String language) {
-        for (Map.Entry<String, String> entry : languageMap.entrySet()) {
-            if (entry.getValue().equals(language)) {
-                setLocale(new Locale(entry.getKey()));
-                break;
-            }
+        try {
+            locale = newLocale;
+            bundle = ResourceBundle.getBundle(BASE_NAME, locale);
+            selectedLanguage.set(languageMap.getOrDefault(locale.getLanguage(), "English"));
+        } catch (MissingResourceException e) {
+            locale = Locale.ENGLISH;
+            bundle = ResourceBundle.getBundle(BASE_NAME, locale);
+            selectedLanguage.set("English");
         }
     }
+
 
     public static StringProperty selectedLanguageProperty() {
         return selectedLanguage;

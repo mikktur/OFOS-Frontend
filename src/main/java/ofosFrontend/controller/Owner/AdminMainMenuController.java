@@ -25,11 +25,14 @@ public class AdminMainMenuController extends AdminBasicController {
     @FXML
     private VBox restaurantListVBox;
     @FXML
-    private Label addressLabel, phoneLabel, hoursLabel;
+    private Label addressLabel;
+    @FXML
+    private Label phoneLabel;
+    @FXML
+    private Label hoursLabel;
 
     @FXML
     private Text defaultText;
-    private int rID;
 
     private RestaurantService restaurantService = new RestaurantService();
     private Restaurant currentSelectedRestaurant;
@@ -44,6 +47,7 @@ public class AdminMainMenuController extends AdminBasicController {
     }
 
     public AdminMainMenuController() {
+        // Required by FXML loader
     }
 
     public void loadRestaurants() {
@@ -67,7 +71,6 @@ public class AdminMainMenuController extends AdminBasicController {
                 restaurantBox.getChildren().add(restaurantNameText);
 
                 restaurantBox.setOnMouseClicked(event -> {
-                    rID = restaurant.getId();
                     currentSelectedRestaurant = restaurant;
 
                     prefs.putInt(LAST_SELECTED_RESTAURANT_KEY, restaurant.getId());

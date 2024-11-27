@@ -4,23 +4,24 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.AnchorPane;
-import javafx.event.EventHandler;
+
 import javafx.scene.input.MouseEvent;
 import ofosFrontend.model.Restaurant;
 import ofosFrontend.model.RestaurantList;
 import ofosFrontend.service.RestaurantService;
 import ofosFrontend.session.LocalizationManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
+
 
 import static ofosFrontend.session.Validations.showError;
 
@@ -32,20 +33,12 @@ public class MainMenuController extends BasicController {
     ResourceBundle bundle = LocalizationManager.getBundle();
     @FXML
     private FlowPane restaurantFlowPane;
-    @FXML
-    private ScrollPane mainScroll;
-    @FXML
-    private AnchorPane pizza_category;
-    @FXML
-    private AnchorPane burger_category;
-    @FXML
-    private AnchorPane steak_category;
-
+    private final Logger logger = LogManager.getLogger(MainMenuController.class);
 
 
     private final RestaurantService restaurantService = new RestaurantService();
     private final RestaurantList restaurantList = new RestaurantList();
-    private final String URL = "http://10.120.32.94:8000/images/restaurant/";
+    private static final String URL = "http://10.120.32.94:8000/images/restaurant/";
 
     // Reference to the main controller
 
@@ -60,14 +53,15 @@ public class MainMenuController extends BasicController {
      * Loads the default content of the main menu view
      */
     @FXML
-    private void goToRestaurant(Restaurant restaurant) throws IOException {
+    private void goToRestaurant(Restaurant restaurant) {
         setupRestaurantView(restaurant);
     }
 
     /**
      * Handles the click event on a category
+     *
      * @param event the mouse event
-     * Gets the id of the clicked category and loads the restaurants of that category
+     *              Gets the id of the clicked category and loads the restaurants of that category
      */
     @FXML
     private void handleCategoryClick(MouseEvent event) {
@@ -165,11 +159,12 @@ public class MainMenuController extends BasicController {
 
     /**
      * Loads the restaurant view.
+     *
      * @param restaurant the restaurant to load
      */
     private void setupRestaurantView(Restaurant restaurant) {
         if (mainController == null) {
-            System.out.println("Error: mainController is null in MMenuController.");
+            logger.error("Error: mainController is null in MMenuController.");
             return;
         }
         //makes sure that the cart that is used is for the correct restaurant.
@@ -188,8 +183,8 @@ public class MainMenuController extends BasicController {
      */
     public void filterRestaurants(String query) {
         List<Restaurant> filteredRestaurants = query.isEmpty()
-                ? restaurantList.getRestaurantList()
-                : restaurantList.getRestaurantList().stream()
+                ? restaurantList.getRestaurantsList()
+                : restaurantList.getRestaurantsList().stream()
                 .filter(restaurant -> restaurant.getRestaurantName().toLowerCase().contains(query.toLowerCase()))
                 .toList();
 
@@ -264,13 +259,7 @@ public class MainMenuController extends BasicController {
      * @param restaurant The restaurant associated with the card.
      */
     private void setCardClickEvent(VBox card, Restaurant restaurant) {
-        card.setOnMouseClicked(event -> {
-            try {
-                goToRestaurant(restaurant);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        card.setOnMouseClicked(event -> goToRestaurant(restaurant));
     }
 
 }

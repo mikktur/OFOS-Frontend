@@ -13,9 +13,12 @@ import javafx.scene.layout.VBox;
 import ofosFrontend.model.Restaurant;
 import ofosFrontend.session.CartManager;
 import ofosFrontend.session.LocalizationManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
+@SuppressWarnings("checkstyle:Indentation")
 public class UserMainController {
 
     @FXML
@@ -36,16 +39,17 @@ public class UserMainController {
     @FXML
     DropDownMenuController dropDownMenuController;
     private ViewFactory viewFactory;
+
     MainMenuController mmController;
     private Restaurant currentRestaurant;
-    private final CartManager cartManager = new CartManager();
+    private final Logger logger = LogManager.getLogger(UserMainController.class);
 
     @FXML
     public void initialize() {
         viewFactory = new ViewFactory(this);
         setControllers();
 
-        System.out.println("Main controller initialized");
+        logger.info("Main controller initialized");
 
         root.setLeft(null);
         root.setRight(null);
@@ -55,7 +59,7 @@ public class UserMainController {
 
     public void setCenterContent(Node content) {
         if (centerPane == null) {
-            System.out.println("centerPane is null!");
+            logger.error("centerPane is null!");
             return;
         }
 
@@ -63,6 +67,7 @@ public class UserMainController {
         centerPane.getChildren().add(content);
         StackPane.setAlignment(content, Pos.CENTER);
     }
+
     public void loadCheckoutView(int rid) {
         Parent checkoutView = viewFactory.createCheckoutView(rid);
 
@@ -94,13 +99,14 @@ public class UserMainController {
 
         if (restaurantView != null) {
             currentRestaurant = restaurant;
-            System.out.println(currentRestaurant);
             setCenterContent(restaurantView);
         }
     }
+
     public void setCurrentRestaurant(Restaurant restaurant) {
         currentRestaurant = restaurant;
     }
+
     public void loadHistoryView() {
         Parent historyView = viewFactory.createOrderHistoryView();
 
@@ -108,24 +114,24 @@ public class UserMainController {
             setCenterContent(historyView);
         }
     }
+
     public void loadDefaultContent() {
         Node defaultContent = viewFactory.createDefaultContent();
 
         if (defaultContent != null) {
             setCenterContent(defaultContent);
-            currentRestaurant=null;
+            currentRestaurant = null;
         }
     }
-    public void setMmController(MainMenuController mainMenuController){
+
+    public void setMmController(MainMenuController mainMenuController) {
         mmController = mainMenuController;
     }
 
     public void reloadDropDown() {
         try {
             boolean isVisible = dropDownRoot.isVisible();
-            if(isVisible){
-                toggleSideMenu();
-            }
+            if (isVisible) toggleSideMenu();
             root.setLeft(null);
             FXMLLoader dropDownLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/dropDownUI.fxml"));
             dropDownLoader.setResources(LocalizationManager.getBundle());
@@ -139,15 +145,16 @@ public class UserMainController {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
+
     public void reloadCart() {
         try {
             boolean isVisible = cart.isVisible();
 
             root.setRight(null);
-            if(isVisible){
+            if (isVisible) {
                 toggleShoppingCart();
             }
             FXMLLoader cartLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/shoppingCart.fxml"));
@@ -155,14 +162,14 @@ public class UserMainController {
             cart = cartLoader.load();
             shoppingCartController = cartLoader.getController();
             shoppingCartController.setMainController(this);
-            if(currentRestaurant!=null){
+            if (currentRestaurant != null) {
                 shoppingCartController.setRid(currentRestaurant.getId());
                 shoppingCartController.initializeCartForRestaurant(currentRestaurant.getId(), currentRestaurant);
                 shoppingCartController.loadCartItems();
 
             }
 
-            if(isVisible){
+            if (isVisible) {
                 root.setRight(cart);
                 toggleShoppingCart();
             }
@@ -220,7 +227,6 @@ public class UserMainController {
     }
 
     public void filterRestaurants(String query) {
-        System.out.println(mmController);
         if (mmController != null) {
             mmController.filterRestaurants(query);
         }
@@ -236,13 +242,15 @@ public class UserMainController {
         }
         shoppingCartController.resetCartView();
     }
-    public void reloadPage(){
+
+    public void reloadPage() {
 
         viewFactory.reloadPage();
         reloadCart();
         reloadDropDown();
 
     }
+
     public Restaurant getCurrentRestaurant() {
         return currentRestaurant;
     }

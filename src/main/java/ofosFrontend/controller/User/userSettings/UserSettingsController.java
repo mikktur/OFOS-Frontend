@@ -89,7 +89,7 @@ public class UserSettingsController extends BasicController {
      * If the user has contact information, updates the UI with the information.
      */
     private void fetchUserData() {
-        int userId = SessionManager.getInstance().getUserId();
+        userId = SessionManager.getInstance().getUserId();
 
         executeTask(
                 userService.fetchUserData(userId),
@@ -307,7 +307,7 @@ public class UserSettingsController extends BasicController {
      */
     private VBox createAddressVBox(DeliveryAddress address) {
         VBox addressVBox = new VBox(2);
-        Label addressLabel = new Label(bundle.getString("Address"));
+        addressLabel.setText(bundle.getString("Address"));
         addressLabel.setStyle("-fx-font-weight: bold;");
 
         Label addressValue = new Label(address.getStreetAddress());
@@ -405,9 +405,6 @@ public class UserSettingsController extends BasicController {
             loader.setResources(LocalizationManager.getBundle());
             Parent root = loader.load();
 
-            AddAddressDialogController dialogController = loader.getController();
-            dialogController.setUserId(userId);
-
             Stage stage = new Stage();
             stage.setTitle(bundle.getString("Add_New_Address"));
             stage.setScene(new Scene(root));
@@ -491,10 +488,7 @@ public class UserSettingsController extends BasicController {
             // Proceed to set as default
             Task<Void> task = deliveryAddressService.setDefaultAddress(address, userId);
 
-            task.setOnSucceeded(e -> {
-                // Update the UI
-                updateDefaultAddressInUI(address);  // Refresh the list of addresses
-            });
+            task.setOnSucceeded(e -> updateDefaultAddressInUI(address));
 
             task.setOnFailed(e -> {
                 Throwable exception = task.getException();
@@ -536,17 +530,12 @@ public class UserSettingsController extends BasicController {
     private void deleteAddress(DeliveryAddress address) {
         Task<Void> task = deliveryAddressService.deleteAddress(address.getDeliveryAddressId());
 
-        task.setOnSucceeded(event -> {
-            // Refresh the delivery addresses after successful deletion
-            Platform.runLater(this::fetchDeliveryAddresses);
-        });
+        task.setOnSucceeded(event -> Platform.runLater(this::fetchDeliveryAddresses));
 
         task.setOnFailed(event -> {
             Throwable exception = task.getException();
             exception.printStackTrace();
-            Platform.runLater(() -> {
-                showError(bundle.getString("FailToDelete"));
-            });
+            Platform.runLater(() -> showError(bundle.getString("FailToDelete")));
         });
 
         Thread thread = new Thread(task);

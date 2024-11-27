@@ -8,7 +8,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class ResourceBundleKeyTest {
+class ResourceBundleKeyTest {
 
     private static final String BASE_FILE = "MessagesBundle_en_US.properties";
     private static final String[] TARGET_FILES = {
@@ -18,7 +18,7 @@ public class ResourceBundleKeyTest {
     };
 
     @Test
-    public void testResourceBundleKeys() {
+    void testResourceBundleKeys() {
         try {
             // Load the base properties file
             Properties baseProperties = loadProperties(BASE_FILE);

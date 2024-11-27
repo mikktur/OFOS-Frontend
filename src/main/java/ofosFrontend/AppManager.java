@@ -1,7 +1,6 @@
 package ofosFrontend;
 
 import javafx.stage.Stage;
-import ofosFrontend.controller.User.UserMainController;
 
 public class AppManager {
 
@@ -11,7 +10,7 @@ public class AppManager {
     private AppManager() {
     }
 
-    public static AppManager getInstance() {
+    public static synchronized AppManager getInstance() {
         if (instance == null) {
             instance = new AppManager();
         }

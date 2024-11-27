@@ -8,11 +8,14 @@ import ofosFrontend.session.LocalizationManager;
 import java.io.IOException;
 
 public class AdminViewFactory {
-    private final static String ADMINHOME = "/ofosFrontend/Owner/adminMainUI.fxml";
-    private final static String ADMINRESTAURANT = "/ofosFrontend/Owner/adminFoodMenuUI.fxml";
+
     private final AdminController mainController;
     private String currentView;
     private Restaurant resta;
+
+    private static final String ADMINHOME = "/ofosFrontend/Owner/adminMainUI.fxml";
+    private static final String ADMINRESTAURANT = "/ofosFrontend/Owner/adminFoodMenuUI.fxml";
+
     public AdminViewFactory(AdminController mainController) {
         this.mainController = mainController;
     }
@@ -56,6 +59,9 @@ public class AdminViewFactory {
                 break;
             case ADMINRESTAURANT:
                 mainController.loadRestaurantContent(resta);
+                break;
+            default:
+                mainController.loadDefaultContent();
                 break;
         }
 

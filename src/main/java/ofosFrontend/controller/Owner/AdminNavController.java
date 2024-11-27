@@ -4,14 +4,14 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
 import ofosFrontend.session.GenericHelper;
 import ofosFrontend.session.LocalizationManager;
-
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class AdminNavController  extends AdminBasicController {
-    public javafx.scene.text.Text ownerText;
+    @FXML
+    private Text ownerText;
     @FXML
     HBox adminNav;
     @FXML

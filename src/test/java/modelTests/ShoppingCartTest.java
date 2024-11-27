@@ -10,14 +10,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ShoppingCartTest {
+class ShoppingCartTest {
 
     private ShoppingCart shoppingCart;
     private Product product1;
     private Product product2;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         Restaurant restaurant = new Restaurant();
         restaurant.setId(1);
         shoppingCart = new ShoppingCart(restaurant);
@@ -27,7 +27,7 @@ public class ShoppingCartTest {
     }
 
     @Test
-    public void testAddNewItem() {
+    void testAddNewItem() {
         shoppingCart.addItem(product1, 1);
 
         ObservableList<CartItem> items = shoppingCart.getItems();
@@ -37,7 +37,7 @@ public class ShoppingCartTest {
     }
 
     @Test
-    public void testAddExistingItemIncreasesQuantity() {
+    void testAddExistingItemIncreasesQuantity() {
         shoppingCart.addItem(product1, 1);
         shoppingCart.addItem(product1, 2);
 
@@ -47,7 +47,7 @@ public class ShoppingCartTest {
     }
 
     @Test
-    public void testAddDifferentItems() {
+    void testAddDifferentItems() {
         shoppingCart.addItem(product1, 1);
         shoppingCart.addItem(product2, 1);
 
@@ -58,7 +58,7 @@ public class ShoppingCartTest {
     }
 
     @Test
-    public void testRemoveItem() {
+    void testRemoveItem() {
         shoppingCart.addItem(product1, 1);
         shoppingCart.removeItem(product1);
 
@@ -67,7 +67,7 @@ public class ShoppingCartTest {
     }
 
     @Test
-    public void testGetTotalPrice() {
+    void testGetTotalPrice() {
         shoppingCart.addItem(product1, 2);
         shoppingCart.addItem(product2, 3);
 
@@ -78,7 +78,7 @@ public class ShoppingCartTest {
     }
 
     @Test
-    public void testClearCart() {
+    void testClearCart() {
         shoppingCart.addItem(product1, 1);
         shoppingCart.addItem(product2, 1);
         shoppingCart.clear();

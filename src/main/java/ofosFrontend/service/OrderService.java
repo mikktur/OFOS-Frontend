@@ -6,9 +6,6 @@ import javafx.concurrent.Task;
 import ofosFrontend.model.*;
 import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 import java.io.IOException;
 import java.net.URI;
@@ -38,9 +35,9 @@ public class OrderService {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         String responseBody = response.body();
 
-        Map<Integer, List<OrderHistory>> orderHistoryMap = mapper.readValue(responseBody, new TypeReference<Map<Integer, List<OrderHistory>>>(){});
+        return mapper.readValue(responseBody, new TypeReference<Map<Integer, List<OrderHistory>>>(){});
 
-        return orderHistoryMap;
+
     }
 
     public Task<Void> confirmOrder(List<CartItem> cartItems, int deliveryAddressId, int restaurantId) {

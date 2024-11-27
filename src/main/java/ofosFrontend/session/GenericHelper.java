@@ -5,7 +5,11 @@ import javafx.concurrent.Task;
 import java.util.Locale;
 import java.util.function.Consumer;
 
-public class GenericHelper {
+public final class GenericHelper {
+
+    private GenericHelper() {
+        throw new IllegalStateException("Utility class");
+    }
     /**
      * Executes a task and calls the onSuccess consumer if the task succeeds.
      * @param task The task to execute.
@@ -50,16 +54,16 @@ public class GenericHelper {
 
         switch (language) {
             case "Finnish":
-                newLocale = new Locale("fi", "FI");
+                newLocale = Locale.forLanguageTag("fi-FI");
                 break;
             case "Japanese":
-                newLocale = new Locale("ja", "JP");
+                newLocale = Locale.JAPAN; // Predefined constant
                 break;
             case "Russian":
-                newLocale = new Locale("ru", "RU");
+                newLocale = new Locale("ru", "RU"); // Russian has no constant
                 break;
             default:
-                newLocale = new Locale("en", "US");
+                newLocale = Locale.US; // Predefined constant
                 break;
         }
 
