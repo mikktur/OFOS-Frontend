@@ -12,6 +12,8 @@
 <?import javafx.scene.text.Text?>
 
 
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Rectangle?>
 <ScrollPane fx:id="mainScroll" fitToWidth="true" hbarPolicy="NEVER"
             styleClass="scroll" stylesheets="@../styles.css"
             xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
@@ -40,60 +42,73 @@
                         <padding>
                             <Insets bottom="20.0" top="20.0"/>
                         </padding>
+
                         <AnchorPane fx:id="burger_category"
                                     onMouseClicked="#handleCategoryClick"
                                     prefHeight="166.0" prefWidth="159.0"
                                     styleClass="category-button">
+                            <StackPane prefHeight="166.0" prefWidth="159.0">
+                                <!-- Border Layer -->
+                                <Rectangle width="159.0" height="166.0" arcWidth="30.0" arcHeight="30.0"
+                                           stroke="black" strokeWidth="1" fill="transparent"/>
+                                <!-- Image -->
+                                <ImageView fitHeight="166.0" fitWidth="159.0" pickOnBounds="true">
+                                    <image>
+                                        <Image url="@../../images/burgerz-fixed.png"/>
+                                    </image>
+                                    <clip>
+                                        <Rectangle arcWidth="30.0" arcHeight="30.0" width="159.0" height="166.0"/>
+                                    </clip>
+                                </ImageView>
+                                <!-- Text Overlay -->
+                                <Text text="%Burgers" styleClass="category-text" textAlignment="CENTER" StackPane.alignment="BOTTOM_CENTER"/>
+                            </StackPane>
 
-                        <ImageView fitHeight="119.0" fitWidth="119.0" layoutX="21.0"
-                                       layoutY="14.0" pickOnBounds="true" preserveRatio="true">
-                                <image>
-                                    <Image url="@../../images/burgerz.png"/>
-                                </image>
-                            </ImageView>
-                            <Text layoutX="45.0" layoutY="146.0" strokeType="OUTSIDE"
-                                  strokeWidth="0.0" text="%Burgers">
-                                <font>
-                                    <Font name="System Bold" size="18.0"/>
-                                </font>
-                            </Text>
                         </AnchorPane>
+
+                        <!-- Repeat for other categories -->
                         <AnchorPane fx:id="pizza_category"
                                     onMouseClicked="#handleCategoryClick"
                                     prefHeight="166.0" prefWidth="159.0"
                                     styleClass="category-button">
-
-                        <ImageView fitHeight="114.0" fitWidth="115.0" layoutX="23.0"
-                                       layoutY="7.0" pickOnBounds="true" preserveRatio="true">
-                                <image>
-                                    <Image url="@../../images/pizza.png"/>
-                                </image>
-                            </ImageView>
-                            <Text layoutX="50.0" layoutY="146.0" strokeType="OUTSIDE"
-                                  strokeWidth="0.0" text="%Pizza">
-                                <font>
-                                    <Font name="System Bold" size="18.0"/>
-                                </font>
-                            </Text>
+                            <StackPane layoutX="0.0" layoutY="0.0" prefHeight="166.0" prefWidth="159.0">
+                                <Rectangle width="159.0" height="166.0" arcWidth="30.0" arcHeight="30.0"
+                                           stroke="black" strokeWidth="1" fill="transparent"/>
+                                <ImageView fitHeight="166.0" fitWidth="159.0" pickOnBounds="true">
+                                    <image>
+                                        <Image url="@../../images/pizza-slice.png"/>
+                                    </image>
+                                    <clip>
+                                        <Rectangle arcWidth="30.0" arcHeight="30.0" width="159.0" height="166.0"/>
+                                    </clip>
+                                </ImageView>
+                                <Text text="%Pizza" styleClass="category-text" textAlignment="CENTER" StackPane.alignment="BOTTOM_CENTER"/>
+                            </StackPane>
                         </AnchorPane>
                         <AnchorPane fx:id="steak_category"
                                     onMouseClicked="#handleCategoryClick"
                                     prefHeight="166.0" prefWidth="159.0"
                                     styleClass="category-button">
-
-                        <ImageView fitHeight="118.0" fitWidth="119.0" layoutX="21.0"
-                                       layoutY="6.0" pickOnBounds="true" preserveRatio="true">
-                                <Image url="@../../images/noodles.png"/>
-                            </ImageView>
-                            <Text layoutX="50.0" layoutY="146.0" strokeType="OUTSIDE"
-                                  strokeWidth="0.0" text="%Steaks">
-                                <font>
-                                    <Font name="System Bold" size="18.0"/>
-                                </font>
-                            </Text>
+                            <StackPane layoutX="0.0" layoutY="0.0" prefHeight="166.0" prefWidth="159.0">
+                                <Rectangle width="159.0" height="166.0" arcWidth="30.0" arcHeight="30.0"
+                                           stroke="black" strokeWidth="1" fill="transparent"/>
+                                <ImageView fitHeight="166.0" fitWidth="159.0" pickOnBounds="true">
+                                    <image>
+                                        <Image url="@../../images/steikki.png"/>
+                                    </image>
+                                    <clip>
+                                        <Rectangle arcWidth="30.0" arcHeight="30.0" width="159.0" height="166.0"/>
+                                    </clip>
+                                </ImageView>
+                                <Text text="%Steaks" styleClass="category-text" textAlignment="CENTER" StackPane.alignment="BOTTOM_CENTER"/>
+                            </StackPane>
                         </AnchorPane>
                     </TilePane>
                 </HBox>
+
+
+
+
                 <FlowPane fx:id="restaurantFlowPane" hgap="20.0" prefWrapLength="800.0"
                           style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);
                            -fx-border-color: #000000;"
