@@ -37,7 +37,7 @@ public class MainMenuController extends BasicController {
 
 
     private final RestaurantService restaurantService = new RestaurantService();
-    private final RestaurantList restaurantList = new RestaurantList();
+    private final RestaurantList restaurantList = new RestaurantList(restaurantService);
     private static final String URL = "http://10.120.32.94:8000/images/restaurant/";
 
     // Reference to the main controller

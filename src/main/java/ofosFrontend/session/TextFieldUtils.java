@@ -6,7 +6,6 @@ import javafx.scene.control.TextInputControl;
  * Utility class for adding character limits to text fields.
  */
 public final class TextFieldUtils {
-public final class TextFieldUtils {
 
 
     private TextFieldUtils() {

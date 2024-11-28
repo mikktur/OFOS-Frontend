@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -294,9 +295,7 @@ public class UserService {
                 logger.error("Failed to change role. Server responded with: {}", response.code());
                 return false;
             }
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            return response.statusCode() == 200;
 
         } catch (IOException e) {
             logger.error("Failed to change role. Network error occurred: {}", e.getMessage());

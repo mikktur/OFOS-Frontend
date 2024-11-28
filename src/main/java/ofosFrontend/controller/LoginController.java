@@ -78,11 +78,11 @@ public class LoginController {
     /**
      * Handle the login response
      *
-     * @param response the response from the login request
+     * @param loginResponse the response from the login request
      *                 if the response is successful, set the session manager token, username, role and user id
      *                 and open the main stage
      */
-    private void handleLoginResponse(Response response) {
+    private void handleLoginResponse(LoginResponse loginResponse) {
 
         ObjectMapper mapper = new ObjectMapper();
 

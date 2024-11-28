@@ -19,7 +19,7 @@ public class OfosStart extends javafx.application.Application {
     public void start(Stage stage) throws IOException {
         GenericHelper.switchLanguage("English");
         AppManager.getInstance().setPrimaryStage(stage);
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("loginUI.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(OfosStart.class.getResource("loginUI.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 600, 400);
         stage.setTitle("OFOS Login");
         stage.setScene(scene);
