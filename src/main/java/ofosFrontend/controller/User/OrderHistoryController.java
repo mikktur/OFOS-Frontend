@@ -288,7 +288,7 @@ public class OrderHistoryController {
         // Add OrderHistory objects directly to the ComboBox
         comboBox.getItems().addAll(orderItems);
         if (!orderItems.isEmpty()) {
-            comboBox.setValue(orderItems.getFirst());
+            comboBox.setValue(orderItems.get(0));
         }
 
         applyCustomCellFactory(comboBox, backgroundColor);

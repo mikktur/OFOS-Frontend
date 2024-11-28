@@ -33,8 +33,8 @@ public class OrderHistorySorter {
     public static Map<Integer, List<OrderHistory>> sortOrderHistoryByRestaurant(Map<Integer, List<OrderHistory>> orderHistoryMap, boolean ascending) {
         List<Map.Entry<Integer, List<OrderHistory>>> entries = new ArrayList<>(orderHistoryMap.entrySet());
         entries.sort((entry1, entry2) -> {
-            String restaurant1 = entry1.getValue().getFirst().getRestaurantName();
-            String restaurant2 = entry2.getValue().getFirst().getRestaurantName();
+            String restaurant1 = entry1.getValue().get(0).getRestaurantName();
+            String restaurant2 = entry2.getValue().get(0).getRestaurantName();
             return ascending ? restaurant1.compareTo(restaurant2) : restaurant2.compareTo(restaurant1);
         });
 
@@ -67,8 +67,8 @@ public class OrderHistorySorter {
     public static Map<Integer, List<OrderHistory>> sortOrderHistoryByDate(Map<Integer, List<OrderHistory>> orderHistoryMap, boolean ascending) {
         List<Map.Entry<Integer, List<OrderHistory>>> entries = new ArrayList<>(orderHistoryMap.entrySet());
         entries.sort((entry1, entry2) -> {
-            String date1 = entry1.getValue().getFirst().getOrderDate();
-            String date2 = entry2.getValue().getFirst().getOrderDate();
+            String date1 = entry1.getValue().get(0).getOrderDate();
+            String date2 = entry2.getValue().get(0).getOrderDate();
             return ascending ? date1.compareTo(date2) : date2.compareTo(date1);
         });
 

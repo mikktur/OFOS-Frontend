@@ -8,6 +8,11 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
+/**
+ * Test class to check that all resource bundle keys are present in all language files.
+ * The test compares the keys in the base file with the keys in the target files.
+ * If any keys are missing in the target files, the test fails.
+ */
 public class ResourceBundleKeyTest {
 
     private static final String BASE_FILE = "MessagesBundle_en_US.properties";
@@ -17,6 +22,9 @@ public class ResourceBundleKeyTest {
             "MessagesBundle_ru_RU.properties"
     };
 
+    /**
+     * Test that all keys in the base properties file are present in the target properties files.
+     */
     @Test
     public void testResourceBundleKeys() {
         try {
@@ -43,6 +51,12 @@ public class ResourceBundleKeyTest {
         }
     }
 
+    /**
+     * Load properties from a file.
+     * @param fileName the name of the properties file
+     * @return the properties object
+     * @throws IOException if the file is not found
+     */
     private Properties loadProperties(String fileName) throws IOException {
         Properties properties = new Properties();
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(fileName)) {

@@ -2,28 +2,48 @@ package modelTests;
 
 import ofosFrontend.model.Restaurant;
 import ofosFrontend.model.RestaurantList;
+import ofosFrontend.service.RestaurantService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+/**
+ * Test class for the RestaurantList model class.
+ * Tests the basic functionality of the RestaurantList class.
+ */
 
 public class RestaurantListTest {
 
     private RestaurantList restaurantList;
     private Restaurant restaurant1;
     private Restaurant restaurant2;
-    private Restaurant restaurant3;
+    private RestaurantService mockService;
+
 
     @BeforeEach
-    public void setUp() {
-        // Initialize the RestaurantList and sample Restaurant objects before each test
-        restaurantList = new RestaurantList();
+    public void setUp() throws IOException {
+        // Mock the RestaurantService
+        mockService = mock(RestaurantService.class);
+
+        // Mock behavior of getAllRestaurants
+        when(mockService.getAllRestaurants()).thenReturn(new ArrayList<>());
+
+
+        // Initialize RestaurantList with the mocked service
+        restaurantList = new RestaurantList(mockService);
+
+        // Sample restaurants
         restaurant1 = new Restaurant("Pizza Place", "123-456-7890", "picture1.jpg", "seppo");
         restaurant2 = new Restaurant("Burger Joint", "987-654-3210", "picture2.jpg", "seppo");
-        restaurant3 = new Restaurant("Sushi Spot", "555-555-5555", "picture3.jpg", "seppo");
+
     }
 
     @Test

@@ -14,14 +14,18 @@ public class RestaurantList {
     private Restaurant restaurant;
     private List<Restaurant> restaurantList;
     private RestaurantService restaurantService;
-    public RestaurantList() {
-        restaurantService = new RestaurantService();
+
+
+    public RestaurantList(RestaurantService restaurantService) {
+        this.restaurantService = restaurantService;
         try {
-            restaurantList = restaurantService.getAllRestaurants();
+            this.restaurantList = new ArrayList<>(restaurantService.getAllRestaurants());
         } catch (IOException e) {
             e.printStackTrace();
+            this.restaurantList = new ArrayList<>(); // Fallback to an empty mutable list
         }
     }
+
 
     public Restaurant getRestaurant() {
         return restaurant;
