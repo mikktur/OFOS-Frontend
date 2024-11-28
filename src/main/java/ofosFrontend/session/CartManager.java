@@ -20,14 +20,30 @@ public class CartManager {
         this.sessionManager = SessionManager.getInstance();
     }
 
-
+    /**
+     * Adds a cart to the session
+     * @param restaurantId The ID of the restaurant
+     * @param cart The cart to add
+     */
     public void addCart(int restaurantId, ShoppingCart cart) {
         sessionManager.getCartMap().put(restaurantId, cart);
     }
+
+    /**
+     * Gets a cart from the session
+     * @param restaurantId The ID of the restaurant
+     * @return The cart
+     */
     public ShoppingCart getCart(int restaurantId) {
         return sessionManager.getCartMap().get(restaurantId);
     }
 
+    /**
+     * Gets or creates a cart for the given restaurant ID
+     * @param restaurantId The ID of the restaurant
+     * @param restaurant The restaurant object
+     * @return The cart
+     */
     public ShoppingCart getOrCreateCart(int restaurantId, Restaurant restaurant) {
         ShoppingCart cart = sessionManager.getCartMap().get(restaurantId);
         if (cart == null) {
@@ -38,17 +54,25 @@ public class CartManager {
         return cart;
     }
 
-
+    /**
+     * Removes a cart from the session
+     * @param restaurantId The ID of the restaurant
+     */
     public void removeCart(int restaurantId) {
         sessionManager.getCartMap().remove(restaurantId);
     }
 
-
+    /**
+     * Clears all carts from the session
+     */
     public void clearAllCarts() {
         sessionManager.getCartMap().clear();
     }
 
-    // Checks and removes empty carts
+
+    /**
+     * Checks all carts and removes the ones that are empty
+     */
     public void checkAndRemoveEmptyCarts() {
         Iterator<Map.Entry<Integer, ShoppingCart>> iterator = sessionManager.getCartMap().entrySet().iterator();
         while (iterator.hasNext()) {

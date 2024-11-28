@@ -4,6 +4,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import java.io.IOException;
 
+/**
+ * Utility class for loading FXML files
+ */
 public class FXMLUtils {
 
     // Load FXML with ResourceBundle from LocalizationManager

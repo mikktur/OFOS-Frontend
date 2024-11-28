@@ -50,6 +50,10 @@ public class AddAddressDialogController {
         this.userId = userId;
     }
 
+    /**
+     * Initializes the dialog.
+     * Adds text limiters to the input fields.
+     */
     @FXML
     public void initialize() {
         TextFieldUtils.addTextLimiter(streetAddressField, STREET_ADDRESS_MAX_LENGTH);

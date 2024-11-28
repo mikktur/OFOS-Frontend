@@ -2,6 +2,9 @@ package ofosFrontend.session;
 
 import javafx.scene.control.TextInputControl;
 
+/**
+ * Utility class for adding character limits to text fields.
+ */
 public class TextFieldUtils {
 
     /**

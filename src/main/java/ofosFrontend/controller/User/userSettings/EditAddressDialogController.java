@@ -35,6 +35,10 @@ public class EditAddressDialogController {
     private DeliveryAddress address;
     private final DeliveryAddressService deliveryAddressService = new DeliveryAddressService();
 
+    /**
+     * Initializes the dialog.
+     * Adds text limiters to the input fields.
+     */
     @FXML
     public void initialize() {
         TextFieldUtils.addTextLimiter(streetAddressField, STREET_ADDRESS_MAX_LENGTH);

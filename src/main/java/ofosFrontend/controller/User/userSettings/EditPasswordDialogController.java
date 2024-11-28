@@ -31,8 +31,12 @@ public class EditPasswordDialogController {
     private final UserService userService = new UserService();
     private final ResourceBundle bundle = LocalizationManager.getBundle();
 
+    /**
+     * Initializes the dialog.
+     * Hides the password fields by default.
+     */
     public void initialize() {
-        togglePasswordVisibility();  // Initialize with hidden passwords
+        togglePasswordVisibility();
     }
 
     /**

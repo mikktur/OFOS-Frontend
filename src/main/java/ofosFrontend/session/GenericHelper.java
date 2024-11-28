@@ -5,6 +5,9 @@ import javafx.concurrent.Task;
 import java.util.Locale;
 import java.util.function.Consumer;
 
+/**
+ * A helper class for generic methods.
+ */
 public class GenericHelper {
     /**
      * Executes a task and calls the onSuccess consumer if the task succeeds.

@@ -6,6 +6,9 @@ import javafx.scene.control.TextField;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
+/**
+ * Utility class for validating user input.
+ */
 public class Validations {
 
     /**
@@ -189,6 +192,10 @@ public class Validations {
         alert.showAndWait();
     }
 
+    /**
+     * Shows a success message dialog.
+     * @param message The success message to display.
+     */
     public static void showSuccessAlert(String message) {
         ResourceBundle bundle = LocalizationManager.getBundle();
         Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
