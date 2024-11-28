@@ -28,7 +28,7 @@ public class AdminNavController  extends AdminBasicController {
         mainController.loadDefaultContent();
     }
     @FXML
-    public void ALogout() {
+    public void AdminLogout() {
         mainController.logout();
     }
     @FXML
@@ -46,14 +46,12 @@ public class AdminNavController  extends AdminBasicController {
 
     private void setupLanguageSelector() {
         languageSelector.setValue(LocalizationManager.selectedLanguageProperty().get());
-
-        languageSelector.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) {
-                switchLanguage(newVal);
+        languageSelector.setOnAction(event -> {
+            String selectedLanguage = languageSelector.getValue();
+            if (selectedLanguage != null) {
+                switchLanguage(selectedLanguage);
             }
         });
-
-        languageSelector.valueProperty().bindBidirectional(LocalizationManager.selectedLanguageProperty());
     }
 
     private void updateLocalizedText() {

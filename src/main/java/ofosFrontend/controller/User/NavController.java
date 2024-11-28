@@ -72,14 +72,12 @@ public class NavController extends BasicController {
      */
     private void setupLanguageSelector() {
         languageSelector.setValue(LocalizationManager.selectedLanguageProperty().get());
-
-        languageSelector.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) {
-                switchLanguage(newVal);
+        languageSelector.setOnAction(event -> {
+            String selectedLanguage = languageSelector.getValue();
+            if (selectedLanguage != null) {
+                switchLanguage(selectedLanguage);
             }
         });
-
-        languageSelector.valueProperty().bindBidirectional(LocalizationManager.selectedLanguageProperty());
     }
 
     /**

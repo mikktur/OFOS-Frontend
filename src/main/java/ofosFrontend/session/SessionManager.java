@@ -84,9 +84,7 @@ public class SessionManager {
     }
 
     public Map<Integer, ShoppingCart> getCartMap() {
-        HashMap<Integer, ShoppingCart> newCartMap = new HashMap<>();
-        newCartMap.putAll(this.cartMap);
-        return newCartMap;
+        return cartMap;
     }
 
     public void removeCart(int id) {

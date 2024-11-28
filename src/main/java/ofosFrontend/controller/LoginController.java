@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ofosFrontend.AppManager;
+import ofosFrontend.model.LoginResponse;
 import ofosFrontend.service.UserService;
 import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
@@ -48,61 +49,50 @@ public class LoginController {
     public void userLogin() {
         new Thread(() -> {
             try {
-                Response response = userService.login(username.getText(), password.getText());
-                Platform.runLater(() -> handleLoginResponse(response));
+                LoginResponse loginResponse = userService.login(username.getText(), password.getText());
+                Platform.runLater(() -> handleLoginResponse(loginResponse));
             } catch (IOException e) {
                 Platform.runLater(() -> {
-                    logger.log(Level.ERROR,"Login failed.");
-
+                    logger.log(Level.ERROR, "Login failed.");
                     showError("Login error: " + e.getMessage());
                 });
             }
         }).start();
     }
 
-    private void handleLoginResponse(Response response) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
+    private void handleLoginResponse(LoginResponse loginResponse) {
 
-            if (response.isSuccessful()) {
+        if (loginResponse.getStatusCode() == 200) {
+            SessionManager manager = SessionManager.getInstance();
+            Map<String, String> body = loginResponse.getBody();
+            manager.setToken(body.get("token"));
+            manager.setUsername(body.get("username"));
+            manager.setRole(body.get("role"));
+            Object userIdObj = body.get("userId");
 
-                SessionManager manager = SessionManager.getInstance();
-                String responseBody = response.body().string();
-                Map<String, String> body = mapper.readValue(responseBody, Map.class);
-                manager.setToken(body.get("token"));
-                manager.setUsername(body.get("username"));
-                manager.setRole(body.get("role"));
-                Object userIdObj = body.get("userId");
+            //vois tehä simppelimmin
+            if (userIdObj instanceof String) {
 
-                //vois tehä simppelimmin
-                if (userIdObj instanceof String) {
+                manager.setUserId(Integer.parseInt((String) userIdObj));
+            } else if (userIdObj instanceof Integer) {
 
-                    manager.setUserId(Integer.parseInt((String) userIdObj));
-                } else if (userIdObj instanceof Integer) {
-
-                    manager.setUserId((Integer) userIdObj);
-                } else {
-
-                    throw new IllegalArgumentException("Invalid userId type: " + userIdObj);
-                }
-                logger.info("User ID: {}", manager.getUserId());
-
-                openMainStage();
-            } else if (response.code() == 401) { // Unauthorized error
-                ObjectMapper objectMapper = new ObjectMapper();
-                Map<String, String> errors = objectMapper.readValue(response.body().string(), Map.class);
-                updateLoginErrorLabel(errors);
+                manager.setUserId((Integer) userIdObj);
             } else {
-                showError("Unexpected response code: " + response.code());
-            }
-        } catch (IOException e) {
-            logger.log(Level.ERROR,"Failed to handle the response.");
 
-            showError("Error processing login response.");
+                throw new IllegalArgumentException("Invalid userId type: " + userIdObj);
+            }
+        } else if (loginResponse.getStatusCode() == 400) {
+            Map<String, String> errors = loginResponse.getBody();
+            updateLoginErrorLabel(errors);
+        } else {
+            showError("Unexpected response code: " + loginResponse.getStatusCode());
         }
 
-    }
 
+        openMainStage();
+
+
+    }
 
 
     @FXML
@@ -147,7 +137,7 @@ public class LoginController {
                 Platform.runLater(() -> handleRegisterResponse(response));
             } catch (IOException e) {
                 Platform.runLater(() -> {
-                    logger.log(Level.ERROR,"Registration failed.");
+                    logger.log(Level.ERROR, "Registration failed.");
                     showError("Registration error: " + e.getMessage());
                 });
             }
@@ -173,7 +163,7 @@ public class LoginController {
                 showError("Unexpected response code: " + response.code());
             }
         } catch (IOException e) {
-            logger.log(Level.ERROR,"Failed to handle the response.");
+            logger.log(Level.ERROR, "Failed to handle the response.");
             showError("Error processing registration response.");
         }
     }
@@ -214,8 +204,9 @@ public class LoginController {
         }
 
         try {
-            // Use the current ResourceBundle from LocalizationManager
+
             rootLoader.setResources(LocalizationManager.getBundle());
+            logger.debug("Loading main stage. : {}", LocalizationManager.getBundle().getLocale());
             BorderPane root = rootLoader.load();
 
             // Set up the main stage
@@ -233,7 +224,6 @@ public class LoginController {
             showError("Failed to open the main stage.");
         }
     }
-
 
 
     private void closeLoginStage() {

@@ -6,6 +6,7 @@ module ofosfrontend {
     requires java.prefs;
     requires org.apache.logging.log4j.core;
     requires com.fasterxml.jackson.databind;
+    requires java.logging;
 
     opens ofosFrontend.model to com.fasterxml.jackson.databind; // Open package to Jackson
     opens ofosFrontend.controller to javafx.fxml; // Existing configuration

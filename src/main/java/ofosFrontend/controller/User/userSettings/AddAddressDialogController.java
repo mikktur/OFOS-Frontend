@@ -29,7 +29,7 @@ public class AddAddressDialogController {
     private static final int CITY_MAX_LENGTH = 30;
     private static final int POSTAL_CODE_MAX_LENGTH = 5;
     private static final int INSTRUCTIONS_MAX_LENGTH = 50;
-
+    private int userId;
     ResourceBundle bundle = LocalizationManager.getBundle();
     private final DeliveryAddressService deliveryAddressService;
     public AddAddressDialogController(DeliveryAddressService deliveryAddressService) {
@@ -69,7 +69,9 @@ public class AddAddressDialogController {
         logger.info("New Address: {}", newAddress);
         saveDeliveryAddress(newAddress);
     }
-
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
     /**
      * Saves the new delivery address to the database.

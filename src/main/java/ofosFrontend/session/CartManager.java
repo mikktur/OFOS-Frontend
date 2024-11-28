@@ -39,15 +39,6 @@ public class CartManager {
     }
 
 
-    public void removeCart(int restaurantId) {
-        sessionManager.getCartMap().remove(restaurantId);
-    }
-
-
-    public void clearAllCarts() {
-        sessionManager.getCartMap().clear();
-    }
-
     // Checks and removes empty carts
     public void checkAndRemoveEmptyCarts() {
         Iterator<Map.Entry<Integer, ShoppingCart>> iterator = sessionManager.getCartMap().entrySet().iterator();

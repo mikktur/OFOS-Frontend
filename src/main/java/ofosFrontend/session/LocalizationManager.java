@@ -11,7 +11,7 @@ public class LocalizationManager {
     private static Locale locale = Locale.ENGLISH;
     private static ResourceBundle bundle = ResourceBundle.getBundle(BASE_NAME, locale);
 
-    // Map with key as language code and value as display name
+
     private static final Map<String, String> languageMap = Map.of(
             "en", "English",
             "fi", "Finnish",
@@ -20,6 +20,10 @@ public class LocalizationManager {
     );
 
     private static final StringProperty selectedLanguage = new SimpleStringProperty();
+
+    static {
+        selectedLanguage.set(languageMap.getOrDefault(locale.getLanguage(), "English"));
+    }
 
     private LocalizationManager() {
     }
@@ -45,12 +49,11 @@ public class LocalizationManager {
         try {
             locale = newLocale;
             bundle = ResourceBundle.getBundle(BASE_NAME, locale);
-            selectedLanguage.set(languageMap.getOrDefault(locale.getLanguage(), "English"));
         } catch (MissingResourceException e) {
             locale = Locale.ENGLISH;
             bundle = ResourceBundle.getBundle(BASE_NAME, locale);
-            selectedLanguage.set("English");
         }
+        selectedLanguage.set(languageMap.getOrDefault(locale.getLanguage(), "English"));
     }
 
 

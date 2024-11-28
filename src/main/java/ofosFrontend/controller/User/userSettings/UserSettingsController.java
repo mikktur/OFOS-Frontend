@@ -44,14 +44,22 @@ import static ofosFrontend.session.Validations.showError;
  */
 public class UserSettingsController extends BasicController {
 
-    @FXML private Label nameLabel;
-    @FXML private Label emailLabel;
-    @FXML private Label phoneNumberLabel;
-    @FXML private Label cityLabel;
-    @FXML private Label postalCodeLabel;
-    @FXML private Label addressLabel;
-    @FXML private VBox deliveryAddressContainer;
-    @FXML private Button changePassword;
+    @FXML
+    private Label nameLabel;
+    @FXML
+    private Label emailLabel;
+    @FXML
+    private Label phoneNumberLabel;
+    @FXML
+    private Label cityLabel;
+    @FXML
+    private Label postalCodeLabel;
+    @FXML
+    private Label addressLabel;
+    @FXML
+    private VBox deliveryAddressContainer;
+    @FXML
+    private Button changePassword;
     private static final Logger logger = LogManager.getLogger(UserSettingsController.class);
     ResourceBundle bundle = LocalizationManager.getBundle();
     private int userId;
@@ -95,6 +103,7 @@ public class UserSettingsController extends BasicController {
 
         executeTask(
                 userService.fetchUserData(userId),
+
                 contactInfo -> Platform.runLater(() -> updateContactInfoUI(contactInfo)),
                 () -> showError(bundle.getString("An_error_occurred_while_fetching_contact_information"))
         );
@@ -111,7 +120,6 @@ public class UserSettingsController extends BasicController {
             promptForContactInfo();
             return;
         }
-
         currentContactInfo = contactInfo;
         nameLabel.setText(contactInfo.getFirstName() + " " + contactInfo.getLastName());
         emailLabel.setText(contactInfo.getEmail());
@@ -310,7 +318,7 @@ public class UserSettingsController extends BasicController {
      */
     private VBox createAddressVBox(DeliveryAddress address) {
         VBox addressVBox = new VBox(2);
-        addressLabel.setText(bundle.getString("Address"));
+        Label addressLabel = new Label(bundle.getString("Address"));
         addressLabel.setStyle("-fx-font-weight: bold;");
 
         Label addressValue = new Label(address.getStreetAddress());
@@ -407,7 +415,8 @@ public class UserSettingsController extends BasicController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/addAddressDialog.fxml"));
             loader.setResources(LocalizationManager.getBundle());
             Parent root = loader.load();
-
+            AddAddressDialogController dialogController = loader.getController();
+            dialogController.setUserId(userId);
             Stage stage = new Stage();
             stage.setTitle(bundle.getString("Add_New_Address"));
             stage.setScene(new Scene(root));

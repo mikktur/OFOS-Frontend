@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class ProductService {
-    private static final String API_URL = "http://10.120.32.94:8000/"; //
+    private static final String API_URL = "http://localhost:8000/"; //
     private final OkHttpClient client = new OkHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
     private final Logger logger = LogManager.getLogger(ProductService.class);

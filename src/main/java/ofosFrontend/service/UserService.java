@@ -3,6 +3,7 @@ package ofosFrontend.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.concurrent.Task;
 import ofosFrontend.model.ContactInfo;
+import ofosFrontend.model.LoginResponse;
 import ofosFrontend.model.PasswordChangeDTO;
 import ofosFrontend.model.User;
 import ofosFrontend.session.SessionManager;
@@ -12,11 +13,12 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 
 public class UserService {
 
-    private static final String API_URL = "http://10.120.32.94:8000/api/";
+    private static final String API_URL = "http://localhost:8000/api/";
 
     private final OkHttpClient client = new OkHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
@@ -25,7 +27,7 @@ public class UserService {
     private static final String BEARER = "Bearer ";
     private static final String MEDIA_TYPE = "application/json; charset=utf-8";
 
-    public Response login(String username, String password) throws IOException {
+    public LoginResponse login(String username, String password) throws IOException {
 
         MediaType JSON = MediaType.get(MEDIA_TYPE);
 
@@ -39,8 +41,11 @@ public class UserService {
                 .post(body)
                 .build();
         try (Response response = client.newCall(request).execute()) {
+            int statusCode = response.code();
             if (response.isSuccessful()) {
-                return response;
+                String responseBody = response.body().string();
+                Map<String, String> bodyMap = mapper.readValue(responseBody, Map.class);
+                return new LoginResponse(statusCode, bodyMap);
             } else {
                 throw new IOException("Failed to login. Status code: " + response.code());
             }

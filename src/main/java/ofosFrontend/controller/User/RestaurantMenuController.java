@@ -80,7 +80,8 @@ public class RestaurantMenuController extends BasicController {
                 descriptionLabel.setText(product.getProductDesc());
                 priceLabel.setText(currencyFormatter.format(product.getProductPrice()));
                 addToCartButton.setOnMouseClicked(event -> addProductToCart(product));
-                imageView.setImage(new Image(URL + product.getPicture()));
+                Image image = new Image(URL + product.getPicture(),true);
+                imageView.setImage(image);
                 menuContainer.getChildren().add(card);
 
 

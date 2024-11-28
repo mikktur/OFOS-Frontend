@@ -15,7 +15,7 @@ import java.util.Map;
 
 
 public class OrderService {
-    private static final String API_URL = "http://10.120.32.94:8000/api/";
+    private static final String API_URL = "http://localhost:8000/api/";
     private final ObjectMapper mapper = new ObjectMapper();
     OkHttpClient client = new OkHttpClient();
 

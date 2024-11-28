@@ -373,7 +373,7 @@ public class CheckoutController extends BasicController {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle(bundle.getString("Order_confirmation"));
                     alert.setHeaderText(null);
-                    alert.setContentText(bundle.getString("Order_successful"));
+                    alert.setContentText(bundle.getString("Order_succesful"));
                     alert.showAndWait();
                     goToMain();
                 })

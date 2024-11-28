@@ -5,11 +5,14 @@ import javafx.concurrent.Task;
 import ofosFrontend.model.ContactInfo;
 import ofosFrontend.session.SessionManager;
 import okhttp3.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
 public class ContactInfoService {
-    private static final String API_URL = "http://10.120.32.94:8000/api/";
+    private static final String API_URL = "http://localhost:8000/api/";
+    private static final Logger logger = LogManager.getLogger(ContactInfoService.class);
     private final ObjectMapper mapper = new ObjectMapper();
     private final OkHttpClient client = new OkHttpClient();
 
@@ -22,7 +25,7 @@ public class ContactInfoService {
 
                 // Serialize the ContactInfo object to JSON
                 String requestBody = mapper.writeValueAsString(contactInfo);
-
+                logger.debug("Request body: " + requestBody);
                 // Build the POST request
                 Request request = new Request.Builder()
                         .url(url)

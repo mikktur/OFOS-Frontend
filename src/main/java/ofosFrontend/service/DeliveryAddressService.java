@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DeliveryAddressService {
-    private static final String API_URL = "http://10.120.32.94:8000/api/";
+    private static final String API_URL = "http://localhost:8000/api/";
     private final ObjectMapper mapper = new ObjectMapper();
     private final OkHttpClient client = new OkHttpClient();
     private final Logger logger = LogManager.getLogger(DeliveryAddressService.class);

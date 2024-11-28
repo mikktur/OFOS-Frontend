@@ -62,7 +62,7 @@ public final class GenericHelper {
                 newLocale = Locale.JAPAN;
                 break;
             case "Russian":
-                newLocale = new Locale("ru", "RU"); // Russian has no constant
+                newLocale = Locale.forLanguageTag("ru-RU");
                 break;
             default:
                 newLocale = Locale.US;

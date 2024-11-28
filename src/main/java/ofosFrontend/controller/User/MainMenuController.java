@@ -244,7 +244,8 @@ public class MainMenuController extends BasicController {
         Label descriptionLabel = (Label) card.lookup("#restaurantDesc");
 
         if (imageView != null) {
-            imageView.setImage(new Image(URL + restaurant.getPicture()));
+            Image image = new Image(URL + restaurant.getPicture(), true);
+            imageView.setImage(image);
         }
 
         if (descriptionLabel != null) {
