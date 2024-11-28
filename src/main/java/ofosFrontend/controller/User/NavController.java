@@ -11,8 +11,6 @@ import javafx.scene.text.Text;
 import ofosFrontend.session.GenericHelper;
 import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 
 /**
@@ -129,6 +127,10 @@ public class NavController extends BasicController {
         assert dropDownMenuBtn != null;
         dropDownMenuBtn.setOnMouseClicked(event -> handleDropDownClick());
         openCart.setOnMouseClicked(event -> handleCartClick());
+
+        usernameLabel.setOnMouseClicked(event -> {
+            mainController.loadSettingsView();
+        });
     }
 
     /**
@@ -153,8 +155,6 @@ public class NavController extends BasicController {
 
         redDot.setVisible(true);
     }
-
-
 
 
 }
