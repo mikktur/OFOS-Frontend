@@ -10,9 +10,18 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+/**
+ * Service class for handling contact information operations
+ */
 public class ContactInfoService {
     private static final String API_URL = "http://10.120.32.94:8000/api/";
 
+
+    /**
+     * Saves the contact information of the currently logged-in user.
+     * @param contactInfo The contact information to save.
+     * @return A Task that saves the contact information.
+     */
     public Task<Void> saveContactInfo(ContactInfo contactInfo) {
         return new Task<>() {
             @Override

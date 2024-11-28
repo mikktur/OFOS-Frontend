@@ -284,8 +284,8 @@ public class CheckoutController  extends BasicController {
 
         executeTask(
                 task,
-                this::processFetchedAddresses, // Action to perform on success
-                () -> showError(bundle.getString("Delivery_address_fetch_error")) // Action to perform on failure
+                this::processFetchedAddresses,
+                () -> showError(bundle.getString("Delivery_address_fetch_error"))
         );
     }
 

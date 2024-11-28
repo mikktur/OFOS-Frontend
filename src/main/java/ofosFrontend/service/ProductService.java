@@ -10,15 +10,21 @@ import okhttp3.*;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Service class for handling product operations
+ */
 public class ProductService {
     private static final String API_URL = "http://10.120.32.94:8000/"; //
     private final OkHttpClient client = new OkHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
 
+    /**
+     * Fetches all products of a selected restaurant.
+     * @param id The ID of the restaurant.
+     * @return A list of Product objects.
+     * @throws IOException If an I/O error occurs.
+     */
     public List<Product> getProductsByRID(int id) throws IOException {
-        MediaType JSON = MediaType.get("application/json; charset=utf-8");
-
-        // Get the current language code dynamically
         String language = LocalizationManager.getLanguageCode();
 
         Request request = new Request.Builder()
@@ -31,7 +37,13 @@ public class ProductService {
         return mapper.readValue(responseBody, mapper.getTypeFactory().constructCollectionType(List.class, Product.class));
     }
 
-
+    /**
+     * Adds a product to a restaurant.
+     * @param product The product to add.
+     * @param restaurantId The ID of the restaurant.
+     * @throws IOException If an I/O error occurs.
+     *
+     */
     public void addProductToRestaurant(Product product, int restaurantId) throws IOException {
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
@@ -54,14 +66,16 @@ public class ProductService {
         }
     }
 
+    /**
+     * Updates a product.
+     * @param product The product to update.
+     * @throws IOException If an I/O error occurs.
+     */
     public void updateProduct(Product product) throws IOException {
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
         String productJson = mapper.writeValueAsString(product);
         SessionManager sessionManager = SessionManager.getInstance();
         String bearerToken = sessionManager.getToken();
-        System.out.println("Frontti testi");
-
-        System.out.println("Body testi: " + productJson);
 
         RequestBody body = RequestBody.create(productJson, JSON);
 
@@ -78,6 +92,12 @@ public class ProductService {
         }
     }
 
+    /**
+     * Deletes a product.
+     * @param product The product to delete.
+     * @param id The ID of the restaurant.
+     * @throws IOException If an I/O error occurs.
+     */
     public void deleteProduct(Product product,int id) throws IOException {
         SessionManager sessionManager = SessionManager.getInstance();
         String bearerToken = sessionManager.getToken();

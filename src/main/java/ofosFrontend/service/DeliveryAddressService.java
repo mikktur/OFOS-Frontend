@@ -16,9 +16,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Service class for handling delivery address operations
+ */
 public class DeliveryAddressService {
     private static final String API_URL = "http://10.120.32.94:8000/api/";
 
+    /**
+     * Saves a delivery address to the database.
+     * @param address The delivery address to save.
+     * @param onSuccess The logic to execute on success.
+     * @param onFailure The logic to execute on failure.
+     */
     public void saveDeliveryAddress(DeliveryAddress address, Runnable onSuccess, Runnable onFailure) {
         try {
             System.out.println("Saving delivery address...");
@@ -41,13 +50,13 @@ public class DeliveryAddressService {
 
             responseFuture.thenAccept(response -> {
                 if (response.statusCode() == 200) {
-                    Platform.runLater(onSuccess);  // Execute success logic on the UI thread
+                    Platform.runLater(onSuccess);
                 } else {
                     Platform.runLater(() -> onFailure.run());
                 }
             }).exceptionally(ex -> {
                 ex.printStackTrace();
-                Platform.runLater(onFailure);  // Handle failure
+                Platform.runLater(onFailure);
                 return null;
             });
         } catch (Exception e) {
@@ -56,6 +65,11 @@ public class DeliveryAddressService {
         }
     }
 
+    /**
+     * Fetches the delivery addresses of the currently logged-in user.
+     * @param userId The ID of the user.
+     * @return A Task that fetches the delivery addresses.
+     */
     public Task<List<DeliveryAddress>> fetchDeliveryAddresses(int userId) {
         return new Task<>() {
             @Override
@@ -81,6 +95,12 @@ public class DeliveryAddressService {
         };
     }
 
+    /**
+     * Sets the default delivery address of the currently logged-in user.
+     * @param address The delivery address to set as default.
+     * @param userId The ID of the user.
+     * @return A Task that sets the default delivery address.
+     */
     public Task<Void> setDefaultAddress(DeliveryAddress address, int userId) {
         return new Task<>() {
             @Override
@@ -114,6 +134,11 @@ public class DeliveryAddressService {
         };
     }
 
+    /**
+     * Deletes a delivery address from the database.
+     * @param deliveryAddressId The ID of the delivery address to delete.
+     * @return A Task that deletes the delivery address.
+     */
     public Task<Void> deleteAddress(int deliveryAddressId) {
         return new Task<>() {
             @Override
@@ -138,6 +163,11 @@ public class DeliveryAddressService {
         };
     }
 
+    /**
+     * Updates a delivery address in the database.
+     * @param address The delivery address to update.
+     * @return A Task that updates the delivery address.
+     */
     public Task<Void> updateDeliveryAddress(DeliveryAddress address) {
         return new Task<>() {
             @Override
