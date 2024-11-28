@@ -11,7 +11,7 @@ public class SessionManager {
     private int userId;
     private String username;
     private String token;
-    private final HashMap<Integer, ShoppingCart> cartMap;
+    private final Map<Integer, ShoppingCart> cartMap;
     private String role;
 
     private SessionManager() {

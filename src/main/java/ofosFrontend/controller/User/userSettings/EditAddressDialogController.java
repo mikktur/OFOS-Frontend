@@ -10,6 +10,8 @@ import ofosFrontend.service.DeliveryAddressService;
 import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.TextFieldUtils;
 import ofosFrontend.session.Validations;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ResourceBundle;
 
@@ -29,7 +31,7 @@ public class EditAddressDialogController {
     private TextField postalCodeField;
     @FXML
     private TextArea instructionsArea;
-
+    private final Logger logger = LogManager.getLogger(EditAddressDialogController.class);
     private static final int STREET_ADDRESS_MAX_LENGTH = 70;
     private static final int CITY_MAX_LENGTH = 30;
     private static final int POSTAL_CODE_MAX_LENGTH = 10;
@@ -102,7 +104,7 @@ public class EditAddressDialogController {
 
         task.setOnFailed(event -> {
             Throwable exception = task.getException();
-            exception.printStackTrace();
+            logger.error("Failed to update delivery address", exception);
             Platform.runLater(() -> Validations.showError(bundle.getString("Update_address_error")));
         });
 

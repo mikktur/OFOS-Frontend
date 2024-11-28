@@ -13,6 +13,8 @@ import ofosFrontend.model.OrderHistory;
 import ofosFrontend.service.OrderHistorySorter;
 import ofosFrontend.service.OrderService;
 import ofosFrontend.session.LocalizationManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -40,7 +42,7 @@ public class OrderHistoryController {
     private Label historyPriceLabel;
     @FXML
     private Label historyDateLabel;
-
+    private static final Logger logger = LogManager.getLogger(OrderHistoryController.class);
     private boolean sortOrderIdAscending = true;
     private boolean sortRestaurantAscending = true;
     private boolean sortPriceAscending = true;
@@ -89,7 +91,9 @@ public class OrderHistoryController {
             try {
                 action.run();
             } catch (IOException | InterruptedException e) {
-                throw new RuntimeException(e);
+                Thread.currentThread().interrupt();
+                logger.error("Error sorting order history", e);
+                showError(bundle.getString("Order_sort_error"));
             }
         });
     }
@@ -109,7 +113,7 @@ public class OrderHistoryController {
      * @throws InterruptedException If the thread is interrupted.
      * @see OrderHistorySorter#sortOrderHistoryById(Map, boolean)
      */
-    private void handleSortById() throws IOException, InterruptedException {
+    private void handleSortById() throws IOException {
         loadSortedOrderHistory(OrderHistorySorter.sortOrderHistoryById(orderService.getHistory(), sortOrderIdAscending));
         sortOrderIdAscending = !sortOrderIdAscending;
     }
@@ -121,7 +125,7 @@ public class OrderHistoryController {
      * @throws InterruptedException If the thread is interrupted.
      * @see OrderHistorySorter#sortOrderHistoryByRestaurant(Map, boolean)
      */
-    private void handleSortByRestaurant() throws IOException, InterruptedException {
+    private void handleSortByRestaurant() throws IOException{
         loadSortedOrderHistory(OrderHistorySorter.sortOrderHistoryByRestaurant(orderService.getHistory(), sortRestaurantAscending));
         sortRestaurantAscending = !sortRestaurantAscending;
     }
@@ -133,7 +137,7 @@ public class OrderHistoryController {
      * @throws InterruptedException If the thread is interrupted.
      * @see OrderHistorySorter#sortOrderHistoryByPrice(Map, boolean)
      */
-    private void handleSortByPrice() throws IOException, InterruptedException {
+    private void handleSortByPrice() throws IOException {
         loadSortedOrderHistory(OrderHistorySorter.sortOrderHistoryByPrice(orderService.getHistory(), sortPriceAscending));
         sortPriceAscending = !sortPriceAscending;
     }
@@ -145,7 +149,7 @@ public class OrderHistoryController {
      * @throws InterruptedException If the thread is interrupted.
      * @see OrderHistorySorter#sortOrderHistoryByDate(Map, boolean)
      */
-    private void handleSortByDate() throws IOException, InterruptedException {
+    private void handleSortByDate() throws IOException{
         loadSortedOrderHistory(OrderHistorySorter.sortOrderHistoryByDate(orderService.getHistory(), sortDateAscending));
         sortDateAscending = !sortDateAscending;
     }
@@ -182,8 +186,9 @@ public class OrderHistoryController {
             Map<Integer, List<OrderHistory>> orderHistoryMap = orderService.getHistory();
             orderHistoryMap = OrderHistorySorter.sortOrderHistoryById(orderHistoryMap, false); // Default to descending order
             displayOrderHistory(orderHistoryMap);
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            Thread.currentThread().interrupt();
+            logger.error("Failed to fetch order history", e);
             showError(bundle.getString("Order_fetch_error"));
         }
     }
@@ -431,7 +436,7 @@ public class OrderHistoryController {
             Date parsedDate = new SimpleDateFormat("yyyy-MM-dd").parse(rawOrderDate);
             return dateFormatter.format(parsedDate);
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error("Failed to parse order date", e);
             return "Invalid date";
         }
     }

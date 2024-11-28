@@ -34,7 +34,7 @@ public class AdminMenuController extends AdminBasicController {
 
     @FXML
     public void initialize() {
-        logger.log(Level.INFO,"Initializing :");
+        logger.log(Level.INFO, "Initializing :");
     }
 
     public void setRestaurantID(int restaurantID, String restaurantName) {
@@ -59,7 +59,7 @@ public class AdminMenuController extends AdminBasicController {
                 productListVBox.getChildren().add(productBox);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to load products", e);
         }
     }
 
@@ -186,7 +186,7 @@ public class AdminMenuController extends AdminBasicController {
                 productService.addProductToRestaurant(product, restaurantID);
                 loadProducts();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Failed to add product", e);
             }
         });
     }
@@ -260,7 +260,7 @@ public class AdminMenuController extends AdminBasicController {
                 productService.updateProduct(updatedProduct);
                 loadProducts();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Failed to update product: {}", e.getMessage());
             }
         });
     }
@@ -270,10 +270,10 @@ public class AdminMenuController extends AdminBasicController {
         String deleteDialogTitle = bundle.getString("DeleteTitle");
         String deleteFail = bundle.getString("DeleteFail");
         try {
-            productService.deleteProduct(product,restaurantID);
+            productService.deleteProduct(product, restaurantID);
             loadProducts();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to delete product", e);
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle(deleteDialogTitle);
             alert.setHeaderText(deleteFail);

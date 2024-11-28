@@ -3,7 +3,6 @@ package ofosFrontend.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -32,12 +31,6 @@ public class LoginController {
     @FXML
     private Label loginPasswordErrorLabel;
     @FXML
-    private Button signUpButton;
-    @FXML
-    private Button createUserButton;
-    @FXML
-    private Button goBackButton;
-    @FXML
     private TextField username;
     @FXML
     private PasswordField password;
@@ -52,15 +45,15 @@ public class LoginController {
     }
 
     @FXML
-    public void userLogin(ActionEvent event) {
+    public void userLogin() {
         new Thread(() -> {
             try {
                 Response response = userService.login(username.getText(), password.getText());
                 Platform.runLater(() -> handleLoginResponse(response));
             } catch (IOException e) {
                 Platform.runLater(() -> {
-                    logger.error("Login failed.");
-                    e.printStackTrace();
+                    logger.log(Level.ERROR,"Login failed.");
+
                     showError("Login error: " + e.getMessage());
                 });
             }
@@ -104,7 +97,7 @@ public class LoginController {
             }
         } catch (IOException e) {
             logger.log(Level.ERROR,"Failed to handle the response.");
-            e.printStackTrace();
+
             showError("Error processing login response.");
         }
 
@@ -130,7 +123,7 @@ public class LoginController {
     }
 
     @FXML
-    private void backToLogin(ActionEvent event) throws IOException {
+    private void backToLogin() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/loginUI.fxml"));
         Parent root = loader.load();
 
@@ -147,7 +140,7 @@ public class LoginController {
     }
 
     @FXML
-    public void registerUser(ActionEvent event) {
+    public void registerUser() {
         new Thread(() -> {
             try {
                 Response response = userService.register(username.getText(), password.getText());
@@ -155,7 +148,6 @@ public class LoginController {
             } catch (IOException e) {
                 Platform.runLater(() -> {
                     logger.log(Level.ERROR,"Registration failed.");
-                    e.printStackTrace();
                     showError("Registration error: " + e.getMessage());
                 });
             }
@@ -182,7 +174,6 @@ public class LoginController {
             }
         } catch (IOException e) {
             logger.log(Level.ERROR,"Failed to handle the response.");
-            e.printStackTrace();
             showError("Error processing registration response.");
         }
     }
@@ -238,7 +229,7 @@ public class LoginController {
             // Close the login stage
             closeLoginStage();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Failed to open the main stage.", e);
             showError("Failed to open the main stage.");
         }
     }

@@ -78,7 +78,7 @@ public class ShoppingCartController extends BasicController {
 
         cartRoot.getProperties().put("controller", this);
         logger.info("ShoppingCartController initialized");
-        logger.info("RID: " + rid);
+        logger.info("RID: {}", rid);
         addListeners();
     }
 
@@ -134,7 +134,7 @@ public class ShoppingCartController extends BasicController {
         try {
             loadCartItems();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error loading cart items {}", e.getMessage());
         }
 
     }
@@ -208,7 +208,7 @@ public class ShoppingCartController extends BasicController {
 
                     cartItemContainer.getChildren().add(cartCardNode);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error("Error loading cart items", e);
                 }
             }
         }
@@ -216,7 +216,7 @@ public class ShoppingCartController extends BasicController {
 
     //used to update which cart to show in the ui, if rid is 0, all carts are shown and not specific items.
     public void updateCart() {
-        logger.info("Updating cart. Current RID: " + rid);
+        logger.info("Updating cart. Current RID: {}", rid);
         cartItemContainer.getChildren().clear();
 
         if (rid != 0) {
@@ -224,7 +224,7 @@ public class ShoppingCartController extends BasicController {
                 cartCheckout.setVisible(true);
                 loadCartItems();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Error loading cart items", e);
             }
         } else {
             try {
@@ -232,7 +232,7 @@ public class ShoppingCartController extends BasicController {
                 cartItemContainer.getChildren().clear();
                 loadAllUserCartItems();
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("Error loading cart items", e);
             }
         }
     }

@@ -29,6 +29,7 @@ public class AdminController {
     @FXML
     private BorderPane ownerRoot;
     private AdminViewFactory adminViewFactory;
+
     public AdminController() {
         // required by FXML loader
     }
@@ -73,7 +74,7 @@ public class AdminController {
                 logger.log(Level.INFO, "navController is null!");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error setting up controllers: {}", e.getMessage());
         }
     }
     public void logout() {
@@ -92,7 +93,7 @@ public class AdminController {
             stage.show();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to load login view: {}", e.getMessage());
         }
         adminSessionManager.logout();
     }

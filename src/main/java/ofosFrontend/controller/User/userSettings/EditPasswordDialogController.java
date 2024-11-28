@@ -10,6 +10,8 @@ import ofosFrontend.model.PasswordChangeDTO;
 import ofosFrontend.service.UserService;
 import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.Validations;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ResourceBundle;
 
@@ -27,7 +29,7 @@ public class EditPasswordDialogController {
     @FXML private TextField newPasswordField;
     @FXML private PasswordField newPasswordHiddenField;
     @FXML private CheckBox showPasswordCheckBox;
-
+    private final Logger logger = LogManager.getLogger(EditPasswordDialogController.class);
     private final UserService userService = new UserService();
     private final ResourceBundle bundle = LocalizationManager.getBundle();
 
@@ -99,7 +101,7 @@ public class EditPasswordDialogController {
 
         task.setOnFailed(event -> {
             Throwable exception = task.getException();
-            exception.printStackTrace();
+            logger.error("Failed to update password", exception);
             Platform.runLater(() -> {
                 String errorMessage = exception.getMessage();
                 if (errorMessage.contains("Unauthorized request")) {

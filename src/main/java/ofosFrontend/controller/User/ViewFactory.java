@@ -38,7 +38,7 @@ public class ViewFactory {
 
             return root;
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error loading checkout view");
             return null;
         }
     }
@@ -51,7 +51,7 @@ public class ViewFactory {
             currentView = SETTINGS;
             return root;
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error loading settings view");
             return null;
         }
     }
@@ -63,7 +63,7 @@ public class ViewFactory {
             currentView = ORDERHISTORY;
             return root;
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error loading order history view");
             return null;
         }
     }
@@ -78,7 +78,7 @@ public class ViewFactory {
             currentView = RESTAURANT;
             return newCenterContent;
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error loading restaurant view");
             return null;
         }
     }
@@ -100,7 +100,7 @@ public class ViewFactory {
             currentView = MAIN;
             return mainContent;
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error loading default content");
             return null;
         }
     }
@@ -113,7 +113,7 @@ public class ViewFactory {
             currentView = ADMINDASHBOARD;
             return root;
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error loading admin dashboard view");
             return null;
         }
     }

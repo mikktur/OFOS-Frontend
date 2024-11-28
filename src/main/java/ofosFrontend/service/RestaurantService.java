@@ -8,10 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +19,7 @@ public class RestaurantService {
     private final OkHttpClient client = new OkHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
     private static final String MEDIA_TYPE = "application/json; charset=utf-8";
+
     public List<Restaurant> getAllRestaurants() throws IOException {
 
 
@@ -49,9 +47,11 @@ public class RestaurantService {
                 .build();
         Response response = client.newCall(request).execute();
         String responseBody = response.body().string();
-        List<Restaurant> restaurants = mapper.readValue(responseBody, mapper.getTypeFactory().constructCollectionType(List.class, Restaurant.class));
-        return restaurants;
+
+        return mapper.readValue(responseBody, mapper.getTypeFactory().constructCollectionType(List.class, Restaurant.class));
+
     }
+
     public void updateRestaurantInfo(Restaurant restaurant) throws IOException {
         MediaType JSON = MediaType.get(MEDIA_TYPE);
 
@@ -132,7 +132,6 @@ public class RestaurantService {
         String url = API_URL + "restaurants/createNew";
         String token = SessionManager.getInstance().getToken();
 
-        // Create JSON representation of the restaurant
         String requestBody = String.format(
                 "{\"name\":\"%s\",\"phone\":\"%s\",\"picture\":\"%s\",\"address\":\"%s\",\"hours\":\"%s\",\"ownerId\":%d}",
                 restaurant.getRestaurantName(),
@@ -143,35 +142,27 @@ public class RestaurantService {
                 restaurant.getOwnerId()
         );
 
-        try {
-            // Create the HTTP client
-            HttpClient client = HttpClient.newHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .post(RequestBody.create(requestBody, MediaType.get("application/json")))
+                .build();
 
-            // Build the HTTP request
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .header("Content-Type", "application/json")
-                    .header("Authorization", "Bearer " + token)
-                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                    .build();
-
-            // Send the request and get the response
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            // Check the response status
-            if (response.statusCode() == 200) {
-                logger.info("Restaurant created successfully: " + response.body());
-                return true;
-            } else {
-                logger.error("Failed to create restaurant. Status code: {}", response.statusCode());
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                logger.error("Failed to create restaurant. Status code: {}", response.code());
                 return false;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false; // Failure
+
+            String responseBody = response.body().string();
+            logger.info("Restaurant created successfully: {}", responseBody);
+            return true;
+        } catch (IOException e) {
+            logger.error("Error while saving restaurant: {}", e.getMessage());
+            return false;
         }
     }
-
 
 }
 

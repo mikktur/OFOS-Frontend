@@ -1,12 +1,14 @@
 package ofosFrontend.session;
 
 import javafx.concurrent.Task;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Locale;
 import java.util.function.Consumer;
 
 public final class GenericHelper {
-
+    private static final Logger logger = LogManager.getLogger(GenericHelper.class);
     private GenericHelper() {
         throw new IllegalStateException("Utility class");
     }
@@ -30,7 +32,7 @@ public final class GenericHelper {
         task.setOnFailed(event -> {
             Throwable exception = task.getException();
             if (exception != null) {
-                exception.printStackTrace();
+                logger.error("Task failed", exception);
             }
             onFailure.run();
         });
@@ -57,13 +59,13 @@ public final class GenericHelper {
                 newLocale = Locale.forLanguageTag("fi-FI");
                 break;
             case "Japanese":
-                newLocale = Locale.JAPAN; // Predefined constant
+                newLocale = Locale.JAPAN;
                 break;
             case "Russian":
                 newLocale = new Locale("ru", "RU"); // Russian has no constant
                 break;
             default:
-                newLocale = Locale.US; // Predefined constant
+                newLocale = Locale.US;
                 break;
         }
 

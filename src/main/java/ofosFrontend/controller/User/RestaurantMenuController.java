@@ -18,6 +18,8 @@ import ofosFrontend.model.ShoppingCart;
 import ofosFrontend.service.ProductService;
 import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.text.NumberFormat;
@@ -45,7 +47,7 @@ public class RestaurantMenuController extends BasicController {
     private Text restaurantHours;
     @FXML
     private ImageView restaurantImage;
-
+    private static final Logger logger = LogManager.getLogger(RestaurantMenuController.class);
     private static final String URL = "http://10.120.32.94:8000/images/";
     private static final String RURL = "http://10.120.32.94:8000/images/restaurant/";
 
@@ -90,7 +92,7 @@ public class RestaurantMenuController extends BasicController {
 
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to load product cards", e);
         }
     }
 

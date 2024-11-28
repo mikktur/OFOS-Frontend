@@ -11,10 +11,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.List;
 
 
@@ -34,16 +30,22 @@ public class UserService {
         MediaType JSON = MediaType.get(MEDIA_TYPE);
 
         User user = new User(username, password);
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonBody = objectMapper.writeValueAsString(user);
+
+        String jsonBody = mapper.writeValueAsString(user);
 
         RequestBody body = RequestBody.create(jsonBody, JSON);
         Request request = new Request.Builder()
                 .url(API_URL + "auth/login")
                 .post(body)
                 .build();
+        try (Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                return response;
+            } else {
+                throw new IOException("Failed to login. Status code: " + response.code());
+            }
+        }
 
-        return client.newCall(request).execute();
     }
 
     public Response register(String username, String password) throws IOException {
@@ -51,16 +53,21 @@ public class UserService {
         MediaType JSON = MediaType.get(MEDIA_TYPE);
 
         User user = new User(username, password);
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonBody = objectMapper.writeValueAsString(user);
+
+        String jsonBody = mapper.writeValueAsString(user);
 
         RequestBody body = RequestBody.create(jsonBody, JSON);
         Request request = new Request.Builder()
                 .url(API_URL + "users/create")
                 .post(body)
                 .build();
-
-        return client.newCall(request).execute();
+        try (Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                return response;
+            } else {
+                throw new IOException("Failed to register. Status code: " + response.code());
+            }
+        }
     }
 
     public Task<ContactInfo> fetchUserData(int userId) {
@@ -79,16 +86,14 @@ public class UserService {
                 try (Response response = client.newCall(request).execute()) {
                     if (response.code() == 200) {
 
-                        ObjectMapper objectMapper = new ObjectMapper();
-                        return objectMapper.readValue(response.body().string(), ContactInfo.class);
+
+                        return mapper.readValue(response.body().string(), ContactInfo.class);
                     } else if (response.code() == 404) {
 
                         return null;
                     } else {
-                        throw new Exception("Failed to fetch contact information. Status code: " + response.code());
+                        throw new IOException("Failed to fetch contact information. Status code: " + response.code());
                     }
-                } catch (IOException e) {
-                    throw new Exception("Network error occurred while fetching user data", e);
                 }
             }
         };
@@ -97,12 +102,11 @@ public class UserService {
     public Task<Void> updatePassword(PasswordChangeDTO passwordDTO) {
         return new Task<>() {
             @Override
-            protected Void call() throws Exception {
+            protected Void call() throws IOException {
                 String url = API_URL + "users/updatePassword";
                 String token = SessionManager.getInstance().getToken();
 
-                ObjectMapper objectMapper = new ObjectMapper();
-                String requestBody = objectMapper.writeValueAsString(passwordDTO);
+                String requestBody = mapper.writeValueAsString(passwordDTO);
 
                 Request request = new Request.Builder()
                         .url(url)
@@ -112,14 +116,11 @@ public class UserService {
                         .build();
 
                 try (Response response = client.newCall(request).execute()) {
-                    if (response.code() == 400) {
-                        throw new Exception("Unauthorized request. Status code: " + response.code());
-                    } else if (!response.isSuccessful()) {
-                        throw new Exception("Failed to update password. Status code: " + response.code() +
-                                ". Response body: " + response.body().string());
+                    if (!response.isSuccessful()) {
+                        throw new IOException("Failed to update password. Status code: " + response.code());
                     }
                 } catch (IOException e) {
-                    throw new Exception("Network error occurred while updating password", e);
+                    throw new IOException("Network error occurred while updating password", e);
                 }
 
                 return null;
@@ -147,7 +148,7 @@ public class UserService {
     public Task<Void> deleteUser() {
         return new Task<>() {
             @Override
-            protected Void call() throws Exception {
+            protected Void call() throws IOException {
                 String url = API_URL + "users/delete";
                 String token = SessionManager.getInstance().getToken();
 
@@ -159,12 +160,10 @@ public class UserService {
 
                 try (Response response = client.newCall(request).execute()) {
                     if (response.code() == 418) { // Status code for "I'm a teapot"
-                        throw new Exception("Owner accounts cannot be deleted. Status code: " + response.code());
+                        throw new IOException("Owner accounts cannot be deleted. Status code: " + response.code());
                     } else if (!response.isSuccessful()) {
-                        throw new Exception("Failed to delete user. Status code: " + response.code());
+                        throw new IOException("Failed to delete user. Status code: " + response.code());
                     }
-                } catch (IOException e) {
-                    throw new Exception("Network error occurred while trying to delete user", e);
                 }
 
                 return null;
@@ -238,8 +237,8 @@ public class UserService {
                 return false;
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            logger.error("Failed to change role. Network error occurred: {}", e.getMessage());
             return false;
         }
     }

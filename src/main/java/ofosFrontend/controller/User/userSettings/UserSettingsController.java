@@ -27,6 +27,8 @@ import ofosFrontend.service.DeliveryAddressService;
 import ofosFrontend.service.UserService;
 import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.*;
@@ -50,7 +52,7 @@ public class UserSettingsController extends BasicController {
     @FXML private Label addressLabel;
     @FXML private VBox deliveryAddressContainer;
     @FXML private Button changePassword;
-
+    private static final Logger logger = LogManager.getLogger(UserSettingsController.class);
     ResourceBundle bundle = LocalizationManager.getBundle();
     private int userId;
     private List<DeliveryAddress> deliveryAddressesList = new ArrayList<>();
@@ -181,7 +183,8 @@ public class UserSettingsController extends BasicController {
             fetchUserData();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error opening contact info dialog", e);
+
             showError(bundle.getString("Contact_info_error"));
         }
     }
@@ -414,7 +417,7 @@ public class UserSettingsController extends BasicController {
             // After the dialog is closed, refresh the addresses
             fetchDeliveryAddresses();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error opening add address dialog", e);
             showError(bundle.getString("Address_dialog_error"));
         }
     }
@@ -441,7 +444,7 @@ public class UserSettingsController extends BasicController {
 
             fetchDeliveryAddresses();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error opening edit address dialog", e);
             showError(bundle.getString("Edit_address_dialog_error"));
         }
     }
@@ -492,7 +495,7 @@ public class UserSettingsController extends BasicController {
 
             task.setOnFailed(e -> {
                 Throwable exception = task.getException();
-                exception.printStackTrace();
+                logger.error("Error setting default address", exception);
                 showError(bundle.getString("Set_default_address_error"));
             });
 
@@ -534,7 +537,7 @@ public class UserSettingsController extends BasicController {
 
         task.setOnFailed(event -> {
             Throwable exception = task.getException();
-            exception.printStackTrace();
+            logger.error("Error deleting address", exception);
             Platform.runLater(() -> showError(bundle.getString("FailToDelete")));
         });
 
@@ -545,11 +548,10 @@ public class UserSettingsController extends BasicController {
 
     /**
      * Handles the Edit Contact Info button action.
-     * @param actionEvent The ActionEvent object that triggered the event.
      * Opens the contact info dialog for the user to edit their contact information.
      */
     @FXML
-    private void handleEditContactInfo(ActionEvent actionEvent) {
+    private void handleEditContactInfo() {
         openContactInfoDialog(currentContactInfo);
     }
 
@@ -581,18 +583,17 @@ public class UserSettingsController extends BasicController {
             fetchUserData();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error opening change password dialog", e);
             showError(bundle.getString("Open_changePW_dialog"));
         }
     }
 
     /**
      * Handles the Delete Account button action.
-     * @param actionEvent The ActionEvent object that triggered the event.
      * Prompts the user to confirm the deletion of their account.
      * If the user confirms, deletes the account from the database.
      */
-    public void handleDeleteAccount(ActionEvent actionEvent) {
+    public void handleDeleteAccount() {
         // Create a confirmation dialog
         Dialog<String> confirmationDialog = new Dialog<>();
         confirmationDialog.setTitle(bundle.getString("Delete_account_confirm_title")); // Localized title

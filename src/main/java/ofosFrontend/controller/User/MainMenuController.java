@@ -152,7 +152,7 @@ public class MainMenuController extends BasicController {
      * @param e the exception that occurred
      */
     private void handleLoadingError(IOException e) {
-        e.printStackTrace(); // Log the error
+        logger.error("Error loading restaurants: {}", e.getMessage());
         Label errorLabel = new Label(bundle.getString("Restaurant_loading_error"));
         restaurantFlowPane.getChildren().add(errorLabel);
     }
@@ -228,7 +228,7 @@ public class MainMenuController extends BasicController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/restaurant_card.fxml"));
             return loader.load();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to load restaurant card FXML", e);
             return null;
         }
     }

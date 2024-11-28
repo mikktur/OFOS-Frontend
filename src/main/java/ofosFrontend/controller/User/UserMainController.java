@@ -11,7 +11,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import ofosFrontend.model.Restaurant;
-import ofosFrontend.session.CartManager;
 import ofosFrontend.session.LocalizationManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -131,7 +130,9 @@ public class UserMainController {
     public void reloadDropDown() {
         try {
             boolean isVisible = dropDownRoot.isVisible();
-            if (isVisible) toggleSideMenu();
+            if (isVisible) {
+                toggleSideMenu();
+            }
             root.setLeft(null);
             FXMLLoader dropDownLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/dropDownUI.fxml"));
             dropDownLoader.setResources(LocalizationManager.getBundle());
@@ -175,7 +176,7 @@ public class UserMainController {
             }
             shoppingCartController.updateCart();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 

@@ -89,13 +89,14 @@ public class AdminDashboardController {
             List<User> users = userService.getAllUsers();
 
             for (User user : users) {
-                if (user.getEnabled())
+                if (user.getEnabled()) {
                     userSelector.getItems().add(user.getUsername());
+                }
             }
 
         } catch (IOException e) {
             showError(bundle.getString(FAILED_TO_LOAD_USER));
-            e.printStackTrace();
+            logger.error("Failed to load users: {}", e.getMessage());
         }
     }
 
@@ -112,7 +113,7 @@ public class AdminDashboardController {
 
         } catch (IOException e) {
             showError(bundle.getString(FAILED_TO_LOAD_USER));
-            e.printStackTrace();
+            logger.error("Failed to load users: {}", e.getMessage());
         }
     }
 
@@ -126,7 +127,7 @@ public class AdminDashboardController {
 
         } catch (IOException e) {
             showError(bundle.getString("Failed_to_load_restaurants"));
-            e.printStackTrace();
+            logger.error("Failed to load restaurants: {}", e.getMessage());
         }
     }
 
@@ -166,7 +167,7 @@ public class AdminDashboardController {
                 }
             } catch (IOException e) {
                 showError(bundle.getString(FAILED_TO_LOAD_USER));
-                e.printStackTrace();
+                logger.error("Failed to load user: {}", e.getMessage());
             }
         }
     }
@@ -187,7 +188,7 @@ public class AdminDashboardController {
                 }
             } catch (IOException e) {
                 showError(bundle.getString(FAILED_TO_LOAD_USER));
-                e.printStackTrace();
+                logger.error("Failed to load user: {}", e.getMessage());
             }
         }
     }
@@ -242,7 +243,7 @@ public class AdminDashboardController {
             }
         } catch (IOException e) {
             showError(bundle.getString(FAILED_TO_LOAD_USER));
-            e.printStackTrace();
+            logger.error("Failed to load user: {}", e.getMessage());
         }
 
         loadUsers();
@@ -296,7 +297,7 @@ public class AdminDashboardController {
                 failureAlert.setHeaderText(bundle.getString(ERROR_HEADER));
                 failureAlert.setContentText(bundle.getString("ChangeOwnerFailed") + "\n\n" + e.getMessage());
                 failureAlert.showAndWait();
-                e.printStackTrace();
+                logger.error("Failed to change owner: {}", e.getMessage());
             }
         } else {
             Alert cancelAlert = new Alert(Alert.AlertType.INFORMATION);
@@ -356,7 +357,7 @@ public class AdminDashboardController {
             }
         } catch (IOException e) {
             showError(bundle.getString(FAILED_TO_LOAD_USER));
-            e.printStackTrace();
+            logger.error("Failed to load user: {}", e.getMessage());
         }
 
         loadUsers();
@@ -384,7 +385,7 @@ public class AdminDashboardController {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to open add restaurant dialog: {}", e.getMessage());
         }
     }
 

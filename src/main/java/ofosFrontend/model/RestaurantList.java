@@ -1,6 +1,8 @@
 package ofosFrontend.model;
 
 import ofosFrontend.service.RestaurantService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.List;
@@ -9,12 +11,13 @@ public class RestaurantList {
     private Restaurant restaurant;
     private List<Restaurant> restaurantsList;
     private RestaurantService restaurantService;
+    private static final Logger logger = LogManager.getLogger(RestaurantList.class);
     public RestaurantList() {
         restaurantService = new RestaurantService();
         try {
             restaurantsList = restaurantService.getAllRestaurants();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to get all restaurants: {}", e.getMessage());
         }
     }
 
