@@ -9,6 +9,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
+/**
+ * Factory class for the owner side views
+ */
 public class AdminViewFactory {
 
     private final AdminController mainController;
@@ -22,6 +25,10 @@ public class AdminViewFactory {
         this.mainController = mainController;
     }
 
+    /**
+     * Creates the owner home view
+     * @return The root node of the view
+     */
     public Parent createAdminHomeView() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(ADMINHOME));
@@ -37,6 +44,11 @@ public class AdminViewFactory {
         }
     }
 
+    /**
+     * Creates the restaurant view for the owner page
+     * @param restaurant The restaurant to display
+     * @return The root node of the view
+     */
     public Parent createAdminRestaurantView(Restaurant restaurant) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(ADMINRESTAURANT));
@@ -54,6 +66,9 @@ public class AdminViewFactory {
         }
     }
 
+    /**
+     * Reload the current page
+     */
     public void reloadPage(){
         switch (currentView){
             case ADMINHOME:

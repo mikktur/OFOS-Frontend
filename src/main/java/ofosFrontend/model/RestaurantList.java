@@ -7,19 +7,27 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Model class representing a list of restaurants
+ */
 public class RestaurantList {
     private Restaurant restaurant;
-    private List<Restaurant> restaurantsList;
+    private List<Restaurant> restaurantList;
     private RestaurantService restaurantService;
     private static final Logger logger = LogManager.getLogger(RestaurantList.class);
-    public RestaurantList() {
-        restaurantService = new RestaurantService();
+
+
+    public RestaurantList(RestaurantService restaurantService) {
+        this.restaurantService = restaurantService;
         try {
-            restaurantsList = restaurantService.getAllRestaurants();
+            this.restaurantList = new ArrayList<>(restaurantService.getAllRestaurants());
         } catch (IOException e) {
+            e.printStackTrace();
+            this.restaurantList = new ArrayList<>(); // Fallback to an empty mutable list
             logger.error("Failed to get all restaurants: {}", e.getMessage());
         }
     }
+
 
     public Restaurant getRestaurant() {
         return restaurant;
@@ -29,36 +37,42 @@ public class RestaurantList {
         this.restaurant = restaurant;
     }
 
-    public List<Restaurant> getRestaurantsList() {
-        return restaurantsList;
+    public List<Restaurant> getRestaurantList() {
+        return restaurantList;
     }
     public void setRestaurants(List<Restaurant> restaurantList) {
-        this.restaurantsList = restaurantList;
+        this.restaurantList = restaurantList;
+    }
+    public void setRestaurantList(List<Restaurant> restaurantList) {
+        this.restaurantList = restaurantList;
     }
 
     public void addRestaurant(Restaurant restaurant) {
-        restaurantsList.add(restaurant);
+        restaurantList.add(restaurant);
     }
 
     public void removeRestaurant(Restaurant restaurant) {
-        restaurantsList.remove(restaurant);
+        restaurantList.remove(restaurant);
     }
 
     public void clear() {
-        restaurantsList.clear();
+        restaurantList.clear();
     }
 
     public int size() {
-        return restaurantsList.size();
+        return restaurantList.size();
     }
 
     public boolean isEmpty() {
-        return restaurantsList.isEmpty();
+        return restaurantList.isEmpty();
     }
 
+    public void getNames() {
+        restaurantList.forEach(restaurant1 -> System.out.println(restaurant1.getRestaurantName()));
+    }
     public List<Restaurant> filterByCategory(String category) throws IOException {
 
-        restaurantsList = restaurantService.getRestaurantsByCategory(category);
-        return restaurantsList;
+        restaurantList = restaurantService.getRestaurantsByCategory(category);
+        return restaurantList;
    }
 }

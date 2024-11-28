@@ -1,5 +1,6 @@
 package ofosFrontend.model;
 
+
 public class OrderProducts {
     private int orderId;
     private int productId;
@@ -37,3 +38,5 @@ public class OrderProducts {
     }
 
 }
+
+

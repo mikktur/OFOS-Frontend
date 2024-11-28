@@ -10,12 +10,21 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
+/**
+ * Service class for handling contact information operations
+ */
 public class ContactInfoService {
     private static final String API_URL = "http://localhost:8000/api/";
     private static final Logger logger = LogManager.getLogger(ContactInfoService.class);
     private final ObjectMapper mapper = new ObjectMapper();
     private final OkHttpClient client = new OkHttpClient();
 
+
+    /**
+     * Saves the contact information of the currently logged-in user.
+     * @param contactInfo The contact information to save.
+     * @return A Task that saves the contact information.
+     */
     public Task<Void> saveContactInfo(ContactInfo contactInfo) {
         return new Task<>() {
             @Override

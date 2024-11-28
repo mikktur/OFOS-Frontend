@@ -1,6 +1,10 @@
 package ofosFrontend.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
+
+/**
+ * Model class representing a product
+ */
 public class Product {
 
     private String productName;

@@ -10,7 +10,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-// not really creating a view, just loading the fxml file and setupping the views...
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Factory for creating views
+ */
 public class ViewFactory {
     public static final String MAIN = "/ofosFrontend/User/mainUI.fxml";
     public static final String CHECKOUT = "/ofosFrontend/User/checkout.fxml";
@@ -18,77 +23,95 @@ public class ViewFactory {
     public static final String RESTAURANT = "/ofosFrontend/User/restaurantMenuUI.fxml";
     public static final String ORDERHISTORY = "/ofosFrontend/OrderHistoryUI.fxml";
     public static final String ADMINDASHBOARD = "/ofosFrontend/User/adminDashboardUI.fxml";
+
     private final UserMainController mainController;
+    private final Map<String, Runnable> reloadActions = new HashMap<>();
     private String currentView;
     private final Logger logger = LogManager.getLogger(ViewFactory.class);
     public ViewFactory(UserMainController mainController) {
         this.mainController = mainController;
+        initializeReloadActions();
     }
-    public Parent createCheckoutView(int rid) {
-        try {
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(CHECKOUT));
+    /**
+     * Loads an FXML file, sets resources, and returns the root node.
+     *
+     * @param fxmlPath Path to the FXML file.
+     * @param controllerSetup A callback to configure the controller (optional).
+     * @return The root node of the loaded FXML.
+     */
+    private <T> Parent loadView(String fxmlPath, ControllerConsumer<T> controllerSetup) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             loader.setResources(LocalizationManager.getBundle());
             Parent root = loader.load();
-            CheckoutController checkoutController = loader.getController();
-            checkoutController.setMainController(mainController);
-            checkoutController.setRid(rid);
-            checkoutController.updateView();
-            currentView = CHECKOUT;
-
+            if (controllerSetup != null) {
+                T controller = loader.getController();
+                controllerSetup.accept(controller);
+            }
+            currentView = fxmlPath;
             return root;
         } catch (IOException e) {
             logger.error("Error loading checkout view");
             return null;
         }
     }
+
+    /**
+     * Creates the checkout view.
+     *
+     * @param rid The restaurant ID.
+     * @return The parent node.
+     */
+    public Parent createCheckoutView(int rid) {
+        return loadView(CHECKOUT, controller -> {
+            CheckoutController checkoutController = (CheckoutController) controller;
+            checkoutController.setMainController(mainController);
+            checkoutController.setRid(rid);
+            checkoutController.updateView();
+        });
+    }
+
+    /**
+     * Creates the settings view.
+     *
+     * @return The parent node.
+     */
     public Parent createSettingsView() {
-        try {
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(SETTINGS));
-            loader.setResources(LocalizationManager.getBundle());
-            Parent root = loader.load();
-            currentView = SETTINGS;
-            return root;
-        } catch (IOException e) {
-            logger.error("Error loading settings view");
-            return null;
-        }
+        return loadView(SETTINGS, null);
     }
+
+    /**
+     * Creates the order history view.
+     *
+     * @return The parent node.
+     */
     public Parent createOrderHistoryView() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(ORDERHISTORY));
-            loader.setResources(LocalizationManager.getBundle());
-            Parent root = loader.load();
-            currentView = ORDERHISTORY;
-            return root;
-        } catch (IOException e) {
-            logger.error("Error loading order history view");
-            return null;
-        }
-    }
-    public ScrollPane createRestaurantView(Restaurant restaurant) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(RESTAURANT));
-            loader.setResources(LocalizationManager.getBundle());
-            ScrollPane newCenterContent = loader.load();
-            RestaurantMenuController controller = loader.getController();
-            controller.setRestaurant(restaurant);
-            controller.createCards();
-            currentView = RESTAURANT;
-            return newCenterContent;
-        } catch (IOException e) {
-            logger.error("Error loading restaurant view");
-            return null;
-        }
+        return loadView(ORDERHISTORY, null);
     }
 
+    /**
+     * Creates the restaurant view.
+     *
+     * @param restaurant The restaurant to display.
+     * @return The scroll pane.
+     */
+    public ScrollPane createRestaurantView(Restaurant restaurant) {
+        return (ScrollPane) loadView(RESTAURANT, controller -> {
+            RestaurantMenuController menuController = (RestaurantMenuController) controller;
+            menuController.setRestaurant(restaurant);
+            menuController.createCards();
+        });
+    }
+
+    /**
+     * Creates the default content view.
+     *
+     * @return The node.
+     */
     public Node createDefaultContent() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(MAIN));
-            loader.setResources(LocalizationManager.getBundle());
-            Node mainContent = loader.load();
-            MainMenuController mmController = loader.getController();
+        return loadView(MAIN, controller -> {
+            MainMenuController mmController = (MainMenuController) controller;
             mainController.setMmController(mmController);
             if (mmController != null) {
                 mmController.setMainController(mainController);
@@ -97,49 +120,51 @@ public class ViewFactory {
             }
             mainController.resetToDefaultCartView();
             mainController.reloadDropDown();
-            currentView = MAIN;
-            return mainContent;
-        } catch (IOException e) {
-            logger.error("Error loading default content");
-            return null;
-        }
+        });
     }
 
+    /**
+     * Creates the admin dashboard view.
+     *
+     * @return The parent node.
+     */
     public Parent createAdminDashboardView() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(ADMINDASHBOARD));
-            loader.setResources(LocalizationManager.getBundle());
-            Parent root = loader.load();
-            currentView = ADMINDASHBOARD;
-            return root;
-        } catch (IOException e) {
-            logger.error("Error loading admin dashboard view");
-            return null;
+        return loadView(ADMINDASHBOARD, null);
+    }
+
+    /**
+     * Reloads the current page.
+     */
+    public void reloadPage() {
+        Runnable reloadAction = reloadActions.get(currentView);
+        if (reloadAction != null) {
+            reloadAction.run();
+        } else {
+            mainController.loadDefaultContent();
         }
     }
 
-
-    public void reloadPage(){
-        switch (currentView){
-            case CHECKOUT:
-                mainController.loadCheckoutView(mainController.getCurrentRestaurant().getId());
-                break;
-            case SETTINGS:
-                mainController.loadSettingsView();
-                break;
-            case RESTAURANT:
-                mainController.loadRestaurantView(mainController.getCurrentRestaurant());
-                break;
-            case ORDERHISTORY:
-                mainController.loadHistoryView();
-                break;
-            case ADMINDASHBOARD:
-                mainController.loadAdminDashboardView();
-                break;
-            default:
-                mainController.loadDefaultContent();
-        }
-
+    /**
+     * Initializes reload actions for different views.
+     */
+    private void initializeReloadActions() {
+        reloadActions.put(CHECKOUT, () -> mainController.loadCheckoutView(mainController.getCurrentRestaurant().getId()));
+        reloadActions.put(SETTINGS, mainController::loadSettingsView);
+        reloadActions.put(RESTAURANT, () -> mainController.loadRestaurantView(mainController.getCurrentRestaurant()));
+        reloadActions.put(ORDERHISTORY, mainController::loadHistoryView);
+        reloadActions.put(ADMINDASHBOARD, mainController::loadAdminDashboardView);
+        reloadActions.put(MAIN, mainController::loadDefaultContent);
     }
+
+    /**
+     * A functional interface for accepting a controller.
+     *
+     * @param <T> The type of the controller.
+     */
+    @FunctionalInterface
+    private interface ControllerConsumer<T> {
+        void accept(T controller);
+    }
+
 
 }

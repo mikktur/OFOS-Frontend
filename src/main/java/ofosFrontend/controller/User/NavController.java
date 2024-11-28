@@ -129,6 +129,10 @@ public class NavController extends BasicController {
         assert dropDownMenuBtn != null;
         dropDownMenuBtn.setOnMouseClicked(event -> handleDropDownClick());
         openCart.setOnMouseClicked(event -> handleCartClick());
+
+        usernameLabel.setOnMouseClicked(event -> {
+            mainController.loadSettingsView();
+        });
     }
 
     /**

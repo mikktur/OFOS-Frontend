@@ -31,6 +31,7 @@ import static ofosFrontend.session.Validations.showError;
 
 /**
  * Controller for the order history view.
+ * Displays the user's order history and allows sorting by various columns.
  */
 public class OrderHistoryController {
 

@@ -1,8 +1,10 @@
 package ofosFrontend.model;
 
 
+/**
+ * Model class representing an order
+ */
 public class Order {
-    // price, quantity, name, date, id
     private int orderId;
     private String state;
     private String orderAddress;

@@ -10,58 +10,69 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<ScrollPane fx:id="menuScroll" fitToWidth="true" styleClass="scroll" stylesheets="@../styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.User.RestaurantMenuController">
-   <content>
-      <VBox alignment="TOP_CENTER">
-         <children>
-            <VBox alignment="TOP_CENTER" maxWidth="1300.0" VBox.vgrow="ALWAYS">
-               <padding>
-                  <Insets left="20.0" right="20.0"/>
-               </padding>
-               <HBox id="menuInfo" alignment="CENTER_LEFT" minHeight="150.0" spacing="15.0" stylesheets="@../styles.css"
-                     style="-fx-background-color: #f5f5f5; -fx-padding: 20;">
-                  <ImageView fx:id="restaurantImage" fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="false" style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 2, 2);"/>
+<?import javafx.scene.shape.Rectangle?>
+<ScrollPane fx:id="menuScroll" fitToWidth="true" styleClass="scroll" stylesheets="@../styles.css"
+            style="-fx-padding: 20 0 0 0;"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ofosFrontend.controller.User.RestaurantMenuController">
+   <VBox alignment="TOP_CENTER">
+      <padding>
+         <Insets top="20.0"/>
+        </padding>
+      <VBox alignment="TOP_CENTER" maxWidth="1300.0" VBox.vgrow="ALWAYS" spacing="20">
+         <padding>
+            <Insets left="20.0" right="20.0"/>
+         </padding>
+         <HBox id="menuInfo" alignment="CENTER_LEFT" minHeight="150.0" spacing="15.0" stylesheets="@../styles.css"
+               style="-fx-background-color: #f5f5f5; -fx-padding: 20;">
+            <ImageView fx:id="restaurantImage" fitHeight="120.0" fitWidth="120.0" pickOnBounds="true"
+                       style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 2, 2);">
+               <clip>
+                  <Rectangle width="120.0" height="120.0" arcWidth="30" arcHeight="30.0"/>
+               </clip>
+            </ImageView>
 
-                  <VBox alignment="TOP_LEFT" spacing="10.0">
-                     <!-- Restaurant Name -->
-                     <Text fx:id="restaurantName" text="McDonald's" style="-fx-font-size: 26; -fx-font-weight: bold; -fx-fill: #333;">
-                        <HBox.margin>
-                           <Insets top="5" bottom="5"/>
-                        </HBox.margin>
-                     </Text>
+            <VBox alignment="TOP_LEFT" spacing="10.0">
+               <!-- Restaurant Name -->
+               <Text fx:id="restaurantName" text="McDonald's"
+                     style="-fx-font-size: 26; -fx-font-weight: bold; -fx-fill: #333;">
+                  <HBox.margin>
+                     <Insets top="5" bottom="5"/>
+                  </HBox.margin>
+               </Text>
 
-                     <!-- Restaurant Address Section -->
-                     <HBox alignment="CENTER_LEFT" spacing="5.0">
-                        <Label text="%restaurantAddress" style="-fx-font-size: 14; -fx-text-fill: #666;" />
-                        <Text fx:id="restaurantAddress" text="123 Main St, Helsinki" wrappingWidth="180.0" style="-fx-font-size: 14; -fx-fill: #444;" />
-                     </HBox>
-
-                     <!-- Restaurant Hours Section -->
-                     <HBox alignment="CENTER_LEFT" spacing="5.0">
-                        <Label text="%restaurantHours" style="-fx-font-size: 14; -fx-text-fill: #666;" />
-                        <Text fx:id="restaurantHours" text="06-23" style="-fx-font-size: 14; -fx-fill: #444;" />
-                     </HBox>
-
-                     <!-- Restaurant Phone Section -->
-                     <HBox alignment="CENTER_LEFT" spacing="5.0">
-                        <Label text="%restaurantPhone" style="-fx-font-size: 14; -fx-text-fill: #666;" />
-                        <Text fx:id="restaurantPhone" text="000000000" style="-fx-font-size: 14; -fx-fill: #444;" />
-                     </HBox>
-                  </VBox>
+               <!-- Restaurant Address Section -->
+               <HBox alignment="CENTER_LEFT" spacing="5.0">
+                  <Label text="%restaurantAddress" style="-fx-font-size: 14; -fx-text-fill: #666;"/>
+                  <Text fx:id="restaurantAddress" text="123 Main St, Helsinki" wrappingWidth="180.0"
+                        style="-fx-font-size: 14; -fx-fill: #444;"/>
                </HBox>
 
-               <FlowPane fx:id="menuContainer" hgap="30.0" prefWrapLength="800.0" rowValignment="TOP"
-                         style="-fx-background-color: #C4E6FB99; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 5, 0, 2, 2);"
-                         styleClass="itemContainer" vgap="20.0" VBox.vgrow="ALWAYS">
-                  <padding>
-                     <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-                  </padding>
-                  <VBox.margin>
-                     <Insets/>
-                  </VBox.margin>
-               </FlowPane>
+               <!-- Restaurant Hours Section -->
+               <HBox alignment="CENTER_LEFT" spacing="5.0">
+                  <Label text="%restaurantHours" style="-fx-font-size: 14; -fx-text-fill: #666;"/>
+                  <Text fx:id="restaurantHours" text="06-23" style="-fx-font-size: 14; -fx-fill: #444;"/>
+               </HBox>
+
+               <!-- Restaurant Phone Section -->
+               <HBox alignment="CENTER_LEFT" spacing="5.0">
+                  <Label text="%restaurantPhone" style="-fx-font-size: 14; -fx-text-fill: #666;"/>
+                  <Text fx:id="restaurantPhone" text="000000000" style="-fx-font-size: 14; -fx-fill: #444;"/>
+               </HBox>
             </VBox>
-         </children>
+         </HBox>
+
+
+         <FlowPane fx:id="menuContainer" hgap="30.0" prefWrapLength="800.0" rowValignment="TOP"
+                   style="-fx-background-color: #C4E6FB99; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 5, 0, 2, 2);"
+                   styleClass="itemContainer" vgap="20.0" VBox.vgrow="ALWAYS">
+            <padding>
+               <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+            </padding>
+            <VBox.margin>
+               <Insets/>
+            </VBox.margin>
+         </FlowPane>
       </VBox>
-   </content>
+   </VBox>
 </ScrollPane>

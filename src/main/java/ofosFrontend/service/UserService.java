@@ -15,7 +15,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-
+/**
+ * Service class for handling user operations
+ */
 public class UserService {
 
     private static final String API_URL = "http://localhost:8000/api/";
@@ -27,6 +29,13 @@ public class UserService {
     private static final String BEARER = "Bearer ";
     private static final String MEDIA_TYPE = "application/json; charset=utf-8";
 
+    /**
+     * Logs in a user with the given username and password.
+     * @param username The username of the user.
+     * @param password The password of the user.
+     * @return The response from the server.
+     * @throws IOException If an I/O error occurs.
+     */
     public LoginResponse login(String username, String password) throws IOException {
 
         MediaType JSON = MediaType.get(MEDIA_TYPE);
@@ -53,6 +62,13 @@ public class UserService {
 
     }
 
+    /**
+     * Registers a new user with the given username and password.
+     * @param username The username of the user.
+     * @param password The password of the user.
+     * @return The response from the server.
+     * @throws IOException If an I/O error occurs.
+     */
     public Response register(String username, String password) throws IOException {
 
         MediaType JSON = MediaType.get(MEDIA_TYPE);
@@ -75,6 +91,11 @@ public class UserService {
         }
     }
 
+    /**
+     * Fetches the user data of the currently logged-in user.
+     * @param userId The ID of the user.
+     * @return A Task that fetches the user data.
+     */
     public Task<ContactInfo> fetchUserData(int userId) {
         return new Task<>() {
             @Override
@@ -104,6 +125,11 @@ public class UserService {
         };
     }
 
+    /**
+     * Updates the password of the currently logged-in user.
+     * @param passwordDTO The DTO containing the old and new passwords.
+     * @return A Task that updates the password.
+     */
     public Task<Void> updatePassword(PasswordChangeDTO passwordDTO) {
         return new Task<>() {
             @Override
@@ -133,6 +159,11 @@ public class UserService {
         };
     }
 
+    /**
+     * Fetches all users.
+     * @return A list of User objects.
+     * @throws IOException If an I/O error occurs.
+     */
     public List<User> getAllUsers() throws IOException {
 
 
@@ -150,6 +181,11 @@ public class UserService {
         return mapper.readValue(responseBody, mapper.getTypeFactory().constructCollectionType(List.class, User.class));
     }
 
+    /**
+     * Deletes the currently logged-in user.
+     * Checks if the user is an owner account and throws an exception if so.
+     * @return A Task that deletes the user.
+     */
     public Task<Void> deleteUser() {
         return new Task<>() {
             @Override
@@ -164,7 +200,7 @@ public class UserService {
                         .build();
 
                 try (Response response = client.newCall(request).execute()) {
-                    if (response.code() == 418) { // Status code for "I'm a teapot"
+                    if (response.code() == 418) {
                         throw new IOException("Owner accounts cannot be deleted. Status code: " + response.code());
                     } else if (!response.isSuccessful()) {
                         throw new IOException("Failed to delete user. Status code: " + response.code());
@@ -176,6 +212,12 @@ public class UserService {
         };
     }
 
+    /**
+     * Fetches user information by username.
+     * @param selectedUserName The username of the user to fetch.
+     * @return The User object.
+     * @throws IOException If an I/O error occurs.
+     */
     public User getUserByUsername(String selectedUserName) throws IOException {
         Request request = new Request.Builder()
                 .url(API_URL + "users/username/" + selectedUserName)
@@ -193,7 +235,12 @@ public class UserService {
         }
     }
 
-
+    /**
+     * Bans a user by ID.
+     * @param userId The ID of the user to ban.
+     * @return True if the operation succeeded, false otherwise.
+     * @throws IOException If an I/O error occurs.
+     */
     public boolean banUser(int userId) throws IOException {
         MediaType JSON = MediaType.get(MEDIA_TYPE);
 
@@ -213,6 +260,12 @@ public class UserService {
     }
 
 
+    /**
+     * Changes the role of a user by ID.
+     * @param userId The ID of the user to change the role of.
+     * @param newRole The new role of the user.
+     * @return True if the operation succeeded, false otherwise.
+     */
     public boolean changeRole(int userId, String newRole) {
         String url = API_URL + "users/changeRole";
         String token = SessionManager.getInstance().getToken();
@@ -241,6 +294,9 @@ public class UserService {
                 logger.error("Failed to change role. Server responded with: {}", response.code());
                 return false;
             }
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            return response.statusCode() == 200;
 
         } catch (IOException e) {
             logger.error("Failed to change role. Network error occurred: {}", e.getMessage());

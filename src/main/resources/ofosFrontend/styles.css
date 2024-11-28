@@ -94,3 +94,75 @@
     -fx-border-color: #000000;
 
 }
+
+.category-button {
+    -fx-background-color: transparent;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+}
+
+.category-button:hover {
+    -fx-background-color: #f0f8ff;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.8), 15, 0, 5, 5);
+    -fx-cursor: hand;
+}
+
+.category-container {
+    -fx-background-color: #c4e6fb;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);
+    -fx-padding: 20;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+
+}
+
+.category-container:hover {
+    -fx-background-color: #b0d9f8;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.7), 15, 0, 5, 5);
+    -fx-cursor: hand;
+}
+
+
+/* Style for the overlay text */
+.category-text {
+    -fx-fill: black; /* Text color */
+    -fx-font-size: 18px; /* Font size */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 4, 0, 1, 1); /* Shadow for readability */
+}
+
+
+.restaurant-label {
+    -fx-font-family: "Arial";
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+.restaurant-label:hover {
+    -fx-text-fill: #0078d7;
+}
+
+
+
+.restaurant-card {
+    -fx-background-color: #ffffff;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);
+    -fx-padding: 10;
+}
+
+.restaurant-card:hover {
+    -fx-background-color: #f0f0f0;
+    -fx-cursor: hand;
+}
+
+.welcome-text {
+    -fx-font-family: "Poppins";
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-fill: #333333;
+    -fx-text-alignment: center;
+}
+
+

@@ -20,10 +20,17 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
+import static ofosFrontend.session.Validations.showError;
 
+/**
+ * Controller for the login view
+ * This class is responsible for handling user login and registration
+ * and opening the main view
+ */
 public class LoginController {
     @FXML
     private Label passwordErrorLabel;
@@ -38,13 +45,21 @@ public class LoginController {
     private final UserService userService = new UserService();
     private final Logger logger = LogManager.getLogger(LoginController.class);
 
-
+    /**
+     * Initialize the login controller
+     * Get the session manager instance
+     */
     @FXML
     public void initialize() {
         //used  to initialize the session manager
         SessionManager.getInstance();
     }
 
+    /**
+     * Handle user login
+     *
+     * @param event the event that triggered the login
+     */
     @FXML
     public void userLogin() {
         new Thread(() -> {
@@ -60,7 +75,16 @@ public class LoginController {
         }).start();
     }
 
-    private void handleLoginResponse(LoginResponse loginResponse) {
+    /**
+     * Handle the login response
+     *
+     * @param response the response from the login request
+     *                 if the response is successful, set the session manager token, username, role and user id
+     *                 and open the main stage
+     */
+    private void handleLoginResponse(Response response) {
+
+        ObjectMapper mapper = new ObjectMapper();
 
         if (loginResponse.getStatusCode() == 200) {
             SessionManager manager = SessionManager.getInstance();
@@ -91,10 +115,13 @@ public class LoginController {
 
         openMainStage();
 
-
     }
 
-
+    /**
+     * Go to the register view
+     *
+     * @throws IOException if the register view cannot be loaded
+     */
     @FXML
     private void goToRegister() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/registerUI.fxml"));
@@ -112,6 +139,12 @@ public class LoginController {
         currentStage.show();
     }
 
+    /**
+     * Go back to the login view
+     *
+     * @param event the event that triggered the go back
+     * @throws IOException if the login view cannot be loaded
+     */
     @FXML
     private void backToLogin() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/loginUI.fxml"));
@@ -129,6 +162,9 @@ public class LoginController {
         currentStage.show();
     }
 
+    /**
+     * Register a new user
+     */
     @FXML
     public void registerUser() {
         new Thread(() -> {
@@ -144,6 +180,13 @@ public class LoginController {
         }).start();
     }
 
+    /**
+     * Handle the registration response
+     *
+     * @param response the response from the registration request
+     *                 if the response is successful, open the login view
+     *                 if the response is a bad request, display the error messages
+     */
     private void handleRegisterResponse(Response response) {
         try {
             if (response.isSuccessful()) {
@@ -168,6 +211,11 @@ public class LoginController {
         }
     }
 
+    /**
+     * Update the registration error labels
+     *
+     * @param errors the errors to display
+     */
     private void updateRegistrationErrorLabels(Map<String, String> errors) {
         // Handles username error text under the username field
         String usernameError = errors.get("username");
@@ -180,6 +228,11 @@ public class LoginController {
         passwordErrorLabel.setVisible(passwordError != null);
     }
 
+    /**
+     * Update the login error label
+     *
+     * @param errors the errors to display
+     */
     private void updateLoginErrorLabel(Map<String, String> errors) {
 
         String passwordError = errors.get("message");
@@ -187,11 +240,11 @@ public class LoginController {
         loginPasswordErrorLabel.setVisible(passwordError != null);
     }
 
-    private void showError(String message) {
-        logger.info(message);
-    }
 
-
+    /**
+     * Open the main stage
+     * Load the appropriate FXML based on the user role
+     */
     public void openMainStage() {
         FXMLLoader rootLoader;
 
@@ -225,8 +278,11 @@ public class LoginController {
         }
     }
 
-
+    /**
+     * Close the login stage
+     */
     private void closeLoginStage() {
+
         Stage loginStage = (Stage) username.getScene().getWindow();
         loginStage.close();
     }

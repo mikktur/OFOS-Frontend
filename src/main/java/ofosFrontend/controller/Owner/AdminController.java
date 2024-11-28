@@ -20,6 +20,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
+/**
+ * Controller for the owner view
+ */
 public class AdminController {
     @FXML
     public HBox adminNavBar;
@@ -34,6 +37,10 @@ public class AdminController {
         // required by FXML loader
     }
 
+    /**
+     * Initialize the owner controller
+     * Load the default content
+     */
     @FXML
     public void initialize() {
         adminViewFactory = new AdminViewFactory(this);
@@ -41,6 +48,11 @@ public class AdminController {
         setupControllers();
 
     }
+
+    /**
+     * Set the center content of the owner view
+     * @param content the content to set
+     */
     public void setCenterContent(Node content) {
         if (ownerCenterPane == null) {
             logger.log(Level.ERROR,"centerPane is null!");
@@ -52,19 +64,33 @@ public class AdminController {
         StackPane.setAlignment(content, Pos.CENTER);
     }
 
+    /**
+     * Load the default content
+     */
     public void loadDefaultContent() {
             Parent content = adminViewFactory.createAdminHomeView();
             setCenterContent(content);
-
     }
 
+    /**
+     * Load the restaurant content
+     * @param restaurant The restaurant to display
+     */
     public void loadRestaurantContent(Restaurant restaurant) {
         Parent content = adminViewFactory.createAdminRestaurantView(restaurant);
         setCenterContent(content);
     }
+
+    /**
+     * Reload the page
+     */
     public void reloadPage(){
         adminViewFactory.reloadPage();
     }
+
+    /**
+     * Set up the controllers
+     */
     public void setupControllers() {
         try {
             AdminNavController navController = (AdminNavController) adminNavBar.getProperties().get("controller");
@@ -77,6 +103,10 @@ public class AdminController {
             logger.error("Error setting up controllers: {}", e.getMessage());
         }
     }
+
+    /**
+     * Log out the user
+     */
     public void logout() {
         SessionManager adminSessionManager = SessionManager.getInstance();
         adminSessionManager.logout();

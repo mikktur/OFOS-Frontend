@@ -49,6 +49,10 @@ public class ContactInfoDialogController {
     private static final int CITY_MAX_LENGTH = 30;
     private static final int POSTAL_CODE_MAX_LENGTH = 5;
 
+    /**
+     * Initializes the dialog.
+     * Adds text limiters to the input fields.
+     */
     @FXML
     public void initialize() {
         TextFieldUtils.addTextLimiter(firstNameField, FIRST_NAME_MAX_LENGTH);

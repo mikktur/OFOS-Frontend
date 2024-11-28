@@ -5,6 +5,9 @@ import javafx.beans.property.StringProperty;
 
 import java.util.*;
 
+/**
+ * Manages the localization of the application.
+ */
 public class LocalizationManager {
 
     private static final String BASE_NAME = "MessagesBundle";
@@ -28,10 +31,18 @@ public class LocalizationManager {
     private LocalizationManager() {
     }
 
+    /**
+     * Gets the resource bundle for the current locale.
+     * @return the resource bundle.
+     */
     public static ResourceBundle getBundle() {
         return bundle;
     }
 
+    /**
+     * Gets the current locale.
+     * @return the locale.
+     */
     public static Locale getLocale() {
         return locale;
     }
@@ -45,6 +56,10 @@ public class LocalizationManager {
         return locale.getLanguage();
     }
 
+    /**
+     * Sets the locale for the application.
+     * @param newLocale the new locale.
+     */
     public static void setLocale(Locale newLocale) {
         try {
             locale = newLocale;
@@ -56,7 +71,23 @@ public class LocalizationManager {
         selectedLanguage.set(languageMap.getOrDefault(locale.getLanguage(), "English"));
     }
 
+    /**
+     * Sets the selected language for the application.
+     * @param language the language to set.
+     */
+    public static void setSelectedLanguage(String language) {
+        for (Map.Entry<String, String> entry : languageMap.entrySet()) {
+            if (entry.getValue().equals(language)) {
+                setLocale(new Locale(entry.getKey()));
+                break;
+            }
+        }
+    }
 
+    /**
+     * Gets the selected language property.
+     * @return the selected language property.
+     */
     public static StringProperty selectedLanguageProperty() {
         return selectedLanguage;
     }

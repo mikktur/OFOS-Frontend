@@ -59,9 +59,8 @@ public class MainMenuController extends BasicController {
 
     /**
      * Handles the click event on a category
-     *
      * @param event the mouse event
-     *              Gets the id of the clicked category and loads the restaurants of that category
+     * Gets the id of the clicked category and loads the restaurants of that category
      */
     @FXML
     private void handleCategoryClick(MouseEvent event) {
@@ -159,7 +158,6 @@ public class MainMenuController extends BasicController {
 
     /**
      * Loads the restaurant view.
-     *
      * @param restaurant the restaurant to load
      */
     private void setupRestaurantView(Restaurant restaurant) {
@@ -183,8 +181,8 @@ public class MainMenuController extends BasicController {
      */
     public void filterRestaurants(String query) {
         List<Restaurant> filteredRestaurants = query.isEmpty()
-                ? restaurantList.getRestaurantsList()
-                : restaurantList.getRestaurantsList().stream()
+                ? restaurantList.getRestaurantList()
+                : restaurantList.getRestaurantList().stream()
                 .filter(restaurant -> restaurant.getRestaurantName().toLowerCase().contains(query.toLowerCase()))
                 .toList();
 

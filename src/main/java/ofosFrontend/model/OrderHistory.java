@@ -1,5 +1,8 @@
 package ofosFrontend.model;
 
+/**
+ * Model class for order history
+ */
 public class OrderHistory {
     private double orderPrice;
     private int quantity;

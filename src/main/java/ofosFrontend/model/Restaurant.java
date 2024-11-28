@@ -3,6 +3,9 @@ package ofosFrontend.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+/**
+ * Model class representing a restaurant
+ */
 public class Restaurant {
     private int id;
     private String restaurantName;

@@ -4,7 +4,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 
-
+/**
+ * Model class representing a shopping cart
+ */
 public class ShoppingCart {
     private final ObservableList<CartItem> items;
     private Restaurant restaurant;

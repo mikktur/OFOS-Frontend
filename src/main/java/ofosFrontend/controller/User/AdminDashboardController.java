@@ -1,5 +1,6 @@
 package ofosFrontend.controller.User;
 
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,8 +21,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import static ofosFrontend.session.Validations.showError;
 
-@SuppressWarnings({"checkstyle:MissingJavadocType", "checkstyle:Indentation"})
+/**
+ * Controller for the admin dashboard view
+ */
 public class AdminDashboardController {
 
     @FXML
@@ -70,7 +74,11 @@ public class AdminDashboardController {
     private final Logger logger = LogManager.getLogger(this.getClass());
     ResourceBundle bundle = LocalizationManager.getBundle();
 
-
+    /**
+     * Initialize the admin dashboard
+     * Load the restaurants and users
+     * Add listeners to the selectors
+     */
     @FXML
     public void initialize() {
         loadRestaurants();
@@ -83,6 +91,10 @@ public class AdminDashboardController {
         bannedUserSelector.setOnAction(event -> displayBannedUser());
     }
 
+    /**
+     * Load the users
+     * Populate the user selector with the usernames of all enabled users
+     */
     private void loadUsers() {
         userSelector.getItems().clear();
         try {
@@ -100,6 +112,10 @@ public class AdminDashboardController {
         }
     }
 
+    /**
+     * Load the banned users
+     * Populate the banned user selector with the usernames of all disabled users
+     */
     private void loadBannedUsers() {
         bannedUserSelector.getItems().clear();
         try {
@@ -117,6 +133,10 @@ public class AdminDashboardController {
         }
     }
 
+    /**
+     * Load the restaurants
+     * Populate the restaurant selector with the names of all restaurants
+     */
     private void loadRestaurants() {
         try {
             restaurants = restaurantService.getAllRestaurants();
@@ -131,6 +151,9 @@ public class AdminDashboardController {
         }
     }
 
+    /**
+     * Display the selected restaurant
+     */
     private void displaySelectedRestaurant() {
         String selectedRestaurantName = restaurantSelector.getValue();
 
@@ -150,6 +173,10 @@ public class AdminDashboardController {
         }
     }
 
+    /**
+     * Display the selected user
+     * Show the user's name, ID, role, and enabled status
+     */
     private void displaySelectedUser() {
         String selectedUserName = userSelector.getValue();
 
@@ -172,6 +199,10 @@ public class AdminDashboardController {
         }
     }
 
+    /**
+     * Display the selected banned user
+     * Show the user's name, ID, and enabled status
+     */
     public void displayBannedUser() {
         String selectedUserName = bannedUserSelector.getValue();
 
@@ -193,6 +224,10 @@ public class AdminDashboardController {
         }
     }
 
+    /**
+     * Ban the selected user
+     * Show a confirmation dialog before proceeding
+     */
     public void banUser() {
         String selectedUserName = userSelector.getValue();
         if (selectedUserName == null) {
@@ -250,6 +285,10 @@ public class AdminDashboardController {
         loadBannedUsers();
     }
 
+    /**
+     * Change the owner of the selected restaurant
+     * Show a confirmation dialog before proceeding
+     */
     public void changeOwner() throws IOException {
         if (selectedRestaurant == null) {
             showError(bundle.getString("NoRestaurantSelected"));
@@ -308,7 +347,9 @@ public class AdminDashboardController {
             logger.info("Change owner operation canceled.");
         }
     }
-
+    /**
+     * Unban the selected user
+     */
     public void unbanUser() {
         String selectedUserName = bannedUserSelector.getValue();
         if (selectedUserName == null) {
@@ -364,14 +405,11 @@ public class AdminDashboardController {
         loadBannedUsers();
     }
 
-    private void showError(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
+    /**
+     * Add a new restaurant
+     * Open a dialog to enter the restaurant details
+     * @param actionEvent The event that triggered the action.
+     */
     public void addRestaurant() {
 
         try {
@@ -389,6 +427,10 @@ public class AdminDashboardController {
         }
     }
 
+    /**
+     * Change the role of the selected user
+     * @param actionEvent The event that triggered the action.
+     */
     public void changeRole() {
         if (selectedUser == null) {
             showError(bundle.getString(NO_USER_SELECTED_KEY));

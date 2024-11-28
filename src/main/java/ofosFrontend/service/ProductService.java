@@ -11,6 +11,9 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Service class for handling product operations
+ */
 public class ProductService {
     private static final String API_URL = "http://localhost:8000/"; //
     private final OkHttpClient client = new OkHttpClient();
@@ -19,6 +22,13 @@ public class ProductService {
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer ";
     private static final String MEDIA_TYPE = "application/json; charset=utf-8";
+
+    /**
+     * Fetches all products of a selected restaurant.
+     * @param id The ID of the restaurant.
+     * @return A list of Product objects.
+     * @throws IOException If an I/O error occurs.
+     */
     public List<Product> getProductsByRID(int id) throws IOException {
 
 
@@ -35,7 +45,13 @@ public class ProductService {
         return mapper.readValue(responseBody, mapper.getTypeFactory().constructCollectionType(List.class, Product.class));
     }
 
-
+    /**
+     * Adds a product to a restaurant.
+     * @param product The product to add.
+     * @param restaurantId The ID of the restaurant.
+     * @throws IOException If an I/O error occurs.
+     *
+     */
     public void addProductToRestaurant(Product product, int restaurantId) throws IOException {
         MediaType JSON = MediaType.get(MEDIA_TYPE);
 
@@ -58,6 +74,11 @@ public class ProductService {
         }
     }
 
+    /**
+     * Updates a product.
+     * @param product The product to update.
+     * @throws IOException If an I/O error occurs.
+     */
     public void updateProduct(Product product) throws IOException {
         MediaType JSON = MediaType.get(MEDIA_TYPE);
         String productJson = mapper.writeValueAsString(product);
@@ -80,10 +101,15 @@ public class ProductService {
         }
     }
 
+    /**
+     * Deletes a product.
+     * @param product The product to delete.
+     * @param id The ID of the restaurant.
+     * @throws IOException If an I/O error occurs.
+     */
     public void deleteProduct(Product product,int id) throws IOException {
         SessionManager sessionManager = SessionManager.getInstance();
         String bearerToken = sessionManager.getToken();
-        logger.info("testiiii");
         Request request = new Request.Builder()
                 .url(API_URL + "api/products/delete/"+product.getProductID()+"/restaurant/" + id)
                 .delete()

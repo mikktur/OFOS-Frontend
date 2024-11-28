@@ -5,12 +5,16 @@ import javafx.scene.control.TextField;
 
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
-
+/**
+ * Utility class for validating user input.
+ */
 public final class Validations {
     private static final String BORDER_RED = "-fx-border-color: red;";
+
     private Validations() {
         throw new UnsupportedOperationException("Utility class");
     }
+
     /**
      * Validates the input fields for an address form.
      * @param streetAddressField TextField for the street address.
@@ -178,8 +182,6 @@ public final class Validations {
     }
 
 
-
-
     /**
      * Shows an error message dialog.
      *
@@ -194,6 +196,10 @@ public final class Validations {
         alert.showAndWait();
     }
 
+    /**
+     * Shows a success message dialog.
+     * @param message The success message to display.
+     */
     public static void showSuccessAlert(String message) {
         ResourceBundle bundle = LocalizationManager.getBundle();
         Alert successAlert = new Alert(Alert.AlertType.INFORMATION);

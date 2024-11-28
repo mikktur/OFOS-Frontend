@@ -6,7 +6,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Locale;
 import java.util.function.Consumer;
-
+/**
+ * A helper class for generic methods.
+ */
 public final class GenericHelper {
     private static final Logger logger = LogManager.getLogger(GenericHelper.class);
     private GenericHelper() {

@@ -17,7 +17,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-@SuppressWarnings("checkstyle:Indentation")
+/**
+ * Controller for the main user view
+ */
 public class UserMainController {
 
     @FXML
@@ -43,6 +45,10 @@ public class UserMainController {
     private Restaurant currentRestaurant;
     private final Logger logger = LogManager.getLogger(UserMainController.class);
 
+    /**
+     * Initialize the main controller
+     * Load the default content
+     */
     @FXML
     public void initialize() {
         viewFactory = new ViewFactory(this);
@@ -55,7 +61,11 @@ public class UserMainController {
         loadDefaultContent();
     }
 
-
+    /**
+     * Set the center content of the main view
+     *
+     * @param content The content to set
+     */
     public void setCenterContent(Node content) {
         if (centerPane == null) {
             logger.error("centerPane is null!");
@@ -67,6 +77,12 @@ public class UserMainController {
         StackPane.setAlignment(content, Pos.CENTER);
     }
 
+
+    /**
+     * Load the checkout view
+     *
+     * @param rid The id of the restaurant to check out from
+     */
     public void loadCheckoutView(int rid) {
         Parent checkoutView = viewFactory.createCheckoutView(rid);
 
@@ -75,6 +91,9 @@ public class UserMainController {
         }
     }
 
+    /**
+     * Load the settings view
+     */
     public void loadSettingsView() {
         Parent settingsView = viewFactory.createSettingsView();
         if (settingsView != null) {
@@ -83,6 +102,9 @@ public class UserMainController {
         }
     }
 
+    /**
+     * Load the order history view
+     */
     public void loadAdminDashboardView() {
         Parent adminDashboardView = viewFactory.createAdminDashboardView();
         if (adminDashboardView != null) {
@@ -91,7 +113,11 @@ public class UserMainController {
         }
     }
 
-
+    /**
+     * Load the restaurant view
+     *
+     * @param restaurant The restaurant to load
+     */
     public void loadRestaurantView(Restaurant restaurant) {
         ScrollPane restaurantView = viewFactory.createRestaurantView(restaurant);
         getShoppingCartController().initializeCartForRestaurant(restaurant.getId(), restaurant);
@@ -106,6 +132,9 @@ public class UserMainController {
         currentRestaurant = restaurant;
     }
 
+    /**
+     * Load the history view
+     */
     public void loadHistoryView() {
         Parent historyView = viewFactory.createOrderHistoryView();
 
@@ -114,6 +143,9 @@ public class UserMainController {
         }
     }
 
+    /**
+     * Load the default content
+     */
     public void loadDefaultContent() {
         Node defaultContent = viewFactory.createDefaultContent();
 
@@ -123,10 +155,17 @@ public class UserMainController {
         }
     }
 
+    /**
+     * Set the main menu controller
+     * @param mainMenuController
+     */
     public void setMmController(MainMenuController mainMenuController) {
         mmController = mainMenuController;
     }
 
+    /**
+     * Reload the drop down menu
+     */
     public void reloadDropDown() {
         try {
             boolean isVisible = dropDownRoot.isVisible();
@@ -150,6 +189,9 @@ public class UserMainController {
         }
     }
 
+    /**
+     * Reload the shopping cart
+     */
     public void reloadCart() {
         try {
             boolean isVisible = cart.isVisible();
@@ -180,7 +222,9 @@ public class UserMainController {
         }
     }
 
-    // could be made better. cba.
+    /**
+     * Set the controllers for the main view
+     */
     public void setControllers() {
         shoppingCartController = (ShoppingCartController) cart.getProperties().get("controller");
         if (shoppingCartController != null) {
@@ -198,6 +242,10 @@ public class UserMainController {
         }
     }
 
+    /**
+     * Toggle the side menu
+     * If the side menu is visible, hide it. If it is hidden, show it.
+     */
     public void toggleSideMenu() {
         if (dropDownRoot != null) {
             boolean isVisible = dropDownRoot.isVisible();
@@ -206,6 +254,10 @@ public class UserMainController {
         }
     }
 
+    /**
+     * Toggle the shopping cart
+     * If the shopping cart is visible, hide it. If it is hidden, show it.
+     */
     public void toggleShoppingCart() {
         if (cart != null) {
             shoppingCartController.updateCart();
@@ -215,28 +267,45 @@ public class UserMainController {
         }
     }
 
+    /**
+     * Hide the red dot
+     */
     public void hideRedDot() {
         if (navController != null) {
             navController.hideRedDot();
         }
     }
 
+    /**
+     * Show the red dot
+     */
     public void showRedDot() {
         if (navController != null) {
             navController.showRedDot();
         }
     }
 
+    /**
+     * Filter the restaurants
+     * @param query The query to filter by
+     */
     public void filterRestaurants(String query) {
         if (mmController != null) {
             mmController.filterRestaurants(query);
         }
     }
 
+    /**
+     * Get the shopping cart controller
+     * @return The shopping cart controller
+     */
     public ShoppingCartController getShoppingCartController() {
         return shoppingCartController;
     }
 
+    /**
+     * Reset the cart view to the default view
+     */
     public void resetToDefaultCartView() {
         if (shoppingCartController == null) {
             return;
@@ -244,7 +313,10 @@ public class UserMainController {
         shoppingCartController.resetCartView();
     }
 
-    public void reloadPage() {
+    /**
+     * Reload the page
+     */
+    public void reloadPage(){
 
         viewFactory.reloadPage();
         reloadCart();
@@ -252,6 +324,10 @@ public class UserMainController {
 
     }
 
+    /**
+     * Get the current restaurant
+     * @return The current restaurant
+     */
     public Restaurant getCurrentRestaurant() {
         return currentRestaurant;
     }

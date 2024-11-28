@@ -32,6 +32,7 @@ public class AddAddressDialogController {
     private int userId;
     ResourceBundle bundle = LocalizationManager.getBundle();
     private final DeliveryAddressService deliveryAddressService;
+
     public AddAddressDialogController(DeliveryAddressService deliveryAddressService) {
         this.deliveryAddressService = deliveryAddressService;
     }
@@ -45,6 +46,14 @@ public class AddAddressDialogController {
     }
 
 
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    /**
+     * Initializes the dialog.
+     * Adds text limiters to the input fields.
+     */
     @FXML
     public void initialize() {
         TextFieldUtils.addTextLimiter(streetAddressField, STREET_ADDRESS_MAX_LENGTH);
@@ -69,9 +78,7 @@ public class AddAddressDialogController {
         logger.info("New Address: {}", newAddress);
         saveDeliveryAddress(newAddress);
     }
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
+
 
     /**
      * Saves the new delivery address to the database.

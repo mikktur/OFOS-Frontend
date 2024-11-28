@@ -1,6 +1,8 @@
 package ofosFrontend.model;
 
-
+/**
+ * Model class for User, representing a user
+ */
 public class User {
     private String username;
     private String password;
