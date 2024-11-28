@@ -8,14 +8,15 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import ofosFrontend.model.Product;
+import ofosFrontend.model.Translation;
 import ofosFrontend.service.ProductService;
 import ofosFrontend.session.LocalizationManager;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
 
 public class AdminMenuController extends AdminBasicController {
 
@@ -26,7 +27,7 @@ public class AdminMenuController extends AdminBasicController {
     @FXML
     private Text restaurantNameText;
 
-    private ProductService productService = new ProductService();
+    private final ProductService productService = new ProductService();
     private int restaurantID;
 
     @FXML
@@ -49,7 +50,7 @@ public class AdminMenuController extends AdminBasicController {
             productListVBox.getChildren().clear();
             ResourceBundle bundle = LocalizationManager.getBundle();
 
-            List<Product> products = productService.getProductsByRID(restaurantID);
+            var products = productService.getProductsByRID(restaurantID);
 
             for (Product product : products) {
                 HBox productBox = createProductEntry(product, bundle);
@@ -65,33 +66,23 @@ public class AdminMenuController extends AdminBasicController {
         productBox.setSpacing(10.0);
         productBox.setStyle("-fx-padding: 5px; -fx-background-color: #e8f4fb; -fx-border-color: #000;");
 
-        String nameLabelText = bundle.getString("ProductNameText") + ": " + product.getProductName();
-        String descriptionLabelText = bundle.getString("ProductDescriptionText") + ": " + product.getProductDesc();
-        String priceLabelText = bundle.getString("ProductPriceText") + ": " + String.format("%.2f", product.getProductPrice());
-        String categoryLabelText = bundle.getString("ProductCategoryText") + ": " + product.getCategory();
-        String statusLabelText = bundle.getString("ProductStatusText") + ": " + (product.isActive() ? "Yes" : "No");
-        String editButtonText = bundle.getString("EditButton");
-        String deleteButtonText = bundle.getString("DeleteButton");
-        String deleteDialogTitle = bundle.getString("DeleteDialogTitle");
-        String deleteDialogText = bundle.getString("DeleteDialogText");
-
-        Text productNameText = new Text(nameLabelText);
-        Text productDescriptionText = new Text(descriptionLabelText);
-        Text productPriceText = new Text(priceLabelText);
-        Text productCategoryText = new Text(categoryLabelText);
-        Text productStatusText = new Text(statusLabelText);
+        Text productNameText = new Text(bundle.getString("ProductNameText") + ": " + product.getProductName());
+        Text productDescriptionText = new Text(bundle.getString("ProductDescriptionText") + ": " + product.getProductDesc());
+        Text productPriceText = new Text(bundle.getString("ProductPriceText") + ": " + String.format("%.2f", product.getProductPrice()));
+        Text productCategoryText = new Text(bundle.getString("ProductCategoryText") + ": " + product.getCategory());
+        Text productStatusText = new Text(bundle.getString("ProductStatusText") + ": " + (product.isActive() ? "Yes" : "No"));
 
         productBox.getChildren().addAll(productNameText, productDescriptionText, productPriceText, productCategoryText, productStatusText);
 
-        Button editButton = new Button(editButtonText);
+        Button editButton = new Button(bundle.getString("EditButton"));
         editButton.setOnAction(event -> openEditDialog(product));
         productBox.getChildren().add(editButton);
 
-        Button deleteButton = new Button(deleteButtonText);
+        Button deleteButton = new Button(bundle.getString("DeleteButton"));
         deleteButton.setOnAction(event -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle(deleteDialogTitle);
-            alert.setHeaderText(deleteDialogText);
+            alert.setTitle(bundle.getString("DeleteDialogTitle"));
+            alert.setHeaderText(bundle.getString("DeleteDialogText"));
             alert.setContentText(product.getProductName());
 
             Optional<ButtonType> result = alert.showAndWait();
@@ -106,141 +97,25 @@ public class AdminMenuController extends AdminBasicController {
 
     @FXML
     private void addItem() {
-        ResourceBundle bundle = LocalizationManager.getBundle();
-        String dialogTitle = bundle.getString("AddItemDialogTitle");
-        String dialogHeader = bundle.getString("AddItemDialogHeader");
-        String productButton = bundle.getString("AddProductButton");
-        String cancelButton = bundle.getString("CancelProduct");
-        String dialogName = bundle.getString("DialogName");
-        String dialogDescription = bundle.getString("DialogDescription");
-        String dialogPrice = bundle.getString("DialogPrice");
-        String dialogCategory = bundle.getString("DialogCategory");
-        String dialogPicture = bundle.getString("DialogPicture");
-        String dialogActive = bundle.getString("DialogActive");
-
-        // New translation fields
-        String dialogFinnish = "Finnish Translation";
-        String dialogJapanese = "Japanese Translation";
-        String dialogRussian = "Russian Translation";
-
-        Dialog<Product> dialog = new Dialog<>();
-        dialog.setTitle(dialogTitle);
-        dialog.setHeaderText(dialogHeader);
-
-        ButtonType addButtonType = new ButtonType(productButton, ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButtonType = new ButtonType(cancelButton, ButtonBar.ButtonData.CANCEL_CLOSE); // Localized cancel button
-        dialog.getDialogPane().getButtonTypes().addAll(addButtonType, cancelButtonType);
-
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        TextField nameField = new TextField();
-        nameField.setPromptText(dialogName);
-
-        TextField descriptionField = new TextField();
-        descriptionField.setPromptText(dialogDescription);
-
-        TextField priceField = new TextField();
-        priceField.setPromptText(dialogPrice);
-
-        TextField categoryField = new TextField();
-        categoryField.setPromptText(dialogCategory);
-
-        TextField pictureField = new TextField();
-        pictureField.setPromptText(dialogPicture);
-
-        CheckBox activeCheckBox = new CheckBox(dialogActive);
-
-        // Add translation fields
-        TextField finnishField = new TextField();
-        finnishField.setPromptText(dialogFinnish);
-
-        TextField japaneseField = new TextField();
-        japaneseField.setPromptText(dialogJapanese);
-
-        TextField russianField = new TextField();
-        russianField.setPromptText(dialogRussian);
-
-        grid.add(new Label(dialogName), 0, 0);
-        grid.add(nameField, 1, 0);
-        grid.add(new Label(dialogDescription), 0, 1);
-        grid.add(descriptionField, 1, 1);
-        grid.add(new Label(dialogPrice), 0, 2);
-        grid.add(priceField, 1, 2);
-        grid.add(new Label(dialogCategory), 0, 3);
-        grid.add(categoryField, 1, 3);
-        grid.add(new Label(dialogPicture), 0, 4);
-        grid.add(pictureField, 1, 4);
-        grid.add(new Label(dialogActive), 0, 5);
-        grid.add(activeCheckBox, 1, 5);
-
-        // Add translation fields to grid
-        grid.add(new Label(dialogFinnish), 0, 6);
-        grid.add(finnishField, 1, 6);
-        grid.add(new Label(dialogJapanese), 0, 7);
-        grid.add(japaneseField, 1, 7);
-        grid.add(new Label(dialogRussian), 0, 8);
-        grid.add(russianField, 1, 8);
-
-        dialog.getDialogPane().setContent(grid);
-
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == addButtonType) {
-                String name = nameField.getText();
-                String description = descriptionField.getText();
-                double price = Double.parseDouble(priceField.getText());
-                String category = categoryField.getText();
-                String picture = pictureField.getText();
-                boolean active = activeCheckBox.isSelected();
-
-                // Collect translations
-                String finnish = finnishField.getText();
-                String japanese = japaneseField.getText();
-                String russian = russianField.getText();
-
-                return new Product(name, price, description, null, picture, category, active, finnish, japanese, russian);
-            }
-            return null;
-        });
-
-        Optional<Product> result = dialog.showAndWait();
-
-        result.ifPresent(product -> {
-            try {
-                productService.addProductToRestaurant(product, restaurantID);
-                loadProducts();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        showProductDialog(new Product(), false);
     }
 
-
     private void openEditDialog(Product product) {
-        ResourceBundle bundle = LocalizationManager.getBundle();
-        String dialogTitle = bundle.getString("EditItemDialog");
-        String dialogHeader = bundle.getString("EditItemHeader");
-        String updateButton = bundle.getString("UpdateButton");
-        String cancelButton = bundle.getString("CancelEdit");
-        String editActive = bundle.getString("EditActive");
-        String editName = bundle.getString("EditName");
-        String editDescription = bundle.getString("EditDescription");
-        String editPrice = bundle.getString("EditPrice");
-        String editCategory = bundle.getString("EditCategory");
-        String editPicture = bundle.getString("EditPicture");
+        showProductDialog(product, true);
+    }
 
-        // Translation fields
-        String editFinnish = "Edit Finnish Translation";
-        String editJapanese = "Edit Japanese Translation";
-        String editRussian = "Edit Russian Translation";
+    private void showProductDialog(Product product, boolean isEdit) {
+        ResourceBundle bundle = LocalizationManager.getBundle();
+        String dialogTitle = isEdit ? bundle.getString("EditItemDialog") : bundle.getString("AddItemDialogTitle");
 
         Dialog<Product> dialog = new Dialog<>();
         dialog.setTitle(dialogTitle);
-        dialog.setHeaderText(dialogHeader);
 
-        ButtonType updateButtonType = new ButtonType(updateButton, ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButtonType = new ButtonType(cancelButton, ButtonBar.ButtonData.CANCEL_CLOSE); // Localized cancel button
-        dialog.getDialogPane().getButtonTypes().addAll(updateButtonType, cancelButtonType);
+        ButtonType confirmButtonType = new ButtonType(
+                isEdit ? bundle.getString("UpdateButton") : bundle.getString("AddProductButton"),
+                ButtonBar.ButtonData.OK_DONE
+        );
+        dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, ButtonType.CANCEL);
 
         GridPane grid = new GridPane();
         grid.setHgap(10);
@@ -251,44 +126,38 @@ public class AdminMenuController extends AdminBasicController {
         TextField priceField = new TextField(String.valueOf(product.getProductPrice()));
         TextField categoryField = new TextField(product.getCategory());
         TextField pictureField = new TextField(product.getPicture());
-        CheckBox activeCheckBox = new CheckBox(editActive);
+        CheckBox activeCheckBox = new CheckBox(bundle.getString("ProductStatusText"));
         activeCheckBox.setSelected(product.isActive());
 
         // Translation fields
-        TextField finnishField = new TextField(product.getFinnishTranslation());
-        finnishField.setPromptText(editFinnish);
+        TextField finnishField = new TextField(getTranslationText(product, "fi"));
+        TextField japaneseField = new TextField(getTranslationText(product, "ja"));
+        TextField russianField = new TextField(getTranslationText(product, "ru"));
 
-        TextField japaneseField = new TextField(product.getJapaneseTranslation());
-        japaneseField.setPromptText(editJapanese);
-
-        TextField russianField = new TextField(product.getRussianTranslation());
-        russianField.setPromptText(editRussian);
-
-        grid.add(new Label(editName), 0, 0);
+        grid.add(new Label(bundle.getString("ProductNameText")), 0, 0);
         grid.add(nameField, 1, 0);
-        grid.add(new Label(editDescription), 0, 1);
+        grid.add(new Label(bundle.getString("ProductDescriptionText")), 0, 1);
         grid.add(descriptionField, 1, 1);
-        grid.add(new Label(editPrice), 0, 2);
+        grid.add(new Label(bundle.getString("ProductPriceText")), 0, 2);
         grid.add(priceField, 1, 2);
-        grid.add(new Label(editCategory), 0, 3);
+        grid.add(new Label(bundle.getString("ProductCategoryText")), 0, 3);
         grid.add(categoryField, 1, 3);
-        grid.add(new Label(editPicture), 0, 4);
+        grid.add(new Label(bundle.getString("ProductPictureText")), 0, 4);
         grid.add(pictureField, 1, 4);
-        grid.add(new Label(editActive), 0, 5);
         grid.add(activeCheckBox, 1, 5);
 
         // Add translation fields
-        grid.add(new Label(editFinnish), 0, 6);
+        grid.add(new Label("Finnish Translation"), 0, 6);
         grid.add(finnishField, 1, 6);
-        grid.add(new Label(editJapanese), 0, 7);
+        grid.add(new Label("Japanese Translation"), 0, 7);
         grid.add(japaneseField, 1, 7);
-        grid.add(new Label(editRussian), 0, 8);
+        grid.add(new Label("Russian Translation"), 0, 8);
         grid.add(russianField, 1, 8);
 
         dialog.getDialogPane().setContent(grid);
 
         dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == updateButtonType) {
+            if (dialogButton == confirmButtonType) {
                 product.setProductName(nameField.getText());
                 product.setProductDesc(descriptionField.getText());
                 product.setProductPrice(Double.parseDouble(priceField.getText()));
@@ -296,10 +165,12 @@ public class AdminMenuController extends AdminBasicController {
                 product.setPicture(pictureField.getText());
                 product.setActive(activeCheckBox.isSelected());
 
-                // Update translations
-                product.setFinnishTranslation(finnishField.getText());
-                product.setJapaneseTranslation(japaneseField.getText());
-                product.setRussianTranslation(russianField.getText());
+                // Set translations as a list
+                List<Translation> translations = new ArrayList<>();
+                translations.add(new Translation("fi", finnishField.getText()));
+                translations.add(new Translation("ja", japaneseField.getText()));
+                translations.add(new Translation("ru", russianField.getText()));
+                product.setTranslations(translations);
 
                 return product;
             }
@@ -307,10 +178,13 @@ public class AdminMenuController extends AdminBasicController {
         });
 
         Optional<Product> result = dialog.showAndWait();
-
         result.ifPresent(updatedProduct -> {
             try {
-                productService.updateProduct(updatedProduct);
+                if (isEdit) {
+                    productService.updateProduct(updatedProduct);
+                } else {
+                    productService.addProductToRestaurant(updatedProduct, restaurantID);
+                }
                 loadProducts();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -318,18 +192,21 @@ public class AdminMenuController extends AdminBasicController {
         });
     }
 
+    private String getTranslationText(Product product, String language) {
+        return product.getTranslations().stream()
+                .filter(t -> t.getLanguageCode().equals(language))
+                .map(Translation::getText)
+                .findFirst()
+                .orElse("");
+    }
+
     private void deleteProduct(Product product) {
-        ResourceBundle bundle = LocalizationManager.getBundle();
-        String deleteDialogTitle = bundle.getString("DeleteTitle");
-        String deleteFail = bundle.getString("DeleteFail");
         try {
-            productService.deleteProduct(product,restaurantID);
+            productService.deleteProduct(product, restaurantID);
             loadProducts();
         } catch (IOException e) {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle(deleteDialogTitle);
-            alert.setHeaderText(deleteFail);
             alert.setContentText(e.getMessage());
             alert.showAndWait();
         }

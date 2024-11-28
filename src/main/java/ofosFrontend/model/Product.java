@@ -2,6 +2,8 @@ package ofosFrontend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.List;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Product {
 
@@ -13,13 +15,9 @@ public class Product {
     private String category;
     private boolean active;
 
-    // Translation fields
-    private String finnishTranslation;
-    private String japaneseTranslation;
-    private String russianTranslation;
+    private List<Translation> translations;
 
-    // Parameterized constructor with translations
-    public Product(String productName, double productPrice, String productDesc, Integer productID, String picture, String category, boolean active, String finnishTranslation, String japaneseTranslation, String russianTranslation) {
+    public Product(String productName, double productPrice, String productDesc, Integer productID, String picture, String category, boolean active, List<Translation> translations) {
         this.productName = productName;
         this.productPrice = productPrice;
         this.productDesc = productDesc;
@@ -27,38 +25,10 @@ public class Product {
         this.picture = picture;
         this.category = category;
         this.active = active;
-        this.finnishTranslation = finnishTranslation;
-        this.japaneseTranslation = japaneseTranslation;
-        this.russianTranslation = russianTranslation;
+        this.translations = translations;
     }
 
-    // Default constructor
     public Product() {
-    }
-
-    // Getters and setters for the original fields
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public String getPicture() {
-        return picture;
-    }
-
-    public void setPicture(String picture) {
-        this.picture = picture;
     }
 
     public String getProductName() {
@@ -93,43 +63,50 @@ public class Product {
         this.productID = productID;
     }
 
-    public String getFinnishTranslation() {
-        return finnishTranslation;
+    public String getPicture() {
+        return picture;
     }
 
-    public void setFinnishTranslation(String finnishTranslation) {
-        this.finnishTranslation = finnishTranslation;
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 
-    public String getJapaneseTranslation() {
-        return japaneseTranslation;
+    public String getCategory() {
+        return category;
     }
 
-    public void setJapaneseTranslation(String japaneseTranslation) {
-        this.japaneseTranslation = japaneseTranslation;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
-    public String getRussianTranslation() {
-        return russianTranslation;
+    public boolean isActive() {
+        return active;
     }
 
-    public void setRussianTranslation(String russianTranslation) {
-        this.russianTranslation = russianTranslation;
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public List<Translation> getTranslations() {
+        return translations;
+    }
+
+    public void setTranslations(List<Translation> translations) {
+        this.translations = translations;
     }
 
     @Override
     public String toString() {
         return "Product{" +
                 "productName='" + productName + '\'' +
-                ", price=" + productPrice +
+                ", productPrice=" + productPrice +
                 ", productDesc='" + productDesc + '\'' +
                 ", productID=" + productID +
                 ", picture='" + picture + '\'' +
                 ", category='" + category + '\'' +
                 ", active=" + active +
-                ", finnishTranslation='" + finnishTranslation + '\'' +
-                ", japaneseTranslation='" + japaneseTranslation + '\'' +
-                ", russianTranslation='" + russianTranslation + '\'' +
+                ", translations=" + translations +
                 '}';
     }
 }
+
