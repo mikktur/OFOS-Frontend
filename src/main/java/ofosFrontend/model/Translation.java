@@ -2,14 +2,13 @@ package ofosFrontend.model;
 
 public class Translation {
     private String languageCode;
-    private String text;
+    private String name;
+    private String description;
 
-    public Translation(String languageCode, String text) {
+    public Translation(String languageCode, String name, String description) {
         this.languageCode = languageCode;
-        this.text = text;
-    }
-
-    public Translation() {
+        this.name = name;
+        this.description = description;
     }
 
     public String getLanguageCode() {
@@ -20,19 +19,34 @@ public class Translation {
         this.languageCode = languageCode;
     }
 
-    public String getText() {
-        return text;
+    public String getName() {
+        return name;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override
     public String toString() {
         return "Translation{" +
-                "languageCode='" + languageCode + '\'' +
-                ", text='" + text + '\'' +
+                "language='" + languageCode + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
+
+    public void getLanguageCode(String languageCode) {
+        this.languageCode = languageCode;
+    }
 }
+
+

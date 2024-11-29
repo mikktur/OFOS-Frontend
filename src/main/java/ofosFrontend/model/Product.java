@@ -14,7 +14,6 @@ public class Product {
     private String picture;
     private String category;
     private boolean active;
-
     private List<Translation> translations;
 
     public Product(String productName, double productPrice, String productDesc, Integer productID, String picture, String category, boolean active, List<Translation> translations) {
@@ -93,6 +92,13 @@ public class Product {
 
     public void setTranslations(List<Translation> translations) {
         this.translations = translations;
+    }
+
+    public Translation getTranslationForLanguage(String language) {
+        return translations.stream()
+                .filter(translation -> translation.getLanguageCode().equalsIgnoreCase(language))
+                .findFirst()
+                .orElse(new Translation(language, "", ""));
     }
 
     @Override
