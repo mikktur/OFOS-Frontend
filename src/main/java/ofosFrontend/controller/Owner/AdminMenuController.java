@@ -125,6 +125,9 @@ public class AdminMenuController extends AdminBasicController {
         String dialogTitle = isEditMode ? bundle.getString("EditItemDialog") : bundle.getString("AddItemDialogTitle");
         String dialogHeader = isEditMode ? bundle.getString("EditItemHeader") : bundle.getString("AddItemDialogHeader");
         String confirmButton = isEditMode ? bundle.getString("UpdateButton") : bundle.getString("AddProductButton");
+        String cancelButton = bundle.getString("CancelProduct");
+        String dialogName = bundle.getString("DialogName");
+        String dialogDescription = bundle.getString("DialogDescription");
         String dialogPrice = bundle.getString("DialogPrice");
         String dialogCategory = bundle.getString("DialogCategory");
         String dialogPicture = bundle.getString("DialogPicture");
@@ -135,8 +138,10 @@ public class AdminMenuController extends AdminBasicController {
         dialog.setHeaderText(dialogHeader);
 
         ButtonType confirmButtonType = new ButtonType(confirmButton, ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, ButtonType.CANCEL);
+        ButtonType cancelButtonType = new ButtonType(cancelButton, ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, cancelButtonType);
 
+        // Create dialog content
         GridPane productDetailsGrid = new GridPane();
         productDetailsGrid.setHgap(10);
         productDetailsGrid.setVgap(10);
@@ -156,17 +161,16 @@ public class AdminMenuController extends AdminBasicController {
         productDetailsGrid.add(new Label(dialogActive), 0, 3);
         productDetailsGrid.add(activeCheckBox, 1, 3);
 
-        // TabPane for translations
+        // Create tabs for translations
         TabPane tabPane = new TabPane();
         tabPane.getTabs().addAll(
-                createTranslationTab("English", isEditMode ? product.getTranslationForLanguage("English") : null),
-                createTranslationTab("Finnish", isEditMode ? product.getTranslationForLanguage("Finnish") : null),
-                createTranslationTab("Japanese", isEditMode ? product.getTranslationForLanguage("Japanese") : null),
-                createTranslationTab("Russian", isEditMode ? product.getTranslationForLanguage("Russian") : null)
-
+                createTranslationTab("English", isEditMode ? product.getTranslationForLanguage("English") : null, bundle),
+                createTranslationTab("Finnish", isEditMode ? product.getTranslationForLanguage("Finnish") : null, bundle),
+                createTranslationTab("Japanese", isEditMode ? product.getTranslationForLanguage("Japanese") : null, bundle),
+                createTranslationTab("Russian", isEditMode ? product.getTranslationForLanguage("Russian") : null, bundle)
         );
 
-        VBox dialogContent = new VBox(10, productDetailsGrid, tabPane);
+        VBox dialogContent = new VBox(10, tabPane, productDetailsGrid);
         dialogContent.setPadding(new Insets(10));
 
         dialog.getDialogPane().setContent(dialogContent);
@@ -197,22 +201,27 @@ public class AdminMenuController extends AdminBasicController {
         return dialog;
     }
 
-    private Tab createTranslationTab(String language, Translation existingTranslation) {
+
+    private Tab createTranslationTab(String languageKey, Translation existingTranslation, ResourceBundle bundle) {
         VBox tabContent = new VBox(10);
         tabContent.setPadding(new Insets(10));
+
+        String nameLabel = bundle.getString(languageKey + "Name");
+        String descriptionLabel = bundle.getString(languageKey + "Description");
 
         TextField nameField = new TextField(existingTranslation != null ? existingTranslation.getName() : "");
         TextField descriptionField = new TextField(existingTranslation != null ? existingTranslation.getDescription() : "");
 
         tabContent.getChildren().addAll(
-                new Label(language + " Name"), nameField,
-                new Label(language + " Description"), descriptionField
+                new Label(nameLabel), nameField,
+                new Label(descriptionLabel), descriptionField
         );
 
-        Tab tab = new Tab(language);
+        Tab tab = new Tab(languageKey);
         tab.setContent(tabContent);
         return tab;
     }
+
 
     private List<Translation> extractTranslationsFromTabs(TabPane tabPane) {
         List<Translation> translations = new ArrayList<>();

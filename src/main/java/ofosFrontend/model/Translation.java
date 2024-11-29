@@ -19,6 +19,10 @@ public class Translation {
         this.languageCode = languageCode;
     }
 
+    public void getLanguageCode(String languageCode) {
+        this.languageCode = languageCode;
+    }
+
     public String getName() {
         return name;
     }
@@ -42,10 +46,6 @@ public class Translation {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 '}';
-    }
-
-    public void getLanguageCode(String languageCode) {
-        this.languageCode = languageCode;
     }
 }
 
