@@ -11,7 +11,8 @@ import java.util.*;
 public class LocalizationManager {
 
     private static final String BASE_NAME = "MessagesBundle";
-    private static Locale locale = Locale.ENGLISH;
+    //private static Locale locale = Locale.ENGLISH;
+    private static Locale locale = new Locale("en",  "US");
     private static ResourceBundle bundle = ResourceBundle.getBundle(BASE_NAME, locale);
 
 
@@ -62,6 +63,7 @@ public class LocalizationManager {
      */
     public static void setLocale(Locale newLocale) {
         try {
+            System.out.println("Setting locale to: " + newLocale);
             locale = newLocale;
             bundle = ResourceBundle.getBundle(BASE_NAME, locale);
         } catch (MissingResourceException e) {

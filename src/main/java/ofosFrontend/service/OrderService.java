@@ -17,7 +17,7 @@ import java.util.Map;
  * Service class for handling order operations
  */
 public class OrderService {
-    private static final String API_URL = "http://localhost:8000/api/";
+    private static final String API_URL = "http://10.120.32.94:8000/api/";
     private final ObjectMapper mapper = new ObjectMapper();
     OkHttpClient client = new OkHttpClient();
 
@@ -25,7 +25,6 @@ public class OrderService {
      * Fetches the order history of the currently logged-in user.
      * @return A map of order IDs to lists of OrderHistory objects.
      * @throws IOException If an I/O error occurs.
-     * @throws InterruptedException If the operation is interrupted.
      */
     public Map<Integer, List<OrderHistory>> getHistory() throws IOException {
         String lang = LocalizationManager.getLanguageCode();

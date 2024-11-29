@@ -14,7 +14,7 @@ import java.io.IOException;
  * Service class for handling contact information operations
  */
 public class ContactInfoService {
-    private static final String API_URL = "http://localhost:8000/api/";
+    private static final String API_URL = "http://10.120.32.94:8000/api/";
     private static final Logger logger = LogManager.getLogger(ContactInfoService.class);
     private final ObjectMapper mapper = new ObjectMapper();
     private final OkHttpClient client = new OkHttpClient();

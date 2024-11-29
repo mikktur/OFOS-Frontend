@@ -20,9 +20,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 import static ofosFrontend.session.Validations.showError;
 
@@ -57,8 +55,6 @@ public class LoginController {
 
     /**
      * Handle user login
-     *
-     * @param event the event that triggered the login
      */
     @FXML
     public void userLogin() {
@@ -141,8 +137,6 @@ public class LoginController {
 
     /**
      * Go back to the login view
-     *
-     * @param event the event that triggered the go back
      * @throws IOException if the login view cannot be loaded
      */
     @FXML
