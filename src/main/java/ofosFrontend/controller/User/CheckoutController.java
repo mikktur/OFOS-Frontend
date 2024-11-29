@@ -162,6 +162,10 @@ public class CheckoutController  extends BasicController {
         });
     }
 
+    /**
+     * Creates the confirmation dialog for the order.
+     * @return The dialog object.
+     */
     private Dialog<ButtonType> createOrderConfirmationDialog() {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle(bundle.getString("Order_confirmation"));
@@ -173,6 +177,10 @@ public class CheckoutController  extends BasicController {
         return dialog;
     }
 
+    /**
+     * Builds the content of the order confirmation dialog.
+     * @return The VBox containing the order summary.
+     */
     private VBox buildOrderSummary() {
         VBox content = new VBox(10);
 
@@ -190,6 +198,10 @@ public class CheckoutController  extends BasicController {
         return content;
     }
 
+    /**
+     * Creates the summary of the cart items.
+     * @return The VBox containing the cart items.
+     */
     private VBox createCartSummary() {
         VBox cartSummary = new VBox();
         Label cartItemsLabel = new Label(bundle.getString("Items"));
@@ -210,6 +222,10 @@ public class CheckoutController  extends BasicController {
         return cartSummary;
     }
 
+    /**
+     * Creates the summary of the delivery address.
+     * @return The VBox containing the delivery address.
+     */
     private VBox createDeliveryAddressSummary() {
         VBox addressSummary = new VBox();
         Label deliveryLabel = new Label(bundle.getString("Delivery_Address"));
@@ -227,6 +243,10 @@ public class CheckoutController  extends BasicController {
         return addressSummary;
     }
 
+    /**
+     * Creates the summary of the payment method.
+     * @return The VBox containing the payment method.
+     */
     private VBox createPaymentMethodSummary() {
         VBox paymentSummary = new VBox();
         Label paymentLabel = new Label(bundle.getString("paymentMethod"));
@@ -237,6 +257,10 @@ public class CheckoutController  extends BasicController {
         return paymentSummary;
     }
 
+    /**
+     * Creates the summary of the total price.
+     * @return The VBox containing the total price.
+     */
     private VBox createTotalSummary() {
         VBox totalSummary = new VBox();
         Label totalLabel = new Label(bundle.getString("Total") + subTotal.getText());
