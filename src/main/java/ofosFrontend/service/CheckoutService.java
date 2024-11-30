@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CheckoutService {
-    private static final String API_URL = "http://10.120.32.94:8000/api/";
+    private static final String API_URL = "http://localhost:8000/api/";
     private List<DeliveryAddress> deliveryAddressesList = new ArrayList<>();
 
     public Task<List<DeliveryAddress>> fetchDeliveryAddresses() {

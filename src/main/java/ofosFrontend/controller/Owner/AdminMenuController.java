@@ -95,6 +95,7 @@ public class AdminMenuController extends AdminBasicController {
 
         result.ifPresent(product -> {
             try {
+                System.out.println("Product object before serialization: " + product);
                 productService.addProductToRestaurant(product, restaurantID);
                 loadProducts();
             } catch (IOException e) {
@@ -102,6 +103,7 @@ public class AdminMenuController extends AdminBasicController {
             }
         });
     }
+
 
     private void openEditDialog(Product product) {
         ResourceBundle bundle = LocalizationManager.getBundle();
@@ -126,8 +128,6 @@ public class AdminMenuController extends AdminBasicController {
         String dialogHeader = isEditMode ? bundle.getString("EditItemHeader") : bundle.getString("AddItemDialogHeader");
         String confirmButton = isEditMode ? bundle.getString("UpdateButton") : bundle.getString("AddProductButton");
         String cancelButton = bundle.getString("CancelProduct");
-        String dialogName = bundle.getString("DialogName");
-        String dialogDescription = bundle.getString("DialogDescription");
         String dialogPrice = bundle.getString("DialogPrice");
         String dialogCategory = bundle.getString("DialogCategory");
         String dialogPicture = bundle.getString("DialogPicture");
@@ -182,9 +182,27 @@ public class AdminMenuController extends AdminBasicController {
                 String picture = pictureField.getText();
                 boolean active = activeCheckBox.isSelected();
 
+                // Extract translations from tabs
                 List<Translation> translations = extractTranslationsFromTabs(tabPane);
 
+                // Find English translation for productName and productDesc
+                String productName = translations.stream()
+                        .filter(t -> "en".equals(t.getLanguageCode()))
+                        .map(Translation::getName)
+                        .findFirst()
+                        .orElse("");
+
+                String productDesc = translations.stream()
+                        .filter(t -> "en".equals(t.getLanguageCode()))
+                        .map(Translation::getDescription)
+                        .findFirst()
+                        .orElse("");
+
+
+
                 if (isEditMode) {
+                    product.setProductName(productName);
+                    product.setProductDesc(productDesc);
                     product.setProductPrice(price);
                     product.setCategory(category);
                     product.setPicture(picture);
@@ -192,7 +210,7 @@ public class AdminMenuController extends AdminBasicController {
                     product.setTranslations(translations);
                     return product;
                 } else {
-                    return new Product(null, price, null, null, picture, category, active, translations);
+                    return new Product(productName, price, productDesc, null, picture, category, active, translations);
                 }
             }
             return null;
@@ -200,6 +218,7 @@ public class AdminMenuController extends AdminBasicController {
 
         return dialog;
     }
+
 
 
     private Tab createTranslationTab(String languageKey, Translation existingTranslation, ResourceBundle bundle) {
@@ -228,14 +247,29 @@ public class AdminMenuController extends AdminBasicController {
 
         for (Tab tab : tabPane.getTabs()) {
             VBox content = (VBox) tab.getContent();
-            TextField nameField = (TextField) content.getChildren().get(1);
-            TextField descriptionField = (TextField) content.getChildren().get(3);
+            TextField nameField = (TextField) content.getChildren().get(1); // Field for name
+            TextField descriptionField = (TextField) content.getChildren().get(3); // Field for description
 
-            translations.add(new Translation(tab.getText(), nameField.getText(), descriptionField.getText()));
+            // Map full language names to ISO codes
+            String languageCode = switch (tab.getText()) {
+                case "English" -> "en";
+                case "Finnish" -> "fi";
+                case "Japanese" -> "ja";
+                case "Russian" -> "ru";
+                default -> tab.getText();
+            };
+
+            translations.add(new Translation(
+                    languageCode,
+                    nameField.getText(),
+                    descriptionField.getText()
+            ));
         }
 
         return translations;
     }
+
+
 
     private void confirmAndDeleteProduct(Product product, ResourceBundle bundle) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
