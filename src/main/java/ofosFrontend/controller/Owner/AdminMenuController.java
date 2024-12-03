@@ -28,8 +28,9 @@ public class AdminMenuController extends AdminBasicController {
     @FXML
     private Text restaurantNameText;
 
-    private final ProductService productService = new ProductService();
+    private ProductService productService = new ProductService();
     private int restaurantID;
+    private Product product = new Product();
 
     @FXML
     public void initialize() {
@@ -67,20 +68,40 @@ public class AdminMenuController extends AdminBasicController {
         productBox.setSpacing(10.0);
         productBox.setStyle("-fx-padding: 5px; -fx-background-color: #e8f4fb; -fx-border-color: #000;");
 
-        Text productNameText = new Text(bundle.getString("ProductNameText") + ": " + product.getProductName());
-        Text productDescriptionText = new Text(bundle.getString("ProductDescriptionText") + ": " + product.getProductDesc());
-        Text productPriceText = new Text(bundle.getString("ProductPriceText") + ": " + String.format("%.2f", product.getProductPrice()));
-        Text productCategoryText = new Text(bundle.getString("ProductCategoryText") + ": " + product.getCategory());
-        Text productStatusText = new Text(bundle.getString("ProductStatusText") + ": " + (product.isActive() ? "Yes" : "No"));
+        String nameLabelText = bundle.getString("ProductNameText") + ": " + product.getProductName();
+        String descriptionLabelText = bundle.getString("ProductDescriptionText") + ": " + product.getProductDesc();
+        String priceLabelText = bundle.getString("ProductPriceText") + ": " + String.format("%.2f", product.getProductPrice());
+        String categoryLabelText = bundle.getString("ProductCategoryText") + ": " + product.getCategory();
+        String statusLabelText = bundle.getString("ProductStatusText") + ": " + (product.isActive() ? "Yes" : "No");
+        String editButtonText = bundle.getString("EditButton");
+        String deleteButtonText = bundle.getString("DeleteButton");
+        String deleteDialogTitle = bundle.getString("DeleteDialogTitle");
+        String deleteDialogText = bundle.getString("DeleteDialogText");
+
+        Text productNameText = new Text(nameLabelText);
+        Text productDescriptionText = new Text(descriptionLabelText);
+        Text productPriceText = new Text(priceLabelText);
+        Text productCategoryText = new Text(categoryLabelText);
+        Text productStatusText = new Text(statusLabelText);
 
         productBox.getChildren().addAll(productNameText, productDescriptionText, productPriceText, productCategoryText, productStatusText);
 
-        Button editButton = new Button(bundle.getString("EditButton"));
+        Button editButton = new Button(editButtonText);
         editButton.setOnAction(event -> openEditDialog(product));
         productBox.getChildren().add(editButton);
 
-        Button deleteButton = new Button(bundle.getString("DeleteButton"));
-        deleteButton.setOnAction(event -> confirmAndDeleteProduct(product, bundle));
+        Button deleteButton = new Button(deleteButtonText);
+        deleteButton.setOnAction(event -> {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle(deleteDialogTitle);
+            alert.setHeaderText(deleteDialogText);
+            alert.setContentText(product.getProductName());
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                deleteProduct(product);
+            }
+        });
         productBox.getChildren().add(deleteButton);
 
         return productBox;
@@ -89,206 +110,207 @@ public class AdminMenuController extends AdminBasicController {
     @FXML
     private void addItem() {
         ResourceBundle bundle = LocalizationManager.getBundle();
-        Dialog<Product> dialog = createProductDialog(bundle, null);
-
-        Optional<Product> result = dialog.showAndWait();
-
-        result.ifPresent(product -> {
-            try {
-                System.out.println("Product object before serialization: " + product);
-                productService.addProductToRestaurant(product, restaurantID);
-                loadProducts();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
-
-    private void openEditDialog(Product product) {
-        ResourceBundle bundle = LocalizationManager.getBundle();
-        Dialog<Product> dialog = createProductDialog(bundle, product);
-
-        Optional<Product> result = dialog.showAndWait();
-
-        result.ifPresent(updatedProduct -> {
-            try {
-                productService.updateProduct(updatedProduct);
-                loadProducts();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
-    private Dialog<Product> createProductDialog(ResourceBundle bundle, Product product) {
-        boolean isEditMode = product != null;
-
-        String dialogTitle = isEditMode ? bundle.getString("EditItemDialog") : bundle.getString("AddItemDialogTitle");
-        String dialogHeader = isEditMode ? bundle.getString("EditItemHeader") : bundle.getString("AddItemDialogHeader");
-        String confirmButton = isEditMode ? bundle.getString("UpdateButton") : bundle.getString("AddProductButton");
+        String dialogTitle = bundle.getString("AddItemDialogTitle");
+        String dialogHeader = bundle.getString("AddItemDialogHeader");
+        String productButton = bundle.getString("AddProductButton");
         String cancelButton = bundle.getString("CancelProduct");
-        String dialogPrice = bundle.getString("DialogPrice");
-        String dialogCategory = bundle.getString("DialogCategory");
-        String dialogPicture = bundle.getString("DialogPicture");
-        String dialogActive = bundle.getString("DialogActive");
 
         Dialog<Product> dialog = new Dialog<>();
         dialog.setTitle(dialogTitle);
         dialog.setHeaderText(dialogHeader);
 
-        ButtonType confirmButtonType = new ButtonType(confirmButton, ButtonBar.ButtonData.OK_DONE);
+        ButtonType addButtonType = new ButtonType(productButton, ButtonBar.ButtonData.OK_DONE);
         ButtonType cancelButtonType = new ButtonType(cancelButton, ButtonBar.ButtonData.CANCEL_CLOSE);
-        dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, cancelButtonType);
+        dialog.getDialogPane().getButtonTypes().addAll(addButtonType, cancelButtonType);
 
-        // Create dialog content
-        GridPane productDetailsGrid = new GridPane();
-        productDetailsGrid.setHgap(10);
-        productDetailsGrid.setVgap(10);
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
 
-        TextField priceField = new TextField(isEditMode ? String.valueOf(product.getProductPrice()) : "");
-        TextField categoryField = new TextField(isEditMode ? product.getCategory() : "");
-        TextField pictureField = new TextField(isEditMode ? product.getPicture() : "");
-        CheckBox activeCheckBox = new CheckBox(dialogActive);
-        if (isEditMode) activeCheckBox.setSelected(product.isActive());
-
-        productDetailsGrid.add(new Label(dialogPrice), 0, 0);
-        productDetailsGrid.add(priceField, 1, 0);
-        productDetailsGrid.add(new Label(dialogCategory), 0, 1);
-        productDetailsGrid.add(categoryField, 1, 1);
-        productDetailsGrid.add(new Label(dialogPicture), 0, 2);
-        productDetailsGrid.add(pictureField, 1, 2);
-        productDetailsGrid.add(new Label(dialogActive), 0, 3);
-        productDetailsGrid.add(activeCheckBox, 1, 3);
-
-        // Create tabs for translations
+        // Translation tabs (English, Finnish, Japanese, Russian)
         TabPane tabPane = new TabPane();
-        tabPane.getTabs().addAll(
-                createTranslationTab("English", isEditMode ? product.getTranslationForLanguage("English") : null, bundle),
-                createTranslationTab("Finnish", isEditMode ? product.getTranslationForLanguage("Finnish") : null, bundle),
-                createTranslationTab("Japanese", isEditMode ? product.getTranslationForLanguage("Japanese") : null, bundle),
-                createTranslationTab("Russian", isEditMode ? product.getTranslationForLanguage("Russian") : null, bundle)
-        );
+        Tab englishTab = createTranslationTab("English", product.getTranslations());
+        Tab finnishTab = createTranslationTab("Finnish", product.getTranslations());
+        Tab japaneseTab = createTranslationTab("Japanese", product.getTranslations());
+        Tab russianTab = createTranslationTab("Russian", product.getTranslations());
+        tabPane.getTabs().addAll(englishTab, finnishTab, japaneseTab, russianTab);
 
-        VBox dialogContent = new VBox(10, tabPane, productDetailsGrid);
-        dialogContent.setPadding(new Insets(10));
+        // Fields for price, category, picture, etc.
+        TextField priceField = new TextField();
+        TextField categoryField = new TextField();
+        TextField pictureField = new TextField();
 
-        dialog.getDialogPane().setContent(dialogContent);
+        CheckBox activeCheckbox = new CheckBox();
+        grid.add(new Label(bundle.getString("DialogPrice")), 0, 1);
+        grid.add(priceField, 1, 1);
+        grid.add(new Label(bundle.getString("DialogCategory")), 0, 2);
+        grid.add(categoryField, 1, 2);
+        grid.add(new Label(bundle.getString("DialogPicture")), 0, 3);
+        grid.add(pictureField, 1, 3);
+        grid.add(new Label(bundle.getString("DialogActive")), 0, 4);
+        grid.add(activeCheckbox, 1, 4);
+
+        grid.add(tabPane, 0, 0, 2, 1);
+
+        dialog.getDialogPane().setContent(grid);
 
         dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == confirmButtonType) {
-                double price = Double.parseDouble(priceField.getText());
-                String category = categoryField.getText();
-                String picture = pictureField.getText();
-                boolean active = activeCheckBox.isSelected();
+            if (dialogButton == addButtonType) {
+                List<Translation> translations = new ArrayList<>();
+                translations.add(getTranslationFromTab(englishTab));
+                translations.add(getTranslationFromTab(finnishTab));
+                translations.add(getTranslationFromTab(japaneseTab));
+                translations.add(getTranslationFromTab(russianTab));
 
-                // Extract translations from tabs
-                List<Translation> translations = extractTranslationsFromTabs(tabPane);
+                return new Product(
+                        translations.get(0).getName(),  // Default to English name
+                        Double.parseDouble(priceField.getText()),
+                        translations.get(0).getDescription(), // Default to English description
+                        null, // ProductID will be set later
+                        pictureField.getText(),
+                        categoryField.getText(),
+                        activeCheckbox.isSelected(),
+                        translations
+                );
+            }
+            return null;
+        });
+        Optional<Product> result = dialog.showAndWait();
+        result.ifPresent(product -> {
+            restaurantNameText.setId(String.valueOf(restaurantID));
+            try {
+                productService.addProductToRestaurant(product, restaurantID);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            loadProducts();
+        });
 
-                // Find English translation for productName and productDesc
-                String productName = translations.stream()
-                        .filter(t -> "en".equals(t.getLanguageCode()))
-                        .map(Translation::getName)
-                        .findFirst()
-                        .orElse("");
+    }
 
-                String productDesc = translations.stream()
-                        .filter(t -> "en".equals(t.getLanguageCode()))
-                        .map(Translation::getDescription)
-                        .findFirst()
-                        .orElse("");
+    private Tab createTranslationTab(String language, List<Translation> translations) {
+        Tab tab = new Tab(language);
+        GridPane tabGrid = new GridPane();
+        tabGrid.setPadding(new Insets(10, 10, 10, 10));
+        tabGrid.setHgap(10);
+        tabGrid.setVgap(10);
 
+        TextField nameField = new TextField();
+        TextArea descField = new TextArea();
+        descField.setWrapText(true);
 
+        tabGrid.add(new Label(language + " Name"), 0, 0);
+        tabGrid.add(nameField, 1, 0);
+        tabGrid.add(new Label(language + " Description"), 0, 1);
+        tabGrid.add(descField, 1, 1);
 
-                if (isEditMode) {
-                    product.setProductName(productName);
-                    product.setProductDesc(productDesc);
-                    product.setProductPrice(price);
-                    product.setCategory(category);
-                    product.setPicture(picture);
-                    product.setActive(active);
-                    product.setTranslations(translations);
-                    return product;
-                } else {
-                    return new Product(productName, price, productDesc, null, picture, category, active, translations);
-                }
+        tab.setContent(tabGrid);
+        return tab;
+    }
+
+    private Translation getTranslationFromTab(Tab tab) {
+        GridPane tabGrid = (GridPane) tab.getContent();
+        TextField nameField = (TextField) tabGrid.getChildren().get(1);
+        TextArea descField = (TextArea) tabGrid.getChildren().get(3);
+
+        return new Translation(tab.getText(), nameField.getText(), descField.getText());
+    }
+
+    private void openEditDialog(Product product) {
+        ResourceBundle bundle = LocalizationManager.getBundle();
+        String dialogTitle = bundle.getString("EditItemDialog");
+        String dialogHeader = bundle.getString("EditItemHeader");
+        String saveButtonText = bundle.getString("UpdateButton");
+        String cancelButtonText = bundle.getString("CancelEdit");
+
+        Dialog<Product> dialog = new Dialog<>();
+        dialog.setTitle(dialogTitle);
+        dialog.setHeaderText(dialogHeader);
+
+        ButtonType saveButtonType = new ButtonType(saveButtonText, ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = new ButtonType(cancelButtonText, ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, cancelButtonType);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+
+        // Translation tabs (English, Finnish, Japanese, Russian)
+        TabPane tabPane = new TabPane();
+        Tab englishTab = createTranslationTab("English", product.getTranslations());
+        Tab finnishTab = createTranslationTab("Finnish", product.getTranslations());
+        Tab japaneseTab = createTranslationTab("Japanese", product.getTranslations());
+        Tab russianTab = createTranslationTab("Russian", product.getTranslations());
+        tabPane.getTabs().addAll(englishTab, finnishTab, japaneseTab, russianTab);
+
+        // Fields for price, category, picture, etc.
+        TextField priceField = new TextField(String.valueOf(product.getProductPrice()));
+        TextField categoryField = new TextField(product.getCategory());
+        TextField pictureField = new TextField(product.getPicture());
+
+        CheckBox activeCheckbox = new CheckBox();
+        activeCheckbox.setSelected(product.isActive());
+
+        grid.add(new Label(bundle.getString("DialogPrice")), 0, 1);
+        grid.add(priceField, 1, 1);
+        grid.add(new Label(bundle.getString("DialogCategory")), 0, 2);
+        grid.add(categoryField, 1, 2);
+        grid.add(new Label(bundle.getString("DialogPicture")), 0, 3);
+        grid.add(pictureField, 1, 3);
+        grid.add(new Label(bundle.getString("DialogActive")), 0, 4);
+        grid.add(activeCheckbox, 1, 4);
+
+        grid.add(tabPane, 0, 0, 2, 1);
+
+        dialog.getDialogPane().setContent(grid);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == saveButtonType) {
+                List<Translation> updatedTranslations = new ArrayList<>();
+                updatedTranslations.add(getTranslationFromTab(englishTab));
+                updatedTranslations.add(getTranslationFromTab(finnishTab));
+                updatedTranslations.add(getTranslationFromTab(japaneseTab));
+                updatedTranslations.add(getTranslationFromTab(russianTab));
+
+                product.setProductName(updatedTranslations.get(0).getName());  // Default to English name
+                product.setProductDesc(updatedTranslations.get(0).getDescription());  // Default to English description
+                product.setProductPrice(Double.parseDouble(priceField.getText()));
+                product.setCategory(categoryField.getText());
+                product.setPicture(pictureField.getText());
+                product.setActive(activeCheckbox.isSelected());
+                product.setTranslations(updatedTranslations);
+
+                return product;
             }
             return null;
         });
 
-        return dialog;
-    }
-
-
-
-    private Tab createTranslationTab(String languageKey, Translation existingTranslation, ResourceBundle bundle) {
-        VBox tabContent = new VBox(10);
-        tabContent.setPadding(new Insets(10));
-
-        String nameLabel = bundle.getString(languageKey + "Name");
-        String descriptionLabel = bundle.getString(languageKey + "Description");
-
-        TextField nameField = new TextField(existingTranslation != null ? existingTranslation.getName() : "");
-        TextField descriptionField = new TextField(existingTranslation != null ? existingTranslation.getDescription() : "");
-
-        tabContent.getChildren().addAll(
-                new Label(nameLabel), nameField,
-                new Label(descriptionLabel), descriptionField
-        );
-
-        Tab tab = new Tab(languageKey);
-        tab.setContent(tabContent);
-        return tab;
-    }
-
-
-    private List<Translation> extractTranslationsFromTabs(TabPane tabPane) {
-        List<Translation> translations = new ArrayList<>();
-
-        for (Tab tab : tabPane.getTabs()) {
-            VBox content = (VBox) tab.getContent();
-            TextField nameField = (TextField) content.getChildren().get(1); // Field for name
-            TextField descriptionField = (TextField) content.getChildren().get(3); // Field for description
-
-            // Map full language names to ISO codes
-            String languageCode = switch (tab.getText()) {
-                case "English" -> "en";
-                case "Finnish" -> "fi";
-                case "Japanese" -> "ja";
-                case "Russian" -> "ru";
-                default -> tab.getText();
-            };
-
-            translations.add(new Translation(
-                    languageCode,
-                    nameField.getText(),
-                    descriptionField.getText()
-            ));
-        }
-
-        return translations;
-    }
-
-
-
-    private void confirmAndDeleteProduct(Product product, ResourceBundle bundle) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(bundle.getString("DeleteDialogTitle"));
-        alert.setHeaderText(bundle.getString("DeleteDialogText"));
-        alert.setContentText(product.getProductName());
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
+        Optional<Product> result = dialog.showAndWait();
+        result.ifPresent(updatedProduct -> {
             try {
-                productService.deleteProduct(product, restaurantID);
-                loadProducts();
+                productService.updateProduct(updatedProduct);  // Update product in service
             } catch (IOException e) {
-                e.printStackTrace();
-                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                errorAlert.setTitle(bundle.getString("DeleteTitle"));
-                errorAlert.setContentText(bundle.getString("DeleteFailed"));
-                errorAlert.showAndWait();
+                throw new RuntimeException(e);
             }
+            loadProducts();  // Reload product list
+        });
+    }
+
+
+    private void deleteProduct(Product product) {
+        ResourceBundle bundle = LocalizationManager.getBundle();
+        String deleteDialogTitle = bundle.getString("DeleteTitle");
+        String deleteFail = bundle.getString("DeleteFail");
+        try {
+            productService.deleteProduct(product, restaurantID);
+            loadProducts();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle(deleteDialogTitle);
+            alert.setHeaderText(deleteFail);
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
         }
     }
 }
