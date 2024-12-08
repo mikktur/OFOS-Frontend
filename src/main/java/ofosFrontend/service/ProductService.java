@@ -94,7 +94,7 @@ public class ProductService {
     /**
      * Deletes a product.
      * @param product The product to delete.
-     * @param id The ID of the restaurant.
+     * @param restaurantId The ID of the restaurant.
      * @throws IOException If an I/O error occurs.
      */
     public void deleteProduct(Product product, int restaurantId) throws IOException {
