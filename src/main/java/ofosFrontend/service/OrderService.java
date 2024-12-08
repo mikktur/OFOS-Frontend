@@ -6,9 +6,6 @@ import javafx.concurrent.Task;
 import ofosFrontend.model.*;
 import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 import java.io.IOException;
 import java.net.URI;
