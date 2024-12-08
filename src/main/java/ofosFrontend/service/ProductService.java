@@ -43,7 +43,6 @@ public class ProductService {
                 .build();
 
         Response response = client.newCall(request).execute();
-        System.out.println("body: " + productJson);
 
         if (!response.isSuccessful()) {
             throw new IOException("Failed to add product: " + response);
