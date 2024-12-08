@@ -5,6 +5,8 @@ import ofosFrontend.model.Product;
 import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
 import okhttp3.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,6 +18,10 @@ public class ProductService {
     private static final String API_URL = "http://10.120.32.94:8000/";
     private final OkHttpClient client = new OkHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
+    private final Logger logger = LogManager.getLogger(ProductService.class);
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String BEARER = "Bearer ";
+    private static final String MEDIA_TYPE = "application/json; charset=utf-8";
 
     /**
      * Fetches all products of a selected restaurant.
@@ -24,6 +30,9 @@ public class ProductService {
      * @throws IOException If an I/O error occurs.
      */
     public List<Product> getProductsByRID(int id) throws IOException {
+
+
+        // Get the current language code dynamically
         String language = LocalizationManager.getLanguageCode();
 
         Request request = new Request.Builder()
@@ -45,17 +54,18 @@ public class ProductService {
      *
      */
     public void addProductToRestaurant(Product product, int restaurantId) throws IOException {
-        MediaType JSON = MediaType.get("application/json; charset=utf-8");
-        String productJson = mapper.writeValueAsString(product);
+        MediaType JSON = MediaType.get(MEDIA_TYPE);
+
+        String json = mapper.writeValueAsString(product);
 
         SessionManager sessionManager = SessionManager.getInstance();
         String bearerToken = sessionManager.getToken();
 
-        RequestBody body = RequestBody.create(productJson, JSON);
+        RequestBody body = RequestBody.create(json, JSON);
         Request request = new Request.Builder()
                 .url(API_URL + "api/products/create/" + restaurantId)
                 .post(body)
-                .addHeader("Authorization", "Bearer " + bearerToken)
+                .addHeader(AUTHORIZATION, BEARER + bearerToken)
                 .build();
 
         Response response = client.newCall(request).execute();
@@ -71,17 +81,18 @@ public class ProductService {
      * @throws IOException If an I/O error occurs.
      */
     public void updateProduct(Product product, int rid) throws IOException {
-        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+        MediaType JSON = MediaType.get(MEDIA_TYPE);
         String productJson = mapper.writeValueAsString(product);
 
         SessionManager sessionManager = SessionManager.getInstance();
         String bearerToken = sessionManager.getToken();
 
+
         RequestBody body = RequestBody.create(productJson, JSON);
         Request request = new Request.Builder()
                 .url(API_URL + "api/products/update/" + rid)
                 .put(body)
-                .addHeader("Authorization", "Bearer " + bearerToken)
+                .addHeader(AUTHORIZATION, BEARER + bearerToken)
                 .build();
 
         Response response = client.newCall(request).execute();
@@ -104,7 +115,7 @@ public class ProductService {
         Request request = new Request.Builder()
                 .url(API_URL + "api/products/delete/" + product.getProductID() + "/restaurant/" + restaurantId)
                 .delete()
-                .addHeader("Authorization", "Bearer " + bearerToken)
+                .addHeader(AUTHORIZATION, BEARER + bearerToken)
                 .build();
 
         Response response = client.newCall(request).execute();
@@ -112,5 +123,6 @@ public class ProductService {
         if (!response.isSuccessful()) {
             throw new IOException("Failed to delete product: " + response);
         }
+
     }
 }

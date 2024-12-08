@@ -11,6 +11,9 @@ import ofosFrontend.service.RestaurantService;
 import ofosFrontend.service.UserService;
 import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.TextFieldUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 import java.io.IOException;
 import java.util.List;
@@ -25,19 +28,25 @@ import static ofosFrontend.session.Validations.*;
  */
 public class AddRestaurantDialogController {
 
-    @FXML private TextField addressField;
-    @FXML private TextField hoursField;
-    @FXML private TextField nameField;
-    @FXML private TextField phoneField;
-    @FXML private TextField pictureURL;
-    @FXML private ComboBox<String> dialogOwnerSelector;
+    @FXML
+    private TextField addressField;
+    @FXML
+    private TextField hoursField;
+    @FXML
+    private TextField nameField;
+    @FXML
+    private TextField phoneField;
+    @FXML
+    private TextField pictureURL;
+    @FXML
+    private ComboBox<String> dialogOwnerSelector;
 
     private static final int STREET_ADDRESS_MAX_LENGTH = 70;
     private static final int HOURS_MAX_LENGTH = 20;
     private static final int NAME_MAX_LENGTH = 50;
     private static final int PHONE_MAX_LENGTH = 15;
     private static final int PICTURE_MAX_LENGTH = 100;
-
+    private final Logger logger = LogManager.getLogger(AddRestaurantDialogController.class);
     private final UserService userService = new UserService();
     private final RestaurantService restaurantService = new RestaurantService();
     private final ResourceBundle bundle = LocalizationManager.getBundle();
@@ -114,7 +123,7 @@ public class AddRestaurantDialogController {
                     .forEach(user -> dialogOwnerSelector.getItems().add(user.getUsername() + " ID: " + user.getUserId()));
         } catch (IOException e) {
             showError(bundle.getString("Failed_to_load_user"));
-            e.printStackTrace();
+            logger.error("Failed to load users: {}", e.getMessage());
         }
     }
 

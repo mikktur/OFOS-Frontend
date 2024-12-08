@@ -11,6 +11,8 @@ import javafx.scene.text.Text;
 import ofosFrontend.session.GenericHelper;
 import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 /**
@@ -34,7 +36,9 @@ public class NavController extends BasicController {
     AnchorPane redDot;
     @FXML
     private ComboBox<String> languageSelector;
+    private static final Logger logger = LogManager.getLogger(NavController.class);
     public NavController() {
+        // required by FXML loader
 
     }
 
@@ -68,14 +72,12 @@ public class NavController extends BasicController {
      */
     private void setupLanguageSelector() {
         languageSelector.setValue(LocalizationManager.selectedLanguageProperty().get());
-
-        languageSelector.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) {
-                switchLanguage(newVal);
+        languageSelector.setOnAction(event -> {
+            String selectedLanguage = languageSelector.getValue();
+            if (selectedLanguage != null) {
+                switchLanguage(selectedLanguage);
             }
         });
-
-        languageSelector.valueProperty().bindBidirectional(LocalizationManager.selectedLanguageProperty());
     }
 
     /**
@@ -83,7 +85,7 @@ public class NavController extends BasicController {
      */
     private void handleSearch() {
         String query = searchBar.getText().toLowerCase();
-        System.out.println("Query: " + query);
+        logger.info("Query: {}", query);
 
 
         if (mainController != null) {
@@ -96,7 +98,7 @@ public class NavController extends BasicController {
      */
     public void setUsernameLabel() {
         SessionManager sessionManager = SessionManager.getInstance();
-        System.out.println(sessionManager.getUsername());
+        logger.info(sessionManager.getUsername());
         usernameLabel.setText(sessionManager.getUsername());
 
     }
@@ -155,6 +157,8 @@ public class NavController extends BasicController {
 
         redDot.setVisible(true);
     }
+
+
 
 
 }

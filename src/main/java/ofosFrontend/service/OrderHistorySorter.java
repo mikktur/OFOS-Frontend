@@ -3,11 +3,14 @@ package ofosFrontend.service;
 import ofosFrontend.model.OrderHistory;
 
 import java.util.*;
-
 /**
  * Utility class for sorting order history
  */
-public class OrderHistorySorter {
+public final class OrderHistorySorter {
+
+
+    private OrderHistorySorter() {
+    }
 
     /**
      * Sorts the order history by id

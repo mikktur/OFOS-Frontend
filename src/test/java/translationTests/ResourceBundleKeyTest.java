@@ -13,7 +13,8 @@ import static org.junit.jupiter.api.Assertions.fail;
  * The test compares the keys in the base file with the keys in the target files.
  * If any keys are missing in the target files, the test fails.
  */
-public class ResourceBundleKeyTest {
+class ResourceBundleKeyTest {
+
 
     private static final String BASE_FILE = "MessagesBundle_en_US.properties";
     private static final String[] TARGET_FILES = {
@@ -26,7 +27,7 @@ public class ResourceBundleKeyTest {
      * Test that all keys in the base properties file are present in the target properties files.
      */
     @Test
-    public void testResourceBundleKeys() {
+    void testResourceBundleKeys() {
         try {
             // Load the base properties file
             Properties baseProperties = loadProperties(BASE_FILE);
@@ -53,6 +54,7 @@ public class ResourceBundleKeyTest {
 
     /**
      * Load properties from a file.
+     *
      * @param fileName the name of the properties file
      * @return the properties object
      * @throws IOException if the file is not found

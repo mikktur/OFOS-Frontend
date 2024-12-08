@@ -18,6 +18,8 @@ import ofosFrontend.model.ShoppingCart;
 import ofosFrontend.service.ProductService;
 import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.text.NumberFormat;
@@ -28,7 +30,7 @@ import java.util.List;
  * This class is responsible for creating the product cards for the restaurant
  * and adding them to the menu container
  */
-public class RestaurantMenuController extends BasicController{
+public class RestaurantMenuController extends BasicController {
     private Restaurant restaurant;
     private ProductService productService = new ProductService();
     @FXML
@@ -45,11 +47,12 @@ public class RestaurantMenuController extends BasicController{
     private Text restaurantHours;
     @FXML
     private ImageView restaurantImage;
-
-    private final String URL = "http://10.120.32.94:8000/images/";
-    private final String RURL = "http://10.120.32.94:8000/images/restaurant/";
+    private static final Logger logger = LogManager.getLogger(RestaurantMenuController.class);
+    private static final String URL = "http://10.120.32.94:8000/images/";
+    private static final String RURL = "http://10.120.32.94:8000/images/restaurant/";
 
     public RestaurantMenuController() {
+        // required by FXML loader
     }
 
     /**
@@ -60,11 +63,10 @@ public class RestaurantMenuController extends BasicController{
         List<Product> products = null;
         setRestaurantInfo();
 
-        System.out.println("Restaurant: " + this.restaurant.getRestaurantName());
         try {
-            products  = productService.getProductsByRID(this.restaurant.getId());
+            products = productService.getProductsByRID(this.restaurant.getId());
             NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(LocalizationManager.getLocale());
-            for(Product product : products) {
+            for (Product product : products) {
                 FXMLLoader cardLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/menuItem.fxml"));
                 cardLoader.setResources(LocalizationManager.getBundle());
                 VBox card = cardLoader.load();
@@ -77,10 +79,9 @@ public class RestaurantMenuController extends BasicController{
                 nameLabel.setText(product.getProductName());
                 descriptionLabel.setText(product.getProductDesc());
                 priceLabel.setText(currencyFormatter.format(product.getProductPrice()));
-                addToCartButton.setOnMouseClicked(event -> {
-                    addProductToCart(product);
-                });
-                imageView.setImage(new Image(URL + product.getPicture()));
+                addToCartButton.setOnMouseClicked(event -> addProductToCart(product));
+                Image image = new Image(URL + product.getPicture(),true);
+                imageView.setImage(image);
                 menuContainer.getChildren().add(card);
 
 
@@ -92,12 +93,13 @@ public class RestaurantMenuController extends BasicController{
 
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to load product cards", e);
         }
     }
 
     /**
      * Add a product to the shopping cart
+     *
      * @param product the product to add
      */
     private void addProductToCart(Product product) {
@@ -120,7 +122,6 @@ public class RestaurantMenuController extends BasicController{
      * This method sets the restaurant image, name, address, phone, and hours
      */
     public void setRestaurantInfo() {
-        System.out.println("image url: " + RURL + restaurant.getPicture());
         restaurantImage.setImage(new Image(RURL + restaurant.getPicture()));
         restaurantName.setText(restaurant.getRestaurantName());
         restaurantAddress.setText(restaurant.getAddress());

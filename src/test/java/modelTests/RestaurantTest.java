@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class RestaurantTest {
+class RestaurantTest {
 
     private Restaurant restaurant;
 
@@ -17,7 +17,7 @@ public class RestaurantTest {
     }
 
     @Test
-    public void testDefaultConstructor() {
+    void testDefaultConstructor() {
         // Test that the default constructor initializes fields to default values
         Restaurant defaultRestaurant = new Restaurant();
         assertEquals(0, defaultRestaurant.getId(), "Id should be 0 for the default constructor.");
@@ -27,7 +27,7 @@ public class RestaurantTest {
     }
 
     @Test
-    public void testParameterizedConstructor() {
+    void testParameterizedConstructor() {
         // Verify that the parameterized constructor sets the restaurantName, restaurantPhone, and picture correctly
         assertEquals("Sushi Place", restaurant.getRestaurantName(), "Restaurant name should be 'Sushi Place'.");
         assertEquals("123-456-7890", restaurant.getRestaurantPhone(), "Restaurant phone should be '123-456-7890'.");
@@ -36,25 +36,25 @@ public class RestaurantTest {
     }
 
     @Test
-    public void testGetAndSetId() {
+    void testGetAndSetId() {
         restaurant.setId(101);
         assertEquals(101, restaurant.getId(), "Id should be set to 101.");
     }
 
     @Test
-    public void testGetAndSetRestaurantName() {
+    void testGetAndSetRestaurantName() {
         restaurant.setRestaurantName("Burger Joint");
         assertEquals("Burger Joint", restaurant.getRestaurantName(), "Restaurant name should be 'Burger Joint'.");
     }
 
     @Test
-    public void testGetAndSetRestaurantPhone() {
+    void testGetAndSetRestaurantPhone() {
         restaurant.setRestaurantPhone("987-654-3210");
         assertEquals("987-654-3210", restaurant.getRestaurantPhone(), "Restaurant phone should be '987-654-3210'.");
     }
 
     @Test
-    public void testGetAndSetPicture() {
+    void testGetAndSetPicture() {
         restaurant.setPicture("burger.jpg");
         assertEquals("burger.jpg", restaurant.getPicture(), "Picture should be 'burger.jpg'.");
     }

@@ -4,22 +4,24 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.AnchorPane;
-import javafx.event.EventHandler;
+
 import javafx.scene.input.MouseEvent;
 import ofosFrontend.model.Restaurant;
 import ofosFrontend.model.RestaurantList;
 import ofosFrontend.service.RestaurantService;
 import ofosFrontend.session.LocalizationManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.ResourceBundle;
+
 
 import static ofosFrontend.session.Validations.showError;
 
@@ -31,13 +33,12 @@ public class MainMenuController extends BasicController {
     ResourceBundle bundle = LocalizationManager.getBundle();
     @FXML
     private FlowPane restaurantFlowPane;
-
-
+    private final Logger logger = LogManager.getLogger(MainMenuController.class);
 
 
     private final RestaurantService restaurantService = new RestaurantService();
     private final RestaurantList restaurantList = new RestaurantList(restaurantService);
-    private final String URL = "http://10.120.32.94:8000/images/restaurant/";
+    private static final String URL = "http://10.120.32.94:8000/images/restaurant/";
 
     // Reference to the main controller
 
@@ -52,7 +53,7 @@ public class MainMenuController extends BasicController {
      * Loads the default content of the main menu view
      */
     @FXML
-    private void goToRestaurant(Restaurant restaurant) throws IOException {
+    private void goToRestaurant(Restaurant restaurant) {
         setupRestaurantView(restaurant);
     }
 
@@ -150,7 +151,7 @@ public class MainMenuController extends BasicController {
      * @param e the exception that occurred
      */
     private void handleLoadingError(IOException e) {
-        e.printStackTrace(); // Log the error
+        logger.error("Error loading restaurants: {}", e.getMessage());
         Label errorLabel = new Label(bundle.getString("Restaurant_loading_error"));
         restaurantFlowPane.getChildren().add(errorLabel);
     }
@@ -161,7 +162,7 @@ public class MainMenuController extends BasicController {
      */
     private void setupRestaurantView(Restaurant restaurant) {
         if (mainController == null) {
-            System.out.println("Error: mainController is null in MMenuController.");
+            logger.error("Error: mainController is null in MMenuController.");
             return;
         }
         //makes sure that the cart that is used is for the correct restaurant.
@@ -225,7 +226,7 @@ public class MainMenuController extends BasicController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/restaurant_card.fxml"));
             return loader.load();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to load restaurant card FXML", e);
             return null;
         }
     }
@@ -241,7 +242,8 @@ public class MainMenuController extends BasicController {
         Label descriptionLabel = (Label) card.lookup("#restaurantDesc");
 
         if (imageView != null) {
-            imageView.setImage(new Image(URL + restaurant.getPicture()));
+            Image image = new Image(URL + restaurant.getPicture(), true);
+            imageView.setImage(image);
         }
 
         if (descriptionLabel != null) {
@@ -256,13 +258,7 @@ public class MainMenuController extends BasicController {
      * @param restaurant The restaurant associated with the card.
      */
     private void setCardClickEvent(VBox card, Restaurant restaurant) {
-        card.setOnMouseClicked(event -> {
-            try {
-                goToRestaurant(restaurant);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        card.setOnMouseClicked(event -> goToRestaurant(restaurant));
     }
 
 }

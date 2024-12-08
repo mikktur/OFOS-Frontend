@@ -12,6 +12,8 @@ import javafx.util.Pair;
 import ofosFrontend.model.Restaurant;
 import ofosFrontend.service.RestaurantService;
 import ofosFrontend.session.LocalizationManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.util.prefs.Preferences;
@@ -28,12 +30,15 @@ public class AdminMainMenuController extends AdminBasicController {
     @FXML
     private VBox restaurantListVBox;
     @FXML
-    private Label addressLabel, phoneLabel, hoursLabel;
+    private Label addressLabel;
+    @FXML
+    private Label phoneLabel;
+    @FXML
+    private Label hoursLabel;
 
     @FXML
     private Text defaultText;
-    private int rID;
-
+    private final Logger logger = LogManager.getLogger(AdminMainMenuController.class);
     private RestaurantService restaurantService = new RestaurantService();
     private Restaurant currentSelectedRestaurant;
 
@@ -51,6 +56,7 @@ public class AdminMainMenuController extends AdminBasicController {
     }
 
     public AdminMainMenuController() {
+        // Required by FXML loader
     }
 
     /**
@@ -77,7 +83,6 @@ public class AdminMainMenuController extends AdminBasicController {
                 restaurantBox.getChildren().add(restaurantNameText);
 
                 restaurantBox.setOnMouseClicked(event -> {
-                    rID = restaurant.getId();
                     currentSelectedRestaurant = restaurant;
 
                     prefs.putInt(LAST_SELECTED_RESTAURANT_KEY, restaurant.getId());
@@ -101,7 +106,7 @@ public class AdminMainMenuController extends AdminBasicController {
             updateRestaurantDetailsUI();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to load restaurants", e);
         }
     }
 
@@ -204,7 +209,7 @@ public class AdminMainMenuController extends AdminBasicController {
                 errorAlert.setHeaderText(infoFailure);
                 errorAlert.setContentText(errorContext);
                 errorAlert.showAndWait();
-                e.printStackTrace();
+                logger.error("Failed to update restaurant info", e);
             }
         });
     }

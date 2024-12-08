@@ -1,7 +1,6 @@
 package ofosFrontend;
 
 import javafx.stage.Stage;
-import ofosFrontend.controller.User.UserMainController;
 
 /**
  * Singleton class for managing the application.
@@ -18,7 +17,7 @@ public class AppManager {
      * Gets the instance of the AppManager
      * @return The AppManager
      */
-    public static AppManager getInstance() {
+    public static synchronized AppManager getInstance() {
         if (instance == null) {
             instance = new AppManager();
         }

@@ -10,6 +10,8 @@ import ofosFrontend.service.ContactInfoService;
 import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.TextFieldUtils;
 import ofosFrontend.session.Validations;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ResourceBundle;
 
@@ -20,18 +22,25 @@ import java.util.ResourceBundle;
  */
 public class ContactInfoDialogController {
 
-    @FXML private TextField firstNameField;
-    @FXML private TextField lastNameField;
-    @FXML private TextField emailField;
-    @FXML private TextField phoneNumberField;
-    @FXML private TextField streetAddressField;
-    @FXML private TextField cityField;
-    @FXML private TextField postalCodeField;
+    @FXML
+    private TextField firstNameField;
+    @FXML
+    private TextField lastNameField;
+    @FXML
+    private TextField emailField;
+    @FXML
+    private TextField phoneNumberField;
+    @FXML
+    private TextField streetAddressField;
+    @FXML
+    private TextField cityField;
+    @FXML
+    private TextField postalCodeField;
 
     ResourceBundle bundle = LocalizationManager.getBundle();
 
     private final ContactInfoService contactInfoService = new ContactInfoService();
-
+    private final Logger logger = LogManager.getLogger(ContactInfoDialogController.class);
     private static final int FIRST_NAME_MAX_LENGTH = 20;
     private static final int LAST_NAME_MAX_LENGTH = 20;
     private static final int EMAIL_MAX_LENGTH = 50;
@@ -108,7 +117,7 @@ public class ContactInfoDialogController {
 
         task.setOnFailed(event -> {
             Throwable exception = task.getException();
-            exception.printStackTrace();
+            logger.error("Failed to save contact info", exception);
             Platform.runLater(() -> Validations.showError(bundle.getString("Contact_info_save_fail")));
         });
 
@@ -136,7 +145,9 @@ public class ContactInfoDialogController {
      */
     public void setContactInfo(ContactInfo contactInfo) {
 
-        if (contactInfo == null) return;
+        if (contactInfo == null) {
+            return;
+        }
 
         firstNameField.setText(contactInfo.getFirstName());
         lastNameField.setText(contactInfo.getLastName());

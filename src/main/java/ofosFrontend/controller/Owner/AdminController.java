@@ -13,6 +13,10 @@ import javafx.stage.Stage;
 import ofosFrontend.AppManager;
 import ofosFrontend.model.Restaurant;
 import ofosFrontend.session.SessionManager;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 import java.io.IOException;
 
@@ -22,12 +26,15 @@ import java.io.IOException;
 public class AdminController {
     @FXML
     public HBox adminNavBar;
+    private static final Logger logger = LogManager.getLogger();
     @FXML
     private StackPane ownerCenterPane;
     @FXML
     private BorderPane ownerRoot;
     private AdminViewFactory adminViewFactory;
+
     public AdminController() {
+        // required by FXML loader
     }
 
     /**
@@ -48,7 +55,7 @@ public class AdminController {
      */
     public void setCenterContent(Node content) {
         if (ownerCenterPane == null) {
-            System.out.println("centerPane is null!");
+            logger.log(Level.ERROR,"centerPane is null!");
             return;
         }
 
@@ -90,10 +97,10 @@ public class AdminController {
             if (navController != null) {
                 navController.setMainController(this);
             } else {
-                System.out.println("navController is null!");
+                logger.log(Level.INFO, "navController is null!");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error setting up controllers: {}", e.getMessage());
         }
     }
 
@@ -116,7 +123,7 @@ public class AdminController {
             stage.show();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to load login view: {}", e.getMessage());
         }
         adminSessionManager.logout();
     }

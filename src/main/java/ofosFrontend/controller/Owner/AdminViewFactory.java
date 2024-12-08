@@ -4,6 +4,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import ofosFrontend.model.Restaurant;
 import ofosFrontend.session.LocalizationManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
@@ -11,11 +13,14 @@ import java.io.IOException;
  * Factory class for the owner side views
  */
 public class AdminViewFactory {
-    private final static String ADMINHOME = "/ofosFrontend/Owner/adminMainUI.fxml";
-    private final static String ADMINRESTAURANT = "/ofosFrontend/Owner/adminFoodMenuUI.fxml";
+
     private final AdminController mainController;
     private String currentView;
     private Restaurant resta;
+    private final Logger logger = LogManager.getLogger(AdminViewFactory.class);
+    private static final String ADMINHOME = "/ofosFrontend/Owner/adminMainUI.fxml";
+    private static final String ADMINRESTAURANT = "/ofosFrontend/Owner/adminFoodMenuUI.fxml";
+
     public AdminViewFactory(AdminController mainController) {
         this.mainController = mainController;
     }
@@ -34,7 +39,7 @@ public class AdminViewFactory {
             currentView = ADMINHOME;
             return root;
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to load AdminHomeView", e);
             return null;
         }
     }
@@ -56,7 +61,7 @@ public class AdminViewFactory {
             resta = restaurant;
             return root;
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to load AdminRestaurantView", e);
             return null;
         }
     }
@@ -71,6 +76,9 @@ public class AdminViewFactory {
                 break;
             case ADMINRESTAURANT:
                 mainController.loadRestaurantContent(resta);
+                break;
+            default:
+                mainController.loadDefaultContent();
                 break;
         }
 

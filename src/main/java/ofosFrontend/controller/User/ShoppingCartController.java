@@ -15,10 +15,12 @@ import ofosFrontend.model.ShoppingCart;
 import ofosFrontend.session.CartManager;
 import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.text.NumberFormat;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -51,7 +53,7 @@ public class ShoppingCartController extends BasicController {
     private VBox cartRoot;
     //used to check if the listener has been initialized at least once. used in reloading the ui.
     private boolean listenerInitialized = false;
-
+    private final Logger logger = LogManager.getLogger(ShoppingCartController.class);
     /**
      * The restaurant id
      */
@@ -62,9 +64,11 @@ public class ShoppingCartController extends BasicController {
      */
     NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(LocalizationManager.getLocale());
     private CartManager cartManager = new CartManager();
-    public ShoppingCartController() {
 
+    public ShoppingCartController() {
+        // required by FXML loader
     }
+
     /**
      * Initializes the controller
      */
@@ -72,8 +76,8 @@ public class ShoppingCartController extends BasicController {
     public void initialize() {
 
         cartRoot.getProperties().put("controller", this);
-        System.out.println("ShoppingCartController initialized");
-        System.out.println("RID: " + rid);
+        logger.info("ShoppingCartController initialized");
+        logger.info("RID: {}", rid);
         addListeners();
     }
 
@@ -98,6 +102,7 @@ public class ShoppingCartController extends BasicController {
         }
         updateSubTotal();
     }
+
     /**
      * Resets the cart view
      */
@@ -120,54 +125,56 @@ public class ShoppingCartController extends BasicController {
         rid = restaurantId;
         ShoppingCart cart = cartManager.getOrCreateCart(restaurantId, restaurant);
         if (cart.getItems().isEmpty() || !listenerInitialized) {
-            addCartListeners(cart);
-            listenerInitialized=true;
+            addCartItemListener(cart.getItems());
+            listenerInitialized = true;
         }
         try {
             loadCartItems();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error loading cart items {}", e.getMessage());
         }
 
     }
 
     // used to add ui elements to the ui when user adds or removes products to the cart
-
     /**
      * Adds listeners to the cart
      * @param cart the cart to add listeners to
      *             @see ShoppingCart
      */
-    private void addCartListeners(ShoppingCart cart) {
-        ObservableList<CartItem> items = cart.getItems();
-        System.out.println("Adding cart listeners");
-
+    private void addCartItemListener(ObservableList<CartItem> items) {
         items.addListener((ListChangeListener<CartItem>) change -> {
-            System.out.println("Cart items changed");
             while (change.next()) {
                 if (change.wasAdded()) {
-                    removeEmptyCartMessage();
-                    cartCheckout.setVisible(true);
-                    for (CartItem addedItem : change.getAddedSubList()) {
-                        try {
-                            mainController.showRedDot();
-                            addCartItemToUI(addedItem);
-                            addQuantityListener(addedItem);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                    handleItemAdded(change.getAddedSubList());
                 }
                 if (change.wasRemoved()) {
-                    if (items.isEmpty()) {
-                        mainController.hideRedDot();
-                        displayEmptyCartMessage();
-                    }
+                    handleItemRemoved(items);
                 }
             }
-
-            updateSubTotal();
+            updateSubTotal(); // Ensures subtotal is updated after any change
         });
+    }
+
+    private void handleItemRemoved(ObservableList<CartItem> items) {
+        if (items.isEmpty()) {
+            mainController.hideRedDot();
+            displayEmptyCartMessage();
+        }
+    }
+
+    private void handleItemAdded(List<? extends CartItem> addedItems) {
+        removeEmptyCartMessage();
+        cartCheckout.setVisible(true);
+        for (CartItem addedItem : addedItems) {
+            try {
+                mainController.showRedDot();
+                addCartItemToUI(addedItem);
+                addQuantityListener(addedItem);
+            } catch (IOException e) {
+                logger.error("Error adding cart item: {}", addedItem, e);
+            }
+        }
     }
 
 
@@ -175,10 +182,9 @@ public class ShoppingCartController extends BasicController {
     /**
      * Loads all the carts for the user
      */
-    // renders all the currently active carts for the user. used outside of restaurant and checkout views.
     public void loadAllUserCartItems() {
 
-        HashMap<Integer, ShoppingCart> userCarts = SessionManager.getInstance().getCartMap();
+        Map<Integer, ShoppingCart> userCarts = SessionManager.getInstance().getCartMap();
 
         cartItemContainer.getChildren().clear();
         if (userCarts.isEmpty()) {
@@ -206,7 +212,7 @@ public class ShoppingCartController extends BasicController {
 
                     cartItemContainer.getChildren().add(cartCardNode);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error("Error loading cart items", e);
                 }
             }
         }
@@ -216,9 +222,8 @@ public class ShoppingCartController extends BasicController {
      * Updates the cart
      * @see ShoppingCart
      */
-    //used to update which cart to show in the ui, if rid is 0, all carts are shown and not specific items.
     public void updateCart() {
-        System.out.println("Updating cart. Current RID: " + rid);
+        logger.info("Updating cart. Current RID: {}", rid);
         cartItemContainer.getChildren().clear();
 
         if (rid != 0) {
@@ -226,7 +231,7 @@ public class ShoppingCartController extends BasicController {
                 cartCheckout.setVisible(true);
                 loadCartItems();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Error loading cart items", e);
             }
         } else {
             try {
@@ -234,7 +239,7 @@ public class ShoppingCartController extends BasicController {
                 cartItemContainer.getChildren().clear();
                 loadAllUserCartItems();
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("Error loading cart items", e);
             }
         }
     }
@@ -248,9 +253,8 @@ public class ShoppingCartController extends BasicController {
      * @param item the cart item to add
      * @throws IOException if the FXML file is not found
      */
-    // lisää tuotekortin ostoskorin käyttöliittymään
     private void addCartItemToUI(CartItem item) throws IOException {
-        System.out.println("Adding cart item to UI");
+        logger.info("Adding cart item to UI");
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/cartItem.fxml"));
         VBox cartItem = loader.load();
 
@@ -267,24 +271,16 @@ public class ShoppingCartController extends BasicController {
      * @param rid the restaurant id
      */
     public void handleCheckoutClick(int rid) {
-        System.out.println("Checkout clicked");
-        try {
-            System.out.println("RID: ccc " + rid);
-            GoToCheckout(rid);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        logger.info("Checkout clicked");
+        gotoCheckout(rid);
+
     }
 
     /**
      * Adds listeners to the UI elements
      */
     public void addListeners() {
-
-        goToCheckout.setOnAction(event -> {
-            handleCheckoutClick(rid);
-        });
-
+        goToCheckout.setOnAction(event -> handleCheckoutClick(rid));
     }
 
     /**
@@ -311,9 +307,7 @@ public class ShoppingCartController extends BasicController {
      * @param cartItem the cart item
      */
     private void addQuantityListener(CartItem cartItem) {
-        cartItem.quantityProperty().addListener((observable, oldValue, newValue) -> {
-            updateSubTotal();
-        });
+        cartItem.quantityProperty().addListener((observable, oldValue, newValue) -> updateSubTotal());
     }
 
     /**
@@ -332,7 +326,7 @@ public class ShoppingCartController extends BasicController {
      * @throws IOException if the FXML file is not found
      */
     @FXML
-    private void GoToCheckout(int rid) throws IOException {
+    private void gotoCheckout(int rid) {
         setRid(rid);
         updateCart();
         mainController.loadCheckoutView(rid);

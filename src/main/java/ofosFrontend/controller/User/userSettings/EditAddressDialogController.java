@@ -10,6 +10,8 @@ import ofosFrontend.service.DeliveryAddressService;
 import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.TextFieldUtils;
 import ofosFrontend.session.Validations;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ResourceBundle;
 
@@ -21,11 +23,15 @@ import java.util.ResourceBundle;
  */
 public class EditAddressDialogController {
 
-    @FXML private TextField streetAddressField;
-    @FXML private TextField cityField;
-    @FXML private TextField postalCodeField;
-    @FXML private TextArea instructionsArea;
-
+    @FXML
+    private TextField streetAddressField;
+    @FXML
+    private TextField cityField;
+    @FXML
+    private TextField postalCodeField;
+    @FXML
+    private TextArea instructionsArea;
+    private final Logger logger = LogManager.getLogger(EditAddressDialogController.class);
     private static final int STREET_ADDRESS_MAX_LENGTH = 70;
     private static final int CITY_MAX_LENGTH = 30;
     private static final int POSTAL_CODE_MAX_LENGTH = 10;
@@ -49,6 +55,7 @@ public class EditAddressDialogController {
 
     /**
      * Sets the delivery address to be edited and populates the fields with the address data.
+     *
      * @param address The delivery address object to be edited.
      */
     public void setAddress(DeliveryAddress address) {
@@ -83,25 +90,25 @@ public class EditAddressDialogController {
 
     /**
      * Updates the delivery address in the database.
+     *
      * @param address The DeliveryAddress object containing the updated delivery address.
      */
     private void updateDeliveryAddress(DeliveryAddress address) {
         Task<Void> task = deliveryAddressService.updateDeliveryAddress(address);
 
-        task.setOnSucceeded(event -> {
-            Platform.runLater(() -> {
-                Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-                successAlert.setTitle(bundle.getString("Success"));
-                successAlert.setHeaderText(null);
-                successAlert.setContentText(bundle.getString("Address_edited_successfully"));
-                successAlert.showAndWait();
-                closeDialog();
-            });
-        });
+        task.setOnSucceeded(event -> Platform.runLater(() -> {
+            Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+            successAlert.setTitle(bundle.getString("Success"));
+            successAlert.setHeaderText(null);
+            successAlert.setContentText(bundle.getString("Address_edited_successfully"));
+            successAlert.showAndWait();
+            handleCancel();
+
+        }));
 
         task.setOnFailed(event -> {
             Throwable exception = task.getException();
-            exception.printStackTrace();
+            logger.error("Failed to update delivery address", exception);
             Platform.runLater(() -> Validations.showError(bundle.getString("Update_address_error")));
         });
 
@@ -120,11 +127,6 @@ public class EditAddressDialogController {
         stage.close();
     }
 
-    /**
-     * Closes the current dialog window.
-     */
-    private void closeDialog() {
-        Stage stage = (Stage) streetAddressField.getScene().getWindow();
-        stage.close();
-    }
+
+
 }

@@ -12,6 +12,9 @@ import ofosFrontend.model.Product;
 import ofosFrontend.model.Translation;
 import ofosFrontend.service.ProductService;
 import ofosFrontend.session.LocalizationManager;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,7 +26,7 @@ import java.util.ResourceBundle;
  * Controller for the owner menu view
  */
 public class AdminMenuController extends AdminBasicController {
-
+    private static final Logger logger = LogManager.getLogger(AdminMenuController.class);
     @FXML
     private VBox productListVBox;
     @FXML
@@ -37,7 +40,7 @@ public class AdminMenuController extends AdminBasicController {
 
     @FXML
     public void initialize() {
-        System.out.println("Initializing :)");
+        logger.log(Level.INFO, "Initializing :");
     }
 
     /**
@@ -75,7 +78,7 @@ public class AdminMenuController extends AdminBasicController {
                 productListVBox.getChildren().add(productBox);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to load products", e);
         }
     }
 
@@ -206,7 +209,7 @@ public class AdminMenuController extends AdminBasicController {
             try {
                 productService.addProductToRestaurant(product, restaurantID);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                logger.error("Failed to add product", e);
             }
             loadProducts();
         });
@@ -319,7 +322,7 @@ public class AdminMenuController extends AdminBasicController {
             try {
                 productService.updateProduct(updatedProduct, rid);  // Update product in service
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                logger.error("Failed to update product: {}", e.getMessage());
             }
             loadProducts();  // Reload product list
         });
@@ -338,7 +341,7 @@ public class AdminMenuController extends AdminBasicController {
             productService.deleteProduct(product, restaurantID);
             loadProducts();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to delete product", e);
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle(deleteDialogTitle);
             alert.setHeaderText(deleteFail);

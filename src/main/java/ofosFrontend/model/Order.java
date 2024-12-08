@@ -1,5 +1,6 @@
 package ofosFrontend.model;
 
+
 /**
  * Model class representing an order
  */

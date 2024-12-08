@@ -6,11 +6,12 @@ import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
 import ofosFrontend.model.Restaurant;
 import ofosFrontend.session.LocalizationManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-// not really creating a view, just loading the fxml file and setupping the views...
 
 /**
  * Factory for creating views
@@ -26,7 +27,7 @@ public class ViewFactory {
     private final UserMainController mainController;
     private final Map<String, Runnable> reloadActions = new HashMap<>();
     private String currentView;
-
+    private final Logger logger = LogManager.getLogger(ViewFactory.class);
     public ViewFactory(UserMainController mainController) {
         this.mainController = mainController;
         initializeReloadActions();
@@ -51,7 +52,7 @@ public class ViewFactory {
             currentView = fxmlPath;
             return root;
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error loading checkout view");
             return null;
         }
     }
@@ -115,7 +116,7 @@ public class ViewFactory {
             if (mmController != null) {
                 mmController.setMainController(mainController);
             } else {
-                System.out.println("mmController is null");
+                logger.error("mmController is null");
             }
             mainController.resetToDefaultCartView();
             mainController.reloadDropDown();

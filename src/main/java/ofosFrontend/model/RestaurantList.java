@@ -1,11 +1,12 @@
 package ofosFrontend.model;
 
 import ofosFrontend.service.RestaurantService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Model class representing a list of restaurants
@@ -14,6 +15,7 @@ public class RestaurantList {
     private Restaurant restaurant;
     private List<Restaurant> restaurantList;
     private RestaurantService restaurantService;
+    private static final Logger logger = LogManager.getLogger(RestaurantList.class);
 
 
     public RestaurantList(RestaurantService restaurantService) {
@@ -23,6 +25,7 @@ public class RestaurantList {
         } catch (IOException e) {
             e.printStackTrace();
             this.restaurantList = new ArrayList<>(); // Fallback to an empty mutable list
+            logger.error("Failed to get all restaurants: {}", e.getMessage());
         }
     }
 

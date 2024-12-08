@@ -10,7 +10,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 public class CartItem {
     private final Product product;
     private final IntegerProperty quantity;
-    private int rid;
+    private final int rid;
     // Constructor
     public CartItem(Product product, int quantity, int rid) {
         this.product = product;

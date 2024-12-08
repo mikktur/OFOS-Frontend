@@ -10,7 +10,8 @@ import ofosFrontend.session.TextFieldUtils;
 import ofosFrontend.session.Validations;
 
 import java.util.ResourceBundle;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 /**
  * Controller class for the Add Address dialog.
  * Handles the user input and saves the new address to the database.
@@ -23,13 +24,12 @@ public class AddAddressDialogController {
     @FXML private TextField cityField;
     @FXML private TextField postalCodeField;
     @FXML private TextArea instructionsArea;
-    private int userId;
-
+    protected static final Logger logger = LogManager.getLogger();
     private static final int STREET_ADDRESS_MAX_LENGTH = 70;
     private static final int CITY_MAX_LENGTH = 30;
     private static final int POSTAL_CODE_MAX_LENGTH = 5;
     private static final int INSTRUCTIONS_MAX_LENGTH = 50;
-
+    private int userId;
     ResourceBundle bundle = LocalizationManager.getBundle();
     private final DeliveryAddressService deliveryAddressService;
 
@@ -75,7 +75,7 @@ public class AddAddressDialogController {
         }
 
         DeliveryAddress newAddress = getNewAddress();
-        System.out.println("New Address: " + newAddress);
+        logger.info("New Address: {}", newAddress);
         saveDeliveryAddress(newAddress);
     }
 

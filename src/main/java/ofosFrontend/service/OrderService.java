@@ -6,12 +6,9 @@ import javafx.concurrent.Task;
 import ofosFrontend.model.*;
 import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
+import okhttp3.*;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,29 +19,33 @@ import java.util.Map;
 public class OrderService {
     private static final String API_URL = "http://10.120.32.94:8000/api/";
     private final ObjectMapper mapper = new ObjectMapper();
+    OkHttpClient client = new OkHttpClient();
 
     /**
      * Fetches the order history of the currently logged-in user.
      * @return A map of order IDs to lists of OrderHistory objects.
      * @throws IOException If an I/O error occurs.
-     * @throws InterruptedException If the operation is interrupted.
      */
-    public Map<Integer, List<OrderHistory>> getHistory() throws IOException, InterruptedException {
+    public Map<Integer, List<OrderHistory>> getHistory() throws IOException {
         String lang = LocalizationManager.getLanguageCode();
-        String url = API_URL + "order/"+lang+"/history";
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
+        String url = API_URL + "order/" + lang + "/history";
+
+
+        Request request = new Request.Builder()
+                .url(url)
                 .header("Authorization", "Bearer " + SessionManager.getInstance().getToken())
-                .GET()
                 .build();
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        String responseBody = response.body();
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new IOException("Failed to fetch order history. Status code: " + response.code());
+            }
 
-        Map<Integer, List<OrderHistory>> orderHistoryMap = mapper.readValue(responseBody, new TypeReference<Map<Integer, List<OrderHistory>>>(){});
-
-        return orderHistoryMap;
+            String responseBody = response.body().string();
+            return mapper.readValue(responseBody, new TypeReference<Map<Integer, List<OrderHistory>>>() {});
+        } catch (IOException e) {
+            throw new IOException("Failed to fetch order history: " + e.getMessage());
+        }
     }
 
     /**
@@ -58,7 +59,7 @@ public class OrderService {
     public Task<Void> confirmOrder(List<CartItem> cartItems, int deliveryAddressId, int restaurantId) {
         return new Task<>() {
             @Override
-            protected Void call() throws Exception {
+            protected Void call() throws IOException {
                 List<OrderItem> orderItems = new ArrayList<>();
                 for (CartItem item : cartItems) {
                     OrderItem orderItem = new OrderItem(
@@ -72,19 +73,18 @@ public class OrderService {
 
                 String requestBody = mapper.writeValueAsString(orderItems);
 
-                String url = API_URL + "order";
-                HttpClient client = HttpClient.newHttpClient();
-                HttpRequest request = HttpRequest.newBuilder()
-                        .uri(URI.create(url))
+
+                Request request = new Request.Builder()
+                        .url(API_URL + "order")
                         .header("Authorization", "Bearer " + SessionManager.getInstance().getToken())
                         .header("Content-Type", "application/json")
-                        .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                        .post(RequestBody.create(requestBody, MediaType.get("application/json")))
                         .build();
 
-                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-                if (response.statusCode() != 200) {
-                    throw new Exception("Failed to confirm the order. Status code: " + response.statusCode());
+                try (Response response = client.newCall(request).execute()) {
+                    if (!response.isSuccessful()) {
+                        throw new IOException("Failed to confirm the order. Status code: " + response.code());
+                    }
                 }
 
                 return null;
