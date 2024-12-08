@@ -7,4 +7,4 @@
 2. Kokoa projekti ajamalla `mvn clean package`
 3. Käynnistä sovellus ajamalla `java -jar target/OFOS-Frontend-1.0.jar`
 
-linkki javadociin, siirrä jonnekki fiksuun paikkaan https://users.metropolia.fi/~mikaelea/OFOS-Documentation/Documentation/
+linkki backend javadociin, siirrä jonnekki fiksuun paikkaan https://users.metropolia.fi/~mikaelea/OFOS-Documentation/Documentation/
