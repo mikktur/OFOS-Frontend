@@ -10,7 +10,8 @@ public class Translation {
         this.name = name;
         this.description = description;
     }
-
+    public Translation() {
+    }
     public String getLanguage() {
         return language;
     }

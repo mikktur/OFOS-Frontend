@@ -408,7 +408,6 @@ public class AdminDashboardController {
     /**
      * Add a new restaurant
      * Open a dialog to enter the restaurant details
-     * @param actionEvent The event that triggered the action.
      */
     public void addRestaurant() {
 
@@ -429,7 +428,6 @@ public class AdminDashboardController {
 
     /**
      * Change the role of the selected user
-     * @param actionEvent The event that triggered the action.
      */
     public void changeRole() {
         if (selectedUser == null) {

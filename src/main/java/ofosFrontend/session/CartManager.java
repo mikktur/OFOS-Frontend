@@ -1,13 +1,19 @@
 package ofosFrontend.session;
 
+import ofosFrontend.model.Product;
 import ofosFrontend.model.Restaurant;
 import ofosFrontend.model.ShoppingCart;
+import ofosFrontend.service.ProductService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 
 /**
  * Manages the shopping carts for the user
+ *
  * @see ShoppingCart
  * @see SessionManager
  */
@@ -15,6 +21,7 @@ import java.util.Map;
 // someday im gonna finish this
 public class CartManager {
     private final SessionManager sessionManager;
+    private static final Logger logger = LogManager.getLogger(CartManager.class);
 
     public CartManager() {
         this.sessionManager = SessionManager.getInstance();
@@ -22,8 +29,9 @@ public class CartManager {
 
     /**
      * Adds a cart to the session
+     *
      * @param restaurantId The ID of the restaurant
-     * @param cart The cart to add
+     * @param cart         The cart to add
      */
     public void addCart(int restaurantId, ShoppingCart cart) {
         sessionManager.getCartMap().put(restaurantId, cart);
@@ -31,17 +39,47 @@ public class CartManager {
 
     /**
      * Gets a cart from the session
+     *
      * @param restaurantId The ID of the restaurant
      * @return The cart
      */
     public ShoppingCart getCart(int restaurantId) {
-        return sessionManager.getCartMap().get(restaurantId);
-    }
+        ShoppingCart cart = sessionManager.getCartMap().get(restaurantId);
 
+        if (cart != null) {
+            updateCartWithLocalizedProducts(cart);
+        }
+        return cart;
+    }
+    public Map<Integer, ShoppingCart> getCartMap() {
+        Map <Integer, ShoppingCart> cartMap = sessionManager.getCartMap();
+        cartMap.forEach((restaurantId, cart) -> updateCartWithLocalizedProducts(cart));
+        return cartMap;
+    }
+    private void updateCartWithLocalizedProducts(ShoppingCart cart) {
+        ProductService productService = new ProductService();
+        String lang = LocalizationManager.getLanguageCode();
+
+        cart.getItems().forEach(cartItem -> {
+            try {
+                if (cartItem.getProduct() == null) {
+                    return;
+                }
+                // Fetch product details for the current language
+                Product updatedProduct = productService.getProductByIdAndLang(cartItem.getProduct().getProductID(), lang);
+
+                // Update the cart item with the localized product details
+                cartItem.setProduct(updatedProduct);
+            } catch (IOException e) {
+                logger.error("Error fetching localized product details for product ID: {}", cartItem.getProduct().getProductID(), e);
+            }
+        });
+    }
     /**
      * Gets or creates a cart for the given restaurant ID
+     *
      * @param restaurantId The ID of the restaurant
-     * @param restaurant The restaurant object
+     * @param restaurant   The restaurant object
      * @return The cart
      */
     public ShoppingCart getOrCreateCart(int restaurantId, Restaurant restaurant) {
@@ -51,11 +89,13 @@ public class CartManager {
             cart = new ShoppingCart(restaurant);
             addCart(restaurantId, cart);
         }
+        updateCartWithLocalizedProducts(cart);
         return cart;
     }
 
     /**
      * Removes a cart from the session
+     *
      * @param restaurantId The ID of the restaurant
      */
     public void removeCart(int restaurantId) {

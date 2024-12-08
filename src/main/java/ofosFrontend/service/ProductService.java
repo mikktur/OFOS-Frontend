@@ -5,8 +5,7 @@ import ofosFrontend.model.Product;
 import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
 import okhttp3.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 
 import java.io.IOException;
 import java.util.List;
@@ -15,10 +14,9 @@ import java.util.List;
  * Service class for handling product operations
  */
 public class ProductService {
-    private static final String API_URL = "http://10.120.32.94:8000/";
+    private static final String API_URL = "http://localhost:8000/";
     private final OkHttpClient client = new OkHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
-    private final Logger logger = LogManager.getLogger(ProductService.class);
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer ";
     private static final String MEDIA_TYPE = "application/json; charset=utf-8";
@@ -45,7 +43,16 @@ public class ProductService {
 
         return mapper.readValue(responseBody, mapper.getTypeFactory().constructCollectionType(List.class, Product.class));
     }
+    public Product getProductById(int id) throws IOException {
+        Request request = new Request.Builder()
+                .url(API_URL + "api/products/" + id)
+                .get()
+                .build();
 
+        Response response = client.newCall(request).execute();
+        String responseBody = response.body().string();
+        return mapper.readValue(responseBody, Product.class);
+    }
     /**
      * Adds a product to a restaurant.
      * @param product The product to add.
@@ -124,5 +131,16 @@ public class ProductService {
             throw new IOException("Failed to delete product: " + response);
         }
 
+    }
+
+    public Product getProductByIdAndLang(int id, String lang) throws IOException {
+        Request request = new Request.Builder()
+                .url(API_URL + "api/products/" + id + "/" + lang)
+                .get()
+                .build();
+
+        Response response = client.newCall(request).execute();
+        String responseBody = response.body().string();
+        return mapper.readValue(responseBody, Product.class);
     }
 }

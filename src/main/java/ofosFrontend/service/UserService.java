@@ -12,7 +12,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +20,7 @@ import java.util.Map;
  */
 public class UserService {
 
-    private static final String API_URL = "http://10.120.32.94:8000/api/";
+    private static final String API_URL = "http://localhost:8000/api/";
 
     private final OkHttpClient client = new OkHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
@@ -32,6 +31,7 @@ public class UserService {
 
     /**
      * Logs in a user with the given username and password.
+     *
      * @param username The username of the user.
      * @param password The password of the user.
      * @return The response from the server.
@@ -65,6 +65,7 @@ public class UserService {
 
     /**
      * Registers a new user with the given username and password.
+     *
      * @param username The username of the user.
      * @param password The password of the user.
      * @return The response from the server.
@@ -94,6 +95,7 @@ public class UserService {
 
     /**
      * Fetches the user data of the currently logged-in user.
+     *
      * @param userId The ID of the user.
      * @return A Task that fetches the user data.
      */
@@ -128,6 +130,7 @@ public class UserService {
 
     /**
      * Updates the password of the currently logged-in user.
+     *
      * @param passwordDTO The DTO containing the old and new passwords.
      * @return A Task that updates the password.
      */
@@ -162,6 +165,7 @@ public class UserService {
 
     /**
      * Fetches all users.
+     *
      * @return A list of User objects.
      * @throws IOException If an I/O error occurs.
      */
@@ -185,6 +189,7 @@ public class UserService {
     /**
      * Deletes the currently logged-in user.
      * Checks if the user is an owner account and throws an exception if so.
+     *
      * @return A Task that deletes the user.
      */
     public Task<Void> deleteUser() {
@@ -215,6 +220,7 @@ public class UserService {
 
     /**
      * Fetches user information by username.
+     *
      * @param selectedUserName The username of the user to fetch.
      * @return The User object.
      * @throws IOException If an I/O error occurs.
@@ -238,6 +244,7 @@ public class UserService {
 
     /**
      * Bans a user by ID.
+     *
      * @param userId The ID of the user to ban.
      * @return True if the operation succeeded, false otherwise.
      * @throws IOException If an I/O error occurs.
@@ -263,42 +270,55 @@ public class UserService {
 
     /**
      * Changes the role of a user by ID.
-     * @param userId The ID of the user to change the role of.
+     *
+     * @param userId  The ID of the user to change the role of.
      * @param newRole The new role of the user.
      * @return True if the operation succeeded, false otherwise.
      */
     public boolean changeRole(int userId, String newRole) {
-        String url = API_URL + "users/changeRole";
+        String url = API_URL + "users/changerole";
         String token = SessionManager.getInstance().getToken();
 
-        String requestBody = "{\"userId\":" + userId + ",\"newRole\":\"" + newRole + "\"}";
-
-        RequestBody body = RequestBody.create(
-                requestBody,
-                MediaType.get(MEDIA_TYPE)
-        );
-
-        Request request = new Request.Builder()
-                .url(url)
-                .header("Content-Type", "application/json")
-                .header(AUTHORIZATION, BEARER + token)
-                .put(body)
-                .build();
+        if (token == null || token.isEmpty()) {
+            logger.error("Cannot change role: Token is null or empty.");
+            return false;
+        }
 
         try {
-            Response response = client.newCall(request).execute();
+            // Construct JSON request body
+            User user = new User();
+            user.setRole(newRole);
+            user.setUserId(userId);
 
-            if (response.isSuccessful()) {
-                logger.info("Role changed successfully for user ID: {}", userId);
-                return true;
-            } else {
-                logger.error("Failed to change role. Server responded with: {}", response.code());
-                return false;
+            String requestBody = mapper.writeValueAsString(user);
+
+            RequestBody body = RequestBody.create(
+                    requestBody,
+                    MediaType.get(MEDIA_TYPE)
+            );
+
+            // Build the request
+            Request request = new Request.Builder()
+                    .url(url)
+                    .header("Content-Type", "application/json")
+                    .header(AUTHORIZATION, BEARER + token)
+                    .put(body)
+                    .build();
+
+            // Execute the request
+            try (Response response = client.newCall(request).execute()) {
+                if (response.isSuccessful()) {
+                    logger.info("Role changed successfully for user ID: {}", userId);
+                    return true;
+                } else {
+                    String errorResponse = response.body() != null ? response.body().string() : "No response body";
+                    logger.error("Failed to change role. Server responded with: {} - {}", response.code(), errorResponse);
+                    return false;
+                }
             }
 
-
         } catch (IOException e) {
-            logger.error("Failed to change role. Network error occurred: {}", e.getMessage());
+            logger.error("Failed to change role. Network error occurred.", e);
             return false;
         }
     }

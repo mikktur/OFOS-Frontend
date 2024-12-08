@@ -8,7 +8,7 @@ import javafx.beans.property.SimpleIntegerProperty;
  * @see ShoppingCart
  */
 public class CartItem {
-    private final Product product;
+    private Product product;
     private final IntegerProperty quantity;
     private final int rid;
     // Constructor
@@ -51,5 +51,8 @@ public class CartItem {
             quantity.set(quantity.get() - 1);
 
         }
+    }
+    public void setProduct(Product product) {
+        this.product = product;
     }
 }

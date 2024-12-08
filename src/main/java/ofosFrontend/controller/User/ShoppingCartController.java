@@ -139,7 +139,7 @@ public class ShoppingCartController extends BasicController {
     // used to add ui elements to the ui when user adds or removes products to the cart
     /**
      * Adds listeners to the cart
-     * @param cart the cart to add listeners to
+     * @param items the cart items
      *             @see ShoppingCart
      */
     private void addCartItemListener(ObservableList<CartItem> items) {
@@ -184,7 +184,12 @@ public class ShoppingCartController extends BasicController {
      */
     public void loadAllUserCartItems() {
 
-        Map<Integer, ShoppingCart> userCarts = SessionManager.getInstance().getCartMap();
+
+
+
+
+
+        Map<Integer, ShoppingCart> userCarts = cartManager.getCartMap();
 
         cartItemContainer.getChildren().clear();
         if (userCarts.isEmpty()) {
@@ -205,7 +210,7 @@ public class ShoppingCartController extends BasicController {
 
                     restaurantNameLabel.setText(cart.getRestaurant().getRestaurantName());
                     Label cartSum = (Label) cartCardNode.lookup("#cartSum");
-                    cartSum.setText(String.valueOf(cart.getTotalPrice()));
+                    cartSum.setText(getCurrencyFormatter().format(cart.getTotalPrice()));
 
                     checkoutButton.setOnAction(event -> handleCheckoutClick(cart.getRestaurant().getId()));
 
@@ -225,7 +230,6 @@ public class ShoppingCartController extends BasicController {
     public void updateCart() {
         logger.info("Updating cart. Current RID: {}", rid);
         cartItemContainer.getChildren().clear();
-
         if (rid != 0) {
             try {
                 cartCheckout.setVisible(true);
@@ -317,7 +321,7 @@ public class ShoppingCartController extends BasicController {
         double subTotal = SessionManager.getInstance().getCart(rid).getTotalPrice();
 
 
-        subTotalLabel.setText(currencyFormatter.format(subTotal));
+        subTotalLabel.setText(getCurrencyFormatter().format(subTotal));
     }
 
     /**
@@ -330,5 +334,8 @@ public class ShoppingCartController extends BasicController {
         setRid(rid);
         updateCart();
         mainController.loadCheckoutView(rid);
+    }
+    private NumberFormat getCurrencyFormatter() {
+        return NumberFormat.getCurrencyInstance(LocalizationManager.getLocale());
     }
 }

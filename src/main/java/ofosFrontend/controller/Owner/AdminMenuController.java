@@ -17,10 +17,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Controller for the owner menu view
@@ -157,10 +156,10 @@ public class AdminMenuController extends AdminBasicController {
 
         // Translation tabs (English, Finnish, Japanese, Russian)
         TabPane tabPane = new TabPane();
-        Tab englishTab = createTranslationTab("English", product.getTranslations());
-        Tab finnishTab = createTranslationTab("Finnish", product.getTranslations());
-        Tab japaneseTab = createTranslationTab("Japanese", product.getTranslations());
-        Tab russianTab = createTranslationTab("Russian", product.getTranslations());
+        Tab englishTab = createTranslationTab("English", null);
+        Tab finnishTab = createTranslationTab("Finnish", null);
+        Tab japaneseTab = createTranslationTab("Japanese", null);
+        Tab russianTab = createTranslationTab("Russian", null);
         tabPane.getTabs().addAll(englishTab, finnishTab, japaneseTab, russianTab);
 
         // Fields for price, category, picture, etc.
@@ -216,16 +215,17 @@ public class AdminMenuController extends AdminBasicController {
 
     }
 
-    private Tab createTranslationTab(String language, List<Translation> translations) {
+    private Tab createTranslationTab(String language, Translation translation) {
         Tab tab = new Tab(language);
         GridPane tabGrid = new GridPane();
         tabGrid.setPadding(new Insets(10, 10, 10, 10));
         tabGrid.setHgap(10);
         tabGrid.setVgap(10);
-
         TextField nameField = new TextField();
         TextArea descField = new TextArea();
         descField.setWrapText(true);
+        nameField.setText(translation != null ? translation.getName() : "");
+        descField.setText(translation != null ? translation.getDescription() : "");
 
         tabGrid.add(new Label(language + " Name"), 0, 0);
         tabGrid.add(nameField, 1, 0);
@@ -241,7 +241,7 @@ public class AdminMenuController extends AdminBasicController {
         TextField nameField = (TextField) tabGrid.getChildren().get(1);
         TextArea descField = (TextArea) tabGrid.getChildren().get(3);
 
-        return new Translation(tab.getText(), nameField.getText(), descField.getText());
+        return new Translation(tab.getText().substring(0, 2).toLowerCase(), nameField.getText(), descField.getText());
     }
 
     /**
@@ -249,6 +249,15 @@ public class AdminMenuController extends AdminBasicController {
      * @param product The product to edit
      */
     private void openEditDialog(Product product, int rid) {
+        try {
+            product = productService.getProductById(product.getProductID());
+        } catch (IOException e) {
+            logger.error("Failed to get product", e);
+        }
+        Map<String, Translation> translations = product.getTranslations().stream()
+                .collect(Collectors.toMap(Translation::getLanguage, Function.identity()));
+
+        //sout all the translations
         ResourceBundle bundle = LocalizationManager.getBundle();
         String dialogTitle = bundle.getString("EditItemDialog");
         String dialogHeader = bundle.getString("EditItemHeader");
@@ -269,10 +278,10 @@ public class AdminMenuController extends AdminBasicController {
 
         // Translation tabs (English, Finnish, Japanese, Russian)
         TabPane tabPane = new TabPane();
-        Tab englishTab = createTranslationTab("English", product.getTranslations());
-        Tab finnishTab = createTranslationTab("Finnish", product.getTranslations());
-        Tab japaneseTab = createTranslationTab("Japanese", product.getTranslations());
-        Tab russianTab = createTranslationTab("Russian", product.getTranslations());
+        Tab englishTab = createTranslationTab("English", translations.get("en"));
+        Tab finnishTab = createTranslationTab("Finnish", translations.get("fi"));
+        Tab japaneseTab = createTranslationTab("Japanese", translations.get("ja"));
+        Tab russianTab = createTranslationTab("Russian", translations.get("ru"));
         tabPane.getTabs().addAll(englishTab, finnishTab, japaneseTab, russianTab);
 
         // Fields for price, category, picture, etc.
@@ -283,7 +292,7 @@ public class AdminMenuController extends AdminBasicController {
         CheckBox activeCheckbox = new CheckBox();
         activeCheckbox.setSelected(product.isActive());
 
-        grid.add(new Label(bundle.getString("DialogPrice")), 0, 1);
+        grid.add(new Label(bundle.getString("DialogPrice") + " (€)"), 0, 1);
         grid.add(priceField, 1, 1);
         grid.add(new Label(bundle.getString("DialogCategory")), 0, 2);
         grid.add(categoryField, 1, 2);
@@ -296,6 +305,7 @@ public class AdminMenuController extends AdminBasicController {
 
         dialog.getDialogPane().setContent(grid);
 
+        Product finalProduct = product;
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == saveButtonType) {
                 List<Translation> updatedTranslations = new ArrayList<>();
@@ -304,15 +314,15 @@ public class AdminMenuController extends AdminBasicController {
                 updatedTranslations.add(getTranslationFromTab(japaneseTab));
                 updatedTranslations.add(getTranslationFromTab(russianTab));
 
-                product.setProductName(updatedTranslations.get(0).getName());  // Default to English name
-                product.setProductDesc(updatedTranslations.get(0).getDescription());  // Default to English description
-                product.setProductPrice(Double.parseDouble(priceField.getText()));
-                product.setCategory(categoryField.getText());
-                product.setPicture(pictureField.getText());
-                product.setActive(activeCheckbox.isSelected());
-                product.setTranslations(updatedTranslations);
+                finalProduct.setProductName(updatedTranslations.get(0).getName());  // Default to English name
+                finalProduct.setProductDesc(updatedTranslations.get(0).getDescription());  // Default to English description
+                finalProduct.setProductPrice(Double.parseDouble(priceField.getText()));
+                finalProduct.setCategory(categoryField.getText());
+                finalProduct.setPicture(pictureField.getText());
+                finalProduct.setActive(activeCheckbox.isSelected());
+                finalProduct.setTranslations(updatedTranslations);
 
-                return product;
+                return finalProduct;
             }
             return null;
         });

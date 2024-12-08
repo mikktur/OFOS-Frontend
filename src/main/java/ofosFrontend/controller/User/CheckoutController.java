@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import ofosFrontend.controller.User.userSettings.AddAddressDialogController;
 import ofosFrontend.model.*;
 import ofosFrontend.service.OrderService;
+import ofosFrontend.session.CartManager;
 import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
 import javafx.scene.control.Label;
@@ -138,12 +139,13 @@ public class CheckoutController extends BasicController {
 
     }
 
-    public void setRid(int rid) {
+    public void setRestaurant(int rid) {
         this.rid = rid;
     }
 
     public void updateView() {
         renderSummary();
+
     }
 
     /**
@@ -204,6 +206,8 @@ public class CheckoutController extends BasicController {
      * @return The VBox containing the cart items.
      */
     private VBox createCartSummary() {
+
+
         VBox cartSummary = new VBox();
         Label cartItemsLabel = new Label(bundle.getString("Items"));
         cartItemsLabel.setStyle(FONT_WEIGHT_BOLD);
@@ -276,27 +280,31 @@ public class CheckoutController extends BasicController {
      * Displays the restaurant name, cart items, and subtotal.
      */
     public void renderSummary() {
-        SessionManager session = SessionManager.getInstance();
-        ShoppingCart cart = session.getCart(rid);
-        Restaurant restaurant = session.getCart(rid).getRestaurant();
-        Label restaurantLabel = new Label(restaurant.getRestaurantName());
-        restaurantLabel.setStyle(FONT_WEIGHT_BOLD);
+        summaryContainer.getChildren().clear();
+        CartManager cartManager = new CartManager();
+        ShoppingCart cart = cartManager.getCart(rid);
+        Restaurant restaurant = cart.getRestaurant();
 
+        Label restaurantLabel = new Label(restaurant.getRestaurantName());
+        restaurantLabel.getStyleClass().add("restaurant-label");
         summaryContainer.getChildren().add(restaurantLabel);
+
         for (CartItem item : cart.getItems()) {
+            if (item == null || item.getProduct() == null) {
+                continue;
+            }
+
             HBox container = new HBox();
             container.setSpacing(5);
-            Label name = new Label();
-            Label price = new Label();
-            Label quantity = new Label();
-            name.setText(item.getProduct().getProductName());
-            price.setText(currencyFormatter.format(item.getTotalPrice()));
-            quantity.setText("x " + (item.getQuantity()));
+
+            Label name = new Label(item.getProduct().getProductName());
+            Label price = new Label(currencyFormatter.format(item.getTotalPrice()));
+            Label quantity = new Label(String.format("x %d", item.getQuantity()));
+
             container.getChildren().addAll(name, price, quantity);
             summaryContainer.getChildren().add(container);
         }
-
-        subTotal.setText((currencyFormatter.format(cart.getTotalPrice())));
+        subTotal.setText(currencyFormatter.format(cart.getTotalPrice()));
     }
 
     /**
@@ -389,7 +397,7 @@ public class CheckoutController extends BasicController {
         List<CartItem> cartItems = SessionManager.getInstance().getCart(rid).getItems();
         int deliveryAddressId = selectedAddress.getDeliveryAddressId();
 
-        Task<Void> task = orderService.confirmOrder(cartItems, deliveryAddressId, rid);
+        Task<Void> task = orderService.confirmOrder(cartItems, deliveryAddressId,rid);
 
         task.setOnSucceeded(event ->
                 Platform.runLater(() -> {

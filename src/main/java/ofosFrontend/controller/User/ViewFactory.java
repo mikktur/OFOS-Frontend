@@ -67,7 +67,8 @@ public class ViewFactory {
         return loadView(CHECKOUT, controller -> {
             CheckoutController checkoutController = (CheckoutController) controller;
             checkoutController.setMainController(mainController);
-            checkoutController.setRid(rid);
+            checkoutController.setRestaurant(rid);
+            mainController.setRid(rid);
             checkoutController.updateView();
         });
     }
@@ -113,12 +114,13 @@ public class ViewFactory {
         return loadView(MAIN, controller -> {
             MainMenuController mmController = (MainMenuController) controller;
             mainController.setMmController(mmController);
+            mainController.resetToDefaultCartView();
             if (mmController != null) {
                 mmController.setMainController(mainController);
             } else {
                 logger.error("mmController is null");
             }
-            mainController.resetToDefaultCartView();
+            mainController.reloadNavBar();
             mainController.reloadDropDown();
         });
     }
@@ -148,7 +150,7 @@ public class ViewFactory {
      * Initializes reload actions for different views.
      */
     private void initializeReloadActions() {
-        reloadActions.put(CHECKOUT, () -> mainController.loadCheckoutView(mainController.getCurrentRestaurant().getId()));
+        reloadActions.put(CHECKOUT, () -> mainController.loadCheckoutView(mainController.getRid()));
         reloadActions.put(SETTINGS, mainController::loadSettingsView);
         reloadActions.put(RESTAURANT, () -> mainController.loadRestaurantView(mainController.getCurrentRestaurant()));
         reloadActions.put(ORDERHISTORY, mainController::loadHistoryView);

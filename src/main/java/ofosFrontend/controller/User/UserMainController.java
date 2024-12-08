@@ -40,7 +40,7 @@ public class UserMainController {
     @FXML
     DropDownMenuController dropDownMenuController;
     private ViewFactory viewFactory;
-
+    private int rid;
     MainMenuController mmController;
     private Restaurant currentRestaurant;
     private final Logger logger = LogManager.getLogger(UserMainController.class);
@@ -76,8 +76,12 @@ public class UserMainController {
         centerPane.getChildren().add(content);
         StackPane.setAlignment(content, Pos.CENTER);
     }
-
-
+    public void setRid(int rid) {
+        this.rid = rid;
+    }
+    public int getRid() {
+        return rid;
+    }
     /**
      * Load the checkout view
      *
@@ -85,7 +89,10 @@ public class UserMainController {
      */
     public void loadCheckoutView(int rid) {
         Parent checkoutView = viewFactory.createCheckoutView(rid);
-
+        if(cart.isVisible()){
+            toggleShoppingCart();
+        }
+        navController.disableCart();
         if (checkoutView != null) {
             setCenterContent(checkoutView);
         }
@@ -148,6 +155,7 @@ public class UserMainController {
      */
     public void loadDefaultContent() {
         Node defaultContent = viewFactory.createDefaultContent();
+        navController.enableCart();
 
         if (defaultContent != null) {
             setCenterContent(defaultContent);
@@ -184,6 +192,18 @@ public class UserMainController {
                 toggleSideMenu();
             }
 
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+    public void reloadNavBar() {
+        try {
+            FXMLLoader navLoader = new FXMLLoader(getClass().getResource("/ofosFrontend/User/navBar.fxml"));
+            navLoader.setResources(LocalizationManager.getBundle());
+            navBar = navLoader.load();
+            navController = navLoader.getController();
+            navController.setMainController(this);
+            root.setTop(navBar);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
@@ -319,9 +339,9 @@ public class UserMainController {
     public void reloadPage(){
 
         viewFactory.reloadPage();
-        reloadCart();
-        reloadDropDown();
 
+        reloadDropDown();
+        reloadNavBar();
     }
 
     /**

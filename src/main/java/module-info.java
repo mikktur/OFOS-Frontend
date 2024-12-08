@@ -1,4 +1,4 @@
-module ofosfrontend {
+module ofosFrontend {
     requires javafx.controls;
     requires javafx.fxml;
     requires okhttp3;

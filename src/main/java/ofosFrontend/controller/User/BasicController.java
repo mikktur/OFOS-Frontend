@@ -13,6 +13,7 @@ public class BasicController {
     public void setMainController(UserMainController mainController) {
 
         this.mainController = mainController;
+
     }
 
     public void goToMain() {

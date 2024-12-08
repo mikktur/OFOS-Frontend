@@ -1,4 +1,5 @@
 package ofosFrontend.controller.User;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -13,6 +14,8 @@ import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.ResourceBundle;
 
 
 /**
@@ -36,7 +39,9 @@ public class NavController extends BasicController {
     AnchorPane redDot;
     @FXML
     private ComboBox<String> languageSelector;
+    ResourceBundle bundle = LocalizationManager.getBundle();
     private static final Logger logger = LogManager.getLogger(NavController.class);
+
     public NavController() {
         // required by FXML loader
 
@@ -60,11 +65,13 @@ public class NavController extends BasicController {
 
     /**
      * Switches the language of the application
+     *
      * @param language The language to switch to
      */
     private void switchLanguage(String language) {
         GenericHelper.switchLanguage(language);
         mainController.reloadPage();
+
     }
 
     /**
@@ -78,6 +85,14 @@ public class NavController extends BasicController {
                 switchLanguage(selectedLanguage);
             }
         });
+    }
+
+    public void disableCart() {
+        openCart.setDisable(true);
+    }
+
+    public void enableCart() {
+        openCart.setDisable(false);
     }
 
     /**
@@ -157,8 +172,6 @@ public class NavController extends BasicController {
 
         redDot.setVisible(true);
     }
-
-
 
 
 }

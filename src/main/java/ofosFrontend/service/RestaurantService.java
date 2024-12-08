@@ -17,7 +17,7 @@ import java.util.List;
  * Service class for handling restaurant operations
  */
 public class RestaurantService {
-    private static final String API_URL = "http://10.120.32.94:8000/"; //
+    private static final String API_URL = "http://localhost:8000/"; //
     private final Logger logger = LogManager.getLogger(RestaurantService.class);
     private final OkHttpClient client = new OkHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
@@ -26,6 +26,7 @@ public class RestaurantService {
 
     /**
      * Fetches all restaurants from the API.
+     *
      * @return A list of Restaurant objects.
      * @throws IOException If an I/O error occurs.
      */
@@ -46,6 +47,7 @@ public class RestaurantService {
 
     /**
      * Fetches restaurants of a certain owner.
+     *
      * @return A list of Restaurant objects.
      * @throws IOException If an I/O error occurs.
      */
@@ -69,6 +71,7 @@ public class RestaurantService {
 
     /**
      * Updates a restaurant's information.
+     *
      * @param restaurant The restaurant to fetch.
      * @throws IOException If an I/O error occurs.
      */
@@ -94,6 +97,7 @@ public class RestaurantService {
 
     /**
      * Fetches restaurants of a certain category.
+     *
      * @param categoryName The category name.
      * @return A list of Restaurant objects.
      * @throws IOException If an I/O error occurs.
@@ -131,8 +135,9 @@ public class RestaurantService {
 
     /**
      * Change the owner of a restaurant.
+     *
      * @param restaurantId The ID of the restaurant.
-     * @param newOwnerId The ID of the new owner.
+     * @param newOwnerId   The ID of the new owner.
      * @return True if the operation was successful, false otherwise.
      * @throws IOException If an I/O error occurs.
      */
@@ -159,22 +164,20 @@ public class RestaurantService {
 
     /**
      * Saves a new restaurant to the database.
+     *
      * @param restaurant The restaurant to save.
      * @return True if the operation was successful, false otherwise.
      */
     public boolean saveRestaurant(Restaurant restaurant) {
-        String url = API_URL + "restaurants/createNew";
+        String url = API_URL + "restaurants/create";
         String token = SessionManager.getInstance().getToken();
-
-        String requestBody = String.format(
-                "{\"name\":\"%s\",\"phone\":\"%s\",\"picture\":\"%s\",\"address\":\"%s\",\"hours\":\"%s\",\"ownerId\":%d}",
-                restaurant.getRestaurantName(),
-                restaurant.getRestaurantPhone(),
-                restaurant.getPicture(),
-                restaurant.getAddress(),
-                restaurant.getBusinessHours(),
-                restaurant.getOwnerId()
-        );
+        String requestBody;
+        try {
+            requestBody = mapper.writeValueAsString(restaurant);
+        } catch (IOException e) {
+            logger.error("Error while serializing restaurant: {}", e.getMessage());
+            return false;
+        }
 
         Request request = new Request.Builder()
                 .url(url)

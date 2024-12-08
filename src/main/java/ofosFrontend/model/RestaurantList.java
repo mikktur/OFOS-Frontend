@@ -44,9 +44,7 @@ public class RestaurantList {
     public void setRestaurants(List<Restaurant> restaurantList) {
         this.restaurantList = restaurantList;
     }
-    public void setRestaurantList(List<Restaurant> restaurantList) {
-        this.restaurantList = restaurantList;
-    }
+
 
     public void addRestaurant(Restaurant restaurant) {
         restaurantList.add(restaurant);
@@ -68,9 +66,6 @@ public class RestaurantList {
         return restaurantList.isEmpty();
     }
 
-    public void getNames() {
-        restaurantList.forEach(restaurant1 -> System.out.println(restaurant1.getRestaurantName()));
-    }
     public List<Restaurant> filterByCategory(String category) throws IOException {
 
         restaurantList = restaurantService.getRestaurantsByCategory(category);

@@ -80,7 +80,6 @@ public class LoginController {
      */
     private void handleLoginResponse(LoginResponse loginResponse) {
 
-        ObjectMapper mapper = new ObjectMapper();
 
         if (loginResponse.getStatusCode() == 200) {
             SessionManager manager = SessionManager.getInstance();
@@ -258,7 +257,8 @@ public class LoginController {
 
             // Set up the main stage
             Stage mainStage = new Stage();
-            Scene menuScene = new Scene(root, 1000, 800);
+            Scene menuScene = new Scene(root, 1100, 800);
+            mainStage.minWidthProperty().bind(menuScene.widthProperty());
             mainStage.setTitle("OFOS Menu");
             mainStage.setScene(menuScene);
             AppManager.getInstance().setPrimaryStage(mainStage);
