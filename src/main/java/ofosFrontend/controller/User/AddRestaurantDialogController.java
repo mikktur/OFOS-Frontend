@@ -111,7 +111,7 @@ public class AddRestaurantDialogController {
             List<User> users = userService.getAllUsers();
             users.stream()
                     .filter(user -> "OWNER".equals(user.getRole()))
-                    .forEach(user -> dialogOwnerSelector.getItems().add(user.getUsername() + " ID: " + user.getId()));
+                    .forEach(user -> dialogOwnerSelector.getItems().add(user.getUsername() + " ID: " + user.getUserId()));
         } catch (IOException e) {
             showError(bundle.getString("Failed_to_load_user"));
             e.printStackTrace();
