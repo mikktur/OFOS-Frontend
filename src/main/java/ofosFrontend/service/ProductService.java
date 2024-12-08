@@ -1,6 +1,5 @@
 package ofosFrontend.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ofosFrontend.model.Product;
 import ofosFrontend.session.LocalizationManager;
@@ -14,7 +13,7 @@ import java.util.List;
  * Service class for handling product operations
  */
 public class ProductService {
-    private static final String API_URL = "http://10.120.32.94:8000/"; //
+    private static final String API_URL = "http://10.120.32.94:8000/";
     private final OkHttpClient client = new OkHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
 
@@ -31,6 +30,7 @@ public class ProductService {
                 .url(API_URL + "api/products/restaurant/" + language + "/" + id)
                 .get()
                 .build();
+
         Response response = client.newCall(request).execute();
         String responseBody = response.body().string();
 
@@ -46,13 +46,12 @@ public class ProductService {
      */
     public void addProductToRestaurant(Product product, int restaurantId) throws IOException {
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
-
-        String json = mapper.writeValueAsString(product);
+        String productJson = mapper.writeValueAsString(product);
 
         SessionManager sessionManager = SessionManager.getInstance();
         String bearerToken = sessionManager.getToken();
 
-        RequestBody body = RequestBody.create(json, JSON);
+        RequestBody body = RequestBody.create(productJson, JSON);
         Request request = new Request.Builder()
                 .url(API_URL + "api/products/create/" + restaurantId)
                 .post(body)
@@ -74,21 +73,21 @@ public class ProductService {
     public void updateProduct(Product product) throws IOException {
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
         String productJson = mapper.writeValueAsString(product);
+
         SessionManager sessionManager = SessionManager.getInstance();
         String bearerToken = sessionManager.getToken();
 
         RequestBody body = RequestBody.create(productJson, JSON);
-
         Request request = new Request.Builder()
                 .url(API_URL + "api/products/update")
                 .put(body)
                 .addHeader("Authorization", "Bearer " + bearerToken)
                 .build();
 
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) {
-                throw new IOException("Failed to update product: " + response);
-            }
+        Response response = client.newCall(request).execute();
+
+        if (!response.isSuccessful()) {
+            throw new IOException("Failed to update product: " + response);
         }
     }
 
@@ -98,23 +97,20 @@ public class ProductService {
      * @param id The ID of the restaurant.
      * @throws IOException If an I/O error occurs.
      */
-    public void deleteProduct(Product product,int id) throws IOException {
+    public void deleteProduct(Product product, int restaurantId) throws IOException {
         SessionManager sessionManager = SessionManager.getInstance();
         String bearerToken = sessionManager.getToken();
-        System.out.println("testiiii");
+
         Request request = new Request.Builder()
-                .url(API_URL + "api/products/delete/"+product.getProductID()+"/restaurant/" + id)
+                .url(API_URL + "api/products/delete/" + product.getProductID() + "/restaurant/" + restaurantId)
                 .delete()
                 .addHeader("Authorization", "Bearer " + bearerToken)
                 .build();
 
-        try (Response response = client.newCall(request).execute()) {
+        Response response = client.newCall(request).execute();
 
-
-            if (!response.isSuccessful()) {
-                throw new IOException("Failed to delete product: " + response);
-            }
+        if (!response.isSuccessful()) {
+            throw new IOException("Failed to delete product: " + response);
         }
-
     }
 }
