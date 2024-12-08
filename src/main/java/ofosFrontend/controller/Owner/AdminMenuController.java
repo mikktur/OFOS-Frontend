@@ -109,7 +109,7 @@ public class AdminMenuController extends AdminBasicController {
         productBox.getChildren().addAll(productNameText, productDescriptionText, productPriceText, productCategoryText, productStatusText);
 
         Button editButton = new Button(editButtonText);
-        editButton.setOnAction(event -> openEditDialog(product));
+        editButton.setOnAction(event -> openEditDialog(product, restaurantID));
         productBox.getChildren().add(editButton);
 
         Button deleteButton = new Button(deleteButtonText);
@@ -245,7 +245,7 @@ public class AdminMenuController extends AdminBasicController {
      * Open the edit dialog for a product
      * @param product The product to edit
      */
-    private void openEditDialog(Product product) {
+    private void openEditDialog(Product product, int rid) {
         ResourceBundle bundle = LocalizationManager.getBundle();
         String dialogTitle = bundle.getString("EditItemDialog");
         String dialogHeader = bundle.getString("EditItemHeader");
@@ -317,7 +317,7 @@ public class AdminMenuController extends AdminBasicController {
         Optional<Product> result = dialog.showAndWait();
         result.ifPresent(updatedProduct -> {
             try {
-                productService.updateProduct(updatedProduct);  // Update product in service
+                productService.updateProduct(updatedProduct, rid);  // Update product in service
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

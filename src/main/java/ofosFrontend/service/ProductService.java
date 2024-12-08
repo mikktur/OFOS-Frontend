@@ -70,7 +70,7 @@ public class ProductService {
      * @param product The product to update.
      * @throws IOException If an I/O error occurs.
      */
-    public void updateProduct(Product product) throws IOException {
+    public void updateProduct(Product product, int rid) throws IOException {
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
         String productJson = mapper.writeValueAsString(product);
 
@@ -79,7 +79,7 @@ public class ProductService {
 
         RequestBody body = RequestBody.create(productJson, JSON);
         Request request = new Request.Builder()
-                .url(API_URL + "api/products/update")
+                .url(API_URL + "api/products/update/" + rid)
                 .put(body)
                 .addHeader("Authorization", "Bearer " + bearerToken)
                 .build();
