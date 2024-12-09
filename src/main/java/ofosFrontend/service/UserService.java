@@ -3,113 +3,159 @@ package ofosFrontend.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.concurrent.Task;
 import ofosFrontend.model.ContactInfo;
+import ofosFrontend.model.LoginResponse;
 import ofosFrontend.model.PasswordChangeDTO;
 import ofosFrontend.model.User;
 import ofosFrontend.session.SessionManager;
 import okhttp3.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.List;
+import java.util.Map;
 
-
+/**
+ * Service class for handling user operations
+ */
 public class UserService {
 
-    private static final String API_URL = "http://10.120.32.94:8000/api/";
-    private static final String API_URL_LOCAL = "http://localhost:8000/api/";
+    private static final String API_URL = "http://localhost:8000/api/";
 
     private final OkHttpClient client = new OkHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
+    private final Logger logger = LogManager.getLogger(UserService.class);
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String BEARER = "Bearer ";
+    private static final String MEDIA_TYPE = "application/json; charset=utf-8";
 
-    public Response login(String username, String password) throws IOException {
+    /**
+     * Logs in a user with the given username and password.
+     *
+     * @param username The username of the user.
+     * @param password The password of the user.
+     * @return The response from the server.
+     * @throws IOException If an I/O error occurs.
+     */
+    public LoginResponse login(String username, String password) throws IOException {
 
-        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+        MediaType JSON = MediaType.get(MEDIA_TYPE);
 
         User user = new User(username, password);
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonBody = objectMapper.writeValueAsString(user);
+
+        String jsonBody = mapper.writeValueAsString(user);
 
         RequestBody body = RequestBody.create(jsonBody, JSON);
         Request request = new Request.Builder()
                 .url(API_URL + "auth/login")
                 .post(body)
                 .build();
+        try (Response response = client.newCall(request).execute()) {
+            int statusCode = response.code();
+            if (response.isSuccessful()) {
+                String responseBody = response.body().string();
+                Map<String, String> bodyMap = mapper.readValue(responseBody, Map.class);
+                return new LoginResponse(statusCode, bodyMap);
+            } else {
+                throw new IOException("Failed to login. Status code: " + response.code());
+            }
+        }
 
-        return client.newCall(request).execute();
     }
 
+    /**
+     * Registers a new user with the given username and password.
+     *
+     * @param username The username of the user.
+     * @param password The password of the user.
+     * @return The response from the server.
+     * @throws IOException If an I/O error occurs.
+     */
     public Response register(String username, String password) throws IOException {
 
-        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+        MediaType JSON = MediaType.get(MEDIA_TYPE);
 
         User user = new User(username, password);
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonBody = objectMapper.writeValueAsString(user);
+
+        String jsonBody = mapper.writeValueAsString(user);
 
         RequestBody body = RequestBody.create(jsonBody, JSON);
         Request request = new Request.Builder()
                 .url(API_URL + "users/create")
                 .post(body)
                 .build();
-
-        return client.newCall(request).execute();
+        try (Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                return response;
+            } else {
+                throw new IOException("Failed to register. Status code: " + response.code());
+            }
+        }
     }
 
+    /**
+     * Fetches the user data of the currently logged-in user.
+     *
+     * @param userId The ID of the user.
+     * @return A Task that fetches the user data.
+     */
     public Task<ContactInfo> fetchUserData(int userId) {
         return new Task<>() {
             @Override
             protected ContactInfo call() throws Exception {
                 String url = API_URL + "contactinfo/" + userId;
 
-                HttpClient client = HttpClient.newHttpClient();
-                HttpRequest request = HttpRequest.newBuilder()
-                        .uri(URI.create(url))
-                        .header("Authorization", "Bearer " + SessionManager.getInstance().getToken())
-                        .GET()
+                Request request = new Request.Builder()
+                        .url(url)
+                        .header(AUTHORIZATION, BEARER + SessionManager.getInstance().getToken())
+                        .get()
                         .build();
 
-                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-                if (response.statusCode() == 200) {
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    return objectMapper.readValue(response.body(), ContactInfo.class);
-                } else if (response.statusCode() == 404) {
-                    // No contact information found, return null
-                    return null;
-                } else {
-                    throw new Exception("Failed to fetch contact information. Status code: " + response.statusCode());
+                try (Response response = client.newCall(request).execute()) {
+                    if (response.code() == 200) {
+
+
+                        return mapper.readValue(response.body().string(), ContactInfo.class);
+                    } else if (response.code() == 404) {
+
+                        return null;
+                    } else {
+                        throw new IOException("Failed to fetch contact information. Status code: " + response.code());
+                    }
                 }
             }
         };
     }
 
+    /**
+     * Updates the password of the currently logged-in user.
+     *
+     * @param passwordDTO The DTO containing the old and new passwords.
+     * @return A Task that updates the password.
+     */
     public Task<Void> updatePassword(PasswordChangeDTO passwordDTO) {
         return new Task<>() {
             @Override
-            protected Void call() throws Exception {
+            protected Void call() throws IOException {
                 String url = API_URL + "users/updatePassword";
                 String token = SessionManager.getInstance().getToken();
 
-                ObjectMapper objectMapper = new ObjectMapper();
-                String requestBody = objectMapper.writeValueAsString(passwordDTO);
+                String requestBody = mapper.writeValueAsString(passwordDTO);
 
-                HttpClient client = HttpClient.newHttpClient();
-                HttpRequest request = HttpRequest.newBuilder()
-                        .uri(URI.create(url))
+                Request request = new Request.Builder()
+                        .url(url)
                         .header("Content-Type", "application/json")
-                        .header("Authorization", "Bearer " + token)
-                        .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
+                        .header(AUTHORIZATION, BEARER + token)
+                        .put(RequestBody.create(requestBody, MediaType.get(MEDIA_TYPE)))
                         .build();
 
-                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-                if (response.statusCode() == 400) {
-                    throw new Exception("Unauthorized request. Status code: " + response.statusCode());
-                }
-                else if (response.statusCode() != 200) {
-                    throw new Exception("Failed to update password. Status code: " + response.statusCode() + response.body());
+                try (Response response = client.newCall(request).execute()) {
+                    if (!response.isSuccessful()) {
+                        throw new IOException("Failed to update password. Status code: " + response.code());
+                    }
+                } catch (IOException e) {
+                    throw new IOException("Network error occurred while updating password", e);
                 }
 
                 return null;
@@ -117,16 +163,20 @@ public class UserService {
         };
     }
 
+    /**
+     * Fetches all users.
+     *
+     * @return A list of User objects.
+     * @throws IOException If an I/O error occurs.
+     */
     public List<User> getAllUsers() throws IOException {
-        MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
-        // Create a GET request
+
         Request request = new Request.Builder()
                 .url(API_URL + "users")
                 .get()
                 .build();
 
-        // Execute the request and parse the response
         Response response = client.newCall(request).execute();
         if (!response.isSuccessful()) {
             throw new IOException("Failed to fetch users: " + response.code() + " " + response.message());
@@ -136,26 +186,31 @@ public class UserService {
         return mapper.readValue(responseBody, mapper.getTypeFactory().constructCollectionType(List.class, User.class));
     }
 
+    /**
+     * Deletes the currently logged-in user.
+     * Checks if the user is an owner account and throws an exception if so.
+     *
+     * @return A Task that deletes the user.
+     */
     public Task<Void> deleteUser() {
         return new Task<>() {
             @Override
-            protected Void call() throws Exception {
+            protected Void call() throws IOException {
                 String url = API_URL + "users/delete";
                 String token = SessionManager.getInstance().getToken();
 
-                HttpClient client = HttpClient.newHttpClient();
-                HttpRequest request = HttpRequest.newBuilder()
-                        .uri(URI.create(url))
-                        .header("Authorization", "Bearer " + token)
-                        .DELETE()
+                Request request = new Request.Builder()
+                        .url(url)
+                        .header(AUTHORIZATION, BEARER + token)
+                        .delete()
                         .build();
 
-                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-                if (response.statusCode() == 418) { // Status code for "I'm a teapot"
-                    throw new Exception("Owner accounts cannot be deleted. Status code: " + response.statusCode());
-                } else if (response.statusCode() != 200) {
-                    throw new Exception("Failed to delete user. Status code: " + response.statusCode());
-
+                try (Response response = client.newCall(request).execute()) {
+                    if (response.code() == 418) {
+                        throw new IOException("Owner accounts cannot be deleted. Status code: " + response.code());
+                    } else if (!response.isSuccessful()) {
+                        throw new IOException("Failed to delete user. Status code: " + response.code());
+                    }
                 }
 
                 return null;
@@ -163,6 +218,13 @@ public class UserService {
         };
     }
 
+    /**
+     * Fetches user information by username.
+     *
+     * @param selectedUserName The username of the user to fetch.
+     * @return The User object.
+     * @throws IOException If an I/O error occurs.
+     */
     public User getUserByUsername(String selectedUserName) throws IOException {
         Request request = new Request.Builder()
                 .url(API_URL + "users/username/" + selectedUserName)
@@ -180,9 +242,15 @@ public class UserService {
         }
     }
 
-
+    /**
+     * Bans a user by ID.
+     *
+     * @param userId The ID of the user to ban.
+     * @return True if the operation succeeded, false otherwise.
+     * @throws IOException If an I/O error occurs.
+     */
     public boolean banUser(int userId) throws IOException {
-        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+        MediaType JSON = MediaType.get(MEDIA_TYPE);
 
         Request request = new Request.Builder()
                 .url(API_URL + "users/ban/" + userId)
@@ -193,70 +261,64 @@ public class UserService {
             if (response.isSuccessful()) {
                 return true;
             } else {
-                System.err.println("Failed to ban user: " + response.code() + " " + response.message());
+                logger.error("Failed to ban user: {} {}", response.code(), response.message());
                 return false;
             }
         }
     }
 
-    /*
 
-    // We can use the ban method to unban users also, so this is not needed anymore
-
-    public boolean unbanUser(int userId) throws IOException {
-        MediaType JSON = MediaType.get("application/json; charset=utf-8");
-
-        Request request = new Request.Builder()
-                .url(API_URL + "users/unban/" + userId)
-                .post(RequestBody.create("", JSON))
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            if (response.isSuccessful()) {
-                return true; // Unban operation succeeded
-            } else {
-                System.err.println("Failed to unban user: " + response.code() + " " + response.message());
-                return false; // Unban operation failed
-            }
-        }
-
-    }
-    */
-
-
+    /**
+     * Changes the role of a user by ID.
+     *
+     * @param userId  The ID of the user to change the role of.
+     * @param newRole The new role of the user.
+     * @return True if the operation succeeded, false otherwise.
+     */
     public boolean changeRole(int userId, String newRole) {
-        String url = API_URL + "users/changeRole";
+        String url = API_URL + "users/changerole";
         String token = SessionManager.getInstance().getToken();
 
-        // Create a JSON request body
-        String requestBody = "{\"userId\":" + userId + ",\"newRole\":\"" + newRole + "\"}";
+        if (token == null || token.isEmpty()) {
+            logger.error("Cannot change role: Token is null or empty.");
+            return false;
+        }
 
         try {
-            // Create the HTTP client
-            HttpClient client = HttpClient.newHttpClient();
+            // Construct JSON request body
+            User user = new User();
+            user.setRole(newRole);
+            user.setUserId(userId);
 
-            // Build the HTTP request
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
+            String requestBody = mapper.writeValueAsString(user);
+
+            RequestBody body = RequestBody.create(
+                    requestBody,
+                    MediaType.get(MEDIA_TYPE)
+            );
+
+            // Build the request
+            Request request = new Request.Builder()
+                    .url(url)
                     .header("Content-Type", "application/json")
-                    .header("Authorization", "Bearer " + token)
-                    .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
+                    .header(AUTHORIZATION, BEARER + token)
+                    .put(body)
                     .build();
 
-
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            if (response.statusCode() == 200) {
-                System.out.println("Role changed successfully for user ID: " + userId);
-                return true;
-            } else {
-                System.err.println("Failed to change role. Server responded with: " + response.statusCode());
-                System.err.println("Response body: " + response.body());
-                return false;
+            // Execute the request
+            try (Response response = client.newCall(request).execute()) {
+                if (response.isSuccessful()) {
+                    logger.info("Role changed successfully for user ID: {}", userId);
+                    return true;
+                } else {
+                    String errorResponse = response.body() != null ? response.body().string() : "No response body";
+                    logger.error("Failed to change role. Server responded with: {} - {}", response.code(), errorResponse);
+                    return false;
+                }
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            logger.error("Failed to change role. Network error occurred.", e);
             return false;
         }
     }

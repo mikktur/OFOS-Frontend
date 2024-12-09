@@ -1,5 +1,8 @@
 package ofosFrontend.model;
 
+/**
+ * Model class for OrderItem, representing an item in an order
+ */
 public class OrderItem {
     private int quantity;
     private int productID;

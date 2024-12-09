@@ -1,17 +1,21 @@
 package ofosFrontend.session;
 
-import ofosFrontend.model.Restaurant;
 import ofosFrontend.model.ShoppingCart;
 
 import java.util.HashMap;
+import java.util.Map;
 
+/**
+ * Manages the session for the user.
+ * Stores the user's information and shopping carts.
+ */
 public class SessionManager {
 
     private static SessionManager session;
     private int userId;
     private String username;
     private String token;
-    private final HashMap<Integer, ShoppingCart> cartMap;
+    private final Map<Integer, ShoppingCart> cartMap;
     private String role;
 
     private SessionManager() {
@@ -21,14 +25,13 @@ public class SessionManager {
         token = null;
         role = null;
     }
-
-    public static SessionManager getInstance() {
+    /**
+     * Gets the instance of the session manager
+     * @return The session manager
+     */
+    public static synchronized SessionManager getInstance() {
         if (session == null) {
-            synchronized (SessionManager.class) {
-                if (session == null) {
-                    session = new SessionManager();
-                }
-            }
+            session = new SessionManager();
         }
         return session;
     }
@@ -38,6 +41,9 @@ public class SessionManager {
         this.token = token;
     }
 
+    /**
+     * Upon logout, clears all the session data.
+     */
     public void logout() {
         username = null;
         token = null;
@@ -46,6 +52,7 @@ public class SessionManager {
         cartMap.clear();
 
     }
+
     public void setRole(String role) {
         this.role = role;
     }
@@ -53,6 +60,7 @@ public class SessionManager {
     public String getRole() {
         return role;
     }
+
     public String getUsername() {
         return username != null ? username : "";
     }
@@ -81,15 +89,36 @@ public class SessionManager {
         return userId;
     }
 
+    /**
+     * Adds a cart to the session
+     * @param restaurantId The ID of the restaurant
+     * @param cart The cart to add
+     */
     public void addCart(int restaurantId, ShoppingCart cart) {
         cartMap.put(restaurantId, cart);
     }
-    public HashMap<Integer, ShoppingCart> getCartMap() {
+
+    /**
+     * Gets the cart map
+     * @return The cart map
+     */
+    public Map<Integer, ShoppingCart> getCartMap() {
         return cartMap;
     }
+
+    /**
+     * Removes a cart from the session
+     * @param id The ID of the restaurant
+     */
     public void removeCart(int id) {
         cartMap.remove(id);
     }
+
+    /**
+     * Gets a cart from the session
+     * @param restaurantId The ID of the restaurant
+     * @return The cart
+     */
     public ShoppingCart getCart(int restaurantId) {
         return cartMap.get(restaurantId);
     }

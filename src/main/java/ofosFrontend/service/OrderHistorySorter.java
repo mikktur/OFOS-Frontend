@@ -3,9 +3,21 @@ package ofosFrontend.service;
 import ofosFrontend.model.OrderHistory;
 
 import java.util.*;
+/**
+ * Utility class for sorting order history
+ */
+public final class OrderHistorySorter {
 
-public class OrderHistorySorter {
 
+    private OrderHistorySorter() {
+    }
+
+    /**
+     * Sorts the order history by id
+     * @param orderHistoryMap map of order history
+     * @param ascending true if sorting in ascending order, false otherwise
+     * @return sorted map of order history
+     */
     public static Map<Integer, List<OrderHistory>> sortOrderHistoryById(Map<Integer, List<OrderHistory>> orderHistoryMap, boolean ascending) {
         List<Map.Entry<Integer, List<OrderHistory>>> entries = new ArrayList<>(orderHistoryMap.entrySet());
         entries.sort((entry1, entry2) -> ascending
@@ -15,7 +27,12 @@ public class OrderHistorySorter {
         return toLinkedHashMap(entries);
     }
 
-
+    /**
+     * Sorts the order history by restaurant name
+     * @param orderHistoryMap map of order history
+     * @param ascending true if sorting in ascending order, false otherwise
+     * @return sorted map of order history
+     */
     public static Map<Integer, List<OrderHistory>> sortOrderHistoryByRestaurant(Map<Integer, List<OrderHistory>> orderHistoryMap, boolean ascending) {
         List<Map.Entry<Integer, List<OrderHistory>>> entries = new ArrayList<>(orderHistoryMap.entrySet());
         entries.sort((entry1, entry2) -> {
@@ -27,6 +44,12 @@ public class OrderHistorySorter {
         return toLinkedHashMap(entries);
     }
 
+    /**
+     * Sorts the order history by total price
+     * @param orderHistoryMap map of order history
+     * @param ascending true if sorting in ascending order, false otherwise
+     * @return sorted map of order history
+     */
     public static Map<Integer, List<OrderHistory>> sortOrderHistoryByPrice(Map<Integer, List<OrderHistory>> orderHistoryMap, boolean ascending) {
         List<Map.Entry<Integer, List<OrderHistory>>> entries = new ArrayList<>(orderHistoryMap.entrySet());
         entries.sort((entry1, entry2) -> {
@@ -38,6 +61,12 @@ public class OrderHistorySorter {
         return toLinkedHashMap(entries);
     }
 
+    /**
+     * Sorts the order history by date
+     * @param orderHistoryMap map of order history
+     * @param ascending true if sorting in ascending order, false otherwise
+     * @return sorted map of order history
+     */
     public static Map<Integer, List<OrderHistory>> sortOrderHistoryByDate(Map<Integer, List<OrderHistory>> orderHistoryMap, boolean ascending) {
         List<Map.Entry<Integer, List<OrderHistory>>> entries = new ArrayList<>(orderHistoryMap.entrySet());
         entries.sort((entry1, entry2) -> {
@@ -49,6 +78,11 @@ public class OrderHistorySorter {
         return toLinkedHashMap(entries);
     }
 
+    /**
+     * Converts a list of entries to a linked hash map
+     * @param entries list of entries
+     * @return linked hash map
+     */
     private static Map<Integer, List<OrderHistory>> toLinkedHashMap(List<Map.Entry<Integer, List<OrderHistory>>> entries) {
         Map<Integer, List<OrderHistory>> sortedMap = new LinkedHashMap<>();
         for (Map.Entry<Integer, List<OrderHistory>> entry : entries) {

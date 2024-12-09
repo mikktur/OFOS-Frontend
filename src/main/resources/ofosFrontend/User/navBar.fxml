@@ -16,9 +16,9 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
-<StackPane fx:id="navBarRoot" alignment="TOP_CENTER" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.User.NavController">
+<StackPane fx:id="navBarRoot" alignment="TOP_CENTER" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.User.NavController" >
    <children>
-      <HBox alignment="CENTER" maxHeight="60.0" prefHeight="44.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" styleClass="navBar">
+      <HBox alignment="CENTER" maxHeight="60.0" prefHeight="44.0" style="-fx-background-color: linear-gradient(to bottom, #c4e6fb, #91d1f9); -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" styleClass="navBar">
           <children>
               <HBox alignment="CENTER_LEFT" styleClass="leftNav" HBox.hgrow="ALWAYS">
                   <children>
@@ -42,7 +42,7 @@
               </HBox>
               <HBox alignment="CENTER" styleClass="middleNav" HBox.hgrow="ALWAYS">
                   <children>
-                      <TextField fx:id="searchBar" alignment="CENTER" maxWidth="800.0" prefHeight="35.0" prefWidth="583.0" promptText="hae" style="-fx-background-color: #ffffff;">
+                      <TextField fx:id="searchBar" alignment="CENTER" maxWidth="800.0" prefHeight="35.0" prefWidth="583.0" promptText="%Search" style="-fx-background-color: #ffffff;">
                           <font>
                               <Font size="16.0" />
                           </font>

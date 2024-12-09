@@ -1,6 +1,13 @@
 package ofosFrontend.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.util.List;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
+
+/**
+ * Model class representing a product
+ */
 public class Product {
 
     private String productName;
@@ -11,8 +18,11 @@ public class Product {
     private String category;
     private boolean active;
 
+    // List to hold translations for name and description
+    private List<Translation> translations;
+
     // Parameterized constructor
-    public Product(String productName, double productPrice, String productDesc, Integer productID, String picture, String category, boolean active) {
+    public Product(String productName, double productPrice, String productDesc, Integer productID, String picture, String category, boolean active, List<Translation> translations) {
         this.productName = productName;
         this.productPrice = productPrice;
         this.productDesc = productDesc;
@@ -20,6 +30,7 @@ public class Product {
         this.picture = picture;
         this.category = category;
         this.active = active;
+        this.translations = translations;
     }
 
     // Default constructor
@@ -83,6 +94,14 @@ public class Product {
         this.productID = productID;
     }
 
+    public List<Translation> getTranslations() {
+        return translations;
+    }
+
+    public void setTranslations(List<Translation> translations) {
+        this.translations = translations;
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -93,6 +112,7 @@ public class Product {
                 ", picture='" + picture + '\'' +
                 ", category='" + category + '\'' +
                 ", active=" + active +
+                ", translations=" + translations +
                 '}';
     }
 }

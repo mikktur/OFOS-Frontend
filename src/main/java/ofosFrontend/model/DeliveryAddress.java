@@ -1,5 +1,8 @@
 package ofosFrontend.model;
 
+/**
+ * Model for the delivery address
+ */
 public class DeliveryAddress {
     private int deliveryAddressId;
     private String streetAddress;

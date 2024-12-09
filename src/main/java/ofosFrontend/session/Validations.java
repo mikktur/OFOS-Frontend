@@ -5,8 +5,15 @@ import javafx.scene.control.TextField;
 
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
+/**
+ * Utility class for validating user input.
+ */
+public final class Validations {
+    private static final String BORDER_RED = "-fx-border-color: red;";
 
-public class Validations {
+    private Validations() {
+        throw new UnsupportedOperationException("Utility class");
+    }
 
     /**
      * Validates the input fields for an address form.
@@ -19,14 +26,14 @@ public class Validations {
     public static String validateAddressInput(TextField streetAddressField, TextField cityField, TextField postalCodeField, ResourceBundle bundle) {
 
         if (streetAddressField.getText().isEmpty()) {
-            streetAddressField.setStyle("-fx-border-color: red;");
+            streetAddressField.setStyle(BORDER_RED);
             return bundle.getString("Street_address_required");
         } else {
             streetAddressField.setStyle(null);
         }
 
         if (cityField.getText().isEmpty()) {
-            cityField.setStyle("-fx-border-color: red;");
+            cityField.setStyle(BORDER_RED);
             return bundle.getString("City_required");
         } else {
             cityField.setStyle(null);
@@ -34,10 +41,10 @@ public class Validations {
 
         String postalCode = postalCodeField.getText();
         if (postalCode.isEmpty()) {
-            postalCodeField.setStyle("-fx-border-color: red;");
+            postalCodeField.setStyle(BORDER_RED);
             return bundle.getString("Postal_code_required");
         } else if (!postalCode.matches("\\d{5}")) {
-            postalCodeField.setStyle("-fx-border-color: red;");
+            postalCodeField.setStyle(BORDER_RED);
             return bundle.getString("Postal_code_invalid");
         } else {
             postalCodeField.setStyle(null);
@@ -175,8 +182,6 @@ public class Validations {
     }
 
 
-
-
     /**
      * Shows an error message dialog.
      *
@@ -191,6 +196,10 @@ public class Validations {
         alert.showAndWait();
     }
 
+    /**
+     * Shows a success message dialog.
+     * @param message The success message to display.
+     */
     public static void showSuccessAlert(String message) {
         ResourceBundle bundle = LocalizationManager.getBundle();
         Alert successAlert = new Alert(Alert.AlertType.INFORMATION);

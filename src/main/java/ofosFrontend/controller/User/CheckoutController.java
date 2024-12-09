@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import ofosFrontend.controller.User.userSettings.AddAddressDialogController;
 import ofosFrontend.model.*;
 import ofosFrontend.service.OrderService;
+import ofosFrontend.session.CartManager;
 import ofosFrontend.session.LocalizationManager;
 import ofosFrontend.session.SessionManager;
 import javafx.scene.control.Label;
@@ -28,6 +29,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import ofosFrontend.service.CheckoutService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import static ofosFrontend.session.GenericHelper.executeTask;
 import static ofosFrontend.session.Validations.showError;
@@ -37,7 +40,7 @@ import static ofosFrontend.session.Validations.showError;
  * The view is used to confirm the order and select the delivery address and payment method.
  * The user can also add a new delivery address.
  */
-public class CheckoutController  extends BasicController {
+public class CheckoutController extends BasicController {
     @FXML
     VBox summaryContainer;
     @FXML
@@ -50,10 +53,9 @@ public class CheckoutController  extends BasicController {
     Button orderBtn;
     @FXML
     Button addAddressBtn;
-
+    private static final String FONT_WEIGHT_BOLD = "-fx-font-weight: bold;";
     private int rid;
-    private final int userId = SessionManager.getInstance().getUserId();
-
+    private final Logger logger = LogManager.getLogger(CheckoutController.class);
     NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(LocalizationManager.getLocale());
     ResourceBundle bundle = LocalizationManager.getBundle();
     CheckoutService checkoutService = new CheckoutService();
@@ -64,6 +66,7 @@ public class CheckoutController  extends BasicController {
     private final OrderService orderService = new OrderService();
 
     public CheckoutController() {
+        // Required by FXML loader
     }
 
     /**
@@ -74,7 +77,7 @@ public class CheckoutController  extends BasicController {
     @FXML
     public void initialize() {
 
-        //renderSummary();
+
         getDeliveryAddresses();
         populatePaymentMethods();
         setupListeners();
@@ -112,7 +115,6 @@ public class CheckoutController  extends BasicController {
                 Parent root = loader.load();
 
                 AddAddressDialogController dialogController = loader.getController();
-                dialogController.setUserId(userId);
 
                 Stage stage = new Stage();
                 stage.setTitle(bundle.getString("Add_new_delivery_address"));
@@ -129,20 +131,21 @@ public class CheckoutController  extends BasicController {
                 }
 
 
-
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Failed to open add address dialog", e);
                 showError(bundle.getString("Address_dialog_error"));
             }
         });
 
     }
 
-    public void setRid(int rid) {
+    public void setRestaurant(int rid) {
         this.rid = rid;
     }
+
     public void updateView() {
         renderSummary();
+
     }
 
     /**
@@ -162,6 +165,10 @@ public class CheckoutController  extends BasicController {
         });
     }
 
+    /**
+     * Creates the confirmation dialog for the order.
+     * @return The dialog object.
+     */
     private Dialog<ButtonType> createOrderConfirmationDialog() {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle(bundle.getString("Order_confirmation"));
@@ -173,6 +180,10 @@ public class CheckoutController  extends BasicController {
         return dialog;
     }
 
+    /**
+     * Builds the content of the order confirmation dialog.
+     * @return The VBox containing the order summary.
+     */
     private VBox buildOrderSummary() {
         VBox content = new VBox(10);
 
@@ -190,10 +201,16 @@ public class CheckoutController  extends BasicController {
         return content;
     }
 
+    /**
+     * Creates the summary of the cart items.
+     * @return The VBox containing the cart items.
+     */
     private VBox createCartSummary() {
+
+
         VBox cartSummary = new VBox();
         Label cartItemsLabel = new Label(bundle.getString("Items"));
-        cartItemsLabel.setStyle("-fx-font-weight: bold;");
+        cartItemsLabel.setStyle(FONT_WEIGHT_BOLD);
 
         VBox cartItems = new VBox();
         for (CartItem item : SessionManager.getInstance().getCart(rid).getItems()) {
@@ -210,10 +227,14 @@ public class CheckoutController  extends BasicController {
         return cartSummary;
     }
 
+    /**
+     * Creates the summary of the delivery address.
+     * @return The VBox containing the delivery address.
+     */
     private VBox createDeliveryAddressSummary() {
         VBox addressSummary = new VBox();
         Label deliveryLabel = new Label(bundle.getString("Delivery_Address"));
-        deliveryLabel.setStyle("-fx-font-weight: bold;");
+        deliveryLabel.setStyle(FONT_WEIGHT_BOLD);
 
         TextFlow addressFlow = new TextFlow(
                 new Text(selectedAddress.getStreetAddress() + ", "),
@@ -227,24 +248,31 @@ public class CheckoutController  extends BasicController {
         return addressSummary;
     }
 
+    /**
+     * Creates the summary of the payment method.
+     * @return The VBox containing the payment method.
+     */
     private VBox createPaymentMethodSummary() {
         VBox paymentSummary = new VBox();
         Label paymentLabel = new Label(bundle.getString("paymentMethod"));
-        paymentLabel.setStyle("-fx-font-weight: bold;");
+        paymentLabel.setStyle(FONT_WEIGHT_BOLD);
         Label selectedPaymentLabel = new Label(selectedPaymentMethod);
 
         paymentSummary.getChildren().addAll(paymentLabel, selectedPaymentLabel);
         return paymentSummary;
     }
 
+    /**
+     * Creates the summary of the total price.
+     * @return The VBox containing the total price.
+     */
     private VBox createTotalSummary() {
         VBox totalSummary = new VBox();
         Label totalLabel = new Label(bundle.getString("Total") + subTotal.getText());
-        totalLabel.setStyle("-fx-font-weight: bold;");
+        totalLabel.setStyle(FONT_WEIGHT_BOLD);
         totalSummary.getChildren().add(totalLabel);
         return totalSummary;
     }
-
 
 
     /**
@@ -252,27 +280,31 @@ public class CheckoutController  extends BasicController {
      * Displays the restaurant name, cart items, and subtotal.
      */
     public void renderSummary() {
-        SessionManager session = SessionManager.getInstance();
-        ShoppingCart cart = session.getCart(rid);
-        Restaurant restaurant = session.getCart(rid).getRestaurant();
-        Label restaurantLabel = new Label(restaurant.getRestaurantName());
-        restaurantLabel.setStyle("-fx-font-weight: bold;");
+        summaryContainer.getChildren().clear();
+        CartManager cartManager = new CartManager();
+        ShoppingCart cart = cartManager.getCart(rid);
+        Restaurant restaurant = cart.getRestaurant();
 
+        Label restaurantLabel = new Label(restaurant.getRestaurantName());
+        restaurantLabel.getStyleClass().add("restaurant-label");
         summaryContainer.getChildren().add(restaurantLabel);
+
         for (CartItem item : cart.getItems()) {
+            if (item == null || item.getProduct() == null) {
+                continue;
+            }
+
             HBox container = new HBox();
             container.setSpacing(5);
-            Label name = new Label();
-            Label price = new Label();
-            Label quantity = new Label();
-            name.setText(item.getProduct().getProductName());
-            price.setText(currencyFormatter.format(item.getTotalPrice()));
-            quantity.setText("x " + (item.getQuantity()));
+
+            Label name = new Label(item.getProduct().getProductName());
+            Label price = new Label(currencyFormatter.format(item.getTotalPrice()));
+            Label quantity = new Label(String.format("x %d", item.getQuantity()));
+
             container.getChildren().addAll(name, price, quantity);
             summaryContainer.getChildren().add(container);
         }
-
-        subTotal.setText((currencyFormatter.format(cart.getTotalPrice())));
+        subTotal.setText(currencyFormatter.format(cart.getTotalPrice()));
     }
 
     /**
@@ -284,15 +316,16 @@ public class CheckoutController  extends BasicController {
 
         executeTask(
                 task,
-                this::processFetchedAddresses, // Action to perform on success
-                () -> showError(bundle.getString("Delivery_address_fetch_error")) // Action to perform on failure
+                this::processFetchedAddresses,
+                () -> showError(bundle.getString("Delivery_address_fetch_error"))
         );
     }
 
     /**
      * Processes the fetched delivery addresses.
+     *
      * @param addresses The list of delivery addresses.
-     * Sorts the addresses by default address first.
+     *                  Sorts the addresses by default address first.
      */
     private void processFetchedAddresses(List<DeliveryAddress> addresses) {
         deliveryAddressesList = addresses;
@@ -325,8 +358,9 @@ public class CheckoutController  extends BasicController {
 
     /**
      * Formats the delivery address for display in the choice box.
+     *
      * @param address The delivery address.
-     * @param index The index of the address in the list.
+     * @param index   The index of the address in the list.
      * @return The formatted address string.
      */
     private String formatDeliveryAddress(DeliveryAddress address, int index) {
@@ -365,23 +399,21 @@ public class CheckoutController  extends BasicController {
 
         Task<Void> task = orderService.confirmOrder(cartItems, deliveryAddressId,rid);
 
-        task.setOnSucceeded(event -> {
-            // Show confirmation dialog on success
-            Platform.runLater(() -> {
-                SessionManager.getInstance().removeCart(rid);
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle(bundle.getString("Order_confirmation"));
-                alert.setHeaderText(null);
-                alert.setContentText(bundle.getString("Order_succesful"));
-                alert.showAndWait();
-                goToMain();
-
-            });
-        });
+        task.setOnSucceeded(event ->
+                Platform.runLater(() -> {
+                    SessionManager.getInstance().removeCart(rid);
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle(bundle.getString("Order_confirmation"));
+                    alert.setHeaderText(null);
+                    alert.setContentText(bundle.getString("Order_succesful"));
+                    alert.showAndWait();
+                    goToMain();
+                })
+        );
 
         task.setOnFailed(event -> {
             Throwable exception = task.getException();
-            exception.printStackTrace();
+            logger.error("Failed to confirm order", exception);
             Platform.runLater(() -> {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle(bundle.getString("Order_failed"));

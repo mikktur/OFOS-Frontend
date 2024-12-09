@@ -12,6 +12,8 @@ import javafx.util.Pair;
 import ofosFrontend.model.Restaurant;
 import ofosFrontend.service.RestaurantService;
 import ofosFrontend.session.LocalizationManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.util.prefs.Preferences;
@@ -19,18 +21,24 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for the main owner view
+ */
 public class AdminMainMenuController extends AdminBasicController {
     @FXML
     private VBox restaurantsVBox;
     @FXML
     private VBox restaurantListVBox;
     @FXML
-    private Label addressLabel, phoneLabel, hoursLabel;
+    private Label addressLabel;
+    @FXML
+    private Label phoneLabel;
+    @FXML
+    private Label hoursLabel;
 
     @FXML
     private Text defaultText;
-    private int rID;
-
+    private final Logger logger = LogManager.getLogger(AdminMainMenuController.class);
     private RestaurantService restaurantService = new RestaurantService();
     private Restaurant currentSelectedRestaurant;
 
@@ -38,14 +46,22 @@ public class AdminMainMenuController extends AdminBasicController {
 
     private Preferences prefs = Preferences.userNodeForPackage(AdminMainMenuController.class);
 
+    /**
+     * Initialize the owner main menu
+     * Load the restaurants
+     */
     @FXML
     public void initialize() {
         loadRestaurants();
     }
 
     public AdminMainMenuController() {
+        // Required by FXML loader
     }
 
+    /**
+     * Load the restaurants owned by the user
+     */
     public void loadRestaurants() {
         try {
             restaurantListVBox.getChildren().clear();
@@ -67,7 +83,6 @@ public class AdminMainMenuController extends AdminBasicController {
                 restaurantBox.getChildren().add(restaurantNameText);
 
                 restaurantBox.setOnMouseClicked(event -> {
-                    rID = restaurant.getId();
                     currentSelectedRestaurant = restaurant;
 
                     prefs.putInt(LAST_SELECTED_RESTAURANT_KEY, restaurant.getId());
@@ -91,10 +106,13 @@ public class AdminMainMenuController extends AdminBasicController {
             updateRestaurantDetailsUI();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to load restaurants", e);
         }
     }
 
+    /**
+     * Update the restaurant details UI
+     */
     private void updateRestaurantDetailsUI() {
         if (currentSelectedRestaurant != null) {
             defaultText.setText(currentSelectedRestaurant.getRestaurantName());
@@ -104,6 +122,10 @@ public class AdminMainMenuController extends AdminBasicController {
         }
     }
 
+    /**
+     * Modify the restaurant information
+     * This method opens a dialog to modify the restaurant's address, phone, and business hours
+     */
     @FXML
     private void modifyRestaurantInfo() {
         ResourceBundle bundle = LocalizationManager.getBundle();
@@ -136,7 +158,7 @@ public class AdminMainMenuController extends AdminBasicController {
         dialog.setHeaderText(dialogHeader);
 
         ButtonType modifyButtonType = new ButtonType(saveButton, ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButtonType = new ButtonType(cancelButton, ButtonBar.ButtonData.CANCEL_CLOSE); // Localized cancel button
+        ButtonType cancelButtonType = new ButtonType(cancelButton, ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getDialogPane().getButtonTypes().addAll(modifyButtonType, cancelButtonType);
         GridPane grid = new GridPane();
         grid.setHgap(10);
@@ -187,11 +209,15 @@ public class AdminMainMenuController extends AdminBasicController {
                 errorAlert.setHeaderText(infoFailure);
                 errorAlert.setContentText(errorContext);
                 errorAlert.showAndWait();
-                e.printStackTrace();
+                logger.error("Failed to update restaurant info", e);
             }
         });
     }
 
+    /**
+     * Go to the edit menu
+     * @param actionEvent the event that triggered the action
+     */
     @FXML
     public void goToEditMenu(ActionEvent actionEvent) {
         mainController.loadRestaurantContent(currentSelectedRestaurant);

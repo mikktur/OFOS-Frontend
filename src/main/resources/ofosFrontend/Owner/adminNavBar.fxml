@@ -12,7 +12,7 @@
 <?import java.lang.String?>
 <HBox fx:id="adminNav" alignment="CENTER_LEFT" prefHeight="42.0" prefWidth="664.0" style="-fx-background-color: #c4e6fb; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofosFrontend.controller.Owner.AdminNavController">
    <children>
-      <ImageView fx:id="adminLogout" fitHeight="39.0" fitWidth="40.0" onMouseClicked="#ALogout" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
+      <ImageView fx:id="adminLogout" fitHeight="39.0" fitWidth="40.0" onMouseClicked="#AdminLogout" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
          <image>
             <Image url="@../../images/logout.png" />
          </image>

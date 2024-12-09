@@ -12,6 +12,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ofosFrontend.AppManager;
 import ofosFrontend.session.SessionManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
@@ -27,7 +29,7 @@ public class DropDownMenuController extends BasicController {
     private Text dropDownUsername;
     @FXML
     private HBox adminDashboardElement;
-
+    private final Logger logger = LogManager.getLogger(DropDownMenuController.class);
     /**
      * Initializes the drop down menu
      * Sets the username in the drop down menu to the current user's username
@@ -51,13 +53,14 @@ public class DropDownMenuController extends BasicController {
      * Navigates to the admin dashboard view
      */
     @FXML
-    public void goToAdminDashboard(MouseEvent mouseEvent) throws IOException {
+    public void goToAdminDashboard(MouseEvent mouseEvent) {
         mainController.loadAdminDashboardView();
     }
 
 
 
     public DropDownMenuController() {
+        // required by FXML loader
     }
 
     /**
@@ -80,7 +83,7 @@ public class DropDownMenuController extends BasicController {
             stage.show();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to load login view: {}", e.getMessage());
         }
         sessionManager.logout();
     }

@@ -9,17 +9,23 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import ofosFrontend.model.Product;
+import ofosFrontend.model.Translation;
 import ofosFrontend.service.ProductService;
 import ofosFrontend.session.LocalizationManager;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
-
+/**
+ * Controller for the owner menu view
+ */
 public class AdminMenuController extends AdminBasicController {
-
+    private static final Logger logger = LogManager.getLogger(AdminMenuController.class);
     @FXML
     private VBox productListVBox;
     @FXML
@@ -29,22 +35,36 @@ public class AdminMenuController extends AdminBasicController {
 
     private ProductService productService = new ProductService();
     private int restaurantID;
+    private Product product = new Product();
 
     @FXML
     public void initialize() {
-        System.out.println("Initializing :)");
+        logger.log(Level.INFO, "Initializing :");
     }
 
+    /**
+     * Set the restaurant ID and load the products
+     * @param restaurantID The restaurant ID
+     * @param restaurantName The restaurant name
+     */
     public void setRestaurantID(int restaurantID, String restaurantName) {
         this.restaurantID = restaurantID;
         updateRestaurantName(restaurantName);
         loadProducts();
     }
 
+    /**
+     * Update the restaurant name
+     * @param restaurantName The new restaurant name
+     */
     private void updateRestaurantName(String restaurantName) {
         restaurantNameText.setText(restaurantName);
     }
 
+    /**
+     * Load the products for the restaurant
+     * and add them to the product list
+     */
     private void loadProducts() {
         try {
             productListVBox.getChildren().clear();
@@ -57,10 +77,16 @@ public class AdminMenuController extends AdminBasicController {
                 productListVBox.getChildren().add(productBox);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to load products", e);
         }
     }
 
+    /**
+     * Create a product entry for the product list
+     * @param product The product to create the entry for
+     * @param bundle The resource bundle
+     * @return The product entry
+     */
     private HBox createProductEntry(Product product, ResourceBundle bundle) {
         HBox productBox = new HBox();
         productBox.setSpacing(10.0);
@@ -85,7 +111,7 @@ public class AdminMenuController extends AdminBasicController {
         productBox.getChildren().addAll(productNameText, productDescriptionText, productPriceText, productCategoryText, productStatusText);
 
         Button editButton = new Button(editButtonText);
-        editButton.setOnAction(event -> openEditDialog(product));
+        editButton.setOnAction(event -> openEditDialog(product, restaurantID));
         productBox.getChildren().add(editButton);
 
         Button deleteButton = new Button(deleteButtonText);
@@ -105,6 +131,9 @@ public class AdminMenuController extends AdminBasicController {
         return productBox;
     }
 
+    /**
+     * Add a new product to the restaurant
+     */
     @FXML
     private void addItem() {
         ResourceBundle bundle = LocalizationManager.getBundle();
@@ -112,166 +141,217 @@ public class AdminMenuController extends AdminBasicController {
         String dialogHeader = bundle.getString("AddItemDialogHeader");
         String productButton = bundle.getString("AddProductButton");
         String cancelButton = bundle.getString("CancelProduct");
-        String dialogName = bundle.getString("DialogName");
-        String dialogDescription = bundle.getString("DialogDescription");
-        String dialogPrice = bundle.getString("DialogPrice");
-        String dialogCategory = bundle.getString("DialogCategory");
-        String dialogPicture = bundle.getString("DialogPicture");
-        String dialogActive = bundle.getString("DialogActive");
-
 
         Dialog<Product> dialog = new Dialog<>();
         dialog.setTitle(dialogTitle);
         dialog.setHeaderText(dialogHeader);
 
         ButtonType addButtonType = new ButtonType(productButton, ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButtonType = new ButtonType(cancelButton, ButtonBar.ButtonData.CANCEL_CLOSE); // Localized cancel button
+        ButtonType cancelButtonType = new ButtonType(cancelButton, ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getDialogPane().getButtonTypes().addAll(addButtonType, cancelButtonType);
 
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
-        TextField nameField = new TextField();
-        nameField.setPromptText(dialogName);
 
-        TextField descriptionField = new TextField();
-        descriptionField.setPromptText(dialogDescription);
+        // Translation tabs (English, Finnish, Japanese, Russian)
+        TabPane tabPane = new TabPane();
+        Tab englishTab = createTranslationTab("English", null);
+        Tab finnishTab = createTranslationTab("Finnish", null);
+        Tab japaneseTab = createTranslationTab("Japanese", null);
+        Tab russianTab = createTranslationTab("Russian", null);
+        tabPane.getTabs().addAll(englishTab, finnishTab, japaneseTab, russianTab);
 
+        // Fields for price, category, picture, etc.
         TextField priceField = new TextField();
-        priceField.setPromptText(dialogPrice);
-
         TextField categoryField = new TextField();
-        categoryField.setPromptText(dialogCategory);
-
         TextField pictureField = new TextField();
-        pictureField.setPromptText(dialogPicture);
 
-        CheckBox activeCheckBox = new CheckBox(dialogActive);
+        CheckBox activeCheckbox = new CheckBox();
+        grid.add(new Label(bundle.getString("DialogPrice")), 0, 1);
+        grid.add(priceField, 1, 1);
+        grid.add(new Label(bundle.getString("DialogCategory")), 0, 2);
+        grid.add(categoryField, 1, 2);
+        grid.add(new Label(bundle.getString("DialogPicture")), 0, 3);
+        grid.add(pictureField, 1, 3);
+        grid.add(new Label(bundle.getString("DialogActive")), 0, 4);
+        grid.add(activeCheckbox, 1, 4);
 
-        grid.add(new Label(dialogName), 0, 0);
-        grid.add(nameField, 1, 0);
-        grid.add(new Label(dialogDescription), 0, 1);
-        grid.add(descriptionField, 1, 1);
-        grid.add(new Label(dialogPrice), 0, 2);
-        grid.add(priceField, 1, 2);
-        grid.add(new Label(dialogCategory), 0, 3);
-        grid.add(categoryField, 1, 3);
-        grid.add(new Label(dialogPicture), 0, 4);
-        grid.add(pictureField, 1, 4);
-        grid.add(new Label(dialogActive), 0, 5);
-        grid.add(activeCheckBox, 1, 5);
+        grid.add(tabPane, 0, 0, 2, 1);
 
         dialog.getDialogPane().setContent(grid);
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == addButtonType) {
-                String name = nameField.getText();
-                String description = descriptionField.getText();
-                double price = Double.parseDouble(priceField.getText());
-                String category = categoryField.getText();
-                String picture = pictureField.getText();
-                boolean active = activeCheckBox.isSelected();
+                List<Translation> translations = new ArrayList<>();
+                translations.add(getTranslationFromTab(englishTab));
+                translations.add(getTranslationFromTab(finnishTab));
+                translations.add(getTranslationFromTab(japaneseTab));
+                translations.add(getTranslationFromTab(russianTab));
 
-                return new Product(name, price, description, null, picture, category, active);
+                return new Product(
+                        translations.get(0).getName(),  // Default to English name
+                        Double.parseDouble(priceField.getText()),
+                        translations.get(0).getDescription(), // Default to English description
+                        null, // ProductID will be set later
+                        pictureField.getText(),
+                        categoryField.getText(),
+                        activeCheckbox.isSelected(),
+                        translations
+                );
             }
             return null;
         });
-
         Optional<Product> result = dialog.showAndWait();
-
         result.ifPresent(product -> {
+            restaurantNameText.setId(String.valueOf(restaurantID));
             try {
                 productService.addProductToRestaurant(product, restaurantID);
-                loadProducts();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Failed to add product", e);
             }
+            loadProducts();
         });
+
     }
 
-    private void openEditDialog(Product product) {
+    private Tab createTranslationTab(String language, Translation translation) {
+        Tab tab = new Tab(language);
+        GridPane tabGrid = new GridPane();
+        tabGrid.setPadding(new Insets(10, 10, 10, 10));
+        tabGrid.setHgap(10);
+        tabGrid.setVgap(10);
+        TextField nameField = new TextField();
+        TextArea descField = new TextArea();
+        descField.setWrapText(true);
+        nameField.setText(translation != null ? translation.getName() : "");
+        descField.setText(translation != null ? translation.getDescription() : "");
+
+        tabGrid.add(new Label(language + " Name"), 0, 0);
+        tabGrid.add(nameField, 1, 0);
+        tabGrid.add(new Label(language + " Description"), 0, 1);
+        tabGrid.add(descField, 1, 1);
+
+        tab.setContent(tabGrid);
+        return tab;
+    }
+
+    private Translation getTranslationFromTab(Tab tab) {
+        GridPane tabGrid = (GridPane) tab.getContent();
+        TextField nameField = (TextField) tabGrid.getChildren().get(1);
+        TextArea descField = (TextArea) tabGrid.getChildren().get(3);
+
+        return new Translation(tab.getText().substring(0, 2).toLowerCase(), nameField.getText(), descField.getText());
+    }
+
+    /**
+     * Open the edit dialog for a product
+     * @param product The product to edit
+     */
+    private void openEditDialog(Product product, int rid) {
+        try {
+            product = productService.getProductById(product.getProductID());
+        } catch (IOException e) {
+            logger.error("Failed to get product", e);
+        }
+        Map<String, Translation> translations = product.getTranslations().stream()
+                .collect(Collectors.toMap(Translation::getLanguage, Function.identity()));
+
+        //sout all the translations
         ResourceBundle bundle = LocalizationManager.getBundle();
         String dialogTitle = bundle.getString("EditItemDialog");
         String dialogHeader = bundle.getString("EditItemHeader");
-        String updateButton = bundle.getString("UpdateButton");
-        String cancelButton = bundle.getString("CancelEdit");
-        String editActive = bundle.getString("EditActive");
-        String editName = bundle.getString("EditName");
-        String editDescription = bundle.getString("EditDescription");
-        String editPrice = bundle.getString("EditPrice");
-        String editCategory = bundle.getString("EditCategory");
-        String editPicture = bundle.getString("EditPicture");
+        String saveButtonText = bundle.getString("UpdateButton");
+        String cancelButtonText = bundle.getString("CancelEdit");
 
         Dialog<Product> dialog = new Dialog<>();
         dialog.setTitle(dialogTitle);
         dialog.setHeaderText(dialogHeader);
 
-        ButtonType updateButtonType = new ButtonType(updateButton, ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButtonType = new ButtonType(cancelButton, ButtonBar.ButtonData.CANCEL_CLOSE); // Localized cancel button
-        dialog.getDialogPane().getButtonTypes().addAll(updateButtonType, cancelButtonType);
+        ButtonType saveButtonType = new ButtonType(saveButtonText, ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = new ButtonType(cancelButtonText, ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, cancelButtonType);
 
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
 
-        TextField nameField = new TextField(product.getProductName());
-        TextField descriptionField = new TextField(product.getProductDesc());
+        // Translation tabs (English, Finnish, Japanese, Russian)
+        TabPane tabPane = new TabPane();
+        Tab englishTab = createTranslationTab("English", translations.get("en"));
+        Tab finnishTab = createTranslationTab("Finnish", translations.get("fi"));
+        Tab japaneseTab = createTranslationTab("Japanese", translations.get("ja"));
+        Tab russianTab = createTranslationTab("Russian", translations.get("ru"));
+        tabPane.getTabs().addAll(englishTab, finnishTab, japaneseTab, russianTab);
+
+        // Fields for price, category, picture, etc.
         TextField priceField = new TextField(String.valueOf(product.getProductPrice()));
         TextField categoryField = new TextField(product.getCategory());
         TextField pictureField = new TextField(product.getPicture());
-        CheckBox activeCheckBox = new CheckBox(editActive);
-        activeCheckBox.setSelected(product.isActive());
 
-        grid.add(new Label(editName), 0, 0);
-        grid.add(nameField, 1, 0);
-        grid.add(new Label(editDescription), 0, 1);
-        grid.add(descriptionField, 1, 1);
-        grid.add(new Label(editPrice), 0, 2);
-        grid.add(priceField, 1, 2);
-        grid.add(new Label(editCategory), 0, 3);
-        grid.add(categoryField, 1, 3);
-        grid.add(new Label(editPicture), 0, 4);
-        grid.add(pictureField, 1, 4);
-        grid.add(new Label(editActive), 0, 5);
-        grid.add(activeCheckBox, 1, 5);
+        CheckBox activeCheckbox = new CheckBox();
+        activeCheckbox.setSelected(product.isActive());
+
+        grid.add(new Label(bundle.getString("DialogPrice") + " (€)"), 0, 1);
+        grid.add(priceField, 1, 1);
+        grid.add(new Label(bundle.getString("DialogCategory")), 0, 2);
+        grid.add(categoryField, 1, 2);
+        grid.add(new Label(bundle.getString("DialogPicture")), 0, 3);
+        grid.add(pictureField, 1, 3);
+        grid.add(new Label(bundle.getString("DialogActive")), 0, 4);
+        grid.add(activeCheckbox, 1, 4);
+
+        grid.add(tabPane, 0, 0, 2, 1);
 
         dialog.getDialogPane().setContent(grid);
 
+        Product finalProduct = product;
         dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == updateButtonType) {
-                product.setProductName(nameField.getText());
-                product.setProductDesc(descriptionField.getText());
-                product.setProductPrice(Double.parseDouble(priceField.getText()));
-                product.setCategory(categoryField.getText());
-                product.setPicture(pictureField.getText());
-                product.setActive(activeCheckBox.isSelected());
+            if (dialogButton == saveButtonType) {
+                List<Translation> updatedTranslations = new ArrayList<>();
+                updatedTranslations.add(getTranslationFromTab(englishTab));
+                updatedTranslations.add(getTranslationFromTab(finnishTab));
+                updatedTranslations.add(getTranslationFromTab(japaneseTab));
+                updatedTranslations.add(getTranslationFromTab(russianTab));
 
-                return product;
+                finalProduct.setProductName(updatedTranslations.get(0).getName());  // Default to English name
+                finalProduct.setProductDesc(updatedTranslations.get(0).getDescription());  // Default to English description
+                finalProduct.setProductPrice(Double.parseDouble(priceField.getText()));
+                finalProduct.setCategory(categoryField.getText());
+                finalProduct.setPicture(pictureField.getText());
+                finalProduct.setActive(activeCheckbox.isSelected());
+                finalProduct.setTranslations(updatedTranslations);
+
+                return finalProduct;
             }
             return null;
         });
 
         Optional<Product> result = dialog.showAndWait();
-
         result.ifPresent(updatedProduct -> {
             try {
-                productService.updateProduct(updatedProduct);
-                loadProducts();
+                productService.updateProduct(updatedProduct, rid);  // Update product in service
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Failed to update product: {}", e.getMessage());
             }
+            loadProducts();  // Reload product list
         });
     }
 
+
+    /**
+     * Delete a product from the restaurant
+     * @param product The product to delete
+     */
     private void deleteProduct(Product product) {
         ResourceBundle bundle = LocalizationManager.getBundle();
         String deleteDialogTitle = bundle.getString("DeleteTitle");
         String deleteFail = bundle.getString("DeleteFail");
         try {
-            productService.deleteProduct(product,restaurantID);
+            productService.deleteProduct(product, restaurantID);
             loadProducts();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to delete product", e);
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle(deleteDialogTitle);
             alert.setHeaderText(deleteFail);

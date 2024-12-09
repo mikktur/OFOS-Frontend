@@ -3,10 +3,10 @@ package ofosFrontend.model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.ArrayList;
-import java.util.List;
 
-
+/**
+ * Model class representing a shopping cart
+ */
 public class ShoppingCart {
     private final ObservableList<CartItem> items;
     private Restaurant restaurant;

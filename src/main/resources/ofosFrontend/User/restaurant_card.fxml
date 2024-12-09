@@ -7,12 +7,16 @@
 <?import javafx.scene.text.Font?>
 
 
-<VBox fx:id="card" alignment="TOP_CENTER" prefHeight="311.0" prefWidth="271.0" stylesheets="@../styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<?import javafx.scene.shape.Rectangle?>
+<VBox fx:id="card" alignment="TOP_CENTER" prefHeight="311.0" prefWidth="271.0" styleClass="restaurant-card" stylesheets="@../styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ImageView fx:id="restaurantImage" fitHeight="193.0" fitWidth="277.0" pickOnBounds="true">
          <VBox.margin>
             <Insets />
          </VBox.margin>
+         <clip>
+            <Rectangle width="277.0" height="193.0" arcWidth="15.0" arcHeight="15.0" />
+         </clip>
       </ImageView>
       <Label fx:id="restaurantDesc" alignment="TOP_CENTER" textAlignment="CENTER">
          <font>

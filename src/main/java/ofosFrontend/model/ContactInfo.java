@@ -1,5 +1,8 @@
 package ofosFrontend.model;
 
+/**
+ * Model class for contact information
+ */
 public class ContactInfo {
     private int userId;
     private String phoneNumber;

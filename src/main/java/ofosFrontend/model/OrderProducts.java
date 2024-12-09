@@ -1,11 +1,17 @@
 package ofosFrontend.model;
 
+
 public class OrderProducts {
     private int orderId;
     private int productId;
     private int quantity;
 
-    public OrderProducts() {}
+    public OrderProducts( int orderId, int productId, int quantity) {
+        this.orderId = orderId;
+        this.productId = productId;
+        this.quantity = quantity;
+
+    }
 
     public int getOrderId() {
         return orderId;
@@ -32,3 +38,5 @@ public class OrderProducts {
     }
 
 }
+
+
