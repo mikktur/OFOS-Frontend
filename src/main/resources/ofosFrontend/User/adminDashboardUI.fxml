@@ -45,10 +45,10 @@
             <!-- Restaurant Details -->
             <VBox fx:id="Restaurant_Details" spacing="5.0"
                   style="-fx-padding: 10; -fx-background-color: #ffffff; -fx-border-color: lightgray; -fx-border-width: 1; -fx-border-radius: 5;">
-                <Label text="Restaurant_Details" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
-                <Label fx:id="restaurantNameLabel" text="Restaurant_Name:"/>
-                <Label fx:id="restaurantIDLabel" text="Restaurant_ID:"/>
-                <Label fx:id="restaurantOwnerLabel" text="Owner:"/>
+                <Label text="%Restaurant_Details" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+                <Label fx:id="restaurantNameLabel" text="%Restaurant_Name"/>
+                <Label fx:id="restaurantIDLabel" text="%Restaurant_ID"/>
+                <Label fx:id="restaurantOwnerLabel" text="%Owner"/>
             </VBox>
 
             <!-- User Details -->
