@@ -22,7 +22,7 @@ import static ofosFrontend.session.Validations.showError;
 public class CheckoutService {
     private final OkHttpClient client = new OkHttpClient();
     private ResourceBundle bundle = LocalizationManager.getBundle();
-    private static final String API_URL = "http://localhost:8000/api/";
+    private static final String API_URL = "http://10.120.32.94:8000/api/";
     /**
      * Fetches the delivery addresses of the currently logged-in user asynchronously.
      *

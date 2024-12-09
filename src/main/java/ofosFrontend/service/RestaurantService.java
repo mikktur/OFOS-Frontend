@@ -17,7 +17,7 @@ import java.util.List;
  * Service class for handling restaurant operations
  */
 public class RestaurantService {
-    private static final String API_URL = "http://localhost:8000/"; //
+    private static final String API_URL = "http://10.120.32.94:8000/"; //
     private final Logger logger = LogManager.getLogger(RestaurantService.class);
     private final OkHttpClient client = new OkHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();

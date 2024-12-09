@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public class UserService {
 
-    private static final String API_URL = "http://localhost:8000/api/";
+    private static final String API_URL = "http://10.120.32.94:8000/api/";
 
     private final OkHttpClient client = new OkHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
